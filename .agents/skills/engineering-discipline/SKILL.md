@@ -1,6 +1,7 @@
 ---
 name: engineering-discipline
 description: The working protocol for any non-trivial change in the portfolio — verify before claiming, no hallucinated APIs, smallest correct solution, and run the gates before declaring done. Use at the start of an implementation task and before reporting it finished.
+allowed-tools: Bash(pnpm run check), Bash(pnpm run lint), Bash(pnpm run typecheck), Bash(pnpm run test), Bash(pnpm run test:e2e)
 ---
 
 # Engineering Discipline
@@ -32,23 +33,24 @@ protocol; the topic skills ([[frontend-architecture]], [[frontend-performance]],
 
 ## 3. Respect the architecture
 
-- Keep the layout idiomatic and flat (see [[frontend-architecture]]): routes in
-  `src/app/**` compose, `src/components/**` holds reusable UI, `src/content/**` and
-  `src/lib/**` hold data and small helpers. Do not reintroduce heavy layering.
-- Server Components by default; `'use client'` only on the leaf that needs it.
-- Keep files small and single-purpose (one exported component per file).
+- Follow `docs/architecture.md` and [[frontend-architecture]] for dependency direction.
+- Routes compose; features own behavior; shared UI does not import features.
+- Follow [[backend-architecture]] when concrete I/O requires ports and adapters.
+- Keep files focused and browser dependencies separate from server capabilities.
 
 ## 4. Change workflow
 
 1. Identify the target route/component/content and where it lives under `src`.
 2. Change the content/data first when behavior changes, then the components that
    render it, then the route that composes them. Add/adjust tests alongside.
-3. Verify before declaring done.
+3. Review the diff for unnecessary complexity and run [[change-review]] as a
+   separate pass for non-trivial work.
+4. Verify before declaring done.
 
 ## 5. Definition of done (run these, read the output)
 
-- Local gate before merge: `pnpm run check` (lint, typecheck, test, build,
-  dead-code, dupes) — all green.
+- Local gate before merge: `pnpm run check` (formatting, skill validation, import boundaries, tool tests, lint, typecheck,
+  test, build, dead-code, dupes) — all green.
 - For narrower iteration, run the affected pieces directly: `pnpm run lint`,
   `pnpm run typecheck`, `pnpm run test`.
 - For commits use the [[commit-check]] skill.
@@ -56,3 +58,11 @@ protocol; the topic skills ([[frontend-architecture]], [[frontend-performance]],
 If a gate fails, fix the cause — do not weaken the gate, delete the test, or add an
 ignore to make red turn green. Justify any genuinely-needed config exception in the
 PR.
+
+## Recovery and completion
+
+A retry must use new evidence or a different strategy. After two failures with the
+same apparent cause, reassess the original evidence before another attempt. Do
+not mask failures by weakening gates or expanding scope. Stop refinement when the
+requested behavior, relevant gates, and review pass; report external blockers
+precisely when no materially different in-scope approach remains.

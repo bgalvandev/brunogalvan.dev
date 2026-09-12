@@ -1,0 +1,56 @@
+---
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+}
+const { theme } = messages(Astro.props.locale);
+---
+
+<button
+  type="button"
+  class="control"
+  data-theme-toggle
+  data-light-label={theme.light}
+  data-dark-label={theme.dark}
+  aria-label={theme.toggle}
+  aria-pressed="false"
+  hidden
+>
+  {theme.light}
+</button>
+<script>
+  const preference = window.matchMedia('(prefers-color-scheme: dark)');
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>(
+    '[data-theme-toggle]',
+  );
+  function isDark() {
+    return root.dataset.theme
+      ? root.dataset.theme === 'dark'
+      : preference.matches;
+  }
+  function update() {
+    buttons.forEach((button) => {
+      const dark = isDark();
+      button.setAttribute('aria-pressed', String(dark));
+      button.textContent =
+        (dark ? button.dataset.darkLabel : button.dataset.lightLabel) ?? '';
+      button.hidden = false;
+    });
+  }
+  buttons.forEach((button) =>
+    button.addEventListener('click', () => {
+      const theme = isDark() ? 'light' : 'dark';
+      root.dataset.theme = theme;
+      try {
+        localStorage.setItem('theme', theme);
+      } catch {
+        /* Keep the current page usable. */
+      }
+      update();
+    }),
+  );
+  preference.addEventListener('change', update);
+  update();
+</script>

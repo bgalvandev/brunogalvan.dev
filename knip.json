@@ -1,9 +1,9 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
-    "src/app/**/{page,layout,template,loading,error,not-found,global-error,route,default,sitemap,robots,manifest,opengraph-image,icon,apple-icon}.{ts,tsx}",
-    "e2e/**/*.spec.ts"
+    "e2e/**/*.spec.ts",
+    "scripts/**/*.spec.mjs",
+    "scripts/e2e/preview.mjs"
   ],
-  "project": ["src/**/*.{ts,tsx}", "e2e/**/*.ts"],
-  "ignoreDependencies": ["tslib", "tailwindcss"]
+  "project": ["src/**/*.{ts,astro,css}", "e2e/**/*.ts", "scripts/**/*.mjs"]
 }

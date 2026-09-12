@@ -1,0 +1,242 @@
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+const identity = 'Bruno Galván';
+const contact = 'brunogalvangarcia@outlook.com';
+const origin = 'https://brunogalvan.dev';
+
+for (const locale of ['es', 'en'] as const) {
+  test(`${locale}: direct URL, identity and reciprocal metadata`, async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    await context.addCookies([
+      { name: 'locale', value: locale === 'es' ? 'en' : 'es', url: baseURL! },
+    ]);
+    await context.setExtraHTTPHeaders({
+      'Accept-Language': locale === 'es' ? 'en-US' : 'es-CO',
+    });
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    const response = await page.goto(`/${locale}/`);
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+    await expect(page).toHaveTitle(new RegExp(identity));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      locale === 'es' ? 'Ingeniero de software.' : 'Software engineer.',
+    );
+    await expect(page.getByRole('link', { name: contact })).toHaveAttribute(
+      'href',
+      `mailto:${contact}`,
+    );
+    await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/bgalvandev',
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      `${origin}/${locale}/`,
+    );
+    for (const alternate of ['es', 'en']) {
+      await expect(
+        page.locator(`link[hreflang="${alternate}"]`),
+      ).toHaveAttribute('href', `${origin}/${alternate}/`);
+    }
+    await expect(page.locator('link[hreflang="x-default"]')).toHaveAttribute(
+      'href',
+      `${origin}/es/`,
+    );
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      /Bruno Galván/,
+    );
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+      'content',
+      `${origin}/${locale}/`,
+    );
+    expect(errors).toEqual([]);
+  });
+
+  for (const colorScheme of ['light', 'dark'] as const) {
+    test(`${locale}: accessible ${colorScheme} page without overflow`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
+      await page.goto(`/${locale}/`);
+      await expect(page.getByRole('button')).toHaveAttribute(
+        'aria-pressed',
+        String(colorScheme === 'dark'),
+      );
+      const results = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .analyze();
+      expect(results.violations).toEqual([]);
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= window.innerWidth,
+        ),
+      ).toBe(true);
+    });
+  }
+}
+
+test('root opens default content and language links remain explicit', async ({
+  page,
+  context,
+}) => {
+  await context.setExtraHTTPHeaders({ 'Accept-Language': 'en-US' });
+  await page.goto('/');
+  await expect(page).toHaveURL('/es/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Ingeniero de software.',
+  );
+  await page.getByRole('link', { name: 'English', exact: true }).click();
+  await expect(page).toHaveURL('/en/');
+  await page.getByRole('link', { name: 'Español', exact: true }).click();
+  await expect(page).toHaveURL('/es/');
+});
+
+test('theme persists through locale navigation and reload', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/es/');
+  await page.getByRole('button', { name: 'Cambiar tema de color' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.getByRole('link', { name: 'English', exact: true }).click();
+  await expect(
+    page.getByRole('button', { name: 'Toggle color theme' }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.getByRole('button').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+});
+
+test('theme remains usable when browser storage fails', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'localStorage', {
+      get() {
+        throw new Error('Storage unavailable');
+      },
+    });
+  });
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/en/');
+  await page.getByRole('button').click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(page.getByRole('link', { name: contact })).toBeVisible();
+});
+
+test('invalid stored theme falls back to OS and follows OS changes', async ({
+  page,
+}) => {
+  await page.addInitScript(() => localStorage.setItem('theme', 'invalid'));
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/en/');
+  await expect(page.getByRole('button')).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await page.emulateMedia({ colorScheme: 'light' });
+  await expect(page.getByRole('button')).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  );
+});
+
+test('keyboard skip link reaches main content', async ({ page }) => {
+  await page.goto('/en/');
+  await page.keyboard.press('Tab');
+  await expect(
+    page.getByRole('link', { name: 'Skip to content' }),
+  ).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('main')).toBeFocused();
+});
+
+test('content and locale navigation work without JavaScript', async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    baseURL,
+    colorScheme: 'dark',
+  });
+  try {
+    const page = await context.newPage();
+    await page.goto('/');
+    await expect(page).toHaveURL('/es/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'Ingeniero de software.',
+    );
+    await expect(page.getByRole('link', { name: contact })).toBeVisible();
+    await expect(page.locator('[data-theme-toggle]')).toBeHidden();
+    await page.getByRole('link', { name: 'English', exact: true }).click();
+    await expect(page).toHaveURL('/en/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'Software engineer.',
+    );
+  } finally {
+    await context.close();
+  }
+});
+
+test('unknown routes return an actual non-indexable 404', async ({ page }) => {
+  const response = await page.goto('/fr/');
+  expect(response?.status()).toBe(404);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    'content',
+    'noindex, follow',
+  );
+  await expect(
+    page.getByRole('link', { name: 'Home', exact: true }),
+  ).toHaveAttribute('href', '/en/');
+});
+
+test('robots and sitemap expose canonical production URLs', async ({
+  request,
+}) => {
+  const robots = await request.get('/robots.txt');
+  expect(robots.status()).toBe(200);
+  expect(await robots.text()).toContain(`Sitemap: ${origin}/sitemap-index.xml`);
+  const index = await request.get('/sitemap-index.xml');
+  expect(index.status()).toBe(200);
+  expect(await index.text()).toContain(`${origin}/sitemap-0.xml`);
+  const sitemap = await request.get('/sitemap-0.xml');
+  const xml = await sitemap.text();
+  expect(xml).toContain(`${origin}/es/`);
+  expect(xml).toContain(`${origin}/en/`);
+  expect(xml).not.toContain('/404');
+  expect(xml).not.toContain(`<loc>${origin}/</loc>`);
+});
+
+test('visual review evidence at narrow, tablet and desktop widths', async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'chromium',
+    'Captured once per viewport/theme/locale.',
+  );
+  for (const width of [360, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const colorScheme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme });
+      for (const locale of ['es', 'en']) {
+        await page.goto(`/${locale}/`);
+        await page.evaluate(() => document.fonts.ready);
+        expect(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= innerWidth,
+          ),
+        ).toBe(true);
+        await page.screenshot({
+          path: testInfo.outputPath(`${locale}-${width}-${colorScheme}.png`),
+          fullPage: true,
+        });
+      }
+    }
+  }
+});

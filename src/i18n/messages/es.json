@@ -1,39 +1,25 @@
 {
-  "metadata": {
+  "meta": {
     "title": "Bruno Galván — Ingeniero de software",
-    "description": "Bruno Galván es ingeniero de software; construye software web claro y fiable. Trabajo seleccionado y formas de contacto."
-  },
-  "nav": {
-    "language": "Idioma",
-    "themeToggle": "Cambiar el tema de color",
-    "themeToDark": "Oscuro",
-    "themeToLight": "Claro"
+    "description": "Espacio personal de Bruno Galván, ingeniero de software. Contacto para proyectos y colaboraciones."
   },
   "home": {
-    "name": "Bruno Galván — Ingeniero de software",
-    "headline": "Construyo software web que se mantiene claro a medida que crece.",
-    "intro": "Me importan la arquitectura limpia, las interfaces rápidas y los detalles que aguantan. Abajo, una selección de trabajo reciente.",
-    "statusLabel": "Estado",
-    "statusValue": "Disponible para proyectos seleccionados",
-    "focusLabel": "Enfoque",
-    "focusValue": "Plataformas web, de principio a fin",
-    "basedLabel": "Ubicación",
-    "basedValue": "Remoto",
-    "work": "Trabajo seleccionado",
-    "contact": "Contacto"
+    "headline": "Ingeniero de software.",
+    "intro": "Puedes escribirme para conversar sobre un proyecto o una colaboración."
   },
-  "projects": {
-    "project-one": {
-      "title": "Proyecto uno",
-      "summary": "Una frase específica sobre qué hace y por qué importó."
-    },
-    "project-two": {
-      "title": "Proyecto dos",
-      "summary": "Qué problema resolvió, para quién y el resultado que lograste."
-    },
-    "project-three": {
-      "title": "Proyecto tres",
-      "summary": "Una descripción corta y concreta — palabras claras, sin palabrería."
-    }
+  "navigation": {
+    "language": "Idioma",
+    "skip": "Ir al contenido",
+    "home": "Inicio"
+  },
+  "theme": {
+    "toggle": "Cambiar tema de color",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "contact": { "heading": "Contacto" },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no está disponible."
   }
 }

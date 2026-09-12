@@ -1,0 +1,46 @@
+---
+import { site } from '@/config/site';
+import { defaultLocale } from '@/i18n/locales';
+import { alternatePages, pagePath, type RouteKey } from '@/i18n/routes';
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  route?: RouteKey;
+  noindex?: boolean;
+}
+const {
+  title,
+  description,
+  canonicalPath,
+  route,
+  noindex = false,
+} = Astro.props;
+const canonical = new URL(canonicalPath, site.url).href;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{route &&
+  alternatePages(route).map(({ locale, path }) => (
+    <link
+      rel="alternate"
+      hreflang={locale}
+      href={new URL(path, site.url).href}
+    />
+  ))}
+{route && (
+  <link
+    rel="alternate"
+    hreflang="x-default"
+    href={new URL(pagePath(route, defaultLocale), site.url).href}
+  />
+)}
+{noindex && <meta name="robots" content="noindex, follow" />}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:type" content="website" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
