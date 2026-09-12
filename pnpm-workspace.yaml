@@ -1,11 +1,4 @@
-# Single app — no workspace packages. This file holds pnpm settings.
-#
-# Native transitive deps that ship prebuilt binaries. Their postinstall build
-# scripts are intentionally skipped (`false`): nothing in this static portfolio
-# needs them at runtime (no next/image → sharp; the watcher/swc are dev/transitive).
-# Deciding them here keeps `pnpm install` clean (no ERR_PNPM_IGNORED_BUILDS) in
-# local and CI. If image optimization (next/image) is added later, set sharp: true.
+# Single application; native dependencies are explicitly reviewed.
 allowBuilds:
-  '@parcel/watcher': false
-  '@swc/core': false
+  esbuild: true
   sharp: false

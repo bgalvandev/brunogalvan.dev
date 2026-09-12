@@ -1,0 +1,27 @@
+/* Paired values preserve system theming even without JavaScript. */
+:root {
+  color-scheme: light dark;
+  --paper: light-dark(#fcfcfa, #121114);
+  --ink: light-dark(#14140f, #eceae3);
+  --muted: light-dark(#6c6a61, #aaa69e);
+  --line: light-dark(#dedcd3, #45414a);
+  --surface: light-dark(#f3f1ea, #1b1a1e);
+  --accent: light-dark(#2b4be3, #a1b1ff);
+  --accent-contrast: light-dark(#ffffff, #0b0b0d);
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+  --font-mono: 'JetBrains Mono Variable', monospace;
+}

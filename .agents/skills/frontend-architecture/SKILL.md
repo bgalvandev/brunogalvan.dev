@@ -1,67 +1,37 @@
 ---
 name: frontend-architecture
-description: How to structure the portfolio UI — Server Components by default, client at the leaves, idiomatic Next.js App Router layout, and small single-purpose files. Use when adding or reshaping any component, page, hook, or content module under src.
+description: Structure Astro routes, layouts, shared UI, and feature presentation. Use when adding or reshaping source responsibilities or imports.
 ---
 
 # Frontend Architecture
 
-This is a content-focused portfolio site on the Next.js App Router. Keep the
-structure idiomatic and flat — do **not** impose per-module Clean Architecture
-layers (domain/application/infrastructure/interface). That is overkill for a site
-whose job is to render content. The rule is the **layout below**.
+Read `docs/architecture.md` for the dependency contract and evolution examples.
+The initial feature is `src/modules/home/home-page.astro`.
 
-## Project layout (follow this)
+- `src/pages`: URL parameters, metadata selection and composition roots.
+- `src/layouts`: HTML document and global assets, independent of features.
+- `src/components`: shared UI, independent of pages and features.
+- `src/modules/<feature>`: feature UI; files may live directly in the feature folder.
+  Add explicit layers only when distinct responsibilities require them.
+- `src/i18n`: locale types, route mappings and synchronized message catalogs.
+- `src/config`: public identity and build-time configuration.
+- `src/styles`: semantic tokens and shared visual rules.
 
-```txt
-src/
-  app/         # routes — layouts and pages are composition roots (Next.js App Router)
-  components/  # reusable components — one exported component per file
-  content/     # data/content: projects, experience, posts, etc.
-  lib/         # small, single-purpose utilities with explicit names
-```
+Keep domain rules outside components. Introduce application ports and infrastructure
+when a feature gains real I/O; follow [[backend-architecture]]. Do not create empty
+layers, repositories or generic services for hypothetical behavior. Architecture
+quality depends on explicit ownership and enforceable boundaries, not file count.
 
-- `src/app/**` holds the routes. A `layout.tsx`/`page.tsx` is a **composition root**:
-  it reads content and wires it into components. Keep heavy logic out of pages —
-  they compose, they don't carry business rules.
-- `src/components/**` holds reusable UI. One component per file, one exported
-  component per file.
-- `src/content/**` (or `src/lib/**` for shared helpers) holds the data that drives
-  the site — the list of projects, experience entries, post metadata — and small
-  utilities. Name things by what they hold or do (`projects.ts`, `format-date.ts`),
-  never `utils.ts` / `service.ts`.
+Astro frontmatter executes at build time for static pages. Browser `<script>`
+blocks execute separately; never import a server capability into their graph.
+Pass serializable, public view data to UI; never pass database handles or secrets.
 
-## Server Components by default
+Use a named feature module for a coherent responsibility. Share only actual reused
+UI; avoid extracting every wrapper. Keep routes as composition, without business
+rules. Cross-feature orchestration belongs in composition roots, not imports of
+another feature's private files. Introduce a public contract with a documented
+boundary-rule change if cross-feature collaboration becomes necessary.
 
-Every component is a React Server Component unless it needs interactivity. Add
-`'use client'` only on the **leaf** that uses state/effects/event handlers or
-browser APIs — never on a layout, a page, or a container. Push the directive as
-far down the tree as possible so the client bundle stays minimal.
-
-- Server Component: data reading, composition, static markup.
-- Client Component (`'use client'`): `useState`/`useEffect`, `onClick`, `useRef`,
-  anything touching `window`/`document`.
-
-Content is read directly in Server Components from `src/content/**` (or a helper in
-`src/lib/**`) — there is no API layer, no DTO mapping, and no Zod validation of
-external responses to do here. Components receive plain typed content objects.
-
-## Small, single-purpose files (no giant files)
-
-- One component per file; one exported component per file.
-- A component file should stay under ~150 lines. When it grows past that, extract
-  sub-components into `src/components/**` and pull non-trivial logic into a hook or a
-  named helper in `src/lib/**`.
-- Co-locate the component test (`*.spec.tsx` / `*.test.tsx`) next to the component.
-- Name by role, not generic nouns: `project-card.tsx`, `nav-link.tsx` — never
-  `utils.ts` / `service.ts`. Helpers go in a named file (`format-date.ts`).
-
-## Verification
-
-- `pnpm run lint` passes (React Compiler / Rules-of-React lint, see
-  [[frontend-performance]]).
-- `pnpm run typecheck` passes.
-- Reviewer confirms `'use client'` sits on leaf components only, and files are small
-  and single-purpose (one exported component per file).
-
-Related: [[frontend-performance]] for render cost, [[code-quality]] for
-duplication/dead-code, [[engineering-discipline]] for the overall working protocol.
+Run `pnpm run architecture:check`, lint and typecheck. Add a regression fixture
+when extending the import contract, then verify relevant production journeys with
+[[frontend-e2e]]. Related: [[astro-development]], [[code-quality]].

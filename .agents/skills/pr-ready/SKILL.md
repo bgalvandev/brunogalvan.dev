@@ -1,57 +1,35 @@
 ---
 name: pr-ready
-description: Verify a pull request is genuinely ready before opening it, marking it ready, or reporting that its checks pass — fetch, ancestry vs origin/main, mergeability, and CI rollup — so you never report a conflicting or stale branch as ready. Use before creating a PR, updating one, or telling the user a PR is ready to merge.
-argument-hint: '[pr-number]'
-allowed-tools: Bash(git fetch *), Bash(git merge-base *), Bash(git rev-parse *), Bash(git status *), Bash(gh pr view *), Bash(gh pr checks *)
+description: Verify an existing pull request before reporting it ready or mergeable, checking current ancestry, GitHub merge state, required checks, and all reported conclusions. Use only after a PR exists.
+allowed-tools: Bash(git fetch *), Bash(git merge-base *), Bash(git rev-parse *), Bash(git status *), Bash(gh api *), Bash(gh pr view *), Bash(gh pr checks *)
 ---
 
-# Pull request readiness check
+# Pull Request Readiness
 
-Run before creating a PR, updating one, or telling the user a PR is ready to merge.
-Complements the `commit-check` skill (which validates the commit and branch) — this one
-validates the PR against `origin/main` and CI. Do not skip steps.
+Run these checks explicitly. Commands shown in a skill are instructions, not proof
+that any shell command has already executed.
 
-## Inputs
+1. Resolve the PR number and base/head branches with `gh pr view --json
+number,url,baseRefName,headRefName,headRefOid,mergeStateStatus,statusCheckRollup`.
+2. Fetch origin. Verify the reviewed local HEAD matches the PR head, and the latest
+   remote base is an ancestor of that head using `git merge-base --is-ancestor`.
+   Update a stale branch without discarding work, then repeat the checks.
+3. Read required checks from the actual base branch protection and applicable
+   repository rulesets using `gh api`. Do not hard-code job names or interpret
+   permission/API errors as absence of requirements.
+4. Inspect all reported checks. Missing/null, queued, in-progress, pending, failed,
+   cancelled, timed-out, or action-required checks do not establish readiness.
+   Every required context must appear and succeed. A skipped optional job is
+   acceptable only when its workflow condition is understood; a required skipped
+   job is not evidence that its validation ran.
+5. A `DIRTY`, `UNKNOWN`, `BEHIND`, or blocked merge state is not ready. Investigate
+   actual checks, protections, and review threads; do not add unrelated code to
+   clear a repository setting.
+6. Report PR URL, exact head, base ancestry, merge state, required contexts, and
+   observed check conclusions. Report readiness only when the evidence agrees.
 
-- `$0` (optional): the PR number. If omitted, derive it once a PR exists with
-  `gh pr view --json number`.
+Opening a draft PR does not require already having a PR. Review the local diff
+and applicable checks first; use this skill once the PR exists. Readiness does
+not itself authorize merging.
 
-## Pre-resolved state
-
-- Current branch: !`git branch --show-current`
-- Fetch + ancestry vs origin/main: !`git fetch origin --quiet && (git merge-base --is-ancestor origin/main HEAD && echo "UP-TO-DATE" || echo "BEHIND — update before reporting ready")`
-
-If the ancestry line reads `BEHIND`, update the branch (rebase or merge `origin/main`)
-and re-run this skill before reporting readiness.
-
-## Steps
-
-1. The fetch + ancestry check above already ran. If it reported `BEHIND`, stop and
-   update the branch first; re-run afterward.
-2. Inspect GitHub mergeability and checks:
-   ```bash
-   gh pr view $0 --json mergeStateStatus,statusCheckRollup,headRefName,baseRefName
-   ```
-3. Interpret the result strictly:
-   - `mergeStateStatus == DIRTY` → NOT ready. Report the conflict.
-   - `mergeStateStatus == UNKNOWN` → GitHub is still computing; re-query, do not conclude.
-   - `statusCheckRollup == null` → required checks (`check`, `e2e`) have not registered;
-     do not claim checks are running. Wait until they appear QUEUED / IN_PROGRESS / COMPLETED.
-   - Any check `FAILURE` → NOT ready. Report which job failed.
-4. The PR is ready only when the branch is up-to-date with `origin/main`,
-   `mergeStateStatus` is CLEAN, and every required check passes. Report the PR URL, the
-   merge state, and the required check names.
-
-## Merge-block triage
-
-If GitHub says "Merging is blocked" while checks pass, do NOT add unrelated code to
-clear it. Inspect, in order: branch-protection requirements and unresolved review
-threads. Fix true positives; dismiss false positives with written justification.
-
-## Note on `gh` and GraphQL
-
-`gh pr edit` / `gh pr merge` can fail on this repo with a Projects-classic GraphQL
-error. Fall back to the REST API — e.g. merge with
-`gh api --method PUT repos/{owner}/{repo}/pulls/{n}/merge -f merge_method=squash`.
-
-Related: [[commit-check]], [[engineering-discipline]].
+Related: [[commit-check]], [[change-review]], [[engineering-discipline]].

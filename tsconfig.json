@@ -1,41 +1,12 @@
 {
+  "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "allowJs": true,
-    "types": ["vitest/globals", "node"],
-    "jsx": "react-jsx",
-    "noEmit": true,
-    "incremental": true,
-    // No baseUrl: TS 6 deprecates it, and path aliases resolve relative to this
-    // file's directory, so `@/*` → `./src/*` works without it.
     "paths": {
       "@/*": ["./src/*"]
     },
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "types": ["node"],
+    "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-  ],
-  "exclude": ["node_modules"]
+  "include": [".astro/types.d.ts", "src/**/*"],
+  "exclude": ["dist", "node_modules"]
 }

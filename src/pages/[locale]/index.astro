@@ -1,0 +1,24 @@
+---
+import { locales, type Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import { pagePath } from '@/i18n/routes';
+import SiteLayout from '@/layouts/site-layout.astro';
+import HomePage from '@/modules/home/home-page.astro';
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { meta } = messages(locale);
+---
+
+<SiteLayout
+  locale={locale}
+  {...meta}
+  canonicalPath={pagePath('home', locale)}
+  route="home"
+>
+  <HomePage locale={locale} />
+</SiteLayout>

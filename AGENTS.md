@@ -2,8 +2,8 @@
 
 ## Scope
 
-This document is the engineering standard for this repository — the personal
-portfolio at `bgalvan.dev`. It applies to all contributors (human and AI) and all
+This document is the engineering standard for this repository — the
+website at `brunogalvan.dev`. It applies to all contributors (human and AI) and all
 CI workflows. It holds **always-on standing rules**. Repeatable _procedures_ live in
 skills under `.agents/skills/**` and are referenced from here, not restated.
 
@@ -17,6 +17,15 @@ The key words **MUST, MUST NOT, SHOULD, SHOULD NOT, MAY** are interpreted per BC
    rule, update the affected rule in the **same** change rather than working around it
    silently. Silent drift between a rule and the actual practice is the only thing
    forbidden.
+3. Follow the nearest applicable `AGENTS.md`; an `AGENTS.override.md` takes
+   precedence at the same level. Nested instructions contain only local differences.
+
+### Writing instructions
+
+Rules MUST be scoped, actionable, and verifiable in this website. Procedures
+belong in skills. Keep tool entry files minimal and correct obsolete instructions
+in the change that makes them obsolete. Verification: `pnpm run ai:guard` and
+`git diff --check` pass; review checks instructions against actual scripts and paths.
 
 ## Language Standard
 
@@ -24,43 +33,74 @@ All technical artifacts (code comments, commit messages, PR descriptions, docs) 
 be written in English by default. Product/content copy on the site MAY be in any
 language the design calls for.
 
+## Project Identity and Documentation Provenance
+
+Scope: site content, metadata, contact links, repository instructions, skills,
+ADRs, comments, technical documentation, commits, issues, and PR descriptions.
+
+1. The public identity MUST be Bruno Galván at `brunogalvan.dev`. The approved
+   contact email MUST be `brunogalvangarcia@outlook.com` in visible text and links.
+2. Contributors MUST NOT infer contact details, employers, affiliations, client
+   relationships, or endorsements from another project, account, or template.
+   Additional public identities or project/client mentions require explicit user
+   authorization and verified content.
+3. Technical artifacts MUST explain decisions in this website's terms: context,
+   alternatives, rationale, consequences, and verification.
+4. Artifacts MUST NOT attribute project work or design decisions to an external
+   individual, course, tutorial, repository, reference gallery, product, brand,
+   or discovery path. Visual rationale MUST describe this site's objectives.
+5. Necessary identifiers for adopted dependencies, evaluated tools, standards,
+   licenses, security advisories, interoperability, and authorized profile links
+   MAY be included. Required license notices and factual citations MUST remain
+   accurate; these exceptions MUST NOT imply an affiliation or endorsement.
+6. External research notes, browsing history, and reference captures MUST remain
+   untracked. When adapting material, contributors MUST review names, domains,
+   email addresses, examples, and links before retaining them.
+
+Verification: review source, catalogs, metadata, tests, docs, and skills for
+unapproved identity or provenance references. `pnpm run ai:guard` rejects email
+literals other than the approved contact in product source/content. Browser tests
+verify the visible contact and mail destination. The email check is lexical;
+reviewers still inspect other names, links, and dynamically assembled content.
+
 ## Stack Baseline
 
-Default unless a documented decision approves an exception.
+- Astro 7, static output by default, strict TypeScript, Tailwind CSS v4.
+- Astro components render HTML; browser scripts enhance real interactions.
+- Node version is pinned in `.nvmrc`; pnpm in `package.json`. Use Corepack and
+  `pnpm install --frozen-lockfile` in CI. Never edit the lockfile manually.
+- Vitest tests pure logic; Playwright tests production HTML and accessibility.
+- Deployment is host-independent static `dist/` today. Runtime capabilities need
+  an explicit adapter and hosting decision; see `docs/architecture.md`.
 
-- Framework: **Next.js (App Router) + React + TypeScript** with `"strict": true`.
-- Styling: **Tailwind CSS v4**; UI as repository-owned source components (never opaque
-  binary bundles).
-- The **React Compiler is enabled** (`reactCompiler: true` in `next.config.js`, backed
-  by `babel-plugin-react-compiler`) — see the `frontend-performance` skill.
-- Package manager: **pnpm** (pinned via `packageManager` in `package.json`); Node.js
-  version pinned in `.nvmrc`.
-- Tests: **Vitest** + **React Testing Library**.
-- Deploy: static/SSR host (e.g. Vercel).
+## Architecture Standard
 
-## Frontend Architecture Standard
+Scope: `src/**`. Procedures: `astro-development`, `frontend-architecture`,
+`backend-architecture`. The dependency contract is in `docs/architecture.md`.
 
-Scope: `src/**`. Procedures: `frontend-architecture` and `frontend-performance` skills.
+1. `src/pages` contains routing and composition; `src/layouts` owns the document;
+   `src/components` contains shared UI. Features live in `src/modules/<feature>`.
+2. Presentation-only features MAY keep files directly in the feature folder.
+   Introduce explicit layers when responsibilities require separation. Within
+   a layered feature, domain is pure, application coordinates domain through ports,
+   infrastructure implements I/O, and interface presents/validates inputs.
+   Create a layer when it has a responsibility; do not fill empty directories.
+3. Shared code MUST NOT depend on features or pages. Features MUST NOT import
+   another feature's internals. Composition roots wire adapters into use cases.
+4. Domain MUST NOT import framework, I/O, presentation, or runtime configuration.
+   Application MUST NOT import infrastructure. UI MUST NOT import server I/O.
+5. Browser code MUST NOT import server capabilities or secrets, including through
+   intermediate imports. Validate untrusted data at runtime boundaries. Never
+   serialize secrets into public configuration, component props, or HTML.
+6. Pages MUST use central locale route mappings; localized URLs MUST work without
+   cookies or JavaScript. Metadata MUST describe the rendered locale.
+7. Keep components focused; approximately 150 lines is a review signal, not a
+   reason to fragment coherent markup. Use explicit names instead of generic utils.
 
-1. Structure follows idiomatic Next.js App Router: `src/app/**` holds routes
-   (composition roots, no heavy business logic), `src/components/**` holds reusable
-   components, `src/content/**` and `src/lib/**` hold data/content and small explicit
-   utilities.
-2. Components MUST be Server Components by default; `'use client'` MUST be placed only
-   on the leaf component that needs interactivity/browser APIs — never on layouts or
-   pages.
-3. One exported component per file; component files SHOULD stay under ~150 lines —
-   extract sub-components/hooks when exceeded (justify any deliberate exception).
-   Generic `utils.ts`/`service.ts` names MUST NOT be used; prefer explicit names.
-4. Manual memoization (`useMemo`/`useCallback`/`React.memo`) MUST NOT be added by
-   default; rely on the React Compiler and add manual memo only with a
-   Profiler-measured reason recorded in a comment.
-5. Lists over ~100 items SHOULD be virtualized (deviation justified in the PR).
-
-Verification: `pnpm run lint` and `pnpm run typecheck` pass (the
-`eslint-plugin-react-hooks` Rules-of-React/React-Compiler rules are the automated
-gate); reviewer checks `'use client'` placement, file size, and virtualization on
-large lists.
+Verification: `pnpm run architecture:check` parses imports and checks boundaries;
+regression tests cover bypasses. `pnpm run typecheck`, lint and browser tests cover
+framework integration. The guard is an import contract, not a secret scanner or
+proof of runtime isolation; reviewers inspect data flow and new dependencies.
 
 ## Simplicity and Proportionality Standard
 
@@ -79,14 +119,13 @@ Scope: repository-wide. Procedure: `code-quality` skill.
 1. Dead code MUST be removed: `pnpm run dead-code` (knip) MUST pass; a genuinely-used
    dependency knip cannot import-trace MAY be added to `knip.json` `ignoreDependencies`
    only with justification.
-2. Copy-paste duplication MUST NOT be introduced: `pnpm run dupes` (jscpd, `--threshold
-0` over `src`, tests excluded) MUST report zero clones. Shared logic MUST be
+2. Copy-paste duplication MUST NOT be introduced: `pnpm run dupes` (jscpd, `--threshold 0` over `src` and `scripts`, tests excluded) MUST report zero clones. Shared logic MUST be
    extracted into the owning module, not a speculative utility.
 3. Both gates run inside `pnpm run check` and CI, and MUST pass.
 
 ## Testing Standard
 
-1. Unit/component tests MUST use **Vitest** + **React Testing Library** and assert
+1. Unit/component tests MUST use **Vitest** for pure TypeScript behavior; rendered components use Playwright and assert
    user-visible behavior.
 2. Test files live next to source as `*.spec.{ts,tsx}` / `*.test.{ts,tsx}`.
 3. Browser end-to-end tests use **Playwright**, live in `e2e/**/*.spec.ts`, and run
@@ -94,8 +133,40 @@ Scope: repository-wide. Procedure: `code-quality` skill.
    need a browser and a server) and covered by a dedicated CI `e2e` job. Procedure:
    `frontend-e2e` skill.
 
+4. Tests MUST protect observable behavior and distinct failure modes rather than
+   private implementation or duplicated coverage. Tool scripts use Node's test runner.
+5. Dependency, global configuration, and CI changes MUST run the full local gate
+   and browser suite. Documentation-only iteration MAY use formatting and skill
+   validation; state which checks actually ran.
+
 Verification (minimum merge gate): `pnpm run check` passes
-(lint, typecheck, test, build, dead-code, dupes); the CI `e2e` job passes.
+(formatting, skill validation, import boundaries, tool tests, lint, typecheck, test, build, dead-code,
+dupes); the CI `e2e` job passes. Use `change-review` for a final review of non-trivial
+changes. Coverage reports are available through `pnpm run test:coverage`; do not
+invent coverage thresholds or tests solely to raise a number.
+
+## UI and Content Standard
+
+Scope: `src/**`. Procedures: frontend skills and `design-review`.
+
+1. UI colors MUST use semantic tokens in `src/styles/tokens.css`, including both
+   light and dark values. Raw Tailwind palettes and bare white/black utilities
+   MUST NOT appear in components.
+2. User-facing text MUST use synchronized Spanish and English catalogs in `src/i18n/messages`;
+   proper names, contact addresses, and technology names MAY remain literal.
+3. Dates and numbers MUST use locale-aware formatters when added to UI.
+4. Unsupported actions and unverified project claims MUST remain truthful;
+   unavailable project links stay non-interactive.
+5. Loading states MUST preserve the ready layout's container, gutters, and major
+   geometry. Mutations MUST expose scoped pending and outcome feedback.
+6. Visible layout or interaction changes SHOULD be inspected from rendered pixels
+   at affected widths in both themes; a rendering limitation is an acceptable
+   deviation only when the missing evidence is recorded.
+7. Shared visual decisions MUST be recorded in `DESIGN.md`; numeric token values
+   stay in CSS. Remove superseded UI after replacement behavior is covered.
+
+Verification: browser theme checks and catalog tests, `pnpm run ai:guard`, relevant browser
+journeys, and rendered inspection for visible changes.
 
 ## Commit Message Standard
 
@@ -122,9 +193,10 @@ contrast`, `chore(ci): pin node via .nvmrc`.
    explicit confirmation; if a force update is unavoidable use `--force-with-lease`,
    never plain `--force`.
 3. Do not commit feature work directly on `main`; create a working branch first.
-4. Before opening a PR, or reporting one ready or mergeable, run the `pr-ready` skill
-   (ancestry vs `origin/main`, mergeability, CI rollup) — never call a stale or
-   conflicting branch ready.
+4. Before opening a PR, review the diff and run the applicable gates. Once a PR
+   exists, run `pr-ready` before reporting it ready or mergeable (ancestry,
+   mergeability, required checks, and all reported checks).
+5. After a merge, sync local `main` from `origin/main` without discarding local work.
 
 ## CI and Supply Chain Standard
 
@@ -134,6 +206,12 @@ Scope: `.github/workflows/**`, `.github/dependabot.yml`.
    `.github/workflows/ci.yml`).
 2. Dependency update automation MUST be configured via `.github/dependabot.yml`.
 3. Workflow credentials MUST live in GitHub Secrets and MUST NOT be committed.
+4. Workflows MUST declare read-only default permissions, job timeouts, and actions
+   pinned to full commit SHAs. Dependabot maintains GitHub Actions pins.
+5. Superseded PR runs MAY be cancelled; pushes to `main` MUST complete independently.
+6. Dependency security checks MUST fail on high or critical advisories. Use
+   `pnpm run security:audit` and the dedicated workflow; audit service failures
+   MUST NOT be reported as a clean audit.
 
 ## Decision Records (ADRs)
 
@@ -142,6 +220,8 @@ strategy, a framework/tooling or theming choice — SHOULD be recorded as a shor
 under `docs/adr/` (copy `0000-template.md`). Records state the decision, the options
 weighed, and the consequences; status flows `Proposed` → `Accepted` → `Superseded by
 NNNN`. Reference the relevant ADR from the PR that enacts or changes the decision.
+Keep decisions proportional: compare viable alternatives, explain the current
+site need, record risks and verification, and date any external sources consulted.
 
 ## Agent Skills and Local Configuration Standard
 
@@ -167,19 +247,24 @@ duplicated `SKILL.md`; reviewer checks frontmatter and that no plaintext secrets
 
 ## File and Naming Conventions
 
-Files use kebab-case (`project-card.tsx`, `format-date.ts`). Prefer explicit names;
+Files use kebab-case (`project-card.astro`, `format-date.ts`). Prefer explicit names;
 `service.ts`/`utils.ts` are discouraged. Tests are `*.spec.{ts,tsx}` next to source.
 
 ## Available Skills
 
-- `engineering-discipline` — default working protocol for any non-trivial change.
-- `frontend-architecture` — how to structure components, routes, and content.
-- `frontend-performance` — React Compiler, streaming, virtualization, bundle size.
-- `frontend-design` — distinctive, intentional visual design.
-- `frontend-theming` — semantic design tokens and light/dark theming (CSS-first Tailwind v4 + next-themes).
-- `frontend-i18n` — bilingual (es/en) UI with next-intl message catalogs and a cookie locale.
-- `frontend-e2e` — Playwright browser end-to-end tests for user journeys.
-- `code-quality` — the knip + jscpd gates and DRY extraction.
-- `commit-check` — validate a change against commit/branch standards before committing.
-- `pr-ready` — verify a PR is genuinely ready (ancestry, mergeability, CI) before opening or merging.
-- `grill-me` — Socratic pre-build interview that pressure-tests a plan or decision before building.
+- `engineering-discipline` — evidence, scope, implementation and verification.
+- `astro-development` — project-specific Astro workflow and official references.
+- `frontend-architecture` — routing, shared UI, feature boundaries.
+- `backend-architecture` — future runtime endpoints, ports, database integration.
+- `frontend-performance` — static HTML, progressive enhancement and asset budgets.
+- `frontend-design` — intentional visual design within the approved brief.
+- `frontend-theming` — semantic tokens, system theme and persistent override.
+- `frontend-i18n` — explicit localized URLs, synchronized catalogs and metadata.
+- `frontend-e2e` — production browser journeys and accessibility.
+- `code-quality` — import boundaries, dead code and duplication gates.
+- `commit-check` — validate a change before committing.
+- `pr-ready` — verify GitHub ancestry, mergeability and checks.
+- `grill-me` — pressure-test a decision when requested.
+- `change-review` — review concrete correctness and regression risks.
+- `design-review` — inspect rendered UI against the brief.
+- `local-development` — start, stop and diagnose local servers.

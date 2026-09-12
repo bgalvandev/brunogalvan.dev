@@ -9,19 +9,19 @@ updates:
       semver-major-days: 14
       semver-minor-days: 5
       semver-patch-days: 2
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
     groups:
       npm-security:
         applies-to: security-updates
         patterns:
           - '*'
-      react-stack:
+      astro-stack:
         applies-to: version-updates
         patterns:
-          - 'next'
-          - 'react'
-          - 'react-dom'
-          - '@types/react'
-          - '@types/react-dom'
+          - 'astro'
+          - '@astrojs/*'
         update-types:
           - minor
           - patch
@@ -31,7 +31,16 @@ updates:
           - 'eslint'
           - '@typescript-eslint/*'
           - 'eslint-plugin-*'
-          - '@next/eslint-plugin-next'
+          - 'typescript-eslint'
+          - '@eslint/js'
         update-types:
           - minor
           - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']

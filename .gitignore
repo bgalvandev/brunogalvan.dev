@@ -1,19 +1,13 @@
 # Dependencies
 node_modules/
-.pnp
-.pnp.*
 
 # Build / output
-.next/
 dist/
-build/
-out/
 *.tsbuildinfo
-next-env.d.ts
+.astro/
 
 # Testing / coverage
 coverage/
-.nyc_output/
 
 # E2E (Playwright)
 /test-results/
@@ -52,8 +46,6 @@ pnpm-debug.log*
 Thumbs.db
 Desktop.ini
 
-# Vercel / deploy
-.vercel/
 
 # AI / agent local config
 # Portable skills live in .agents/skills (read by tool-agnostic agents);

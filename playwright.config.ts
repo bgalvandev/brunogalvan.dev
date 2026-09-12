@@ -1,13 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/*
- * Portfolio e2e — adapted from the frontend-e2e skill, scaled to a static site.
- * There's no API or database here, so tests run against a real production build
- * (`build` + `start`): the same output that ships. Both projects use the
- * Chromium engine (desktop + a mobile viewport) so only one browser is needed.
- */
-const PORT = 3000;
-const baseURL = `http://localhost:${PORT}`;
+const PORT = 3100;
+const baseURL = `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({
   testDir: './e2e',
@@ -27,9 +21,10 @@ export default defineConfig({
     { name: 'mobile', use: { ...devices['Pixel 5'] } },
   ],
   webServer: {
-    command: 'pnpm run build && pnpm run start',
+    command: 'pnpm run build && node scripts/e2e/preview.mjs',
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
+    gracefulShutdown: { signal: 'SIGTERM', timeout: 5_000 },
   },
 });

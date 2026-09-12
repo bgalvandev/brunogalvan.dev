@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-Short, dated records of decisions that shape this repo — the *why* behind a choice,
+Short, dated records of decisions that shape this repo — the _why_ behind a choice,
 kept next to the code so it outlives memory and PR threads.
 
 Write one when a decision is not obvious from the code and would cost someone time to
@@ -9,10 +9,14 @@ theming approach. Skip trivia.
 
 - Copy `0000-template.md` to `NNNN-short-title.md` (next number, kebab-case title).
 - Status flows `Proposed` → `Accepted` → `Superseded by NNNN`; link superseded records both ways.
-- Keep it short. Record the *decision* and its *consequences*, not a tutorial.
+- Keep it short. Record the _decision_ and its _consequences_, not a tutorial.
 
 ## Index
 
-- [0001 — Hosting on Vercel](0001-hosting-on-vercel.md)
-- [0002 — CSS-first theming with a light/dark toggle](0002-theming-css-first-and-toggle.md)
-- [0003 — Bilingual UI (es/en) with cookie-based locale](0003-bilingual-i18n.md)
+- [0005 — Astro website foundation and explicit localized URLs](0005-astro-foundation.md)
+
+Records 0001–0004 described the replaced implementation. Their contents remain
+in Git history or source backups; this directory contains current decisions.
+Numbering is preserved so existing references to decision 0005 remain stable.
+
+- [0006 — Language URLs and direct default entry](0006-language-entry.md)

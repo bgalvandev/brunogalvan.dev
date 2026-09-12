@@ -1,39 +1,21 @@
 {
-  "metadata": {
+  "meta": {
     "title": "Bruno Galván — Software engineer",
-    "description": "Bruno Galván is a software engineer building clear, reliable web software. Selected work and ways to get in touch."
-  },
-  "nav": {
-    "language": "Language",
-    "themeToggle": "Toggle color theme",
-    "themeToDark": "Dark",
-    "themeToLight": "Light"
+    "description": "Personal website of Bruno Galván, software engineer. Get in touch about projects and collaborations."
   },
   "home": {
-    "name": "Bruno Galván — Software engineer",
-    "headline": "I build web software that stays clear as it grows.",
-    "intro": "I care about clean architecture, fast interfaces, and details that hold up. Below is a selection of recent work.",
-    "statusLabel": "Status",
-    "statusValue": "Available for select work",
-    "focusLabel": "Focus",
-    "focusValue": "Web platforms, end to end",
-    "basedLabel": "Based",
-    "basedValue": "Remote",
-    "work": "Selected work",
-    "contact": "Get in touch"
+    "headline": "Software engineer.",
+    "intro": "Get in touch to talk about a project or a collaboration."
   },
-  "projects": {
-    "project-one": {
-      "title": "Project one",
-      "summary": "One specific sentence about what it does and why it mattered."
-    },
-    "project-two": {
-      "title": "Project two",
-      "summary": "What problem it solved, for whom, and the outcome you reached."
-    },
-    "project-three": {
-      "title": "Project three",
-      "summary": "A short, concrete description — plain words over buzzwords."
-    }
+  "navigation": {
+    "language": "Language",
+    "skip": "Skip to content",
+    "home": "Home"
+  },
+  "theme": { "toggle": "Toggle color theme", "light": "Light", "dark": "Dark" },
+  "contact": { "heading": "Contact" },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for is unavailable."
   }
 }

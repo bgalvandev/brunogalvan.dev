@@ -1,8 +1,7 @@
 ---
 name: commit-check
 description: Validate a change against the portfolio's commit and branch standards before committing — not on a protected branch, Conventional Commits header, optional site-area scope, and no authorship trailers. Use before running git commit, or when drafting a commit or squash-merge subject.
-argument-hint: '[proposed commit subject]'
-allowed-tools: Bash(git branch *) Bash(git status *) Bash(git diff *) Bash(git log *)
+allowed-tools: Bash(git branch *) Bash(git status *) Bash(git diff *) Bash(git log *) Bash(git config user.name) Bash(git config user.email)
 ---
 
 # Commit and branch standards check
@@ -17,7 +16,10 @@ Run before creating a commit. Report any failing check and stop until it is reso
    ```
    If the branch is `main` or a release branch, STOP. Create a non-protected working branch
    before the first edit; never commit feature/fix/chore work directly on `main`.
-2. Review what is staged:
+2. Check `git config user.name` and `git config user.email` against the intended
+   repository identity. Preserve existing correct configuration; if ambiguous,
+   clarify before committing rather than changing global identity.
+   Review what is staged:
    ```bash
    git status --short && git diff --cached --stat
    ```

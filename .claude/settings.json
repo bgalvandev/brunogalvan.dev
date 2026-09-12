@@ -23,7 +23,15 @@
       "Bash(git branch *)",
       "Bash(git add *)",
       "Bash(gh pr view *)",
-      "Bash(gh pr checks *)"
+      "Bash(gh pr checks *)",
+      "Bash(pnpm run ai:guard)",
+      "Bash(pnpm run test:tools)",
+      "Bash(pnpm run test:coverage)",
+      "Bash(pnpm run test:e2e)",
+      "Bash(pnpm run test:e2e:ui)",
+      "Bash(pnpm run security:audit)",
+      "Bash(pnpm run preview)",
+      "Bash(pnpm run architecture:check)"
     ]
   }
 }
