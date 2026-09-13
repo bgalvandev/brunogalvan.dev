@@ -21,7 +21,7 @@ const canonical = new URL(canonicalPath, site.url).href;
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={canonical} />
+{!noindex && <link rel="canonical" href={canonical} />}
 {route &&
   alternatePages(route).map(({ locale, path }) => (
     <link
