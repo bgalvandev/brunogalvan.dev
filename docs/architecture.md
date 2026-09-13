@@ -21,7 +21,7 @@ src/
   i18n/                      Locale types, route pairs, typed message catalogs
   styles/                    Semantic theme tokens and shared styling
 scripts/
-  ai/                        Skill, contact identity and semantic-color checks
+  check-tokens.mjs           Semantic-color check over src and public
   e2e/                       Preview lifecycle owned by Playwright
 ```
 
@@ -71,7 +71,7 @@ pnpm run test:e2e
 pnpm run security:audit
 ```
 
-`check` includes formatting, skill/identity guard, tool tests, lint, typecheck, unit
+`check` includes formatting, the token check, tool tests, lint, typecheck, unit
 tests, build, dead-code and clone checks. Browser and registry checks are separate
 because they need a browser/server and an external service. CI runs all three
 categories; local execution is not evidence of remote CI success. Chromium

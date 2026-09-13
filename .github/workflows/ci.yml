@@ -32,8 +32,8 @@ jobs:
       - name: Formatting
         run: pnpm run format:check
 
-      - name: Agent configuration and semantic colors
-        run: pnpm run ai:guard
+      - name: Semantic color tokens
+        run: pnpm run check:tokens
 
       - name: Tool regression tests
         run: pnpm run test:tools
