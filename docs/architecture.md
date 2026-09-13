@@ -146,7 +146,7 @@ application or a different framework. Astro does not remove those tradeoffs.
 | Behavioral verification | Vitest pure logic, Node tool fixtures, Playwright production journeys                                                    |
 | Accessibility           | axe in light/dark, keyboard checks and manual rendered review                                                            |
 | Unused code             | Knip with Astro entry discovery; no speculative dependencies                                                             |
-| Duplication             | jscpd, zero clones at an 80-token/10-line window across source/scripts, excluding tests; includes Astro markup           |
+| Duplication             | jscpd, zero clones at an 80-token/10-line window across source/scripts, excluding tests; Astro files tokenized as TSX    |
 | Supply chain            | Pinned Node/pnpm, frozen lockfile, SHA-pinned CI actions, read-only permissions, Dependabot and high/critical audit gate |
 | Agent instructions      | Canonical `.agents/skills`, discovery symlink, applicability/reference validation and separate change/design review      |
 | Identity                | One public config, approved contact guard and browser assertions; manual review for other unapproved names/links         |

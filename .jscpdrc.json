@@ -4,5 +4,6 @@
   "gitignore": true,
   "absolute": false,
   "reporters": ["console"],
-  "format": ["typescript", "tsx", "javascript", "jsx", "astro", "css"]
+  "format": ["typescript", "tsx", "javascript", "jsx", "css"],
+  "formatsExts": { "tsx": ["astro"] }
 }
