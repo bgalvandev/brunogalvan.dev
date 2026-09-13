@@ -24,8 +24,10 @@ pnpm run build
 pnpm run preview
 ```
 
-Build output is static `dist/`; preview uses `http://127.0.0.1:3100`.
-Preview is for local verification. Hosting is not configured yet.
+Build output is static `dist/`; preview uses `http://127.0.0.1:3100` for local
+verification. Cloudflare Pages builds `main` and every pull request from the
+connected repository (build command `pnpm run build`, output `dist`); redirects
+live in `public/_redirects` and the build writes `dist/_headers`. See ADR 0007.
 
 ## Engineering
 

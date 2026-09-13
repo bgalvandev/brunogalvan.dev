@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { site } from './src/config/site';
 import { pagePath } from './src/i18n/routes';
 import { locales, defaultLocale } from './src/i18n/locales';
+import { cloudflareHeaders } from './scripts/build/cloudflare-headers.mjs';
 
 export default defineConfig({
   site: site.url,
@@ -20,6 +21,7 @@ export default defineConfig({
       filter: (page) => page !== `${site.url}/` && !page.endsWith('/404/'),
       i18n: { defaultLocale, locales: { es: 'es', en: 'en' } },
     }),
+    cloudflareHeaders(),
   ],
   vite: { plugins: [tailwindcss()] },
 });
