@@ -1,7 +1,7 @@
 ---
 import { alternatePages, type RouteKey } from '@/i18n/routes';
 import { messages } from '@/i18n/messages';
-import type { Locale } from '@/i18n/locales';
+import { localeNames, type Locale } from '@/i18n/locales';
 interface Props {
   locale: Locale;
   route: RouteKey;
@@ -17,7 +17,7 @@ const { locale, route } = Astro.props;
       lang={alternative.locale}
       hreflang={alternative.locale}
       aria-current={locale === alternative.locale ? 'page' : undefined}
-      aria-label={alternative.locale === 'es' ? 'Español' : 'English'}
+      aria-label={localeNames[alternative.locale]}
     >
       {alternative.locale.toUpperCase()}
     </a>

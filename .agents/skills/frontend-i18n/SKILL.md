@@ -13,7 +13,9 @@ fallback; configure an equivalent HTTP 301 redirect on the chosen production hos
 
 1. Add visible text to both `src/i18n/messages/es.json` and `en.json` with the same
    keys. Read it through typed `messages(locale)`. Proper names, addresses and
-   technology names may remain literal. 404 bilingual navigation labels are
+   technology names may remain literal. Native language names live in
+   `src/i18n/locales.ts` beside the locale list and are not translated. 404
+   bilingual navigation labels are
    intentional exceptions; do not use them in localized feature UI.
 2. Add each page to `src/i18n/routes.ts` with equivalent paths for both locales.
    Use `pagePath` and `alternatePages` for links; do not rewrite URL prefixes by
@@ -27,6 +29,6 @@ fallback; configure an equivalent HTTP 301 redirect on the chosen production hos
 5. Use `Intl` for dates/numbers when needed; specify timezone for date/time output.
    Add ICU support only when real pluralization/interpolation requires it.
 
-Run unit tests for catalog parity and route pairs, then [[frontend-e2e]] for direct
+Run unit tests for catalog parity and route pairs, then [frontend-e2e](../frontend-e2e/SKILL.md) for direct
 links, equivalent-page switching, metadata and no-JS navigation. Prefixes make
 language URLs explicit and cacheable; they are not themselves a speed optimization.
