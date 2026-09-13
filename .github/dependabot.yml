@@ -11,6 +11,10 @@ updates:
       semver-major-days: 14
       semver-minor-days: 5
       semver-patch-days: 2
+    ignore:
+      # Node types follow the runtime major pinned in .nvmrc and engines.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     groups:
       npm-security:
         applies-to: security-updates
