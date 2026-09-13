@@ -21,7 +21,7 @@ only restores and changes the theme.
 5. Animate transform/opacity where needed and respect reduced motion. Do not
    invent animation or loading states for this static foundation.
 
-Run the build and relevant [[frontend-e2e]] journeys. Check emitted assets for
+Run the build and relevant [frontend-e2e](../frontend-e2e/SKILL.md) journeys. Check emitted assets for
 accidental runtime libraries or secrets. Distinguish a smaller transfer from a
 measured speed improvement; never claim a framework makes every page faster.
-Related: [[astro-development]], [[frontend-architecture]].
+Related: [astro-development](../astro-development/SKILL.md), [frontend-architecture](../frontend-architecture/SKILL.md).

@@ -18,7 +18,7 @@ The initial feature is `src/modules/home/home-page.astro`.
 - `src/styles`: semantic tokens and shared visual rules.
 
 Keep domain rules outside components. Introduce application ports and infrastructure
-when a feature gains real I/O; follow [[backend-architecture]]. Do not create empty
+when a feature gains real I/O; follow [backend-architecture](../backend-architecture/SKILL.md). Do not create empty
 layers, repositories or generic services for hypothetical behavior. Architecture
 quality depends on explicit ownership and enforceable boundaries, not file count.
 
@@ -34,4 +34,4 @@ boundary-rule change if cross-feature collaboration becomes necessary.
 
 Run `pnpm run architecture:check`, lint and typecheck. Add a regression fixture
 when extending the import contract, then verify relevant production journeys with
-[[frontend-e2e]]. Related: [[astro-development]], [[code-quality]].
+[frontend-e2e](../frontend-e2e/SKILL.md). Related: [astro-development](../astro-development/SKILL.md), [code-quality](../code-quality/SKILL.md).

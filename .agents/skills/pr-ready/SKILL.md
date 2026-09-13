@@ -32,4 +32,4 @@ Opening a draft PR does not require already having a PR. Review the local diff
 and applicable checks first; use this skill once the PR exists. Readiness does
 not itself authorize merging.
 
-Related: [[commit-check]], [[change-review]], [[engineering-discipline]].
+Related: [commit-check](../commit-check/SKILL.md), [change-review](../change-review/SKILL.md), [engineering-discipline](../engineering-discipline/SKILL.md).
