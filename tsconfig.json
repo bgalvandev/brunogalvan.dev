@@ -5,6 +5,7 @@
       "@/*": ["./src/*"]
     },
     "types": ["node"],
+    "allowJs": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": [".astro/types.d.ts", "src/**/*", "e2e/**/*.ts", "*.config.ts"],

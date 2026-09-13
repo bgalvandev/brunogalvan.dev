@@ -77,10 +77,16 @@ because they need a browser/server and an external service. CI runs all three
 categories; local execution is not evidence of remote CI success. Chromium
 desktop/mobile coverage is not cross-engine browser certification.
 
-No deployment or production runtime is configured by this foundation. Before
-publication, verify host routing/404 behavior, TLS, canonical domain and cache
-headers; apply a host-specific CSP compatible with the intentional theme script.
-See [ADR 0005](adr/0005-astro-foundation.md) for alternatives and migration tradeoffs.
+Hosting is Cloudflare Pages ([ADR 0007](adr/0007-hosting-on-cloudflare-pages.md)):
+the Git integration builds `main` with `pnpm run build`, serves `dist/` and gives
+every pull request a preview deployment. `public/_redirects` carries the HTTP 301
+from `/` to `/es/`; the build writes `dist/_headers` with a Content Security
+Policy whose script sources are the sha256 hashes of the inline scripts in the
+built HTML, so the pre-paint theme initializer needs no `'unsafe-inline'`, plus a
+one-year immutable cache for `/_astro/*`. Pages serves `404.html` with status 404.
+After a deploy, verify the redirect, the 404 status, the CSP header and TLS on
+the real domain with the commands in the ADR. See
+[ADR 0005](adr/0005-astro-foundation.md) for the framework decision.
 
 The E2E preview wrapper uses the documented experimental Astro programmatic API
 to keep lifecycle ownership with Playwright; the CLI can auto-background under an
@@ -91,6 +97,5 @@ entry because command-string discovery does not trace it.
 The root redirect is declared in `astro.config.ts` and follows
 [ADR 0006](adr/0006-language-entry.md): prefixed language URLs, a fixed default
 entry and visible equivalent-page links. Astro emits an HTML refresh redirect for a
-static build. Configure `/` → `/es/` as HTTP 301 at the eventual host and verify it
-there; local static preview is not proof of an HTTP redirect in production.
-Exclude the redirect source from the sitemap.
+static build as a fallback; `public/_redirects` gives Cloudflare Pages the HTTP 301. Local preview is not proof of the HTTP redirect; verify it on the deployed
+domain. The redirect source is excluded from the sitemap.
