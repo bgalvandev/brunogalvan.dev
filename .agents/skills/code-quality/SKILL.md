@@ -51,8 +51,6 @@ ignored), and incidental similarity that isn't the same concept.
 
 Related: [frontend-architecture](../frontend-architecture/SKILL.md), [engineering-discipline](../engineering-discipline/SKILL.md).
 
-`pnpm run architecture:check` additionally validates feature layers and transitive
-browser dependencies. Its parser supports Astro scripts and TypeScript import syntax.
 The clone window is 80 tokens / 10 lines to detect substantive duplicated blocks
 without forcing abstractions from short structural markup; threshold remains zero.
 

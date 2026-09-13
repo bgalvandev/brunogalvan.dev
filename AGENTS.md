@@ -97,10 +97,10 @@ Scope: `src/**`. Procedures: `astro-development`, `frontend-architecture`,
 7. Keep components focused; approximately 150 lines is a review signal, not a
    reason to fragment coherent markup. Use explicit names instead of generic utils.
 
-Verification: `pnpm run architecture:check` parses imports and checks boundaries;
-regression tests cover bypasses. `pnpm run typecheck`, lint and browser tests cover
-framework integration. The guard is an import contract, not a secret scanner or
-proof of runtime isolation; reviewers inspect data flow and new dependencies.
+Verification: `pnpm run typecheck`, lint and browser tests cover framework
+integration; reviewers inspect imports, data flow and new dependencies. An
+executable import contract returns when a second feature or a server capability
+gives it real files to check.
 
 ## Simplicity and Proportionality Standard
 
@@ -140,10 +140,9 @@ Scope: repository-wide. Procedure: `code-quality` skill.
    validation; state which checks actually ran.
 
 Verification (minimum merge gate): `pnpm run check` passes
-(formatting, skill validation, import boundaries, tool tests, lint, typecheck, test, build, dead-code,
+(formatting, skill validation, tool tests, lint, typecheck, test, build, dead-code,
 dupes); the CI `e2e` job passes. Use `change-review` for a final review of non-trivial
-changes. Coverage reports are available through `pnpm run test:coverage`; do not
-invent coverage thresholds or tests solely to raise a number.
+changes. Do not invent coverage thresholds or tests solely to raise a number.
 
 ## UI and Content Standard
 
@@ -261,7 +260,7 @@ Files use kebab-case (`project-card.astro`, `format-date.ts`). Prefer explicit n
 - `frontend-theming` — semantic tokens, system theme and persistent override.
 - `frontend-i18n` — explicit localized URLs, synchronized catalogs and metadata.
 - `frontend-e2e` — production browser journeys and accessibility.
-- `code-quality` — import boundaries, dead code and duplication gates.
+- `code-quality` — dead code and duplication gates.
 - `commit-check` — validate a change before committing.
 - `pr-ready` — verify GitHub ancestry, mergeability and checks.
 - `grill-me` — pressure-test a decision when requested.

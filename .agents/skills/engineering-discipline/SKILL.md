@@ -49,7 +49,7 @@ protocol; the topic skills ([frontend-architecture](../frontend-architecture/SKI
 
 ## 5. Definition of done (run these, read the output)
 
-- Local gate before merge: `pnpm run check` (formatting, skill validation, import boundaries, tool tests, lint, typecheck,
+- Local gate before merge: `pnpm run check` (formatting, skill validation, tool tests, lint, typecheck,
   test, build, dead-code, dupes) — all green.
 - For narrower iteration, run the affected pieces directly: `pnpm run lint`,
   `pnpm run typecheck`, `pnpm run test`.

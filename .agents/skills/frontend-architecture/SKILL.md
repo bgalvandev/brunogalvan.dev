@@ -32,6 +32,5 @@ rules. Cross-feature orchestration belongs in composition roots, not imports of
 another feature's private files. Introduce a public contract with a documented
 boundary-rule change if cross-feature collaboration becomes necessary.
 
-Run `pnpm run architecture:check`, lint and typecheck. Add a regression fixture
-when extending the import contract, then verify relevant production journeys with
+Run lint and typecheck, then verify relevant production journeys with
 [frontend-e2e](../frontend-e2e/SKILL.md). Related: [astro-development](../astro-development/SKILL.md), [code-quality](../code-quality/SKILL.md).
