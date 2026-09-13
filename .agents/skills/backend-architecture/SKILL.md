@@ -6,7 +6,7 @@ description: Add server-rendered pages, forms, APIs, database access, or externa
 # Backend Architecture
 
 There is currently no runtime backend or database. Read `docs/architecture.md`
-and [[astro-development]] before introducing either.
+and [astro-development](../astro-development/SKILL.md) before introducing either.
 
 1. Identify whether data is public and fresh enough at build time. Public content
    can use an Astro content collection; confidential/request-specific work needs

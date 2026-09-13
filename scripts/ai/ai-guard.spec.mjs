@@ -48,7 +48,7 @@ test('rejects broken skill metadata and references', async (t) => {
   for (const failure of [
     'frontmatter name',
     'applicability description',
-    'missing skill',
+    'relative markdown paths',
     'missing reference',
   ]) {
     assert.ok(result.stderr.includes(failure), result.stderr);

@@ -27,4 +27,4 @@ for localized reachable failures. Fix confirmed findings within the authorized
 implementation task, then re-review only the affected changes. Stop when the
 requested behavior and appropriate gates pass.
 
-Related: [[engineering-discipline]], [[design-review]], [[pr-ready]].
+Related: [engineering-discipline](../engineering-discipline/SKILL.md), [design-review](../design-review/SKILL.md), [pr-ready](../pr-ready/SKILL.md).

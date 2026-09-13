@@ -8,8 +8,8 @@ allowed-tools: Bash(pnpm run check), Bash(pnpm run lint), Bash(pnpm run typechec
 
 The goal: one clear line of reasoning to the best solution — no guessing, no
 hallucinated APIs, no speculative scaffolding. This skill is the default operating
-protocol; the topic skills ([[frontend-architecture]], [[frontend-performance]],
-[[code-quality]], [[frontend-design]]) cover specifics.
+protocol; the topic skills ([frontend-architecture](../frontend-architecture/SKILL.md), [frontend-performance](../frontend-performance/SKILL.md),
+[code-quality](../code-quality/SKILL.md), [frontend-design](../frontend-design/SKILL.md)) cover specifics.
 
 ## 1. Ground every claim in evidence
 
@@ -33,9 +33,9 @@ protocol; the topic skills ([[frontend-architecture]], [[frontend-performance]],
 
 ## 3. Respect the architecture
 
-- Follow `docs/architecture.md` and [[frontend-architecture]] for dependency direction.
+- Follow `docs/architecture.md` and [frontend-architecture](../frontend-architecture/SKILL.md) for dependency direction.
 - Routes compose; features own behavior; shared UI does not import features.
-- Follow [[backend-architecture]] when concrete I/O requires ports and adapters.
+- Follow [backend-architecture](../backend-architecture/SKILL.md) when concrete I/O requires ports and adapters.
 - Keep files focused and browser dependencies separate from server capabilities.
 
 ## 4. Change workflow
@@ -43,7 +43,7 @@ protocol; the topic skills ([[frontend-architecture]], [[frontend-performance]],
 1. Identify the target route/component/content and where it lives under `src`.
 2. Change the content/data first when behavior changes, then the components that
    render it, then the route that composes them. Add/adjust tests alongside.
-3. Review the diff for unnecessary complexity and run [[change-review]] as a
+3. Review the diff for unnecessary complexity and run [change-review](../change-review/SKILL.md) as a
    separate pass for non-trivial work.
 4. Verify before declaring done.
 
@@ -53,7 +53,7 @@ protocol; the topic skills ([[frontend-architecture]], [[frontend-performance]],
   test, build, dead-code, dupes) — all green.
 - For narrower iteration, run the affected pieces directly: `pnpm run lint`,
   `pnpm run typecheck`, `pnpm run test`.
-- For commits use the [[commit-check]] skill.
+- For commits use the [commit-check](../commit-check/SKILL.md) skill.
 
 If a gate fails, fix the cause — do not weaken the gate, delete the test, or add an
 ignore to make red turn green. Justify any genuinely-needed config exception in the

@@ -30,4 +30,4 @@ in an ADR or `DESIGN.md`; private interview details do not belong in the reposit
 
 Stop when the remaining uncertainty no longer changes the next action or the user
 wants to proceed. No fixed number of waves or mandatory final confirmation is
-needed. Hand implementation to [[engineering-discipline]] within the user's scope.
+needed. Hand implementation to [engineering-discipline](../engineering-discipline/SKILL.md) within the user's scope.

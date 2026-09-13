@@ -19,7 +19,7 @@ Docker or environment secrets. Run commands from the repository root.
 
 `pnpm run preview` serves an existing production build on port 3100.
 `pnpm run test:e2e` manages build/preview automatically and requires that port free.
-Avoid simultaneous builds replacing `dist`. See [[frontend-e2e]] for browser setup.
+Avoid simultaneous builds replacing `dist`. See [frontend-e2e](../frontend-e2e/SKILL.md) for browser setup.
 Report observed HTTP status and errors; a live process alone proves no page works.
 
 Astro 7 may auto-background CLI servers in agent environments. Verify ownership

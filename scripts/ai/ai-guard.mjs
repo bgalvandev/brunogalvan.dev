@@ -48,8 +48,10 @@ async function checkSkills() {
     if (!description || ['|', '>'].includes(description)) {
       errors.push(`${name}: missing single-line applicability description.`);
     }
-    for (const [, target] of text.matchAll(/\[\[([a-z0-9-]+)\]\]/g)) {
-      if (!names.has(target)) errors.push(`${name}: missing skill ${target}.`);
+    if (/\[\[[^\]]*\]\]/.test(text)) {
+      errors.push(
+        `${name}: link skills with relative markdown paths instead of [[wikilinks]].`,
+      );
     }
     for (const [, link] of text.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
       const target = link.split('#')[0];

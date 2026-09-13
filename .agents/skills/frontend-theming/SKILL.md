@@ -19,5 +19,5 @@ Read `src/styles/tokens.css`, `src/styles/global.css` and `DESIGN.md`.
   visible keyboard focus. Confirm theme persists across locale navigation.
 
 Verify actual light/dark rendering, OS preference, storage failure, no-JS fallback
-and contrast with [[frontend-e2e]] and [[design-review]]. `pnpm run ai:guard`
+and contrast with [frontend-e2e](../frontend-e2e/SKILL.md) and [design-review](../design-review/SKILL.md). `pnpm run ai:guard`
 rejects raw color utilities; browser accessibility tests check rendered contrast.

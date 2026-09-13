@@ -27,4 +27,4 @@ Report the actual widths/themes/interactions inspected, remaining findings, and
 whether the primary task works. If rendering was unavailable, state the missing
 evidence rather than inferring visual quality from source markup.
 
-Related: [[frontend-design]], [[frontend-theming]], [[frontend-i18n]].
+Related: [frontend-design](../frontend-design/SKILL.md), [frontend-theming](../frontend-theming/SKILL.md), [frontend-i18n](../frontend-i18n/SKILL.md).
