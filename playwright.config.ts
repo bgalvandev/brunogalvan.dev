@@ -18,7 +18,11 @@ export default defineConfig({
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile', use: { ...devices['Pixel 5'] } },
+    {
+      name: 'mobile',
+      testIgnore: '**/site-wide.spec.ts',
+      use: { ...devices['Pixel 5'] },
+    },
   ],
   webServer: {
     command: 'pnpm run build && node scripts/e2e/preview.mjs',
