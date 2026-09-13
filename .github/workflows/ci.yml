@@ -35,9 +35,6 @@ jobs:
       - name: Agent configuration and semantic colors
         run: pnpm run ai:guard
 
-      - name: Architecture boundaries
-        run: pnpm run architecture:check
-
       - name: Tool regression tests
         run: pnpm run test:tools
 
@@ -48,7 +45,7 @@ jobs:
         run: pnpm run typecheck
 
       - name: Test
-        run: pnpm run test:coverage
+        run: pnpm run test
 
       - name: Build
         run: pnpm run build

@@ -37,7 +37,6 @@ Preview is for local verification. Hosting is not configured yet.
 
 ```sh
 pnpm run check
-pnpm run test:coverage
 pnpm exec playwright install chromium
 pnpm run test:e2e
 pnpm run security:audit

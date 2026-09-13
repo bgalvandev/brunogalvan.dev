@@ -7,6 +7,6 @@
     "types": ["node"],
     "forceConsistentCasingInFileNames": true
   },
-  "include": [".astro/types.d.ts", "src/**/*"],
+  "include": [".astro/types.d.ts", "src/**/*", "e2e/**/*.ts", "*.config.ts"],
   "exclude": ["dist", "node_modules"]
 }

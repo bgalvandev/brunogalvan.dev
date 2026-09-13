@@ -9,8 +9,8 @@ test('content and locale navigation work without JavaScript', async ({
 }) => {
   const context = await browser.newContext({
     javaScriptEnabled: false,
-    baseURL,
     colorScheme: 'dark',
+    ...(baseURL === undefined ? {} : { baseURL }),
   });
   try {
     const page = await context.newPage();
