@@ -13,9 +13,12 @@ permissions:
   contents: read
 
 jobs:
+  # One step running the same command contributors run locally, so the two can
+  # never drift. The dependency audit sits here rather than in `check` itself
+  # because it needs the registry, which a local run should not depend on.
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -29,37 +32,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Formatting
-        run: pnpm run format:check
+      - name: Local gate
+        run: pnpm run check
 
-      - name: Semantic color tokens
-        run: pnpm run check:tokens
+      - name: Dependency audit
+        run: pnpm run security:audit
 
-      - name: Tool regression tests
-        run: pnpm run test:tools
-
-      - name: Lint
-        run: pnpm run lint
-
-      - name: Typecheck
-        run: pnpm run typecheck
-
-      - name: Test
-        run: pnpm run test
-
-      - name: Build
-        run: pnpm run build
-
-      - name: Dead code (knip)
-        run: pnpm run dead-code
-
-      - name: Duplication (jscpd)
-        run: pnpm run dupes
-
+  # Independent of `check` so both start at once; a lint failure costs one
+  # extra browser run, and the feedback loop shrinks from minutes to a minute.
   e2e:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: check
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 

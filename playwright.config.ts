@@ -19,8 +19,11 @@ export default defineConfig({
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
     {
+      // Only what a viewport can change: rendered accessibility and overflow.
+      // Metadata, links and the theme script do not vary with the screen size.
       name: 'mobile',
-      testIgnore: '**/site-wide.spec.ts',
+      testMatch: '**/foundation.spec.ts',
+      grep: /accessible .* page without overflow/,
       use: { ...devices['Pixel 5'] },
     },
   ],
