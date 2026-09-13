@@ -40,6 +40,14 @@
   .control:hover {
     background: var(--surface);
   }
+  /* The theme button exists only where its script can run: the pre-paint
+     initializer marks the document with .js. */
+  [data-theme-toggle] {
+    display: none;
+  }
+  html.js [data-theme-toggle] {
+    display: inline-block;
+  }
   .control[aria-current='page'] {
     background: var(--accent);
     color: var(--accent-contrast);

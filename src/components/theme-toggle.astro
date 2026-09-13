@@ -7,22 +7,14 @@ interface Props {
 const { theme } = messages(Astro.props.locale);
 ---
 
-<button
-  type="button"
-  class="control"
-  data-theme-toggle
-  data-light-label={theme.light}
-  data-dark-label={theme.dark}
-  aria-label={theme.toggle}
-  aria-pressed="false"
-  hidden
->
-  {theme.light}
+<!-- A toggle button: the label names the option and aria-pressed says whether it is on, so the visible text never contradicts the state. Shown by CSS only once the pre-paint script has marked JavaScript as available. -->
+<button type="button" class="control" data-theme-toggle aria-pressed="false">
+  {theme.darkMode}
 </button>
 <script>
   const preference = window.matchMedia('(prefers-color-scheme: dark)');
   const root = document.documentElement;
-  const buttons = document.querySelectorAll<HTMLButtonElement>(
+  const button = document.querySelector<HTMLButtonElement>(
     '[data-theme-toggle]',
   );
   function isDark() {
@@ -31,26 +23,18 @@ const { theme } = messages(Astro.props.locale);
       : preference.matches;
   }
   function update() {
-    buttons.forEach((button) => {
-      const dark = isDark();
-      button.setAttribute('aria-pressed', String(dark));
-      button.textContent =
-        (dark ? button.dataset.darkLabel : button.dataset.lightLabel) ?? '';
-      button.hidden = false;
-    });
+    button?.setAttribute('aria-pressed', String(isDark()));
   }
-  buttons.forEach((button) =>
-    button.addEventListener('click', () => {
-      const theme = isDark() ? 'light' : 'dark';
-      root.dataset.theme = theme;
-      try {
-        localStorage.setItem('theme', theme);
-      } catch {
-        /* Keep the current page usable. */
-      }
-      update();
-    }),
-  );
+  button?.addEventListener('click', () => {
+    const theme = isDark() ? 'light' : 'dark';
+    root.dataset.theme = theme;
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {
+      /* Keep the current page usable. */
+    }
+    update();
+  });
   preference.addEventListener('change', update);
   update();
 </script>

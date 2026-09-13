@@ -1,8 +1,10 @@
 ---
 import { site } from '@/config/site';
-import { defaultLocale } from '@/i18n/locales';
+import { defaultLocale, openGraphLocales, type Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
 import { alternatePages, pagePath, type RouteKey } from '@/i18n/routes';
 interface Props {
+  locale: Locale;
   title: string;
   description: string;
   canonicalPath: string;
@@ -10,6 +12,7 @@ interface Props {
   noindex?: boolean;
 }
 const {
+  locale,
   title,
   description,
   canonicalPath,
@@ -17,30 +20,80 @@ const {
   noindex = false,
 } = Astro.props;
 const canonical = new URL(canonicalPath, site.url).href;
+const image = new URL(`/og/${locale}.png`, site.url).href;
+const { meta, home } = messages(locale);
+// Person entity for search engines; the job title is the headline without its
+// closing period. Contact and profile come from the single identity source.
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: site.url,
+  email: `mailto:${site.email}`,
+  jobTitle: home.headline.replace(/\.$/, ''),
+  sameAs: [site.github],
+};
 ---
 
 <title>{title}</title>
 <meta name="description" content={description} />
-{!noindex && <link rel="canonical" href={canonical} />}
-{route &&
-  alternatePages(route).map(({ locale, path }) => (
-    <link
-      rel="alternate"
-      hreflang={locale}
-      href={new URL(path, site.url).href}
-    />
-  ))}
-{route && (
-  <link
-    rel="alternate"
-    hreflang="x-default"
-    href={new URL(pagePath(route, defaultLocale), site.url).href}
-  />
-)}
-{noindex && <meta name="robots" content="noindex, follow" />}
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
-<meta property="og:url" content={canonical} />
-<meta property="og:site_name" content={site.name} />
-<meta property="og:type" content="website" />
+<!-- Browser chrome color: the --paper token values from src/styles/tokens.css. -->
+<meta
+  name="theme-color"
+  media="(prefers-color-scheme: light)"
+  content="#fcfcfa"
+/>
+<meta
+  name="theme-color"
+  media="(prefers-color-scheme: dark)"
+  content="#121114"
+/>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+{noindex ? (
+  <meta name="robots" content="noindex, follow" />
+) : (
+  <>
+    <link rel="canonical" href={canonical} />
+    {route &&
+      alternatePages(route).map(({ locale: alternate, path }) => (
+        <link
+          rel="alternate"
+          hreflang={alternate}
+          href={new URL(path, site.url).href}
+        />
+      ))}
+    {route && (
+      <link
+        rel="alternate"
+        hreflang="x-default"
+        href={new URL(pagePath(route, defaultLocale), site.url).href}
+      />
+    )}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={openGraphLocales[locale]} />
+    {route &&
+      alternatePages(route)
+        .filter((alternate) => alternate.locale !== locale)
+        .map((alternate) => (
+          <meta
+            property="og:locale:alternate"
+            content={openGraphLocales[alternate.locale]}
+          />
+        ))}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={meta.ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image:alt" content={meta.ogImageAlt} />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(person)}
+    ></script>
+  </>
+)}

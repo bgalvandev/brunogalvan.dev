@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-const contact = 'brunogalvangarcia@outlook.com';
-const origin = 'https://brunogalvan.dev';
+import { site } from '@/config/site';
+
+const { email: contact, url: origin } = site;
 
 test('content and locale navigation work without JavaScript', async ({
   browser,

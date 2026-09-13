@@ -7,3 +7,9 @@ export const localeNames = {
   es: 'Español',
   en: 'English',
 } as const satisfies Record<Locale, string>;
+// Open Graph locales use language_TERRITORY; Latin American Spanish matches the
+// site's neutral Spanish better than any single country.
+export const openGraphLocales = {
+  es: 'es_LA',
+  en: 'en_US',
+} as const satisfies Record<Locale, string>;
