@@ -4,10 +4,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Cloudflare Pages reads `_headers` from the build output. The Content Security
-// Policy is derived from the built HTML: every inline script becomes a sha256
-// source, so the pre-paint theme initializer keeps working without
-// 'unsafe-inline' and an edited inline script can never ship with a stale hash.
+// Policy is derived from the built HTML: every inline script and style block
+// becomes a sha256 source, so the pre-paint theme initializer and the font
+// pipeline's @font-face block keep working without 'unsafe-inline', and an
+// edited inline block can never ship with a stale hash.
 const inlineScript = /<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g;
+const inlineStyle = /<style[^>]*>([\s\S]*?)<\/style>/g;
+
+const sha256 = (text) =>
+  `'sha256-${createHash('sha256').update(text).digest('base64')}'`;
 
 async function htmlFiles(directory) {
   const files = [];
@@ -19,24 +24,24 @@ async function htmlFiles(directory) {
   return files;
 }
 
-export async function inlineScriptHashes(root) {
-  const hashes = new Set();
+export async function inlineHashes(root) {
+  const scripts = new Set();
+  const styles = new Set();
   for (const file of await htmlFiles(root)) {
     const html = await readFile(file, 'utf8');
-    for (const [, body] of html.matchAll(inlineScript)) {
-      hashes.add(
-        `'sha256-${createHash('sha256').update(body).digest('base64')}'`,
-      );
-    }
+    for (const [, body] of html.matchAll(inlineScript))
+      scripts.add(sha256(body));
+    for (const [, body] of html.matchAll(inlineStyle)) styles.add(sha256(body));
   }
-  return [...hashes].sort();
+  return { scripts: [...scripts].sort(), styles: [...styles].sort() };
 }
 
-export function renderHeaders(hashes) {
-  const scripts = ["'self'", ...hashes].join(' ');
+export function renderHeaders({ scripts, styles }) {
+  const scriptSources = ["'self'", ...scripts].join(' ');
+  const styleSources = ["'self'", ...styles].join(' ');
   return [
     '/*',
-    `  Content-Security-Policy: default-src 'self'; script-src ${scripts}; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests`,
+    `  Content-Security-Policy: default-src 'self'; script-src ${scriptSources}; style-src ${styleSources}; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests`,
     '  X-Content-Type-Options: nosniff',
     '  Referrer-Policy: strict-origin-when-cross-origin',
     '  Permissions-Policy: camera=(), microphone=(), geolocation=()',
@@ -53,10 +58,10 @@ export function cloudflareHeaders() {
     hooks: {
       'astro:build:done': async ({ dir, logger }) => {
         const root = fileURLToPath(dir);
-        const hashes = await inlineScriptHashes(root);
+        const hashes = await inlineHashes(root);
         await writeFile(path.join(root, '_headers'), renderHeaders(hashes));
         logger.info(
-          `_headers written with ${hashes.length} inline script hash(es)`,
+          `_headers written with ${hashes.scripts.length} inline script and ${hashes.styles.length} inline style hash(es)`,
         );
       },
     },

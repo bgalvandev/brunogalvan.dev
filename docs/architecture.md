@@ -46,7 +46,10 @@ responsibilities or the first request-time capability.
   preserve trailing-slash URLs; verify that on the chosen host.
 - Astro markup requires no hydration framework. A short browser script enhances
   the theme button; an inline initializer restores the override before paint.
-  CSS follows the OS with no JavaScript. Fonts are served from local build assets.
+  CSS follows the OS with no JavaScript. Fonts go through Astro's font
+  pipeline from the installed fontsource packages: only the two latin files
+  ship, preloaded, with metric-matched fallbacks declared inline and hashed
+  into the CSP.
 
 ## Adding a page
 

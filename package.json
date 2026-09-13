@@ -22,10 +22,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:tokens": "node scripts/check-tokens.mjs",
+    "check:dist": "node scripts/check-dist.mjs",
     "dead-code": "knip",
     "dupes": "jscpd src scripts --config .jscpdrc.json --threshold 0 --ignore \"**/*.spec.*,**/*.test.*\" --no-tips",
     "security:audit": "pnpm audit --audit-level high",
-    "check": "pnpm run format:check && pnpm run check:tokens && pnpm run test:tools && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run dead-code && pnpm run dupes"
+    "check": "pnpm run format:check && pnpm run check:tokens && pnpm run test:tools && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run check:dist && pnpm run dead-code && pnpm run dupes"
   },
   "dependencies": {
     "astro": "~7.3.2",

@@ -23,5 +23,7 @@
   --color-surface: var(--surface);
   --color-accent: var(--accent);
   --color-accent-contrast: var(--accent-contrast);
-  --font-mono: 'JetBrains Mono Variable', monospace;
+  /* The families themselves are declared by Astro's font pipeline (astro.config.ts). */
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-jetbrains);
 }
