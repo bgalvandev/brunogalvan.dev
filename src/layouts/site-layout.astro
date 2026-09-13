@@ -1,6 +1,5 @@
 ---
-import '@fontsource-variable/archivo';
-import '@fontsource-variable/jetbrains-mono';
+import { Font } from 'astro:assets';
 import '@/styles/global.css';
 import SeoHead from '@/components/seo-head.astro';
 import ThemeInit from '@/components/theme-init.astro';
@@ -24,6 +23,8 @@ const { locale, ...metadata } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
+    <Font cssVariable="--font-archivo" preload />
+    <Font cssVariable="--font-jetbrains" preload />
     <SeoHead locale={locale} {...metadata} />
     <ThemeInit />
   </head>

@@ -5,5 +5,9 @@
     "scripts/**/*.spec.mjs",
     "scripts/e2e/preview.mjs"
   ],
-  "project": ["src/**/*.{ts,astro,css}", "e2e/**/*.ts", "scripts/**/*.mjs"]
+  "project": ["src/**/*.{ts,astro,css}", "e2e/**/*.ts", "scripts/**/*.mjs"],
+  "ignoreDependencies": [
+    "@fontsource-variable/archivo",
+    "@fontsource-variable/jetbrains-mono"
+  ]
 }
