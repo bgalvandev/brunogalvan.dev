@@ -1,7 +1,8 @@
 {
   "meta": {
     "title": "Bruno Galván — Ingeniero de software",
-    "description": "Espacio personal de Bruno Galván, ingeniero de software. Contacto para proyectos y colaboraciones."
+    "description": "Espacio personal de Bruno Galván, ingeniero de software. Contacto para proyectos y colaboraciones.",
+    "ogImageAlt": "Bruno Galván, ingeniero de software"
   },
   "home": {
     "headline": "Ingeniero de software.",
@@ -12,14 +13,11 @@
     "skip": "Ir al contenido",
     "home": "Inicio"
   },
-  "theme": {
-    "toggle": "Cambiar tema de color",
-    "light": "Claro",
-    "dark": "Oscuro"
-  },
+  "theme": { "darkMode": "Modo oscuro" },
   "contact": { "heading": "Contacto" },
   "notFound": {
     "title": "Página no encontrada",
-    "description": "La página que buscas no está disponible."
+    "description": "La página que buscas no está disponible.",
+    "navigation": "Inicio en español o en inglés"
   }
 }

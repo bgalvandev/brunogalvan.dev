@@ -47,6 +47,7 @@ pnpm run security:audit
 The browser suite builds and manages an isolated preview on port 3100, which must
 be free. CI runs the local gates, browser journeys and registry security auditing.
 
-Public identity and links live in `src/config/site.ts`. Approved contact:
+Public identity and links live in `src/config/site.ts`; `pnpm run og:generate`
+re-renders the social cards and touch icon from it after a change. Approved contact:
 `brunogalvangarcia@outlook.com`. Catalogs live in `src/i18n/messages`; route pairs in
 `src/i18n/routes.ts`. Do not copy identities or affiliations from templates.

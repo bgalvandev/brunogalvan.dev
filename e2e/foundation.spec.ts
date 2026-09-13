@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-const identity = 'Bruno Galván';
-const contact = 'brunogalvangarcia@outlook.com';
-const origin = 'https://brunogalvan.dev';
+import { site } from '@/config/site';
+
+const { name: identity, email: contact, url: origin } = site;
 
 for (const locale of ['es', 'en'] as const) {
   test(`${locale}: direct URL, identity and reciprocal metadata`, async ({
@@ -55,6 +55,29 @@ for (const locale of ['es', 'en'] as const) {
       'content',
       `${origin}/${locale}/`,
     );
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      'content',
+      `${origin}/og/${locale}.png`,
+    );
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+      'content',
+      'summary_large_image',
+    );
+    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+      'content',
+      locale === 'es' ? 'es_LA' : 'en_US',
+    );
+    const person = JSON.parse(
+      (await page
+        .locator('script[type="application/ld+json"]')
+        .textContent()) ?? '{}',
+    );
+    expect(person).toMatchObject({
+      '@type': 'Person',
+      name: identity,
+      url: origin,
+      sameAs: [site.github],
+    });
     expect(errors).toEqual([]);
   });
 
@@ -102,12 +125,13 @@ test('theme persists through locale navigation and reload', async ({
 }) => {
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/es/');
-  await page.getByRole('button', { name: 'Cambiar tema de color' }).click();
+  await page.getByRole('button', { name: 'Modo oscuro' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.getByRole('link', { name: 'English', exact: true }).click();
-  await expect(
-    page.getByRole('button', { name: 'Toggle color theme' }),
-  ).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'Dark mode' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.getByRole('button').click();
@@ -163,6 +187,8 @@ test('unknown routes return an actual non-indexable 404', async ({ page }) => {
     'content',
     'noindex, follow',
   );
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  await expect(page.locator('meta[property="og:url"]')).toHaveCount(0);
   await expect(
     page.getByRole('link', { name: 'Home', exact: true }),
   ).toHaveAttribute('href', '/en/');

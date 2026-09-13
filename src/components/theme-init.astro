@@ -1,5 +1,6 @@
-<!-- Apply a saved preference before paint; CSS handles system theme without JavaScript. -->
+<!-- Runs before paint: marks JavaScript as available (CSS shows the theme button from that flag) and restores a valid saved theme. CSS follows the system theme without JavaScript. -->
 <script is:inline>
+  document.documentElement.classList.add('js');
   try {
     const theme = localStorage.getItem('theme');
     if (theme === 'light' || theme === 'dark') {
