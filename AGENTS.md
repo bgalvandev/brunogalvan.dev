@@ -38,7 +38,7 @@ and practice is the only thing forbidden without exception.
 ## Verification
 
 9. `pnpm run check` MUST pass before merge: formatting, token check, tool tests,
-   lint, typecheck, unit tests, build, dead code and duplication. The CI `e2e`
+   lint, typecheck, unit tests, build, dist check, dead code and duplication. The CI `e2e`
    job MUST pass. A failing gate is fixed at its cause, never weakened, deleted or
    ignored.
 10. Vitest tests pure TypeScript, Playwright tests the production build in a real
