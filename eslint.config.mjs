@@ -8,7 +8,6 @@ export default [
     ignores: [
       '.astro/**',
       'dist/**',
-      'coverage/**',
       'test-results/**',
       'playwright-report/**',
       'blob-report/**',
