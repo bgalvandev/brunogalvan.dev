@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+
 import { test, expect } from '@playwright/test';
 
 import { site } from '@/config/site';
@@ -30,6 +32,60 @@ test('content and locale navigation work without JavaScript', async ({
   } finally {
     await context.close();
   }
+});
+
+// Cloudflare Pages serves dist/_headers; astro preview does not. Replaying the
+// built `/*` headers on every response, exactly as the host will, turns the
+// policy from a listed file into an exercised one: a future inline style
+// attribute, data: font or third-party script fails here, not in production.
+test('the built Content Security Policy allows everything the pages do', async ({
+  page,
+}) => {
+  const built = await readFile(
+    new URL('../dist/_headers', import.meta.url),
+    'utf8',
+  );
+  const csp = /^\s*Content-Security-Policy:\s*(.+)$/m.exec(built)?.[1];
+  if (!csp) {
+    throw new Error('dist/_headers declares no Content-Security-Policy');
+  }
+  await page.route('**/*', async (route) => {
+    const response = await route.fetch();
+    await route.fulfill({
+      response,
+      headers: { ...response.headers(), 'content-security-policy': csp },
+    });
+  });
+  type CspWindow = Window & { __cspViolations: string[] };
+  await page.addInitScript(() => {
+    const record = window as unknown as CspWindow;
+    record.__cspViolations = [];
+    document.addEventListener('securitypolicyviolation', (event) => {
+      record.__cspViolations.push(
+        `${event.violatedDirective} blocked ${event.blockedURI || 'inline'}`,
+      );
+    });
+  });
+  const violations = () =>
+    page.evaluate(() => (window as unknown as CspWindow).__cspViolations);
+
+  for (const colorScheme of ['light', 'dark'] as const) {
+    await page.emulateMedia({ colorScheme });
+    for (const path of ['/es/', '/en/', '/fr/']) {
+      const response = await page.goto(path);
+      expect(response?.headers()['content-security-policy']).toBe(csp);
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      expect(await violations(), `${path} in ${colorScheme}`).toEqual([]);
+    }
+  }
+  // The theme button is the one script that runs after paint.
+  await page.goto('/es/');
+  await page.getByRole('button').click();
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-theme',
+    /light|dark/,
+  );
+  expect(await violations()).toEqual([]);
 });
 
 test('robots and sitemap expose canonical production URLs', async ({

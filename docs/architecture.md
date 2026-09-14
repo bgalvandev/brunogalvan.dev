@@ -87,6 +87,10 @@ from `/` to `/es/`; the build writes `dist/_headers` with a Content Security
 Policy whose script sources are the sha256 hashes of the inline scripts in the
 built HTML, so the pre-paint theme initializer needs no `'unsafe-inline'`, plus a
 one-year immutable cache for `/_astro/*`. Pages serves `404.html` with status 404.
+`check:dist` proves the file lists every inline hash; one browser test replays
+the built `/*` headers on every preview response and asserts that no
+`securitypolicyviolation` fires on either page, the 404, both themes and the
+theme button, so the policy is exercised before a deploy, not only listed.
 After a deploy, verify the redirect, the 404 status, the CSP header and TLS on
 the real domain with the commands in the ADR. See
 [ADR 0005](adr/0005-astro-foundation.md) for the framework decision.
