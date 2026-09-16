@@ -1,7 +1,7 @@
 ---
 name: engineering-discipline
 description: Working protocol for any non-trivial change in this repository: verify before claiming, smallest correct change, run the gates before declaring done. Use at the start of an implementation task and before reporting it finished.
-allowed-tools: Bash(pnpm run check), Bash(pnpm run lint), Bash(pnpm run typecheck), Bash(pnpm run test), Bash(pnpm run test:e2e)
+allowed-tools: Bash(pnpm run check), Bash(pnpm run lint), Bash(pnpm run typecheck), Bash(pnpm run test), Bash(pnpm run test:e2e), Bash(pnpm run build), Bash(node scripts/e2e/preview.mjs)
 ---
 
 # Engineering discipline
@@ -16,10 +16,20 @@ allowed-tools: Bash(pnpm run check), Bash(pnpm run lint), Bash(pnpm run typechec
 3. **Order of work.** Content and data first, then the components that render
    them, then the route that composes them, with tests alongside. Review the diff
    for accidental complexity before declaring done.
-4. **Done means green.** `pnpm run check` and, for visible or configuration
-   changes, `pnpm run test:e2e`. A failing gate is fixed at its cause; the gate is
-   never weakened, the test never deleted, no ignore added to turn red green.
-5. **Recovery.** A retry needs new evidence or a different strategy. After two
+4. **Done means green and seen.** `pnpm run check` and, for visible or
+   configuration changes, `pnpm run test:e2e`. A failing gate is fixed at its
+   cause; the gate is never weakened, the test never deleted, no ignore added to
+   turn red green. Then confirm the change in the production build: `pnpm run
+build && node scripts/e2e/preview.mjs`, open the pages in a real browser,
+   take one capture per changed state into the session scratch directory (the
+   e2e suite already writes captures at three widths and two themes), and look
+   at them yourself. The pull request names the capture paths and what was not
+   exercised.
+5. **A reported failure.** Reproduce it in the production build before touching
+   code, change one thing at a time until the failure appears and disappears
+   with it, then fix with a test that fails before and passes after. Say whether
+   it was a defect or the site working as designed.
+6. **Recovery.** A retry needs new evidence or a different strategy. After two
    failures with the same apparent cause, reassess the original evidence. Stop
    refining when the requested behavior and the gates pass, and report an
    external blocker precisely when no in-scope approach remains.

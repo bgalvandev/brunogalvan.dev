@@ -45,9 +45,12 @@ and practice is the only thing forbidden without exception.
     browser with axe in both themes, and Node's test runner covers repository
     scripts. Tests protect observable behavior and distinct failure modes; there
     are no coverage thresholds.
-11. Visible layout or interaction changes SHOULD be inspected from rendered
-    captures at narrow, tablet and desktop widths in both themes; when that is
-    impossible, the missing evidence is stated.
+11. A change a visitor could notice MUST be confirmed in the production build in
+    a real browser before the pull request is reported ready: layout and
+    interaction changes from rendered captures at narrow, tablet and desktop
+    widths in both themes, behavior changes by walking the flow, and the pull
+    request names the capture paths and what was not exercised. When a state
+    cannot be rendered, the missing evidence is stated.
 
 ## Git and CI
 
