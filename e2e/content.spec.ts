@@ -4,8 +4,8 @@ import AxeBuilder from '@axe-core/playwright';
 import { site } from '@/config/site';
 
 const sections = {
-  es: ['Experiencia', 'Proyectos', 'Stack', 'Sobre mí', 'Contacto'],
-  en: ['Experience', 'Projects', 'Stack', 'About', 'Contact'],
+  es: ['Experiencia', 'Proyectos', 'Stack', 'Método', 'Sobre mí', 'Contacto'],
+  en: ['Experience', 'Projects', 'Stack', 'Method', 'About', 'Contact'],
 } as const;
 
 const caseStudy = {

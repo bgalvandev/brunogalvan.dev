@@ -1,0 +1,36 @@
+---
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import { projects } from '@/modules/projects/projects';
+import { positions, yearsOfExperience } from './experience';
+import { stack } from './stack';
+interface Props {
+  locale: Locale;
+}
+const { figures } = messages(Astro.props.locale);
+// Every number is counted from the content the page already shows, so none of
+// them can drift away from the record below.
+const counts = [
+  { value: yearsOfExperience(), label: figures.years },
+  { value: positions.length, label: figures.companies },
+  {
+    value: projects.filter((project) => project.repository !== null).length,
+    label: figures.repositories,
+  },
+  {
+    value: new Set(stack.flatMap((group) => group.items)).size,
+    label: figures.technologies,
+  },
+];
+---
+
+<section class="figures" aria-label={figures.heading}>
+  <dl class="figures-grid">
+    {counts.map((count) => (
+      <div class="figure">
+        <dt class="figure-value">{count.value}</dt>
+        <dd class="figure-label">{count.label}</dd>
+      </div>
+    ))}
+  </dl>
+</section>

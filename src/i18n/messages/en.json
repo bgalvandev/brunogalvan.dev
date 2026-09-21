@@ -22,6 +22,13 @@
   "theme": {
     "darkMode": "Dark mode"
   },
+  "figures": {
+    "heading": "By the numbers",
+    "years": "Years building software",
+    "companies": "Companies and teams",
+    "repositories": "Projects with public code",
+    "technologies": "Technologies in use"
+  },
   "experience": {
     "heading": "Experience",
     "present": "Present",
@@ -217,6 +224,28 @@
       "ai": "AI and integrations",
       "architecture": "Architecture",
       "platform": "Platform and quality"
+    }
+  },
+  "method": {
+    "heading": "Method",
+    "intro": "How I work when nobody is watching. These are the rules written into my repositories, not a statement of intent.",
+    "items": {
+      "boundaries": {
+        "title": "Boundaries are explicit",
+        "body": "Dependency runs one way: interface to application, application to domain. The domain knows nothing of the framework, the database or the transport. A boundary is crossed by a written decision, never by a shortcut."
+      },
+      "smallest": {
+        "title": "The smallest change that works",
+        "body": "No layer, module or abstraction for a future that has not arrived. Something is added because there is a case for it today, and when it stops being used it goes in the same change."
+      },
+      "verify": {
+        "title": "Verify before claiming",
+        "body": "Nothing is done because it compiles. It is done when the gates pass and I have seen it working in the production build, with captures, and with what went unexercised stated plainly."
+      },
+      "decisions": {
+        "title": "Decisions are written down",
+        "body": "A decision that cannot be read off the code goes into a dated record: context, at least two options compared, and consequences. This site keeps its own."
+      }
     }
   },
   "about": {

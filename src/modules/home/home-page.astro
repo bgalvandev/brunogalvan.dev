@@ -5,6 +5,8 @@ import type { Locale } from '@/i18n/locales';
 import ProjectsSection from '@/modules/projects/projects-section.astro';
 import AboutSection from './about-section.astro';
 import ExperienceSection from './experience-section.astro';
+import Figures from './figures.astro';
+import MethodSection from './method-section.astro';
 import Hero from './hero.astro';
 import Marquee from './marquee.astro';
 import StackSection from './stack-section.astro';
@@ -18,9 +20,11 @@ const { locale } = Astro.props;
 <main id="main" tabindex="-1">
   <Hero locale={locale} />
   <Marquee />
+  <Figures locale={locale} />
   <ExperienceSection locale={locale} />
   <ProjectsSection locale={locale} />
   <StackSection locale={locale} />
+  <MethodSection locale={locale} />
   <AboutSection locale={locale} />
 </main>
 <SiteFooter locale={locale} />

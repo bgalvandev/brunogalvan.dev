@@ -22,6 +22,13 @@
   "theme": {
     "darkMode": "Modo oscuro"
   },
+  "figures": {
+    "heading": "En cifras",
+    "years": "Años construyendo software",
+    "companies": "Empresas y equipos",
+    "repositories": "Proyectos con código público",
+    "technologies": "Tecnologías en uso"
+  },
   "experience": {
     "heading": "Experiencia",
     "present": "Actualidad",
@@ -217,6 +224,28 @@
       "ai": "IA e integraciones",
       "architecture": "Arquitectura",
       "platform": "Plataforma y calidad"
+    }
+  },
+  "method": {
+    "heading": "Método",
+    "intro": "Cómo trabajo cuando nadie está mirando. Son las reglas que están escritas en mis repositorios, no una declaración de intenciones.",
+    "items": {
+      "boundaries": {
+        "title": "Los límites son explícitos",
+        "body": "La dependencia va en una dirección: interfaz hacia aplicación, aplicación hacia dominio. El dominio no conoce el framework, ni la base de datos, ni el transporte. Un límite solo se cruza con una decisión escrita, nunca con un atajo."
+      },
+      "smallest": {
+        "title": "El cambio más pequeño que funciona",
+        "body": "Ninguna capa, módulo o abstracción para un futuro que no ha llegado. Si algo se añade es porque hay un caso hoy, y si deja de usarse se borra en el mismo cambio."
+      },
+      "verify": {
+        "title": "Verificar antes de afirmar",
+        "body": "Nada está hecho porque compile. Está hecho cuando las puertas pasan y lo he visto funcionando en el build de producción, con capturas y diciendo qué quedó sin probar."
+      },
+      "decisions": {
+        "title": "Las decisiones se escriben",
+        "body": "Una decisión que no se deduce del código va a un registro fechado: contexto, al menos dos opciones comparadas y consecuencias. Este sitio tiene los suyos."
+      }
     }
   },
   "about": {

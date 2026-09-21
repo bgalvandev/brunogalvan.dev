@@ -1,0 +1,27 @@
+---
+import PageSection from '@/components/page-section.astro';
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+interface Props {
+  locale: Locale;
+}
+const { method } = messages(Astro.props.locale);
+const entries = Object.values(method.items);
+---
+
+<PageSection id="method" index="04" label={method.heading}>
+  <p class="section-intro">{method.intro}</p>
+  <ol class="rules">
+    {entries.map((entry, index) => (
+      <li class="rule-item">
+        <span class="rule-index" aria-hidden="true">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <div>
+          <h3 class="rule-title">{entry.title}</h3>
+          <p class="rule-body">{entry.body}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</PageSection>
