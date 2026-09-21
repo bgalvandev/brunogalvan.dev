@@ -22,6 +22,7 @@
   /* The drawing's lit panel stays dark in both themes: a screen that inverts
      with the page would read as a sheet of paper. */
   --screen: light-dark(#14151b, #05060b);
+  --screen-ink: light-dark(#e9e8e3, #f2f1ee);
 
   /* Accent, spent on focus, the current language and a single field glow. */
   --accent: light-dark(#2742d8, #93a6ff);

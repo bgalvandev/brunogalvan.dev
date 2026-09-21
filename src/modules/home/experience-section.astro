@@ -1,6 +1,5 @@
 ---
 import PageSection from '@/components/page-section.astro';
-import TagList from '@/components/tag-list.astro';
 import type { Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
 import { formatPeriod, positions } from './experience';
@@ -23,17 +22,8 @@ const { experience } = messages(locale);
               {formatPeriod(position, locale, experience.present)}
             </p>
           </div>
-          <p class="position-company">
-            {position.company} — {entry.context}
-          </p>
-          <ul class="position-highlights">
-            {entry.highlights.map((highlight) => (
-              <li>{highlight}</li>
-            ))}
-          </ul>
-          {position.technologies.length > 0 && (
-            <TagList items={position.technologies} />
-          )}
+          <p class="position-company">{position.company}</p>
+          <p class="position-summary">{entry.summary}</p>
         </article>
       );
     })}

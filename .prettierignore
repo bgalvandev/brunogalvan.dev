@@ -7,3 +7,6 @@
 /playwright-report
 /blob-report
 /.astro
+
+# A character grid: reflowing it would destroy the drawing it encodes.
+src/modules/home/code-portrait.astro

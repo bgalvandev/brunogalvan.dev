@@ -58,6 +58,13 @@ describe('semantic colour tokens', () => {
     },
   );
 
+  it('keeps the portrait plate legible, since it is dark in both themes', () => {
+    const [screenLight, screenDark] = pair('screen');
+    const [inkLight, inkDark] = pair('screen-ink');
+    expect(contrast(inkLight, screenLight)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(inkDark, screenDark)).toBeGreaterThanOrEqual(4.5);
+  });
+
   it('keeps the accent legible against its own contrast colour', () => {
     const [accentLight, accentDark] = pair('accent');
     const [onLight, onDark] = pair('accent-contrast');

@@ -118,6 +118,34 @@ is private or whose deployment is gone says so instead of linking nowhere.
   in the page at 360, 768 and 1440px; the browser suite asserts no horizontal
   overflow, which caught the drawing's column starving the headline.
 
+### The portrait, and how much to say (2026-09-21)
+
+- **Objective.** A photograph pasted into a line drawing is a photograph in a
+  line drawing. And the page had grown to 1168 words while the ten
+  best-regarded developer portfolios measured on 2026-09-21 run a median of
+  200 - rauno.me at 52, loganliffick at 59 - with one of the ten carrying a
+  stack section and two mentioning education.
+- **Decision.** The portrait is generated from the photograph rather than
+  showing it: a grid of this repository's own TypeScript where each glyph's
+  weight is the luminance of the face beneath it, on a plate that stays dark in
+  both themes, so it reads as another screen in the same room as the drawing.
+  Content drops to one line per role, four roles instead of five, one line per
+  project, and two paragraphs about the person. Education, languages and the
+  per-role technology lists are gone; the stack section already names the
+  tools, and the case studies hold the depth.
+- **Rejected alternatives.** The photograph itself, which was the first attempt
+  and which sat on the drawing rather than in it. An HTML `<pre>`: the rows
+  become dozens of inline runs and the engine rounds each run's origin until
+  the columns drift and the glyphs overlap, which is why every row is one SVG
+  `<text>` with an explicit `textLength`. Mapping dark pixels to bright glyphs,
+  which lit the hair and hollowed out the face; and no vignette at all, which
+  left the wall behind the head glowing as brightly as the likeness.
+- **Verification.** The tier grid was printed as ASCII and read before anything
+  was rendered, which is how both the inversion and the background were caught.
+  Contrast of the plate against its ink is asserted in
+  `src/styles/contrast.spec.ts`. Prose, measured in the built page, went from
+  1168 words to 409.
+
 ## Working on visible changes
 
 Choose the depth before touching markup. A precision fix preserves the

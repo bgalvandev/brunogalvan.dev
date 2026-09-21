@@ -8,7 +8,7 @@
     "role": "Desarrollador Full Stack Senior",
     "location": "Lima, Perú",
     "headline": "Construyo plataformas, APIs e integraciones que un negocio usa todos los días.",
-    "intro": "{years} años trabajando en software para salud, educación, retail y ERP, de la interfaz a la base de datos: APIs, integraciones con sistemas externos y automatización con modelos de lenguaje.",
+    "intro": "{years} años en salud, educación, retail y ERP, de la interfaz a la base de datos.",
     "actions": {
       "email": "Escríbeme",
       "work": "Ver proyectos"
@@ -35,60 +35,25 @@
     "items": {
       "clinicsay": {
         "role": "Desarrollador Full Stack Senior",
-        "context": "Gestión clínica e inteligencia artificial",
-        "highlights": [
-          "Desarrollo y mantengo Clinickeys, la plataforma con la que las clínicas gestionan pacientes, citas, finanzas y operación diaria.",
-          "Construyo ClinicSay, la nueva generación de esa plataforma: facturación, finanzas, calendario y administración, en frontend y backend.",
-          "Desarrollé una API de inteligencia artificial para conversaciones, agentes y herramientas, aplicando Clean Architecture y Domain-Driven Design.",
-          "Integré esa API con Kommo CRM y Salesbot, y automaticé formularios clínicos y flujos operativos con modelos de lenguaje.",
-          "Diagnostico y resuelvo incidencias críticas en producción, de la interfaz a la base de datos."
-        ]
+        "summary": "Plataforma de gestión clínica y una API de inteligencia artificial integrada con CRM. Frontend, backend y producción."
       },
       "metrica-andina": {
         "role": "Analista Programador Senior",
-        "context": "Aplicaciones web y microservicios para educación y servicios",
-        "highlights": [
-          "Diseñé, desarrollé y mantuve aplicaciones web escalables basadas en microservicios.",
-          "Automaticé un flujo de WhatsApp dentro de una plataforma omnicanal: leads de Facebook, envío de mensajes y plantillas.",
-          "Integré la API REST de Salesforce CRM con el portal de trámites del Instituto SISE y añadí ocho trámites, incluido el libro de reclamaciones.",
-          "Desarrollé módulos web integrados con la aplicación móvil de la Universidad Científica del Sur: autenticación, consulta de pagos y mapa interactivo.",
-          "Mantuve el portal de proveedores y aprobaciones de Educa_d."
-        ]
+        "summary": "Microservicios, integración con Salesforce y automatización de WhatsApp para clientes de educación."
       },
       "surtidores": {
         "role": "Programador PHP",
-        "context": "Modernización de un ERP empresarial",
-        "highlights": [
-          "Lideré el desarrollo de la nueva versión del ERP web con Laravel, JavaScript y PostgreSQL.",
-          "Centralicé procesos de la empresa dentro del ERP.",
-          "Mantuve y extendí el ERP anterior, construido con PHP 5.",
-          "Integré WordPress y WooCommerce para consumir la información de la tienda virtual.",
-          "Ejecuté pruebas de rendimiento y planes de capacitación técnica para usuarios finales."
-        ]
+        "summary": "Lideré la nueva versión de un ERP web en Laravel y mantuve el anterior, en PHP 5."
       },
       "platanitos": {
         "role": "Programador Web · Analista SAP",
-        "context": "Retail y comercio electrónico",
-        "highlights": [
-          "Desarrollé aplicaciones web con JavaScript, PHP 8 y jQuery bajo patrón MVC.",
-          "Construí una aplicación de alertas que conecta las tiendas físicas con la central.",
-          "Participé en la implementación de facturación electrónica y escribí una librería JavaScript de validaciones OSE.",
-          "Mantuve la información SQL de ventas, inventarios, pedidos, facturación y movimientos de mercadería.",
-          "Como analista SAP supervisé registros contables, pedidos, facturación y compras, y generé reportes diarios cruzando SAP con MySQL."
-        ]
-      },
-      "usil": {
-        "role": "Soporte TI",
-        "context": "Atención a usuarios administrativos y estudiantes",
-        "highlights": [
-          "Gestioné incidencias por Helpdesk con soporte remoto y presencial, y evalué periódicamente los equipos."
-        ]
+        "summary": "Aplicaciones web para retail, facturación electrónica y reportes cruzando SAP con SQL."
       }
     }
   },
   "projects": {
     "heading": "Proyectos",
-    "intro": "Producto propio y código público. Cada enlace lleva al repositorio o al sitio desplegado.",
+    "intro": "Producto propio y código público.",
     "kinds": {
       "product": "Producto propio",
       "project": "Proyecto",
@@ -102,19 +67,19 @@
     },
     "items": {
       "vitalpro": {
-        "summary": "Plataforma SaaS modular para negocios de servicios: clientes, reservas, pagos y seguimiento sobre un núcleo agnóstico, con extensiones verticales como salud. Proyecto propio, en desarrollo."
+        "summary": "Plataforma SaaS modular para negocios de servicios, con una vertical de salud. En desarrollo."
       },
       "starwars-api": {
-        "summary": "API REST serverless que consume SWAPI, traduce su modelo al español y persiste personajes en DynamoDB, organizada con Clean Architecture."
+        "summary": "API REST serverless sobre Lambda y DynamoDB, organizada con Clean Architecture."
       },
       "idbi-invoice": {
-        "summary": "API REST para registrar y consultar comprobantes XML: autenticación JWT, procesamiento en cola, filtros y totales por moneda."
+        "summary": "API en Laravel para comprobantes XML: JWT, procesamiento en cola y totales por moneda."
       },
       "rimac-frontend": {
-        "summary": "Aplicación responsive que consume APIs, valida formularios, permite elegir un plan y muestra el resumen. Componentes reutilizables con Sass y BEM."
+        "summary": "Recorrido de tres pasos en React y TypeScript para cotizar y elegir un plan."
       },
       "rollpay-auth": {
-        "summary": "Aplicación de autenticación en PHP con JSON Web Tokens, escrita siguiendo buenas prácticas."
+        "summary": "Autenticación en PHP con JSON Web Tokens."
       },
       "placer-sano": {
         "summary": "Sitio de restaurante construido con Astro y desplegado en Netlify."
@@ -228,45 +193,33 @@
   },
   "method": {
     "heading": "Método",
-    "intro": "Cómo trabajo cuando nadie está mirando. Son las reglas que están escritas en mis repositorios, no una declaración de intenciones.",
+    "intro": "Las reglas escritas en mis repositorios.",
     "items": {
       "boundaries": {
         "title": "Los límites son explícitos",
-        "body": "La dependencia va en una dirección: interfaz hacia aplicación, aplicación hacia dominio. El dominio no conoce el framework, ni la base de datos, ni el transporte. Un límite solo se cruza con una decisión escrita, nunca con un atajo."
+        "body": "La dependencia va en una dirección y el dominio no conoce el framework. Un límite se cruza con una decisión escrita, no con un atajo."
       },
       "smallest": {
         "title": "El cambio más pequeño que funciona",
-        "body": "Ninguna capa, módulo o abstracción para un futuro que no ha llegado. Si algo se añade es porque hay un caso hoy, y si deja de usarse se borra en el mismo cambio."
+        "body": "Ninguna abstracción para un futuro que no ha llegado, y lo que deja de usarse se borra en el mismo cambio."
       },
       "verify": {
         "title": "Verificar antes de afirmar",
-        "body": "Nada está hecho porque compile. Está hecho cuando las puertas pasan y lo he visto funcionando en el build de producción, con capturas y diciendo qué quedó sin probar."
+        "body": "Nada está hecho porque compile: está hecho cuando las puertas pasan y lo he visto en el build de producción."
       },
       "decisions": {
         "title": "Las decisiones se escriben",
-        "body": "Una decisión que no se deduce del código va a un registro fechado: contexto, al menos dos opciones comparadas y consecuencias. Este sitio tiene los suyos."
+        "body": "Lo que no se deduce del código va a un registro fechado, con las opciones comparadas. Este sitio tiene los suyos."
       }
     }
   },
   "about": {
     "heading": "Sobre mí",
-    "portraitAlt": "Retrato de Bruno Galván",
+    "portraitAlt": "Retrato de Bruno Galván compuesto con código",
     "paragraphs": [
-      "Trabajo desde 2019 en sistemas que se usan todos los días: historias clínicas, matrículas, inventarios, facturación y pedidos. Casi siempre sobre código que ya existía y no podía dejar de funcionar.",
-      "Me muevo igual en frontend y en backend, y me interesa sobre todo la frontera entre ambos: contratos de API explícitos, modelos de datos que resisten el cambio y límites claros entre capas. Aplico Clean Architecture y Domain-Driven Design cuando el problema lo justifica, no por costumbre.",
-      "En los últimos años sumé integraciones y automatización con modelos de lenguaje: APIs de conversación, agentes y herramientas conectadas a CRMs.",
-      "Fuera del trabajo: videojuegos, cine y tiempo para aprender tecnologías nuevas."
-    ],
-    "facts": {
-      "education": {
-        "label": "Formación",
-        "value": "Universidad San Ignacio de Loyola — Computación Informática (2015–2017)"
-      },
-      "languages": {
-        "label": "Idiomas",
-        "value": "Español nativo · Inglés básico"
-      }
-    }
+      "Trabajo desde 2019 en sistemas que se usan todos los días: historias clínicas, matrículas, inventarios y facturación. Casi siempre sobre código que ya existía y no podía dejar de funcionar.",
+      "Me interesa la frontera entre frontend y backend: contratos explícitos, modelos de datos que resisten el cambio y límites claros entre capas."
+    ]
   },
   "contact": {
     "heading": "Contacto",

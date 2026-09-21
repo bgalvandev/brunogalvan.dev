@@ -1,27 +1,21 @@
 ---
-import { Image } from 'astro:assets';
-import portrait from '@/assets/bruno-galvan.png';
 import PageSection from '@/components/page-section.astro';
 import { site } from '@/config/site';
 import type { Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
+import CodePortrait from './code-portrait.astro';
 interface Props {
   locale: Locale;
 }
-const { about, home } = messages(Astro.props.locale);
+const { locale } = Astro.props;
+const { about, home } = messages(locale);
 ---
 
 <PageSection id="about" index="05" label={about.heading}>
   <div class="about-layout">
     <figure class="portrait">
       <div class="portrait-frame">
-        <Image
-          src={portrait}
-          alt={about.portraitAlt}
-          widths={[220, 440]}
-          sizes="(min-width: 52rem) 220px, 55vw"
-          loading="lazy"
-        />
+        <CodePortrait locale={locale} />
         <span></span>
         <span></span>
         <span></span>
@@ -37,14 +31,6 @@ const { about, home } = messages(Astro.props.locale);
           <p>{paragraph}</p>
         ))}
       </div>
-      <dl class="facts">
-        {Object.values(about.facts).map((fact) => (
-          <div>
-            <dt class="fact-label">{fact.label}</dt>
-            <dd class="fact-value">{fact.value}</dd>
-          </div>
-        ))}
-      </dl>
     </div>
   </div>
 </PageSection>

@@ -10,7 +10,6 @@ interface Position {
   // Calendar months as YYYY-MM; `end: null` means the position is current.
   start: string;
   end: string | null;
-  technologies: readonly string[];
 }
 
 // Newest first: the reading order of the rendered timeline.
@@ -20,70 +19,24 @@ export const positions: readonly Position[] = [
     company: 'ClinicSay',
     start: '2024-12',
     end: null,
-    technologies: [
-      'React',
-      'TypeScript',
-      'Node.js',
-      'Prisma',
-      'PostgreSQL',
-      'Docker',
-      'Tailwind CSS',
-      'OpenAI',
-      'LangChain',
-      'DynamoDB',
-      'PHP',
-      'MySQL',
-    ],
   },
   {
     id: 'metrica-andina',
     company: 'Métrica Andina',
     start: '2023-09',
     end: '2024-03',
-    technologies: [
-      'Node.js',
-      'JavaScript',
-      'Angular',
-      'MongoDB',
-      'SQL',
-      'Salesforce',
-      'WhatsApp',
-    ],
   },
   {
     id: 'surtidores',
     company: 'Surtidores S.A.C.',
     start: '2022-08',
     end: '2023-05',
-    technologies: [
-      'PHP',
-      'Laravel',
-      'JavaScript',
-      'PostgreSQL',
-      'WordPress',
-      'WooCommerce',
-    ],
   },
   {
     id: 'platanitos',
     company: 'Platanitos',
     start: '2019-07',
     end: '2022-05',
-    technologies: [
-      'PHP',
-      'JavaScript',
-      'jQuery',
-      'MySQL',
-      'Transact-SQL',
-      'SAP',
-    ],
-  },
-  {
-    id: 'usil',
-    company: 'Universidad San Ignacio de Loyola',
-    start: '2019-02',
-    end: '2019-03',
-    technologies: [],
   },
 ];
 

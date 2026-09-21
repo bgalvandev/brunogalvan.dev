@@ -13,9 +13,9 @@ describe('experience timeline', () => {
       (first, item) => (item.start < first ? item.start : first),
       positions[0]?.start ?? '',
     );
-    expect(earliest).toBe('2019-02');
-    expect(yearsOfExperience(new Date('2026-02-01T00:00:00Z'))).toBe(7);
-    expect(yearsOfExperience(new Date('2026-01-31T00:00:00Z'))).toBe(6);
+    expect(earliest).toBe('2019-07');
+    expect(yearsOfExperience(new Date('2026-07-01T00:00:00Z'))).toBe(7);
+    expect(yearsOfExperience(new Date('2026-06-30T00:00:00Z'))).toBe(6);
   });
 
   it('closes an open position with the caller-supplied present label', () => {

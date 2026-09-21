@@ -8,7 +8,7 @@
     "role": "Senior Full Stack Developer",
     "location": "Lima, Peru",
     "headline": "I build the platforms, APIs and integrations a business uses every day.",
-    "intro": "{years} years working on software for healthcare, education, retail and ERP, from the interface to the database: APIs, integrations with external systems and automation with language models.",
+    "intro": "{years} years across healthcare, education, retail and ERP, from the interface to the database.",
     "actions": {
       "email": "Write to me",
       "work": "See projects"
@@ -35,60 +35,25 @@
     "items": {
       "clinicsay": {
         "role": "Senior Full Stack Developer",
-        "context": "Clinic management and artificial intelligence",
-        "highlights": [
-          "I develop and maintain Clinickeys, the platform clinics use to manage patients, appointments, finances and daily operations.",
-          "I am building ClinicSay, the next generation of that platform: billing, finances, calendar and administration, on both frontend and backend.",
-          "I built an artificial intelligence API for conversations, agents and tools, applying Clean Architecture and Domain-Driven Design.",
-          "I integrated that API with Kommo CRM and Salesbot, and automated clinical forms and operational flows with language models.",
-          "I diagnose and resolve critical production incidents, from the interface down to the database."
-        ]
+        "summary": "A clinic management platform and an artificial intelligence API wired into a CRM. Frontend, backend and production."
       },
       "metrica-andina": {
         "role": "Senior Developer Analyst",
-        "context": "Web applications and microservices for education and services",
-        "highlights": [
-          "I designed, built and maintained scalable web applications based on microservices.",
-          "I automated a WhatsApp flow inside an omnichannel platform: Facebook leads, message and template delivery.",
-          "I integrated the Salesforce CRM REST API with Instituto SISE's procedures portal and added eight procedures, including the complaints book.",
-          "I built web modules integrated with Universidad Científica del Sur's mobile application: authentication, payment lookup and an interactive map.",
-          "I maintained Educa_d's supplier and approvals portal."
-        ]
+        "summary": "Microservices, a Salesforce integration and WhatsApp automation for education clients."
       },
       "surtidores": {
         "role": "PHP Developer",
-        "context": "Modernising an enterprise ERP",
-        "highlights": [
-          "I led development of the new web ERP with Laravel, JavaScript and PostgreSQL.",
-          "I centralised company processes inside the ERP.",
-          "I maintained and extended the previous ERP, built on PHP 5.",
-          "I integrated WordPress and WooCommerce to consume the online store's information.",
-          "I ran performance tests and technical training plans for end users."
-        ]
+        "summary": "Led the new web ERP in Laravel and kept the previous one, on PHP 5, running."
       },
       "platanitos": {
         "role": "Web Developer · SAP Analyst",
-        "context": "Retail and e-commerce",
-        "highlights": [
-          "I built web applications with JavaScript, PHP 8 and jQuery under an MVC pattern.",
-          "I built an alerting application connecting the physical stores to headquarters.",
-          "I took part in the electronic invoicing rollout and wrote a JavaScript library for OSE validations.",
-          "I maintained the SQL data behind sales, inventory, orders, invoicing and stock movements.",
-          "As an SAP analyst I oversaw accounting entries, orders, invoicing and purchasing, and produced daily reports joining SAP with MySQL."
-        ]
-      },
-      "usil": {
-        "role": "IT Support",
-        "context": "Support for administrative staff and students",
-        "highlights": [
-          "I handled incidents through Helpdesk with remote and on-site support, and reviewed equipment periodically."
-        ]
+        "summary": "Web applications for retail, electronic invoicing, and reports joining SAP with SQL."
       }
     }
   },
   "projects": {
     "heading": "Projects",
-    "intro": "An owned product and public code. Every link leads to the repository or the deployed site.",
+    "intro": "An owned product and public code.",
     "kinds": {
       "product": "Own product",
       "project": "Project",
@@ -102,19 +67,19 @@
     },
     "items": {
       "vitalpro": {
-        "summary": "Modular SaaS platform for service businesses: clients, bookings, payments and follow-up on a vertical-agnostic core, with vertical extensions such as healthcare. My own project, in development."
+        "summary": "Modular SaaS platform for service businesses, with a healthcare vertical. In development."
       },
       "starwars-api": {
-        "summary": "Serverless REST API that consumes SWAPI, translates its model into Spanish and persists characters in DynamoDB, organised with Clean Architecture."
+        "summary": "Serverless REST API on Lambda and DynamoDB, organised with Clean Architecture."
       },
       "idbi-invoice": {
-        "summary": "REST API to record and query XML invoices: JWT authentication, queued processing, filters and totals per currency."
+        "summary": "Laravel API for XML invoices: JWT, queued processing and totals per currency."
       },
       "rimac-frontend": {
-        "summary": "Responsive application that consumes APIs, validates forms, lets you pick a plan and shows the summary. Reusable components with Sass and BEM."
+        "summary": "A three-step journey in React and TypeScript to quote and choose a plan."
       },
       "rollpay-auth": {
-        "summary": "Authentication application in PHP with JSON Web Tokens, written following good practices."
+        "summary": "Authentication in PHP with JSON Web Tokens."
       },
       "placer-sano": {
         "summary": "Restaurant site built with Astro and deployed on Netlify."
@@ -228,45 +193,33 @@
   },
   "method": {
     "heading": "Method",
-    "intro": "How I work when nobody is watching. These are the rules written into my repositories, not a statement of intent.",
+    "intro": "The rules written into my repositories.",
     "items": {
       "boundaries": {
         "title": "Boundaries are explicit",
-        "body": "Dependency runs one way: interface to application, application to domain. The domain knows nothing of the framework, the database or the transport. A boundary is crossed by a written decision, never by a shortcut."
+        "body": "Dependency runs one way and the domain knows nothing of the framework. A boundary is crossed by a written decision, not a shortcut."
       },
       "smallest": {
         "title": "The smallest change that works",
-        "body": "No layer, module or abstraction for a future that has not arrived. Something is added because there is a case for it today, and when it stops being used it goes in the same change."
+        "body": "No abstraction for a future that has not arrived, and whatever stops being used goes in the same change."
       },
       "verify": {
         "title": "Verify before claiming",
-        "body": "Nothing is done because it compiles. It is done when the gates pass and I have seen it working in the production build, with captures, and with what went unexercised stated plainly."
+        "body": "Nothing is done because it compiles: it is done when the gates pass and I have seen it in the production build."
       },
       "decisions": {
         "title": "Decisions are written down",
-        "body": "A decision that cannot be read off the code goes into a dated record: context, at least two options compared, and consequences. This site keeps its own."
+        "body": "What cannot be read off the code goes into a dated record with its alternatives. This site keeps its own."
       }
     }
   },
   "about": {
     "heading": "About",
-    "portraitAlt": "Portrait of Bruno Galván",
+    "portraitAlt": "Portrait of Bruno Galván composed from code",
     "paragraphs": [
-      "Since 2019 I have worked on systems people use every day: medical records, enrolments, inventory, invoicing and orders. Almost always on code that already existed and could not stop working.",
-      "I am equally at home on the frontend and the backend, and what interests me most is the border between them: explicit API contracts, data models that survive change and clear boundaries between layers. I apply Clean Architecture and Domain-Driven Design when the problem justifies it, not out of habit.",
-      "In recent years I have added integrations and automation with language models: conversation APIs, agents and tools connected to CRMs.",
-      "Away from work: video games, film and time to learn new technologies."
-    ],
-    "facts": {
-      "education": {
-        "label": "Education",
-        "value": "Universidad San Ignacio de Loyola — Computing and Informatics (2015–2017)"
-      },
-      "languages": {
-        "label": "Languages",
-        "value": "Spanish native · English elementary"
-      }
-    }
+      "Since 2019 I have worked on systems people use every day: medical records, enrolments, inventory and invoicing. Almost always on code that already existed and could not stop working.",
+      "What interests me is the border between frontend and backend: explicit contracts, data models that survive change and clear boundaries between layers."
+    ]
   },
   "contact": {
     "heading": "Contact",
