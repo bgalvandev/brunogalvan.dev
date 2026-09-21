@@ -8,7 +8,7 @@
   --paper: light-dark(#fbfbf9, #08090a);
   --ink: light-dark(#131316, #f2f1ee);
   --muted: light-dark(#66666e, #8d8d96);
-  --faint: light-dark(#6f6e77, #82838d);
+  --faint: light-dark(#6b6a73, #82838d);
 
   /* Structure. `line` is the hairline that separates; `edge` is the heavier
      rule used by the page frame and by a surface under the pointer. */
@@ -17,6 +17,9 @@
 
   /* Raised surfaces, lit along their top edge the way a physical panel is. */
   --surface: light-dark(#ffffff, #0e0f12);
+  /* The alternating band: a section that steps away from the page colour, so
+     scrolling moves between rooms rather than down one wall. */
+  --band: light-dark(#f2f1eb, #0b0c10);
   --highlight: light-dark(rgb(255 255 255 / 90%), rgb(255 255 255 / 6%));
 
   /* The drawing's lit panel stays dark in both themes: a screen that inverts

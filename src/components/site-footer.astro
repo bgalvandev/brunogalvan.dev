@@ -11,35 +11,37 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="section" id="contact" aria-labelledby="contact-heading">
-  <h2 class="section-label" id="contact-heading">
-    <span class="section-index" aria-hidden="true">
-      05
-    </span>
-    <span>{contact.heading}</span>
-  </h2>
-  <div>
-    <p class="section-intro">{contact.intro}</p>
-    <div class="contact-links">
-      <a
-        class="action action-primary contact-link"
-        href={`mailto:${site.email}`}
-      >
-        {site.email}
-      </a>
-      <a class="action" href={site.github} rel="me">
-        {contact.github}
-      </a>
-      <a class="action" href={site.linkedin} rel="me">
-        {contact.linkedin}
-      </a>
-    </div>
-    <div class="colophon">
-      <span class="site-name">
-        <BrandMark size={14} />© {year} {site.name}
+  <div class="measure section-grid">
+    <h2 class="section-label" id="contact-heading">
+      <span class="section-index" aria-hidden="true">
+        06
       </span>
-      <a class="inline-link" href={site.repository}>
-        {contact.source}
-      </a>
+      <span>{contact.heading}</span>
+    </h2>
+    <div>
+      <p class="section-intro">{contact.intro}</p>
+      <div class="contact-links">
+        <a
+          class="action action-primary contact-link"
+          href={`mailto:${site.email}`}
+        >
+          {site.email}
+        </a>
+        <a class="action" href={site.github} rel="me">
+          {contact.github}
+        </a>
+        <a class="action" href={site.linkedin} rel="me">
+          {contact.linkedin}
+        </a>
+      </div>
+      <div class="colophon">
+        <span class="site-name">
+          <BrandMark size={14} />© {year} {site.name}
+        </span>
+        <a class="inline-link" href={site.repository}>
+          {contact.source}
+        </a>
+      </div>
     </div>
   </div>
 </footer>

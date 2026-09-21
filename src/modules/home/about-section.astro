@@ -1,36 +1,17 @@
 ---
 import PageSection from '@/components/page-section.astro';
-import { site } from '@/config/site';
 import type { Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
-import CodePortrait from './code-portrait.astro';
 interface Props {
   locale: Locale;
 }
-const { locale } = Astro.props;
-const { about, home } = messages(locale);
+const { about } = messages(Astro.props.locale);
 ---
 
 <PageSection id="about" index="05" label={about.heading}>
-  <div class="about-layout">
-    <figure class="portrait">
-      <div class="portrait-frame">
-        <CodePortrait locale={locale} />
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <figcaption class="portrait-caption">
-        {site.name} · {home.location}
-      </figcaption>
-    </figure>
-    <div>
-      <div class="prose">
-        {about.paragraphs.map((paragraph) => (
-          <p>{paragraph}</p>
-        ))}
-      </div>
-    </div>
+  <div class="prose">
+    {about.paragraphs.map((paragraph) => (
+      <p>{paragraph}</p>
+    ))}
   </div>
 </PageSection>

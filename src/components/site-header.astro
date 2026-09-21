@@ -14,12 +14,14 @@ const { locale, route, slug } = Astro.props;
 ---
 
 <header class="site-header">
-  <a href={pagePath('home', locale)} class="site-name">
-    <BrandMark size={20} />
-    {site.name}
-  </a>
-  <div class="header-controls">
-    <LanguageSwitcher locale={locale} route={route} slug={slug} />
-    <ThemeToggle locale={locale} />
+  <div class="measure site-header-inner">
+    <a href={pagePath('home', locale)} class="site-name">
+      <BrandMark size={20} />
+      {site.name}
+    </a>
+    <div class="header-controls">
+      <LanguageSwitcher locale={locale} route={route} slug={slug} />
+      <ThemeToggle locale={locale} />
+    </div>
   </div>
 </header>

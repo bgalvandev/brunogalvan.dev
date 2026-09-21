@@ -29,6 +29,10 @@
     "repositories": "Projects with public code",
     "technologies": "Technologies in use"
   },
+  "room": {
+    "heading": "The workshop",
+    "line": "Two screens, a terminal and coffee. This is where everything above happens."
+  },
   "experience": {
     "heading": "Experience",
     "present": "Present",

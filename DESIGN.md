@@ -149,6 +149,27 @@ is private or whose deployment is gone says so instead of linking nowhere.
   `src/styles/contrast.spec.ts`. Prose, measured in the built page, went from
   1168 words to 409.
 
+### Bands, and where the drawings live (2026-09-21)
+
+- **Objective.** The page was one wall: a single measure, one background, every
+  section the same shape. The galleries answer this by cutting the page into
+  full-bleed bands - aeye runs a white section straight into a black one - and
+  by reusing one drawing across sections rather than showing it once.
+- **Decision.** The shell stops wrapping the page. Every section owns its full
+  width and holds its content in a `.measure`, so a band can step away from the
+  page colour with `--band` and scrolling moves between rooms. The code
+  portrait takes the opening, on a plate framed by the same registration marks,
+  and writes itself on: each SVG row is clipped shut and opens left to right,
+  28ms apart, then the pass repeats. The workstation moves to a band of its own
+  further down rather than being deleted.
+- **Rejected alternatives.** Full-bleed through `calc(50% - 50vw)`, which
+  measures the viewport including the scrollbar and buys a horizontal overflow
+  on every long page. A slower, more deliberate write: at 110ms a row the
+  portrait took seven seconds to finish and a visitor watched it arrive.
+- **Verification.** `pnpm run check` and the browser suite; axe caught
+  `--faint` at 4.44 against the new band, so the contrast spec now tests every
+  text token against every surface rather than against the page and the card.
+
 ## Working on visible changes
 
 Choose the depth before touching markup. A precision fix preserves the

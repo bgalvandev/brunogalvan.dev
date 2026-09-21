@@ -9,6 +9,7 @@ import Figures from './figures.astro';
 import MethodSection from './method-section.astro';
 import Hero from './hero.astro';
 import Marquee from './marquee.astro';
+import RoomBand from './room-band.astro';
 import StackSection from './stack-section.astro';
 interface Props {
   locale: Locale;
@@ -23,6 +24,7 @@ const { locale } = Astro.props;
   <Figures locale={locale} />
   <ExperienceSection locale={locale} />
   <ProjectsSection locale={locale} />
+  <RoomBand locale={locale} />
   <StackSection locale={locale} />
   <MethodSection locale={locale} />
   <AboutSection locale={locale} />

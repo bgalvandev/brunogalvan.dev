@@ -1,23 +1,32 @@
 ---
-// A labelled region. The index is typographic, not content: it gives the page a
-// measured rhythm and the label column something to anchor to.
+// A labelled region and a band. The index is typographic, not content: it gives
+// the page a measured rhythm and the label column something to anchor to.
+// `shade` steps the band away from the page colour so scrolling moves between
+// rooms rather than down one wall.
 interface Props {
   id: string;
   index: string;
   label: string;
+  shade?: boolean;
 }
-const { id, index, label } = Astro.props;
+const { id, index, label, shade = false } = Astro.props;
 const headingId = `${id}-heading`;
 ---
 
-<section class="section" id={id} aria-labelledby={headingId}>
-  <h2 class="section-label" id={headingId}>
-    <span class="section-index" aria-hidden="true">
-      {index}
-    </span>
-    <span>{label}</span>
-  </h2>
-  <div class="reveal">
-    <slot />
+<section
+  class:list={['section', shade && 'band-shade']}
+  id={id}
+  aria-labelledby={headingId}
+>
+  <div class="measure section-grid">
+    <h2 class="section-label" id={headingId}>
+      <span class="section-index" aria-hidden="true">
+        {index}
+      </span>
+      <span>{label}</span>
+    </h2>
+    <div class="reveal">
+      <slot />
+    </div>
   </div>
 </section>

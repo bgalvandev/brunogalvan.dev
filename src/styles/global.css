@@ -115,26 +115,29 @@
   }
 
   /* Shell and header ------------------------------------------------------ */
-  .site-shell {
+  .measure {
     width: min(100%, 72rem);
     margin-inline: auto;
     padding-inline: clamp(1.25rem, 4vw, 3rem);
-    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+  .band-shade {
+    background: var(--band);
   }
   .site-header {
     position: sticky;
     top: 0;
     z-index: 4;
+    padding-block: 0.875rem;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    backdrop-filter: blur(10px);
+  }
+  .site-header-inner {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-inline: calc(clamp(1.25rem, 4vw, 3rem) * -1);
-    padding: 0.875rem clamp(1.25rem, 4vw, 3rem);
-    border-bottom: 1px solid var(--line);
-    background: color-mix(in srgb, var(--paper) 82%, transparent);
-    backdrop-filter: blur(10px);
   }
   .site-name {
     display: inline-flex;
@@ -204,7 +207,8 @@
   /* Hero ------------------------------------------------------------------ */
   .hero {
     position: relative;
-    padding-block: clamp(3.5rem, 9vw, 7rem) clamp(3.5rem, 8vw, 6rem);
+    overflow: hidden;
+    padding-block: clamp(3rem, 8vw, 5.5rem) clamp(3.5rem, 8vw, 6rem);
   }
   /* A measured field behind the opening statement: a 1px lattice faded out by
      a radial mask, with one soft accent bloom. Pure gradients, no asset. */
@@ -302,10 +306,12 @@
 
   /* Sections -------------------------------------------------------------- */
   .section {
-    display: grid;
-    gap: 1.5rem;
     padding-block: clamp(3.5rem, 8vw, 6rem);
     border-top: 1px solid var(--line);
+  }
+  .section-grid {
+    display: grid;
+    gap: 1.5rem;
   }
   .section-label {
     align-self: start;
@@ -328,11 +334,13 @@
     color: var(--muted);
   }
   @media (min-width: 52rem) {
-    .section {
+    .section-grid {
       grid-template-columns: 12rem 1fr;
       gap: 3.5rem;
     }
-    .section-label {
+    /* Only a label that owns the left column of a section grid sticks; the
+       workshop band puts its label in ordinary flow above its line. */
+    .section-grid > .section-label {
       position: sticky;
       top: 5rem;
     }
@@ -583,10 +591,10 @@
      gradients and a filter: no image, no canvas, nothing to download. */
   .hero-beam {
     position: absolute;
-    top: -14rem;
+    top: -16rem;
     left: 50%;
     z-index: -1;
-    width: min(46rem, 100%);
+    width: min(46rem, 90%);
     height: 40rem;
     transform: translateX(-50%);
     background: linear-gradient(to bottom, var(--glow), transparent 72%);
@@ -596,7 +604,7 @@
   }
   .hero-grid {
     position: absolute;
-    inset: -6rem calc(clamp(1.25rem, 4vw, 3rem) * -1) 0;
+    inset: -6rem 0 0;
     z-index: -1;
     width: auto;
     height: auto;
@@ -1042,41 +1050,284 @@
     display: grid;
     gap: 2rem;
   }
-  .portrait {
-    margin: 0;
-    width: fit-content;
-  }
-  .portrait-frame {
+  .hero-plate {
     position: relative;
-    padding: 0.75rem;
+    padding: 0.875rem;
     border: 1px solid var(--line);
-    border-radius: 0.5rem;
+    border-radius: 0.625rem;
     background: var(--screen);
   }
-  /* An SVG grid: one text row per scanline, each pinned to the same length, so
-     the columns cannot drift however many runs a row is cut into. */
+  .hero-plate span {
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 0 solid var(--edge);
+  }
+  .hero-plate span:nth-child(2) {
+    top: -1px;
+    left: -1px;
+    border-top-width: 2px;
+    border-left-width: 2px;
+  }
+  .hero-plate span:nth-child(3) {
+    top: -1px;
+    right: -1px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+  }
+  .hero-plate span:nth-child(4) {
+    right: -1px;
+    bottom: -1px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+  }
+  .hero-plate span:nth-child(5) {
+    bottom: -1px;
+    left: -1px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+  }
+
   .code-portrait {
     display: block;
-    width: min(23rem, 66vw);
+    width: 100%;
     height: auto;
     font-family: var(--font-mono);
     fill: var(--screen-ink);
     user-select: none;
   }
   .code-portrait .t0 {
-    fill-opacity: 0.05;
+    fill-opacity: 0.04;
   }
   .code-portrait .t1 {
-    fill-opacity: 0.14;
+    fill-opacity: 0.09;
   }
   .code-portrait .t2 {
-    fill-opacity: 0.34;
+    fill-opacity: 0.17;
   }
   .code-portrait .t3 {
-    fill-opacity: 0.66;
+    fill-opacity: 0.3;
   }
   .code-portrait .t4 {
+    fill-opacity: 0.5;
+  }
+  .code-portrait .t5 {
+    fill-opacity: 0.76;
+  }
+  .code-portrait .t6 {
     fill-opacity: 1;
+  }
+  /* Written on, not just shown: each row is clipped closed and opens left to
+     right, one after another, then the whole pass begins again. */
+  @media (prefers-reduced-motion: no-preference) {
+    .code-portrait text {
+      animation: write 11s var(--ease-out) infinite;
+      clip-path: inset(0 100% 0 0);
+    }
+  }
+  .code-portrait text:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .code-portrait text:nth-child(2) {
+    animation-delay: 0.028s;
+  }
+  .code-portrait text:nth-child(3) {
+    animation-delay: 0.056s;
+  }
+  .code-portrait text:nth-child(4) {
+    animation-delay: 0.084s;
+  }
+  .code-portrait text:nth-child(5) {
+    animation-delay: 0.112s;
+  }
+  .code-portrait text:nth-child(6) {
+    animation-delay: 0.14s;
+  }
+  .code-portrait text:nth-child(7) {
+    animation-delay: 0.168s;
+  }
+  .code-portrait text:nth-child(8) {
+    animation-delay: 0.196s;
+  }
+  .code-portrait text:nth-child(9) {
+    animation-delay: 0.224s;
+  }
+  .code-portrait text:nth-child(10) {
+    animation-delay: 0.252s;
+  }
+  .code-portrait text:nth-child(11) {
+    animation-delay: 0.28s;
+  }
+  .code-portrait text:nth-child(12) {
+    animation-delay: 0.308s;
+  }
+  .code-portrait text:nth-child(13) {
+    animation-delay: 0.336s;
+  }
+  .code-portrait text:nth-child(14) {
+    animation-delay: 0.364s;
+  }
+  .code-portrait text:nth-child(15) {
+    animation-delay: 0.392s;
+  }
+  .code-portrait text:nth-child(16) {
+    animation-delay: 0.42s;
+  }
+  .code-portrait text:nth-child(17) {
+    animation-delay: 0.448s;
+  }
+  .code-portrait text:nth-child(18) {
+    animation-delay: 0.476s;
+  }
+  .code-portrait text:nth-child(19) {
+    animation-delay: 0.504s;
+  }
+  .code-portrait text:nth-child(20) {
+    animation-delay: 0.532s;
+  }
+  .code-portrait text:nth-child(21) {
+    animation-delay: 0.56s;
+  }
+  .code-portrait text:nth-child(22) {
+    animation-delay: 0.588s;
+  }
+  .code-portrait text:nth-child(23) {
+    animation-delay: 0.616s;
+  }
+  .code-portrait text:nth-child(24) {
+    animation-delay: 0.644s;
+  }
+  .code-portrait text:nth-child(25) {
+    animation-delay: 0.672s;
+  }
+  .code-portrait text:nth-child(26) {
+    animation-delay: 0.7s;
+  }
+  .code-portrait text:nth-child(27) {
+    animation-delay: 0.728s;
+  }
+  .code-portrait text:nth-child(28) {
+    animation-delay: 0.756s;
+  }
+  .code-portrait text:nth-child(29) {
+    animation-delay: 0.784s;
+  }
+  .code-portrait text:nth-child(30) {
+    animation-delay: 0.812s;
+  }
+  .code-portrait text:nth-child(31) {
+    animation-delay: 0.84s;
+  }
+  .code-portrait text:nth-child(32) {
+    animation-delay: 0.868s;
+  }
+  .code-portrait text:nth-child(33) {
+    animation-delay: 0.896s;
+  }
+  .code-portrait text:nth-child(34) {
+    animation-delay: 0.924s;
+  }
+  .code-portrait text:nth-child(35) {
+    animation-delay: 0.952s;
+  }
+  .code-portrait text:nth-child(36) {
+    animation-delay: 0.98s;
+  }
+  .code-portrait text:nth-child(37) {
+    animation-delay: 1.008s;
+  }
+  .code-portrait text:nth-child(38) {
+    animation-delay: 1.036s;
+  }
+  .code-portrait text:nth-child(39) {
+    animation-delay: 1.064s;
+  }
+  .code-portrait text:nth-child(40) {
+    animation-delay: 1.092s;
+  }
+  .code-portrait text:nth-child(41) {
+    animation-delay: 1.12s;
+  }
+  .code-portrait text:nth-child(42) {
+    animation-delay: 1.148s;
+  }
+  .code-portrait text:nth-child(43) {
+    animation-delay: 1.176s;
+  }
+  .code-portrait text:nth-child(44) {
+    animation-delay: 1.204s;
+  }
+  .code-portrait text:nth-child(45) {
+    animation-delay: 1.232s;
+  }
+  .code-portrait text:nth-child(46) {
+    animation-delay: 1.26s;
+  }
+  .code-portrait text:nth-child(47) {
+    animation-delay: 1.288s;
+  }
+  .code-portrait text:nth-child(48) {
+    animation-delay: 1.316s;
+  }
+  .code-portrait text:nth-child(49) {
+    animation-delay: 1.344s;
+  }
+  .code-portrait text:nth-child(50) {
+    animation-delay: 1.372s;
+  }
+  .code-portrait text:nth-child(51) {
+    animation-delay: 1.4s;
+  }
+  .code-portrait text:nth-child(52) {
+    animation-delay: 1.428s;
+  }
+  .code-portrait text:nth-child(53) {
+    animation-delay: 1.456s;
+  }
+  .code-portrait text:nth-child(54) {
+    animation-delay: 1.484s;
+  }
+  .code-portrait text:nth-child(55) {
+    animation-delay: 1.512s;
+  }
+  .code-portrait text:nth-child(56) {
+    animation-delay: 1.54s;
+  }
+  .code-portrait text:nth-child(57) {
+    animation-delay: 1.568s;
+  }
+  .code-portrait text:nth-child(58) {
+    animation-delay: 1.596s;
+  }
+  .code-portrait text:nth-child(59) {
+    animation-delay: 1.624s;
+  }
+  .code-portrait text:nth-child(60) {
+    animation-delay: 1.652s;
+  }
+  .code-portrait text:nth-child(61) {
+    animation-delay: 1.68s;
+  }
+  .code-portrait text:nth-child(62) {
+    animation-delay: 1.708s;
+  }
+  .code-portrait text:nth-child(63) {
+    animation-delay: 1.736s;
+  }
+  .code-portrait text:nth-child(64) {
+    animation-delay: 1.764s;
+  }
+  @keyframes write {
+    0% {
+      clip-path: inset(0 100% 0 0);
+    }
+    9%,
+    93% {
+      clip-path: inset(0 0 0 0);
+    }
+    100% {
+      clip-path: inset(0 0 0 100%);
+    }
   }
   .portrait-frame span {
     position: absolute;
@@ -1120,6 +1371,42 @@
       grid-template-columns: auto minmax(0, 1fr);
       gap: 2.5rem;
       align-items: start;
+    }
+  }
+}
+
+@layer components {
+  /* The workshop band ---------------------------------------------------------
+     A full-bleed step into another room, holding nothing but the drawing. */
+  .room-band {
+    padding-block: clamp(3.5rem, 9vw, 6.5rem);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .room-layout {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+  .room-line {
+    margin-top: 1rem;
+    max-width: 30ch;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .room-figure {
+    width: 100%;
+    max-width: 44rem;
+    margin-inline: auto;
+  }
+  @media (min-width: 52rem) {
+    .room-layout {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: 3rem;
+    }
+    .room-copy {
+      align-self: start;
     }
   }
 }

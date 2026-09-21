@@ -1,0 +1,28 @@
+---
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import Workstation from './workstation.astro';
+interface Props {
+  locale: Locale;
+}
+const { room } = messages(Astro.props.locale);
+---
+
+<!-- A band that bleeds edge to edge: the page changes world here, and the only
+     thing in it is the drawing of the place the rest of the page comes from. -->
+<section class="room-band band-shade" aria-labelledby="room-heading">
+  <div class="measure room-layout">
+    <div class="room-copy">
+      <h2 class="section-label" id="room-heading">
+        <span class="section-index" aria-hidden="true">
+          —
+        </span>
+        <span>{room.heading}</span>
+      </h2>
+      <p class="room-line">{room.line}</p>
+    </div>
+    <div class="room-figure reveal">
+      <Workstation />
+    </div>
+  </div>
+</section>

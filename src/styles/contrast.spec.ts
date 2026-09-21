@@ -33,21 +33,27 @@ function contrast(a: string, b: string): number {
   return ((high ?? 0) + 0.05) / ((low ?? 0) + 0.05);
 }
 
+// Every surface text can land on. Adding a background without adding it here
+// is how --faint shipped at 4.44 against the band: the token test passed and
+// only axe, at the end of the browser suite, caught it.
 const [paperLight, paperDark] = pair('paper');
 const [surfaceLight, surfaceDark] = pair('surface');
+const [bandLight, bandDark] = pair('band');
 
 describe('semantic colour tokens', () => {
   // WCAG 2.1 AA for body text. Every token that paints text is covered; a new
   // text token must be added here or it ships unchecked.
   it.each(['ink', 'muted', 'faint'])(
-    '--%s reads against both canvases in both themes',
+    '--%s reads against every surface in both themes',
     (name) => {
       const [light, dark] = pair(name);
       const combinations: [string, string][] = [
         [light, paperLight],
         [light, surfaceLight],
+        [light, bandLight],
         [dark, paperDark],
         [dark, surfaceDark],
+        [dark, bandDark],
       ];
       for (const [fg, bg] of combinations) {
         expect(

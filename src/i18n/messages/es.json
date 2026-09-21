@@ -29,6 +29,10 @@
     "repositories": "Proyectos con código público",
     "technologies": "Tecnologías en uso"
   },
+  "room": {
+    "heading": "El taller",
+    "line": "Dos pantallas, una terminal y café. Aquí es donde pasa todo lo de arriba."
+  },
   "experience": {
     "heading": "Experiencia",
     "present": "Actualidad",
