@@ -105,6 +105,13 @@ test('robots and sitemap expose canonical production URLs', async ({
   expect(xml).not.toContain(`<loc>${origin}/</loc>`);
 });
 
+// One capture per rendered composition: the home page and a case study, which
+// lay out differently, at every width and theme a reviewer is asked to inspect.
+const compositions = {
+  home: { es: '/es/', en: '/en/' },
+  case: { es: '/es/proyectos/starwars-api/', en: '/en/projects/starwars-api/' },
+} as const;
+
 test('manual visual review evidence at narrow, tablet and desktop widths', async ({
   page,
 }, testInfo) => {
@@ -112,18 +119,23 @@ test('manual visual review evidence at narrow, tablet and desktop widths', async
     await page.setViewportSize({ width, height: 900 });
     for (const colorScheme of ['light', 'dark'] as const) {
       await page.emulateMedia({ colorScheme });
-      for (const locale of ['es', 'en']) {
-        await page.goto(`/${locale}/`);
-        await page.evaluate(() => document.fonts.ready);
-        expect(
-          await page.evaluate(
-            () => document.documentElement.scrollWidth <= innerWidth,
-          ),
-        ).toBe(true);
-        await page.screenshot({
-          path: testInfo.outputPath(`${locale}-${width}-${colorScheme}.png`),
-          fullPage: true,
-        });
+      for (const [name, paths] of Object.entries(compositions)) {
+        for (const locale of ['es', 'en'] as const) {
+          await page.goto(paths[locale]);
+          await page.evaluate(() => document.fonts.ready);
+          expect(
+            await page.evaluate(
+              () => document.documentElement.scrollWidth <= innerWidth,
+            ),
+            `${paths[locale]} at ${width}px`,
+          ).toBe(true);
+          await page.screenshot({
+            path: testInfo.outputPath(
+              `${name}-${locale}-${width}-${colorScheme}.png`,
+            ),
+            fullPage: true,
+          });
+        }
       }
     }
   }

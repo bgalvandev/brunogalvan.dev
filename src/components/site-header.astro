@@ -7,8 +7,9 @@ import { pagePath, type RouteKey } from '@/i18n/routes';
 interface Props {
   locale: Locale;
   route: RouteKey;
+  slug?: string | undefined;
 }
-const { locale, route } = Astro.props;
+const { locale, route, slug } = Astro.props;
 ---
 
 <header class="site-header">
@@ -16,7 +17,7 @@ const { locale, route } = Astro.props;
     {site.name}
   </a>
   <div class="header-controls">
-    <LanguageSwitcher locale={locale} route={route} />
+    <LanguageSwitcher locale={locale} route={route} slug={slug} />
     <ThemeToggle locale={locale} />
   </div>
 </header>

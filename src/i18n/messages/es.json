@@ -86,7 +86,8 @@
     "links": {
       "repository": "Repositorio",
       "demo": "Demo",
-      "private": "Repositorio privado"
+      "private": "Repositorio privado",
+      "caseStudy": "Caso de estudio"
     },
     "items": {
       "vitalpro": {
@@ -107,6 +108,100 @@
       "placer-sano": {
         "summary": "Sitio de restaurante construido con Astro y desplegado en Netlify."
       }
+    },
+    "detail": {
+      "back": "Todos los proyectos"
+    }
+  },
+  "caseStudies": {
+    "starwars-api": {
+      "lead": "API REST serverless sobre AWS Lambda y DynamoDB que expone los personajes de Star Wars traducidos al español.",
+      "sections": [
+        {
+          "heading": "Qué resuelve",
+          "body": [
+            "SWAPI entrega los personajes de Star Wars en inglés y con el modelo de datos de su propia base. Esta API se pone delante: traduce ese modelo al español y, además de leer de SWAPI, permite crear, consultar, actualizar y borrar personajes propios en DynamoDB."
+          ]
+        },
+        {
+          "heading": "Cómo está organizado",
+          "body": [
+            "El código separa cuatro capas. El dominio declara el contrato del repositorio de personajes y sus errores; la infraestructura implementa ese contrato contra DynamoDB; la capa de datos aísla la tabla y su modelo; la presentación expone dos grupos de rutas, uno que lee de SWAPI y otro que opera sobre DynamoDB.",
+            "La presentación nunca menciona DynamoDB: depende de la interfaz declarada en el dominio, así que cambiar el almacenamiento es reemplazar una implementación, no reescribir los controladores."
+          ]
+        },
+        {
+          "heading": "Infraestructura",
+          "body": [
+            "Serverless Framework describe en un solo archivo la función Lambda sobre Node.js 20, la API HTTP y la tabla DynamoDB. La política IAM concede exactamente cinco acciones —Scan, GetItem, PutItem, UpdateItem y DeleteItem— y solo sobre esa tabla. Región, nombre de tabla y credenciales se resuelven por variables de entorno; el repositorio no guarda ninguna."
+          ]
+        },
+        {
+          "heading": "Estado",
+          "body": [
+            "El endpoint que estuvo desplegado ya no responde, así que la evidencia disponible es el código."
+          ]
+        }
+      ]
+    },
+    "idbi-invoice": {
+      "lead": "API REST en Laravel que registra comprobantes electrónicos en XML, los deja consultables y totaliza por moneda.",
+      "sections": [
+        {
+          "heading": "Qué resuelve",
+          "body": [
+            "Un comprobante electrónico llega como archivo XML. La API recibe esos archivos, extrae lo que importa —emisor, receptor, moneda, totales y líneas de detalle— y lo guarda en una estructura consultable: una entidad para la cabecera del comprobante y otra para sus líneas."
+          ]
+        },
+        {
+          "heading": "Autenticación y rutas",
+          "body": [
+            "Las rutas están versionadas y divididas por acceso: las públicas cubren registro e inicio de sesión, y el resto vive detrás del middleware que verifica el JSON Web Token. Bajo el prefijo de comprobantes quedan cinco endpoints: listar, registrar, borrar por identificador, totalizar por moneda y regularizar."
+          ]
+        },
+        {
+          "heading": "Un controlador por acción",
+          "body": [
+            "Cada endpoint es un controlador de acción única. La validación de entrada vive en Form Requests y la salida pasa por API Resources, de modo que el modelo de base de datos no se filtra a la respuesta y cada endpoint tiene un único motivo para cambiar."
+          ]
+        },
+        {
+          "heading": "Trabajo en segundo plano",
+          "body": [
+            "Registrar un lote no bloquea la petición: un job asíncrono hace el trabajo pesado y un evento de dominio dispara el listener que notifica al usuario.",
+            "El entorno de desarrollo se levanta con Docker Compose sobre PHP, Nginx y MySQL, e incluye MailHog para revisar esos correos sin llegar a enviarlos."
+          ]
+        }
+      ]
+    },
+    "rimac-frontend": {
+      "lead": "Aplicación React con TypeScript: un recorrido de tres pasos para cotizar y elegir un plan de seguro.",
+      "sections": [
+        {
+          "heading": "Qué resuelve",
+          "body": [
+            "Prueba técnica de Softtek para RIMAC. El usuario entra con sus datos, indica para quién es el plan, compara las opciones disponibles y llega al resumen de la contratación."
+          ]
+        },
+        {
+          "heading": "Tres rutas, tres pasos",
+          "body": [
+            "React Router define el recorrido completo: inicio, planes y resumen. Cada paso es una página propia, así que el avance queda visible en la URL en lugar de esconderse en el estado de un componente."
+          ]
+        },
+        {
+          "heading": "Componentes y estilos",
+          "body": [
+            "Cada componente vive en su carpeta junto a su hoja de estilos en módulo: los estilos quedan acotados al componente que los usa y no hay una hoja global que crezca sin control. El botón, la casilla, la cabecera, el pie y el formulario con sus subcomponentes siguen la misma forma, y los iconos son componentes React en lugar de archivos sueltos."
+          ]
+        },
+        {
+          "heading": "Datos y dependencias",
+          "body": [
+            "Los datos de usuario y de planes vienen de APIs externas consumidas con Axios, y el proyecto se construye con Vite. No incorpora ninguna librería de estado: para un recorrido de tres pasos, el enrutador y el estado local alcanzan."
+          ]
+        }
+      ]
     }
   },
   "stack": {

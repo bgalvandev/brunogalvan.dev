@@ -34,8 +34,14 @@ was rejected here because no entry has a body yet; a collection would add a
 schema, a loader and a second place to look for one line of prose per project,
 and its i18n story still ends in one entry per language. Putting the whole record
 in the catalogs was also rejected: it would translate `PostgreSQL` and
-`2024-12`, and no type would connect a period to its highlights. This decision is
-revisited the moment a project earns a written case study with a body.
+`2024-12`, and no type would connect a period to its highlights.
+
+The three case studies that ship follow the same split: the prose lives in a
+`caseStudies` catalog namespace and the project data names its study through a
+`CaseStudyId`, so a project page cannot exist without prose in both languages and
+prose cannot exist without a page. That holds while a study is a lead plus a few
+headed paragraphs. A collection returns when an entry needs a rich body —
+images, code samples or anything an author would rather write as Markdown.
 
 ## Verification
 

@@ -1,0 +1,40 @@
+---
+import { site } from '@/config/site';
+import { locales, type Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import { pagePath, routeSegment } from '@/i18n/routes';
+import SiteLayout from '@/layouts/site-layout.astro';
+import ProjectDetail from '@/modules/projects/project-detail.astro';
+import { caseStudies } from '@/modules/projects/projects';
+// The localized segment comes from the route table, so /es/proyectos/ and
+// /en/projects/ are generated rather than rewritten from one another.
+export function getStaticPaths() {
+  return locales.flatMap((locale) =>
+    caseStudies.map((entry) => ({
+      params: {
+        locale,
+        section: routeSegment('projects', locale),
+        slug: entry.id,
+      },
+      props: { locale, entry },
+    })),
+  );
+}
+interface Props {
+  locale: Locale;
+  entry: (typeof caseStudies)[number];
+}
+const { locale, entry } = Astro.props;
+const { projects } = messages(locale);
+---
+
+<SiteLayout
+  locale={locale}
+  title={`${entry.project.name} — ${site.name}`}
+  description={projects.items[entry.project.id].summary}
+  canonicalPath={pagePath('projects', locale, entry.id)}
+  route="projects"
+  slug={entry.id}
+>
+  <ProjectDetail locale={locale} entry={entry} />
+</SiteLayout>

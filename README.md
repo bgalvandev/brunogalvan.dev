@@ -2,8 +2,8 @@
 
 Bruno Galván's bilingual personal website: Astro, strict TypeScript and Tailwind
 CSS v4. The home page carries the professional record, the public projects and
-the technology inventory in Spanish and English; project case studies are future
-work.
+the technology inventory; each project with something to show has its own case
+study page. Every route exists in Spanish and English.
 
 ## Local development
 
@@ -16,7 +16,8 @@ pnpm install --frozen-lockfile
 pnpm run dev
 ```
 
-Open `http://127.0.0.1:3000/es/` or `http://127.0.0.1:3000/en/`.
+Open `http://127.0.0.1:3000/es/` or `http://127.0.0.1:3000/en/`; case studies
+live under `/es/proyectos/<slug>/` and `/en/projects/<slug>/`.
 The root URL redirects to `/es/`; the visible language selector links to `/en/`. Stop the owned terminal process with Ctrl+C.
 No environment file, database or container service is required.
 

@@ -86,7 +86,8 @@
     "links": {
       "repository": "Repository",
       "demo": "Demo",
-      "private": "Private repository"
+      "private": "Private repository",
+      "caseStudy": "Case study"
     },
     "items": {
       "vitalpro": {
@@ -107,6 +108,100 @@
       "placer-sano": {
         "summary": "Restaurant site built with Astro and deployed on Netlify."
       }
+    },
+    "detail": {
+      "back": "All projects"
+    }
+  },
+  "caseStudies": {
+    "starwars-api": {
+      "lead": "Serverless REST API on AWS Lambda and DynamoDB that serves the Star Wars characters translated into Spanish.",
+      "sections": [
+        {
+          "heading": "What it solves",
+          "body": [
+            "SWAPI returns the Star Wars characters in English, shaped by its own database. This API sits in front of it: it translates that model into Spanish and, beyond reading from SWAPI, lets you create, read, update and delete your own characters in DynamoDB."
+          ]
+        },
+        {
+          "heading": "How it is organised",
+          "body": [
+            "The code separates four layers. The domain declares the character repository contract and its errors; infrastructure implements that contract against DynamoDB; the data layer isolates the table and its model; presentation exposes two route groups, one reading from SWAPI and one operating on DynamoDB.",
+            "Presentation never mentions DynamoDB: it depends on the interface the domain declares, so changing the storage means replacing one implementation rather than rewriting the controllers."
+          ]
+        },
+        {
+          "heading": "Infrastructure",
+          "body": [
+            "Serverless Framework describes the Lambda function on Node.js 20, the HTTP API and the DynamoDB table in a single file. The IAM policy grants exactly five actions — Scan, GetItem, PutItem, UpdateItem and DeleteItem — and only on that table. Region, table name and credentials resolve from environment variables; the repository stores none of them."
+          ]
+        },
+        {
+          "heading": "Status",
+          "body": [
+            "The endpoint that was deployed no longer answers, so the available evidence is the code itself."
+          ]
+        }
+      ]
+    },
+    "idbi-invoice": {
+      "lead": "Laravel REST API that records electronic invoices as XML, keeps them queryable and totals them per currency.",
+      "sections": [
+        {
+          "heading": "What it solves",
+          "body": [
+            "An electronic invoice arrives as an XML file. The API takes those files, extracts what matters — issuer, receiver, currency, totals and detail lines — and stores it in a queryable structure: one entity for the invoice header and another for its lines."
+          ]
+        },
+        {
+          "heading": "Authentication and routes",
+          "body": [
+            "Routes are versioned and split by access: the public ones cover sign-up and login, and everything else sits behind the middleware that verifies the JSON Web Token. Under the vouchers prefix there are five endpoints: list, record, delete by identifier, total per currency and regularise."
+          ]
+        },
+        {
+          "heading": "One controller per action",
+          "body": [
+            "Every endpoint is a single-action controller. Input validation lives in Form Requests and output goes through API Resources, so the database model never leaks into the response and each endpoint has one reason to change."
+          ]
+        },
+        {
+          "heading": "Background work",
+          "body": [
+            "Recording a batch does not block the request: an asynchronous job does the heavy work and a domain event triggers the listener that notifies the user.",
+            "The development environment comes up through Docker Compose on PHP, Nginx and MySQL, and includes MailHog so those emails can be reviewed without ever being sent."
+          ]
+        }
+      ]
+    },
+    "rimac-frontend": {
+      "lead": "React application with TypeScript: a three-step journey to quote and choose an insurance plan.",
+      "sections": [
+        {
+          "heading": "What it solves",
+          "body": [
+            "A Softtek technical challenge for RIMAC. The user enters their details, says who the plan is for, compares the available options and reaches the summary of the purchase."
+          ]
+        },
+        {
+          "heading": "Three routes, three steps",
+          "body": [
+            "React Router defines the whole journey: home, plans and summary. Each step is its own page, so progress stays visible in the URL instead of hiding inside a component's state."
+          ]
+        },
+        {
+          "heading": "Components and styles",
+          "body": [
+            "Every component lives in its own folder next to its style module: styles stay scoped to the component that uses them and there is no global sheet growing out of control. The button, the checkbox, the header, the footer and the form with its subcomponents all follow the same shape, and the icons are React components rather than loose files."
+          ]
+        },
+        {
+          "heading": "Data and dependencies",
+          "body": [
+            "User and plan data come from external APIs consumed with Axios, and the project builds with Vite. It carries no state library: for a three-step journey, the router and local state are enough."
+          ]
+        }
+      ]
     }
   },
   "stack": {

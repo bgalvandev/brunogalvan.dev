@@ -3,11 +3,13 @@ import PageSection from '@/components/page-section.astro';
 import TagList from '@/components/tag-list.astro';
 import type { Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
+import { pagePath } from '@/i18n/routes';
 import { projects } from './projects';
 interface Props {
   locale: Locale;
 }
-const { projects: catalog } = messages(Astro.props.locale);
+const { locale } = Astro.props;
+const { projects: catalog } = messages(locale);
 ---
 
 <PageSection id="projects" label={catalog.heading}>
@@ -22,6 +24,15 @@ const { projects: catalog } = messages(Astro.props.locale);
         <p class="project-summary">{catalog.items[project.id].summary}</p>
         <TagList items={project.technologies} />
         <p class="project-links">
+          {project.caseStudy && (
+            <a
+              class="inline-link"
+              href={pagePath('projects', locale, project.caseStudy)}
+              aria-label={`${catalog.links.caseStudy} — ${project.name}`}
+            >
+              {catalog.links.caseStudy}
+            </a>
+          )}
           {project.repository ? (
             <a
               class="inline-link"

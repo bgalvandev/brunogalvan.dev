@@ -12,6 +12,7 @@ future requirements and get their own decision records when they arrive.
 src/
   pages/                     URL mapping and composition roots
     [locale]/index.astro      Statically generated /es/ and /en/
+    [locale]/[section]/       Case studies: /es/proyectos/ and /en/projects/
     404.astro                Bilingual recovery, noindex
     robots.txt.ts            Static crawler endpoint
   layouts/                   HTML document, global assets, metadata wiring
@@ -49,8 +50,11 @@ is derived from the earliest period in the timeline instead of being written dow
 - `output: static` produces `dist/`, with no application server requirement.
 - `/es/` and `/en/` are independent, cacheable documents. Cookies and browser
   language do not change their content. `/` redirects to `/es/`.
-- Central route pairs drive internal links, canonical paths and reciprocal
-  `hreflang`; each page's default-locale URL is its `x-default`.
+- `src/i18n/routes.ts` holds the localized path segment for each route, and every
+  internal link, canonical path and reciprocal `hreflang` is built from it; each
+  page's default-locale URL is its `x-default`. A page below a route passes its
+  slug alongside the route, so a translation of `/es/proyectos/<slug>/` is
+  `/en/projects/<slug>/` and never a rewritten prefix.
 - Catalog types catch missing values, and a parity test catches extra/missing keys
   in either language. Add formatted plurals only when actual content needs them.
 - Static sitemap and robots use the public production origin; missing URLs return
@@ -65,11 +69,13 @@ is derived from the earliest period in the timeline instead of being written dow
 
 ## Adding a page
 
-Add a feature folder under `src/modules`, both message catalogs, a route pair in
-`src/i18n/routes.ts` and thin route composition. For editorial content, use a
-schema-validated Astro content collection when entries need structured fields
-([ADR 0008](adr/0008-portfolio-content-model.md)). Add equivalent locale links
-and metadata tests, including an appropriate x-default for that page.
+Add a feature folder under `src/modules`, both message catalogs, a localized
+segment in `src/i18n/routes.ts` and thin route composition. A route with
+children generates them from one dynamic page whose params come from
+`routeSegment`, so neither segment is derived from the other. For editorial
+content, use a schema-validated Astro content collection when entries need a
+rich body ([ADR 0008](adr/0008-portfolio-content-model.md)). Add equivalent
+locale links and metadata tests, including an appropriate x-default.
 
 A form or database-backed page changes the deployment model: it needs an adapter
 and host decision recorded as an ADR, server-only environment validation, input

@@ -2,11 +2,12 @@
 
 ## Current brief
 
-The deliverable is the portfolio home page: one document a visitor reads from top
-to bottom to decide whether to write. It must answer who Bruno Galván is, what he
-has built, with what, and how to reach him, in Spanish or English, in either
-theme. Project case studies are the next requirement and are not approved yet.
-Do not manufacture accomplishments, clients, testimonials or service claims.
+The deliverable is the portfolio: a home page a visitor reads from top to bottom
+to decide whether to write, and a case study for each project that has something
+to show. It must answer who Bruno Galván is, what he has built, with what, and
+how to reach him, in Spanish or English, in either theme. Do not manufacture
+accomplishments, clients, testimonials or service claims; a project whose source
+is private or whose deployment is gone says so instead of linking nowhere.
 
 ## Shared decisions
 
@@ -37,6 +38,11 @@ Do not manufacture accomplishments, clients, testimonials or service claims.
   (periods, technologies, project kind, link names) in mono; hairlines separate
   sections and entries; the accent is spent only on focus and the current
   language. Reading order is hero, experience, projects, stack, about, contact.
+- **Case study composition.** A case study drops the labelled left column: it is
+  one measure of prose under the project name, opening with a back link, the
+  kind, the lead, the technologies and the real destinations, then hairline-
+  separated sections whose headings are sentences rather than category labels.
+  The page is narrower than the home measure because it is read, not scanned.
 - **Rejected alternatives.** A product-marketing surface of cards, layered
   backgrounds and scroll-revealed blocks: it adds surface and motion to maintain
   while the evidence here is text, not product screenshots. An expressive,

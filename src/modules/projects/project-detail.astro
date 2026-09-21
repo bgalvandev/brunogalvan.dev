@@ -1,0 +1,55 @@
+---
+import SiteFooter from '@/components/site-footer.astro';
+import SiteHeader from '@/components/site-header.astro';
+import TagList from '@/components/tag-list.astro';
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import { pagePath } from '@/i18n/routes';
+import type { caseStudies } from './projects';
+interface Props {
+  locale: Locale;
+  entry: (typeof caseStudies)[number];
+}
+const { locale, entry } = Astro.props;
+const { project, id } = entry;
+const { projects: catalog, caseStudies: studies } = messages(locale);
+const study = studies[id];
+---
+
+<SiteHeader locale={locale} route="projects" slug={id} />
+<main id="main" tabindex="-1">
+  <p class="case-back">
+    <a class="inline-link" href={`${pagePath('home', locale)}#projects`}>
+      {catalog.detail.back}
+    </a>
+  </p>
+  <article class="case">
+    <p class="hero-meta">{catalog.kinds[project.kind]}</p>
+    <h1 class="case-title">{project.name}</h1>
+    <p class="case-lead">{study.lead}</p>
+    <TagList items={project.technologies} />
+    <p class="project-links">
+      {project.repository ? (
+        <a class="inline-link" href={project.repository}>
+          {catalog.links.repository}
+        </a>
+      ) : (
+        <span class="project-unavailable">{catalog.links.private}</span>
+      )}
+      {project.demo && (
+        <a class="inline-link" href={project.demo}>
+          {catalog.links.demo}
+        </a>
+      )}
+    </p>
+    {study.sections.map((section) => (
+      <section class="case-section">
+        <h2 class="case-heading">{section.heading}</h2>
+        {section.body.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </section>
+    ))}
+  </article>
+</main>
+<SiteFooter locale={locale} />

@@ -276,6 +276,47 @@
     color: var(--muted);
   }
 
+  /* Case study ------------------------------------------------------------ */
+  .case-back {
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .case {
+    margin-top: 2rem;
+  }
+  .case-title {
+    margin-top: 1rem;
+    font-size: clamp(1.75rem, 1.1rem + 2.6vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  .case-lead {
+    margin-top: 1rem;
+    max-width: 58ch;
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .case > .tags {
+    margin-top: 1.5rem;
+  }
+  .case > .project-links {
+    margin-top: 1rem;
+  }
+  .case-section {
+    display: grid;
+    gap: 1rem;
+    max-width: 66ch;
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    padding-top: clamp(1.75rem, 3vw, 2.25rem);
+    border-top: 1px solid var(--line);
+    line-height: 1.7;
+  }
+  .case-heading {
+    font-size: 1.0625rem;
+  }
+
   /* Stack ----------------------------------------------------------------- */
   .stack-groups {
     display: grid;

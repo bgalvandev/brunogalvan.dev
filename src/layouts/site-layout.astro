@@ -12,6 +12,7 @@ interface Props {
   description: string;
   canonicalPath: string;
   route?: RouteKey;
+  slug?: string;
   noindex?: boolean;
 }
 const { locale, ...metadata } = Astro.props;
