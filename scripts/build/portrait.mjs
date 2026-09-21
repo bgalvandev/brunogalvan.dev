@@ -7,10 +7,9 @@ import sharp from 'sharp';
 // luminance of the photograph. The face is not drawn on top of the code - it
 // is what the code's light and dark make. Run by hand (`pnpm run art:generate`).
 const root = path.resolve(import.meta.dirname, '../..');
-// 78 columns, not more: each row is a run of spans, and below about 8px the
-// browser rounds every run's start position independently, so the monospace
-// grid drifts and the glyphs overlap. Fewer, larger cells keep it exact.
-const COLS = 78;
+// Coarse on purpose. The likeness is meant to be recognised, not studied: at
+// this density it reads as a person and stops short of being a photograph.
+const COLS = 58;
 // Monospace cells are about twice as tall as they are wide.
 const CELL_RATIO = 0.5;
 
@@ -27,6 +26,7 @@ const rows = Math.round((COLS * CELL_RATIO * height) / width);
 // no face appears at all.
 const { data } = await image
   .resize(COLS, rows, { fit: 'fill' })
+  .blur(2.2)
   .grayscale()
   .normalise()
   .linear(1.9, -92)
@@ -35,8 +35,12 @@ const { data } = await image
 
 // The source text. Real code, stripped to a continuous stream of glyphs so the
 // grid never breaks mid-token in a way that reads as noise.
+// Abstract source only: the geometry that draws the room and the arithmetic
+// that checks contrast. Nothing here names an employer, a client or a date -
+// the page spent the same afternoon removing that kind of text, and it has no
+// business reappearing as decoration.
 const sources = await Promise.all(
-  ['src/i18n/routes.ts', 'src/modules/home/experience.ts'].map((file) =>
+  ['scripts/build/workstation.mjs', 'src/styles/contrast.spec.ts'].map((file) =>
     readFile(path.join(root, file), 'utf8'),
   ),
 );
@@ -60,11 +64,11 @@ const stream = sources
   .replace(/[^\x20-\x7e]/g, '')
   .trim();
 
-// Eight tiers, read straight off the luminance: a bright pixel carries a bright
+// Five tiers, read straight off the luminance: a bright pixel carries a bright
 // glyph. The portrait is shown on a dark plate in both themes - it is another
 // screen in the same room as the drawing - so one mapping serves both. Reading
 // it inverted lit the hair and hollowed out the face.
-const TIERS = 8;
+const TIERS = 5;
 // SVG rather than a <pre>: laid out as HTML the rows became dozens of inline
 // runs, and the engine rounded each run's origin until the columns drifted and
 // the glyphs overlapped. One <text> per row with an explicit textLength pins

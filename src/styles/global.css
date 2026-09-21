@@ -1064,27 +1064,18 @@
     user-select: none;
   }
   .code-portrait .t0 {
-    fill-opacity: 0.04;
-  }
-  .code-portrait .t1 {
     fill-opacity: 0.05;
   }
+  .code-portrait .t1 {
+    fill-opacity: 0.14;
+  }
   .code-portrait .t2 {
-    fill-opacity: 0.1;
+    fill-opacity: 0.34;
   }
   .code-portrait .t3 {
-    fill-opacity: 0.18;
+    fill-opacity: 0.66;
   }
   .code-portrait .t4 {
-    fill-opacity: 0.32;
-  }
-  .code-portrait .t5 {
-    fill-opacity: 0.54;
-  }
-  .code-portrait .t6 {
-    fill-opacity: 0.8;
-  }
-  .code-portrait .t7 {
     fill-opacity: 1;
   }
   .portrait-frame span {
