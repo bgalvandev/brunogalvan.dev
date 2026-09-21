@@ -1,0 +1,39 @@
+---
+import PageSection from '@/components/page-section.astro';
+import TagList from '@/components/tag-list.astro';
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import { formatPeriod, positions } from './experience';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { experience } = messages(locale);
+---
+
+<PageSection id="experience" label={experience.heading}>
+  <div class="timeline">
+    {positions.map((position) => {
+      const entry = experience.items[position.id];
+      return (
+        <article class="position">
+          <p class="position-period">
+            {formatPeriod(position, locale, experience.present)}
+          </p>
+          <h3 class="position-role">{entry.role}</h3>
+          <p class="position-company">
+            {position.company} — {entry.context}
+          </p>
+          <ul class="position-highlights">
+            {entry.highlights.map((highlight) => (
+              <li>{highlight}</li>
+            ))}
+          </ul>
+          {position.technologies.length > 0 && (
+            <TagList items={position.technologies} />
+          )}
+        </article>
+      );
+    })}
+  </div>
+</PageSection>

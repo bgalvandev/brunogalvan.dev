@@ -1,20 +1,150 @@
 {
   "meta": {
-    "title": "Bruno Galván — Software engineer",
-    "description": "Personal website of Bruno Galván, software engineer. Get in touch about projects and collaborations.",
-    "ogImageAlt": "Bruno Galván, software engineer"
+    "title": "Bruno Galván — Senior Full Stack Developer",
+    "description": "Bruno Galván, Senior Full Stack Developer in Lima, Peru. Web platforms, APIs and integrations with React, TypeScript, Node.js, PHP and AI automation.",
+    "ogImageAlt": "Bruno Galván, Senior Full Stack Developer"
   },
   "home": {
-    "headline": "Software engineer.",
-    "intro": "Get in touch to talk about a project or a collaboration."
+    "role": "Senior Full Stack Developer",
+    "location": "Lima, Peru",
+    "headline": "I build the platforms, APIs and integrations a business uses every day.",
+    "intro": "{years} years working on software for healthcare, education, retail and ERP, from the interface to the database: APIs, integrations with external systems and automation with language models."
   },
   "navigation": {
     "language": "Language",
     "skip": "Skip to content",
     "home": "Home"
   },
-  "theme": { "darkMode": "Dark mode" },
-  "contact": { "heading": "Contact" },
+  "theme": {
+    "darkMode": "Dark mode"
+  },
+  "experience": {
+    "heading": "Experience",
+    "present": "Present",
+    "items": {
+      "clinicsay": {
+        "role": "Senior Full Stack Developer",
+        "context": "Clinic management and artificial intelligence",
+        "highlights": [
+          "I develop and maintain Clinickeys, the platform clinics use to manage patients, appointments, finances and daily operations.",
+          "I am building ClinicSay, the next generation of that platform: billing, finances, calendar and administration, on both frontend and backend.",
+          "I built an artificial intelligence API for conversations, agents and tools, applying Clean Architecture and Domain-Driven Design.",
+          "I integrated that API with Kommo CRM and Salesbot, and automated clinical forms and operational flows with language models.",
+          "I diagnose and resolve critical production incidents, from the interface down to the database."
+        ]
+      },
+      "metrica-andina": {
+        "role": "Senior Developer Analyst",
+        "context": "Web applications and microservices for education and services",
+        "highlights": [
+          "I designed, built and maintained scalable web applications based on microservices.",
+          "I automated a WhatsApp flow inside an omnichannel platform: Facebook leads, message and template delivery.",
+          "I integrated the Salesforce CRM REST API with Instituto SISE's procedures portal and added eight procedures, including the complaints book.",
+          "I built web modules integrated with Universidad Científica del Sur's mobile application: authentication, payment lookup and an interactive map.",
+          "I maintained Educa_d's supplier and approvals portal."
+        ]
+      },
+      "surtidores": {
+        "role": "PHP Developer",
+        "context": "Modernising an enterprise ERP",
+        "highlights": [
+          "I led development of the new web ERP with Laravel, JavaScript and PostgreSQL.",
+          "I centralised company processes inside the ERP.",
+          "I maintained and extended the previous ERP, built on PHP 5.",
+          "I integrated WordPress and WooCommerce to consume the online store's information.",
+          "I ran performance tests and technical training plans for end users."
+        ]
+      },
+      "platanitos": {
+        "role": "Web Developer · SAP Analyst",
+        "context": "Retail and e-commerce",
+        "highlights": [
+          "I built web applications with JavaScript, PHP 8 and jQuery under an MVC pattern.",
+          "I built an alerting application connecting the physical stores to headquarters.",
+          "I took part in the electronic invoicing rollout and wrote a JavaScript library for OSE validations.",
+          "I maintained the SQL data behind sales, inventory, orders, invoicing and stock movements.",
+          "As an SAP analyst I oversaw accounting entries, orders, invoicing and purchasing, and produced daily reports joining SAP with MySQL."
+        ]
+      },
+      "usil": {
+        "role": "IT Support",
+        "context": "Support for administrative staff and students",
+        "highlights": [
+          "I handled incidents through Helpdesk with remote and on-site support, and reviewed equipment periodically."
+        ]
+      }
+    }
+  },
+  "projects": {
+    "heading": "Projects",
+    "intro": "An owned product and public code. Every link leads to the repository or the deployed site.",
+    "kinds": {
+      "product": "Own product",
+      "project": "Project",
+      "challenge": "Technical challenge"
+    },
+    "links": {
+      "repository": "Repository",
+      "demo": "Demo",
+      "private": "Private repository"
+    },
+    "items": {
+      "vitalpro": {
+        "summary": "Modular SaaS platform for service businesses: clients, bookings, payments and follow-up on a vertical-agnostic core, with vertical extensions such as healthcare. My own project, in development."
+      },
+      "starwars-api": {
+        "summary": "Serverless REST API that consumes SWAPI, translates its model into Spanish and persists characters in DynamoDB, organised with Clean Architecture."
+      },
+      "idbi-invoice": {
+        "summary": "REST API to record and query XML invoices: JWT authentication, queued processing, filters and totals per currency."
+      },
+      "rimac-frontend": {
+        "summary": "Responsive application that consumes APIs, validates forms, lets you pick a plan and shows the summary. Reusable components with Sass and BEM."
+      },
+      "rollpay-auth": {
+        "summary": "Authentication application in PHP with JSON Web Tokens, written following good practices."
+      },
+      "placer-sano": {
+        "summary": "Restaurant site built with Astro and deployed on Netlify."
+      }
+    }
+  },
+  "stack": {
+    "heading": "Stack",
+    "groups": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "data": "Data",
+      "ai": "AI and integrations",
+      "architecture": "Architecture",
+      "platform": "Platform and quality"
+    }
+  },
+  "about": {
+    "heading": "About",
+    "paragraphs": [
+      "Since 2019 I have worked on systems people use every day: medical records, enrolments, inventory, invoicing and orders. Almost always on code that already existed and could not stop working.",
+      "I am equally at home on the frontend and the backend, and what interests me most is the border between them: explicit API contracts, data models that survive change and clear boundaries between layers. I apply Clean Architecture and Domain-Driven Design when the problem justifies it, not out of habit.",
+      "In recent years I have added integrations and automation with language models: conversation APIs, agents and tools connected to CRMs.",
+      "Away from work: video games, film and time to learn new technologies."
+    ],
+    "facts": {
+      "education": {
+        "label": "Education",
+        "value": "Universidad San Ignacio de Loyola — Computing and Informatics (2015–2017)"
+      },
+      "languages": {
+        "label": "Languages",
+        "value": "Spanish native · English elementary"
+      }
+    }
+  },
+  "contact": {
+    "heading": "Contact",
+    "intro": "Write to me to talk about a project or a collaboration.",
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
+  },
   "notFound": {
     "title": "Page not found",
     "description": "The page you are looking for is unavailable.",

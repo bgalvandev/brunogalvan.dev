@@ -22,16 +22,18 @@ const {
 const canonical = new URL(canonicalPath, site.url).href;
 const image = new URL(`/og/${locale}.png`, site.url).href;
 const { meta, home } = messages(locale);
-// Person entity for search engines; the job title is the headline without its
-// closing period. Contact and profile come from the single identity source.
+// Person entity for search engines. The job title and location are the same
+// rendered strings the page shows; contact and profiles come from the single
+// identity source.
 const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: site.name,
   url: site.url,
   email: `mailto:${site.email}`,
-  jobTitle: home.headline.replace(/\.$/, ''),
-  sameAs: [site.github],
+  jobTitle: home.role,
+  address: { '@type': 'PostalAddress', addressLocality: home.location },
+  sameAs: [site.github, site.linkedin],
 };
 ---
 

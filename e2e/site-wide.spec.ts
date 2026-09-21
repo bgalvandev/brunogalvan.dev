@@ -20,14 +20,14 @@ test('content and locale navigation work without JavaScript', async ({
     await page.goto('/');
     await expect(page).toHaveURL('/es/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Ingeniero de software.',
+      'Construyo plataformas, APIs e integraciones que un negocio usa todos los días.',
     );
     await expect(page.getByRole('link', { name: contact })).toBeVisible();
     await expect(page.locator('[data-theme-toggle]')).toBeHidden();
     await page.getByRole('link', { name: 'English', exact: true }).click();
     await expect(page).toHaveURL('/en/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Software engineer.',
+      'I build the platforms, APIs and integrations a business uses every day.',
     );
   } finally {
     await context.close();

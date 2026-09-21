@@ -1,0 +1,22 @@
+---
+import PageSection from '@/components/page-section.astro';
+import TagList from '@/components/tag-list.astro';
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import { stack } from './stack';
+interface Props {
+  locale: Locale;
+}
+const { stack: catalog } = messages(Astro.props.locale);
+---
+
+<PageSection id="stack" label={catalog.heading}>
+  <div class="stack-groups">
+    {stack.map((group) => (
+      <div class="stack-group">
+        <h3 class="stack-name">{catalog.groups[group.id]}</h3>
+        <TagList items={group.items} />
+      </div>
+    ))}
+  </div>
+</PageSection>

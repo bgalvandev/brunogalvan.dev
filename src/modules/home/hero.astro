@@ -1,0 +1,19 @@
+---
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import { yearsOfExperience } from './experience';
+interface Props {
+  locale: Locale;
+}
+const { home } = messages(Astro.props.locale);
+// Resolved when the site is built, so a deploy keeps the figure honest.
+const intro = home.intro.replace('{years}', String(yearsOfExperience()));
+---
+
+<div class="hero">
+  <p class="hero-meta">
+    {home.role} · {home.location}
+  </p>
+  <h1 class="hero-headline">{home.headline}</h1>
+  <p class="hero-intro">{intro}</p>
+</div>

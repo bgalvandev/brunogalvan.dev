@@ -1,0 +1,25 @@
+---
+import PageSection from '@/components/page-section.astro';
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+interface Props {
+  locale: Locale;
+}
+const { about } = messages(Astro.props.locale);
+---
+
+<PageSection id="about" label={about.heading}>
+  <div class="prose">
+    {about.paragraphs.map((paragraph) => (
+      <p>{paragraph}</p>
+    ))}
+  </div>
+  <dl class="facts">
+    {Object.values(about.facts).map((fact) => (
+      <div>
+        <dt class="fact-label">{fact.label}</dt>
+        <dd class="fact-value">{fact.value}</dd>
+      </div>
+    ))}
+  </dl>
+</PageSection>

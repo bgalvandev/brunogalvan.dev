@@ -1,0 +1,19 @@
+---
+// A labelled region: the mono label holds the left column and sticks beside the
+// content on wide screens, so a long section keeps its heading in view.
+interface Props {
+  id: string;
+  label: string;
+}
+const { id, label } = Astro.props;
+const headingId = `${id}-heading`;
+---
+
+<section class="section" id={id} aria-labelledby={headingId}>
+  <h2 class="section-label" id={headingId}>
+    {label}
+  </h2>
+  <div>
+    <slot />
+  </div>
+</section>

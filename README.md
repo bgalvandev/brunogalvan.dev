@@ -1,8 +1,9 @@
 # brunogalvan.dev
 
-Bruno Galván's bilingual website foundation: Astro, strict TypeScript and Tailwind
-CSS v4. The initial home page is intentionally basic; final design, content and
-additional pages are future work.
+Bruno Galván's bilingual personal website: Astro, strict TypeScript and Tailwind
+CSS v4. The home page carries the professional record, the public projects and
+the technology inventory in Spanish and English; project case studies are future
+work.
 
 ## Local development
 
@@ -35,7 +36,9 @@ live in `public/_redirects` and the build writes `dist/_headers`. See ADR 0007.
   contract, rendering, routes, future database/server capabilities and tooling.
 - [Current decision](docs/adr/0005-astro-foundation.md): alternatives and tradeoffs.
 - [Contributor rules](AGENTS.md): standing standards; procedures in `.agents/skills`.
-- [Design memory](DESIGN.md): the restrained initial page and shared visual intent.
+- [Design memory](DESIGN.md): the editorial-technical direction and shared visual intent.
+- [Content model](docs/adr/0008-portfolio-content-model.md): typed data beside the
+  feature, prose in both catalogs.
 
 ```sh
 pnpm run check

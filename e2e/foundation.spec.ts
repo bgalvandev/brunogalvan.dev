@@ -24,7 +24,9 @@ for (const locale of ['es', 'en'] as const) {
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page).toHaveTitle(new RegExp(identity));
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      locale === 'es' ? 'Ingeniero de software.' : 'Software engineer.',
+      locale === 'es'
+        ? 'Construyo plataformas, APIs e integraciones que un negocio usa todos los días.'
+        : 'I build the platforms, APIs and integrations a business uses every day.',
     );
     await expect(page.getByRole('link', { name: contact })).toHaveAttribute(
       'href',
@@ -76,7 +78,11 @@ for (const locale of ['es', 'en'] as const) {
       '@type': 'Person',
       name: identity,
       url: origin,
-      sameAs: [site.github],
+      sameAs: [site.github, site.linkedin],
+      jobTitle:
+        locale === 'es'
+          ? 'Desarrollador Full Stack Senior'
+          : 'Senior Full Stack Developer',
     });
     expect(errors).toEqual([]);
   });
@@ -112,7 +118,7 @@ test('root opens default content and language links remain explicit', async ({
   await page.goto('/');
   await expect(page).toHaveURL('/es/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Ingeniero de software.',
+    'Construyo plataformas, APIs e integraciones que un negocio usa todos los días.',
   );
   await page.getByRole('link', { name: 'English', exact: true }).click();
   await expect(page).toHaveURL('/en/');

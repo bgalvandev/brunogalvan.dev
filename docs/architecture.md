@@ -1,9 +1,10 @@
 # Website architecture
 
 The application delivers a public bilingual website as static HTML with explicit
-feature ownership. The initial product is one basic home page in two languages.
-Design, editorial content, services, a CMS and a database are separate future
-requirements and get their own decision records when they arrive.
+feature ownership. The product is one portfolio home page in two languages,
+carrying the professional record, the public projects and the technology
+inventory. Project case studies, services, a CMS and a database are separate
+future requirements and get their own decision records when they arrive.
 
 ## Current structure
 
@@ -14,9 +15,10 @@ src/
     404.astro                Bilingual recovery, noindex
     robots.txt.ts            Static crawler endpoint
   layouts/                   HTML document, global assets, metadata wiring
-  components/                Shared SEO, language and theme controls
+  components/                Shared SEO, header, footer, section frame, controls
   modules/
-    home/                    Initial feature presentation
+    home/                    Hero, experience, stack and about, with their data
+    projects/                The project record and its rendered list
   config/site.ts             Approved public identity and canonical origin
   i18n/                      Locale types, route pairs, typed message catalogs
   styles/                    Semantic theme tokens and shared styling
@@ -31,6 +33,16 @@ folder under `modules/`. Tests live beside pure TypeScript behavior; production
 browser tests live in `e2e`. There is no server code, so there is nothing for an
 import guard to check yet; one returns with the first feature that has separate
 responsibilities or the first request-time capability.
+
+## Content model
+
+Page content is split by nature ([ADR 0008](adr/0008-portfolio-content-model.md)).
+Locale-independent fields — periods, employers, repository and demo URLs,
+technology names — are typed data in the feature that renders them; every prose
+string lives in both catalogs under `src/i18n/messages`, keyed by the id the data
+module declares, so `astro check` rejects an entry without a translation. A `null`
+URL renders as plain text rather than a link, and the headline experience figure
+is derived from the earliest period in the timeline instead of being written down.
 
 ## Rendering and localization
 
@@ -55,9 +67,9 @@ responsibilities or the first request-time capability.
 
 Add a feature folder under `src/modules`, both message catalogs, a route pair in
 `src/i18n/routes.ts` and thin route composition. For editorial content, use a
-schema-validated Astro content collection when entries need structured fields.
-Add equivalent locale links and metadata tests, including an appropriate
-x-default for that page.
+schema-validated Astro content collection when entries need structured fields
+([ADR 0008](adr/0008-portfolio-content-model.md)). Add equivalent locale links
+and metadata tests, including an appropriate x-default for that page.
 
 A form or database-backed page changes the deployment model: it needs an adapter
 and host decision recorded as an ADR, server-only environment validation, input

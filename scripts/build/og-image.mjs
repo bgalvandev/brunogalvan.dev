@@ -7,7 +7,7 @@ import { chromium } from '@playwright/test';
 
 // Renders the social card for each locale and the touch icon from the same
 // tokens the site uses, then writes them to public/. Run by hand
-// (`pnpm run og:generate`) when the name, headline, colors or favicon change;
+// (`pnpm run og:generate`) when the name, role, colors or favicon change;
 // the PNGs are committed so the build stays free of a browser dependency.
 const require = createRequire(import.meta.url);
 const root = path.resolve(import.meta.dirname, '../..');
@@ -55,7 +55,7 @@ function card(locale) {
     .mark { width: 72px; height: 10px; background: #2b4be3; border-radius: 2px; }
   </style></head><body>
     <div class="domain">${new URL(site.url).host}</div>
-    <div><div class="mark"></div><h1 style="margin-top:28px">${site.name}</h1><p>${catalogs[locale].home.headline}</p></div>
+    <div><div class="mark"></div><h1 style="margin-top:28px">${site.name}</h1><p>${catalogs[locale].home.role}</p></div>
   </body></html>`;
 }
 

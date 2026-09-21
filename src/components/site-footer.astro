@@ -1,0 +1,29 @@
+---
+import { site } from '@/config/site';
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+interface Props {
+  locale: Locale;
+}
+const { contact } = messages(Astro.props.locale);
+---
+
+<footer class="section" id="contact" aria-labelledby="contact-heading">
+  <h2 class="section-label" id="contact-heading">
+    {contact.heading}
+  </h2>
+  <div>
+    <p class="section-intro">{contact.intro}</p>
+    <div class="contact-links">
+      <a class="contact-link" href={`mailto:${site.email}`}>
+        {site.email}
+      </a>
+      <a class="contact-link" href={site.github} rel="me">
+        {contact.github}
+      </a>
+      <a class="contact-link" href={site.linkedin} rel="me">
+        {contact.linkedin}
+      </a>
+    </div>
+  </div>
+</footer>

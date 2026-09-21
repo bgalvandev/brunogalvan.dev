@@ -1,0 +1,49 @@
+---
+import PageSection from '@/components/page-section.astro';
+import TagList from '@/components/tag-list.astro';
+import type { Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import { projects } from './projects';
+interface Props {
+  locale: Locale;
+}
+const { projects: catalog } = messages(Astro.props.locale);
+---
+
+<PageSection id="projects" label={catalog.heading}>
+  <p class="section-intro">{catalog.intro}</p>
+  <div class="project-list">
+    {projects.map((project) => (
+      <article class="project">
+        <div class="project-head">
+          <h3 class="project-name">{project.name}</h3>
+          <p class="project-kind">{catalog.kinds[project.kind]}</p>
+        </div>
+        <p class="project-summary">{catalog.items[project.id].summary}</p>
+        <TagList items={project.technologies} />
+        <p class="project-links">
+          {project.repository ? (
+            <a
+              class="inline-link"
+              href={project.repository}
+              aria-label={`${catalog.links.repository} — ${project.name}`}
+            >
+              {catalog.links.repository}
+            </a>
+          ) : (
+            <span class="project-unavailable">{catalog.links.private}</span>
+          )}
+          {project.demo && (
+            <a
+              class="inline-link"
+              href={project.demo}
+              aria-label={`${catalog.links.demo} — ${project.name}`}
+            >
+              {catalog.links.demo}
+            </a>
+          )}
+        </p>
+      </article>
+    ))}
+  </div>
+</PageSection>

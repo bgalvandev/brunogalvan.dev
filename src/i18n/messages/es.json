@@ -1,20 +1,150 @@
 {
   "meta": {
-    "title": "Bruno Galván — Ingeniero de software",
-    "description": "Espacio personal de Bruno Galván, ingeniero de software. Contacto para proyectos y colaboraciones.",
-    "ogImageAlt": "Bruno Galván, ingeniero de software"
+    "title": "Bruno Galván — Desarrollador Full Stack Senior",
+    "description": "Bruno Galván, desarrollador Full Stack Senior en Lima, Perú. Plataformas web, APIs e integraciones con React, TypeScript, Node.js, PHP y automatización con IA.",
+    "ogImageAlt": "Bruno Galván, desarrollador Full Stack Senior"
   },
   "home": {
-    "headline": "Ingeniero de software.",
-    "intro": "Puedes escribirme para conversar sobre un proyecto o una colaboración."
+    "role": "Desarrollador Full Stack Senior",
+    "location": "Lima, Perú",
+    "headline": "Construyo plataformas, APIs e integraciones que un negocio usa todos los días.",
+    "intro": "{years} años trabajando en software para salud, educación, retail y ERP, de la interfaz a la base de datos: APIs, integraciones con sistemas externos y automatización con modelos de lenguaje."
   },
   "navigation": {
     "language": "Idioma",
     "skip": "Ir al contenido",
     "home": "Inicio"
   },
-  "theme": { "darkMode": "Modo oscuro" },
-  "contact": { "heading": "Contacto" },
+  "theme": {
+    "darkMode": "Modo oscuro"
+  },
+  "experience": {
+    "heading": "Experiencia",
+    "present": "Actualidad",
+    "items": {
+      "clinicsay": {
+        "role": "Desarrollador Full Stack Senior",
+        "context": "Gestión clínica e inteligencia artificial",
+        "highlights": [
+          "Desarrollo y mantengo Clinickeys, la plataforma con la que las clínicas gestionan pacientes, citas, finanzas y operación diaria.",
+          "Construyo ClinicSay, la nueva generación de esa plataforma: facturación, finanzas, calendario y administración, en frontend y backend.",
+          "Desarrollé una API de inteligencia artificial para conversaciones, agentes y herramientas, aplicando Clean Architecture y Domain-Driven Design.",
+          "Integré esa API con Kommo CRM y Salesbot, y automaticé formularios clínicos y flujos operativos con modelos de lenguaje.",
+          "Diagnostico y resuelvo incidencias críticas en producción, de la interfaz a la base de datos."
+        ]
+      },
+      "metrica-andina": {
+        "role": "Analista Programador Senior",
+        "context": "Aplicaciones web y microservicios para educación y servicios",
+        "highlights": [
+          "Diseñé, desarrollé y mantuve aplicaciones web escalables basadas en microservicios.",
+          "Automaticé un flujo de WhatsApp dentro de una plataforma omnicanal: leads de Facebook, envío de mensajes y plantillas.",
+          "Integré la API REST de Salesforce CRM con el portal de trámites del Instituto SISE y añadí ocho trámites, incluido el libro de reclamaciones.",
+          "Desarrollé módulos web integrados con la aplicación móvil de la Universidad Científica del Sur: autenticación, consulta de pagos y mapa interactivo.",
+          "Mantuve el portal de proveedores y aprobaciones de Educa_d."
+        ]
+      },
+      "surtidores": {
+        "role": "Programador PHP",
+        "context": "Modernización de un ERP empresarial",
+        "highlights": [
+          "Lideré el desarrollo de la nueva versión del ERP web con Laravel, JavaScript y PostgreSQL.",
+          "Centralicé procesos de la empresa dentro del ERP.",
+          "Mantuve y extendí el ERP anterior, construido con PHP 5.",
+          "Integré WordPress y WooCommerce para consumir la información de la tienda virtual.",
+          "Ejecuté pruebas de rendimiento y planes de capacitación técnica para usuarios finales."
+        ]
+      },
+      "platanitos": {
+        "role": "Programador Web · Analista SAP",
+        "context": "Retail y comercio electrónico",
+        "highlights": [
+          "Desarrollé aplicaciones web con JavaScript, PHP 8 y jQuery bajo patrón MVC.",
+          "Construí una aplicación de alertas que conecta las tiendas físicas con la central.",
+          "Participé en la implementación de facturación electrónica y escribí una librería JavaScript de validaciones OSE.",
+          "Mantuve la información SQL de ventas, inventarios, pedidos, facturación y movimientos de mercadería.",
+          "Como analista SAP supervisé registros contables, pedidos, facturación y compras, y generé reportes diarios cruzando SAP con MySQL."
+        ]
+      },
+      "usil": {
+        "role": "Soporte TI",
+        "context": "Atención a usuarios administrativos y estudiantes",
+        "highlights": [
+          "Gestioné incidencias por Helpdesk con soporte remoto y presencial, y evalué periódicamente los equipos."
+        ]
+      }
+    }
+  },
+  "projects": {
+    "heading": "Proyectos",
+    "intro": "Producto propio y código público. Cada enlace lleva al repositorio o al sitio desplegado.",
+    "kinds": {
+      "product": "Producto propio",
+      "project": "Proyecto",
+      "challenge": "Reto técnico"
+    },
+    "links": {
+      "repository": "Repositorio",
+      "demo": "Demo",
+      "private": "Repositorio privado"
+    },
+    "items": {
+      "vitalpro": {
+        "summary": "Plataforma SaaS modular para negocios de servicios: clientes, reservas, pagos y seguimiento sobre un núcleo agnóstico, con extensiones verticales como salud. Proyecto propio, en desarrollo."
+      },
+      "starwars-api": {
+        "summary": "API REST serverless que consume SWAPI, traduce su modelo al español y persiste personajes en DynamoDB, organizada con Clean Architecture."
+      },
+      "idbi-invoice": {
+        "summary": "API REST para registrar y consultar comprobantes XML: autenticación JWT, procesamiento en cola, filtros y totales por moneda."
+      },
+      "rimac-frontend": {
+        "summary": "Aplicación responsive que consume APIs, valida formularios, permite elegir un plan y muestra el resumen. Componentes reutilizables con Sass y BEM."
+      },
+      "rollpay-auth": {
+        "summary": "Aplicación de autenticación en PHP con JSON Web Tokens, escrita siguiendo buenas prácticas."
+      },
+      "placer-sano": {
+        "summary": "Sitio de restaurante construido con Astro y desplegado en Netlify."
+      }
+    }
+  },
+  "stack": {
+    "heading": "Stack",
+    "groups": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "data": "Datos",
+      "ai": "IA e integraciones",
+      "architecture": "Arquitectura",
+      "platform": "Plataforma y calidad"
+    }
+  },
+  "about": {
+    "heading": "Sobre mí",
+    "paragraphs": [
+      "Trabajo desde 2019 en sistemas que se usan todos los días: historias clínicas, matrículas, inventarios, facturación y pedidos. Casi siempre sobre código que ya existía y no podía dejar de funcionar.",
+      "Me muevo igual en frontend y en backend, y me interesa sobre todo la frontera entre ambos: contratos de API explícitos, modelos de datos que resisten el cambio y límites claros entre capas. Aplico Clean Architecture y Domain-Driven Design cuando el problema lo justifica, no por costumbre.",
+      "En los últimos años sumé integraciones y automatización con modelos de lenguaje: APIs de conversación, agentes y herramientas conectadas a CRMs.",
+      "Fuera del trabajo: videojuegos, cine y tiempo para aprender tecnologías nuevas."
+    ],
+    "facts": {
+      "education": {
+        "label": "Formación",
+        "value": "Universidad San Ignacio de Loyola — Computación Informática (2015–2017)"
+      },
+      "languages": {
+        "label": "Idiomas",
+        "value": "Español nativo · Inglés básico"
+      }
+    }
+  },
+  "contact": {
+    "heading": "Contacto",
+    "intro": "Escríbeme para conversar sobre un proyecto o una colaboración.",
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
+  },
   "notFound": {
     "title": "Página no encontrada",
     "description": "La página que buscas no está disponible.",

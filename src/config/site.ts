@@ -4,4 +4,5 @@ export const site = {
   url: 'https://brunogalvan.dev',
   email: 'brunogalvangarcia@outlook.com',
   github: 'https://github.com/bgalvandev',
+  linkedin: 'https://www.linkedin.com/in/bgalvandev',
 } as const;
