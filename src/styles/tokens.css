@@ -19,6 +19,10 @@
   --surface: light-dark(#ffffff, #0e0f12);
   --highlight: light-dark(rgb(255 255 255 / 90%), rgb(255 255 255 / 6%));
 
+  /* The drawing's lit panel stays dark in both themes: a screen that inverts
+     with the page would read as a sheet of paper. */
+  --screen: light-dark(#14151b, #05060b);
+
   /* Accent, spent on focus, the current language and a single field glow. */
   --accent: light-dark(#2742d8, #93a6ff);
   --accent-contrast: light-dark(#ffffff, #08090a);

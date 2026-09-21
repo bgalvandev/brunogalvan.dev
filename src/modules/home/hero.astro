@@ -3,6 +3,7 @@ import { site } from '@/config/site';
 import type { Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
 import { yearsOfExperience } from './experience';
+import Workstation from './workstation.astro';
 interface Props {
   locale: Locale;
 }
@@ -52,24 +53,29 @@ const intro = home.intro.replace('{years}', String(yearsOfExperience()));
       opacity="0.28"
     ></rect>
   </svg>
-  <div class="enter">
-    <p class="hero-meta">
-      <span>{home.role}</span>
-      <span class="hero-dot" aria-hidden="true"></span>
-      <span>{home.location}</span>
-    </p>
-    <h1 class="hero-headline">{home.headline}</h1>
-    <p class="hero-intro">{intro}</p>
-    <div class="hero-actions">
-      <a class="action action-primary" href={`mailto:${site.email}`}>
-        {home.actions.email}
-      </a>
-      <a class="action" href="#projects">
-        {home.actions.work}
-      </a>
-      <a class="action" href={site.github} rel="me">
-        {contact.github}
-      </a>
+  <div class="hero-layout">
+    <div class="enter">
+      <p class="hero-meta">
+        <span>{home.role}</span>
+        <span class="hero-dot" aria-hidden="true"></span>
+        <span>{home.location}</span>
+      </p>
+      <h1 class="hero-headline">{home.headline}</h1>
+      <p class="hero-intro">{intro}</p>
+      <div class="hero-actions">
+        <a class="action action-primary" href={`mailto:${site.email}`}>
+          {home.actions.email}
+        </a>
+        <a class="action" href="#projects">
+          {home.actions.work}
+        </a>
+        <a class="action" href={site.github} rel="me">
+          {contact.github}
+        </a>
+      </div>
+    </div>
+    <div class="hero-scene">
+      <Workstation />
     </div>
   </div>
 </div>
