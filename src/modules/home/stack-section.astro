@@ -1,4 +1,5 @@
 ---
+import Glyph from '@/components/glyph.astro';
 import PageSection from '@/components/page-section.astro';
 import TagList from '@/components/tag-list.astro';
 import type { Locale } from '@/i18n/locales';
@@ -11,12 +12,16 @@ const { stack: catalog } = messages(Astro.props.locale);
 ---
 
 <PageSection id="stack" index="03" label={catalog.heading}>
-  <div class="stack-groups">
-    {stack.map((group) => (
-      <div class="stack-group">
-        <h3 class="stack-name">{catalog.groups[group.id]}</h3>
+  <div class="capabilities">
+    {stack.map((group, index) => (
+      <article class="capability">
+        <p class="capability-index" aria-hidden="true">
+          //{String(index + 1).padStart(3, '0')}
+        </p>
+        <Glyph name={group.id} />
+        <h3 class="capability-name">{catalog.groups[group.id]}</h3>
         <TagList items={group.items} />
-      </div>
+      </article>
     ))}
   </div>
 </PageSection>

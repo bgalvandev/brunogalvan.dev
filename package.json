@@ -19,7 +19,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "og:generate": "node scripts/build/og-image.mjs",
-    "art:generate": "node scripts/build/workstation.mjs && prettier --write src/modules/home/workstation.astro",
+    "art:generate": "node scripts/build/workstation.mjs && node scripts/build/glyphs.mjs && prettier --write src/modules/home/workstation.astro src/components/glyph.astro",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:tokens": "node scripts/check-tokens.mjs",
