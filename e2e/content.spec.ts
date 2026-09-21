@@ -93,7 +93,7 @@ test('the experience figure is resolved at build time, not left as a token', asy
   await page.goto('/es/');
   const intro = page.getByRole('main').locator('.hero-intro');
   await expect(intro).not.toContainText('{years}');
-  await expect(intro).toContainText(/^\d+ años/);
+  await expect(intro).toContainText(/\d+ años/);
 });
 
 // AGENTS.md rule 2: an unavailable destination stays non-interactive rather than

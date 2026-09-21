@@ -170,6 +170,29 @@ is private or whose deployment is gone says so instead of linking nowhere.
   `--faint` at 4.44 against the new band, so the contrast spec now tests every
   text token against every surface rather than against the page and the card.
 
+### Specification sheet (2026-09-21)
+
+- **Objective.** The page still read as a tasteful document rather than as a
+  built thing. The reference it is measured against was studied properly this
+  time: nineteen captures down its whole 15,014px, and a reading of its
+  computed styles.
+- **Decision.** Take its structural vocabulary. No radius anywhere - the
+  reference has none, and square reads better beside registration marks.
+  Section headers become a specification line: the number in brackets, a rule,
+  the name behind a chevron, and a rule that runs to the edge; the content
+  below takes the full measure instead of a column beside a label. The primary
+  action carries a square bullet. The opening loses its role-and-country line
+  and simply says hello, because a visitor who wants the title can read the
+  next seven sections. The portrait loses its frame, its sampling drops to 72
+  columns and six tiers, and its dark tiers fall almost to nothing, so the
+  light does the drawing.
+- **Rejected alternatives.** Copying the reference's electric blue and its
+  eleven-section count: the accent and the record here are this site's own.
+  Keeping the sticky label column: it cost a fifth of the measure on every
+  section and fought the full-width grids.
+- **Verification.** `pnpm run check`, the browser suite, and captures of the
+  opening and three sections at 1440px in both themes.
+
 ## Working on visible changes
 
 Choose the depth before touching markup. A precision fix preserves the

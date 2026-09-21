@@ -7,9 +7,10 @@ import sharp from 'sharp';
 // luminance of the photograph. The face is not drawn on top of the code - it
 // is what the code's light and dark make. Run by hand (`pnpm run art:generate`).
 const root = path.resolve(import.meta.dirname, '../..');
-// Sized for the opening: enough cells that the likeness reads at hero scale,
-// few enough that each glyph stays large and the source stays legible as code.
-const COLS = 92;
+// Coarse enough that the light does the work. The likeness is carried by the
+// bright cells; everything below them falls away almost to nothing, so the
+// panel reads as a face made of light rather than a block of text.
+const COLS = 72;
 // Monospace cells are about twice as tall as they are wide.
 const CELL_RATIO = 0.5;
 
@@ -26,7 +27,7 @@ const rows = Math.round((COLS * CELL_RATIO * height) / width);
 // no face appears at all.
 const { data } = await image
   .resize(COLS, rows, { fit: 'fill' })
-  .blur(1.1)
+  .blur(1.6)
   .grayscale()
   .normalise()
   .linear(1.9, -92)
@@ -64,11 +65,11 @@ const stream = sources
   .replace(/[^\x20-\x7e]/g, '')
   .trim();
 
-// Seven tiers, read straight off the luminance: a bright pixel carries a bright
+// Six tiers, read straight off the luminance: a bright pixel carries a bright
 // glyph. The portrait is shown on a dark plate in both themes - it is another
 // screen in the same room as the drawing - so one mapping serves both. Reading
 // it inverted lit the hair and hollowed out the face.
-const TIERS = 7;
+const TIERS = 6;
 // SVG rather than a <pre>: laid out as HTML the rows became dozens of inline
 // runs, and the engine rounded each run's origin until the columns drifted and
 // the glyphs overlapped. One <text> per row with an explicit textLength pins

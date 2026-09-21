@@ -9,7 +9,7 @@ const { method } = messages(Astro.props.locale);
 const entries = Object.values(method.items);
 ---
 
-<PageSection id="method" index="04" label={method.heading} shade>
+<PageSection total="07" id="method" index="05" label={method.heading} shade>
   <p class="section-intro">{method.intro}</p>
   <ol class="rules">
     {entries.map((entry, index) => (

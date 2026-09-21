@@ -10,19 +10,24 @@ const { room } = messages(Astro.props.locale);
 
 <!-- A band that bleeds edge to edge: the page changes world here, and the only
      thing in it is the drawing of the place the rest of the page comes from. -->
-<section class="room-band band-shade" aria-labelledby="room-heading">
-  <div class="measure room-layout">
-    <div class="room-copy">
-      <h2 class="section-label" id="room-heading">
-        <span class="section-index" aria-hidden="true">
-          —
-        </span>
-        <span>{room.heading}</span>
-      </h2>
+<section class="section room-band band-shade" aria-labelledby="room-heading">
+  <div class="measure">
+    <h2 class="section-head" id="room-heading">
+      <span class="section-tag" aria-hidden="true">
+        [N.03/07]
+      </span>
+      <span class="section-rule" aria-hidden="true"></span>
+      <span class="section-name">
+        <span aria-hidden="true">&gt;</span>
+        {room.heading}
+      </span>
+      <span class="section-rule section-rule-run" aria-hidden="true"></span>
+    </h2>
+    <div class="section-body room-layout">
       <p class="room-line">{room.line}</p>
-    </div>
-    <div class="room-figure reveal">
-      <Workstation />
+      <div class="room-figure reveal">
+        <Workstation />
+      </div>
     </div>
   </div>
 </section>

@@ -40,11 +40,6 @@ const intro = home.intro.replace('{years}', String(yearsOfExperience()));
   </svg>
   <div class="measure hero-layout">
     <div class="enter">
-      <p class="hero-meta">
-        <span>{home.role}</span>
-        <span class="hero-dot" aria-hidden="true"></span>
-        <span>{home.location}</span>
-      </p>
       <h1 class="hero-headline">{home.headline}</h1>
       <p class="hero-intro">{intro}</p>
       <div class="hero-actions">
@@ -68,3 +63,98 @@ const intro = home.intro.replace('{years}', String(yearsOfExperience()));
     </div>
   </div>
 </div>
+
+<script>
+  // The portrait resolves out of noise, one row after another, the way an
+  // image loader settles. Then it keeps breathing: a handful of glyphs flicker
+  // and come back, so the panel reads as code still being written rather than
+  // a picture of code. Without this script the panel simply fades in.
+  const POOL = '{}()[]<>/\\=+-*;:.,_|#$&@%!?01';
+  const noise = (length: number) => {
+    let out = '';
+    for (let i = 0; i < length; i += 1) {
+      out += POOL[Math.floor(Math.random() * POOL.length)];
+    }
+    return out;
+  };
+
+  function resolvePortrait() {
+    const svg = document.querySelector<SVGSVGElement>('.code-portrait');
+    if (!svg || svg.dataset['resolved']) return;
+    svg.dataset['resolved'] = 'on';
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const rows = Array.from(svg.querySelectorAll('text')).map((row) => {
+      const spans = Array.from(row.querySelectorAll('tspan'));
+      return {
+        spans,
+        truth: spans.map((span) => span.textContent ?? ''),
+        length: spans.reduce(
+          (sum, span) => sum + (span.textContent?.length ?? 0),
+          0,
+        ),
+        shown: -1,
+      };
+    });
+    const every = rows.flatMap((row) => row.spans);
+
+    const ROW_STEP = 22;
+    const SETTLE = 560;
+    const started = performance.now();
+
+    function paint(row: (typeof rows)[number], revealed: number) {
+      let cursor = 0;
+      row.spans.forEach((span, index) => {
+        const text = row.truth[index] ?? '';
+        const end = cursor + text.length;
+        if (end <= revealed) {
+          if (span.textContent !== text) span.textContent = text;
+        } else if (cursor >= revealed) {
+          span.textContent = noise(text.length);
+        } else {
+          span.textContent =
+            text.slice(0, revealed - cursor) + noise(end - revealed);
+        }
+        cursor = end;
+      });
+    }
+
+    function frame(now: number) {
+      let running = false;
+      rows.forEach((row, index) => {
+        const progress = (now - started - index * ROW_STEP) / SETTLE;
+        const revealed =
+          progress >= 1
+            ? row.length
+            : Math.max(0, Math.floor(progress * row.length));
+        if (progress < 1) running = true;
+        if (revealed === row.shown && progress < 1) return;
+        row.shown = revealed;
+        paint(row, revealed);
+      });
+      if (running) requestAnimationFrame(frame);
+      else breathe();
+    }
+
+    let timer = 0;
+    function breathe() {
+      window.clearInterval(timer);
+      timer = window.setInterval(() => {
+        for (let i = 0; i < 10; i += 1) {
+          const span = every[Math.floor(Math.random() * every.length)];
+          if (!span) continue;
+          const settled = span.textContent ?? '';
+          span.textContent = noise(settled.length);
+          window.setTimeout(() => {
+            span.textContent = settled;
+          }, 110);
+        }
+      }, 320);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  resolvePortrait();
+  document.addEventListener('astro:page-load', resolvePortrait);
+</script>

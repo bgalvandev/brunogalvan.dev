@@ -24,9 +24,7 @@ for (const locale of ['es', 'en'] as const) {
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page).toHaveTitle(new RegExp(identity));
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      locale === 'es'
-        ? 'Construyo plataformas, APIs e integraciones que un negocio usa todos los días.'
-        : 'I build the platforms, APIs and integrations a business uses every day.',
+      locale === 'es' ? 'Hola, soy Bruno.' : "Hi, I'm Bruno.",
     );
     const footer = page.getByRole('contentinfo');
     await expect(footer.getByRole('link', { name: contact })).toHaveAttribute(
@@ -119,7 +117,7 @@ test('root opens default content and language links remain explicit', async ({
   await page.goto('/');
   await expect(page).toHaveURL('/es/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Construyo plataformas, APIs e integraciones que un negocio usa todos los días.',
+    'Hola, soy Bruno.',
   );
   await page.getByRole('link', { name: 'English', exact: true }).click();
   await expect(page).toHaveURL('/en/');

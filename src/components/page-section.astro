@@ -1,15 +1,15 @@
 ---
-// A labelled region and a band. The index is typographic, not content: it gives
-// the page a measured rhythm and the label column something to anchor to.
-// `shade` steps the band away from the page colour so scrolling moves between
-// rooms rather than down one wall.
+// A section header in the manner of a specification sheet: the number, a rule,
+// the name, and a rule that runs to the edge. The content below it takes the
+// full measure rather than a column beside the label.
 interface Props {
   id: string;
   index: string;
+  total?: string;
   label: string;
   shade?: boolean;
 }
-const { id, index, label, shade = false } = Astro.props;
+const { id, index, total = '06', label, shade = false } = Astro.props;
 const headingId = `${id}-heading`;
 ---
 
@@ -18,14 +18,19 @@ const headingId = `${id}-heading`;
   id={id}
   aria-labelledby={headingId}
 >
-  <div class="measure section-grid">
-    <h2 class="section-label" id={headingId}>
-      <span class="section-index" aria-hidden="true">
-        {index}
+  <div class="measure">
+    <h2 class="section-head" id={headingId}>
+      <span class="section-tag" aria-hidden="true">
+        [N.{index}/{total}]
       </span>
-      <span>{label}</span>
+      <span class="section-rule" aria-hidden="true"></span>
+      <span class="section-name">
+        <span aria-hidden="true">&gt;</span>
+        {label}
+      </span>
+      <span class="section-rule section-rule-run" aria-hidden="true"></span>
     </h2>
-    <div class="reveal">
+    <div class="section-body reveal">
       <slot />
     </div>
   </div>

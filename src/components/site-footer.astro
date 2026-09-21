@@ -11,20 +11,26 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="section" id="contact" aria-labelledby="contact-heading">
-  <div class="measure section-grid">
-    <h2 class="section-label" id="contact-heading">
-      <span class="section-index" aria-hidden="true">
-        06
+  <div class="measure">
+    <h2 class="section-head" id="contact-heading">
+      <span class="section-tag" aria-hidden="true">
+        [N.07/07]
       </span>
-      <span>{contact.heading}</span>
+      <span class="section-rule" aria-hidden="true"></span>
+      <span class="section-name">
+        <span aria-hidden="true">&gt;</span>
+        {contact.heading}
+      </span>
+      <span class="section-rule section-rule-run" aria-hidden="true"></span>
     </h2>
-    <div>
+    <div class="section-body">
       <p class="section-intro">{contact.intro}</p>
       <div class="contact-links">
         <a
           class="action action-primary contact-link"
           href={`mailto:${site.email}`}
         >
+          <span class="action-bullet" aria-hidden="true"></span>
           {site.email}
         </a>
         <a class="action" href={site.github} rel="me">

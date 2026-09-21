@@ -11,7 +11,7 @@ interface Props {
 const { stack: catalog } = messages(Astro.props.locale);
 ---
 
-<PageSection id="stack" index="03" label={catalog.heading}>
+<PageSection total="07" id="stack" index="04" label={catalog.heading}>
   <div class="capabilities">
     {stack.map((group, index) => (
       <article class="capability">

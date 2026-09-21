@@ -10,7 +10,7 @@ const { locale } = Astro.props;
 const { experience } = messages(locale);
 ---
 
-<PageSection id="experience" index="01" label={experience.heading}>
+<PageSection total="07" id="experience" index="01" label={experience.heading}>
   <div class="timeline">
     {positions.map((position) => {
       const entry = experience.items[position.id];

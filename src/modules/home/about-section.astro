@@ -8,7 +8,7 @@ interface Props {
 const { about } = messages(Astro.props.locale);
 ---
 
-<PageSection id="about" index="05" label={about.heading}>
+<PageSection total="07" id="about" index="06" label={about.heading}>
   <div class="prose">
     {about.paragraphs.map((paragraph) => (
       <p>{paragraph}</p>
