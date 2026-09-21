@@ -71,11 +71,23 @@ is private or whose deployment is gone says so instead of linking nowhere.
   Raised surfaces are hairline-bordered, lightly rounded and lit along the top
   edge by an inset highlight. Entrance motion is scroll-driven CSS with no
   script, and disappears under reduced motion.
+- **Motion.** Nothing uses the browser's default `ease`. The site has three
+  curves and three durations, and every interactive surface names one:
+  `cubic-bezier(0.16, 1, 0.3, 1)` to settle, a `linear()` spring for a lift, and
+  150/320/520ms. The opening lines arrive in 70ms steps rather than together; a
+  band of tool names runs on a 64s loop and pauses on hover or focus; the
+  pointer carries a light across a project card; routes cross-fade through the
+  view transition API. All of it is CSS and about twenty lines of script, and
+  all of it disappears under reduced motion — which the browser suite asserts,
+  because an entrance that holds its first keyframe hides the page when it
+  breaks.
 - **Rejected alternatives.** Cloning the reference sites' layered product
   surfaces: they are carrying screenshots this site does not have, and an empty
   frame reads as a missing image. A 3D or canvas hero: it buys attention at the
   cost of a runtime dependency, a CSP exception and a battery draw, on a page
-  whose job is to be read. A third display face: the two-file font budget is a
+  whose job is to be read — and of the twelve gallery-listed sites measured on
+  2026-09-21, eleven carried no motion library at all. A third display face:
+  the two-file font budget is a
   decision this repository already made and measured, and the scale and weight
   changes carry the display work without it.
 - **Verification.** Contrast is asserted on the tokens themselves in

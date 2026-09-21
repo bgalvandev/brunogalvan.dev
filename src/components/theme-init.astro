@@ -1,12 +1,18 @@
-<!-- Runs before paint: marks JavaScript as available (CSS shows the theme button from that flag) and restores a valid saved theme. CSS follows the system theme without JavaScript. -->
+<!-- Runs before paint: marks JavaScript as available (CSS shows the theme button from that flag) and restores a valid saved theme. CSS follows the system theme without JavaScript. A client-side navigation replaces the document element's attributes, so the same work runs again after every swap. -->
 <script is:inline>
-  document.documentElement.classList.add('js');
-  try {
-    const theme = localStorage.getItem('theme');
-    if (theme === 'light' || theme === 'dark') {
-      document.documentElement.dataset.theme = theme;
+  (function () {
+    function apply() {
+      document.documentElement.classList.add('js');
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch {
+        // Storage can be unavailable; the system theme remains usable.
+      }
     }
-  } catch {
-    // Storage can be unavailable; the system theme remains usable.
-  }
+    apply();
+    document.addEventListener('astro:after-swap', apply);
+  })();
 </script>

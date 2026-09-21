@@ -2,6 +2,23 @@
 @import './tokens.css';
 
 @layer base {
+  :root {
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+    --spring: linear(
+      0 0%,
+      0.42 8%,
+      0.78 16%,
+      0.98 24%,
+      1.06 32%,
+      1.05 42%,
+      1.01 58%,
+      1 100%
+    );
+    --fast: 150ms;
+    --base: 320ms;
+    --slow: 520ms;
+  }
   html {
     -webkit-text-size-adjust: 100%;
   }
@@ -148,8 +165,9 @@
     letter-spacing: 0.04em;
     cursor: pointer;
     transition:
-      color 0.15s ease,
-      border-color 0.15s ease;
+      color var(--fast) var(--ease-out),
+      border-color var(--fast) var(--ease-out),
+      background-color var(--fast) var(--ease-out);
   }
   .control:hover {
     border-color: var(--edge);
@@ -190,26 +208,6 @@
   }
   /* A measured field behind the opening statement: a 1px lattice faded out by
      a radial mask, with one soft accent bloom. Pure gradients, no asset. */
-  .hero-field {
-    position: absolute;
-    inset: -6rem calc(clamp(1.25rem, 4vw, 3rem) * -1) 0;
-    z-index: -1;
-    --lattice: color-mix(in srgb, var(--line) 62%, transparent);
-    background-image:
-      radial-gradient(38rem 24rem at 24% 20%, var(--glow), transparent 72%),
-      repeating-linear-gradient(
-        to right,
-        var(--lattice) 0 1px,
-        transparent 1px 6rem
-      ),
-      repeating-linear-gradient(
-        to bottom,
-        var(--lattice) 0 1px,
-        transparent 1px 6rem
-      );
-    mask-image: radial-gradient(88% 92% at 26% 26%, #000 0%, transparent 72%);
-    pointer-events: none;
-  }
   .hero-meta {
     display: flex;
     flex-wrap: wrap;
@@ -259,12 +257,17 @@
     box-shadow: inset 0 1px 0 var(--highlight);
     font-size: 0.875rem;
     transition:
-      border-color 0.15s ease,
-      transform 0.15s ease;
+      border-color var(--base) var(--ease-out),
+      transform var(--base) var(--spring),
+      box-shadow var(--base) var(--ease-out);
   }
   .action:hover {
     border-color: var(--edge);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+  }
+  .action:active {
+    transform: translateY(0) scale(0.985);
+    transition-duration: var(--fast);
   }
   .action-primary {
     border-color: var(--ink);
@@ -335,7 +338,9 @@
     gap: 0.3125rem;
     border-bottom: 1px solid var(--edge);
     padding-bottom: 1px;
-    transition: color 0.15s ease;
+    transition:
+      color var(--fast) var(--ease-out),
+      border-color var(--fast) var(--ease-out);
   }
   .inline-link:hover {
     border-bottom-color: var(--accent);
@@ -413,9 +418,38 @@
     padding: 1.375rem;
     background: var(--surface);
     box-shadow: inset 0 1px 0 var(--highlight);
-    transition: border-color 0.15s ease;
+    transition:
+      border-color var(--base) var(--ease-out),
+      transform var(--base) var(--ease-out);
+    position: relative;
+    isolation: isolate;
+  }
+  /* The pointer carries a light with it. Coordinates come from a tiny script;
+     without it the card is simply a bordered panel. */
+  .project::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      16rem circle at var(--px, 50%) var(--py, 0%),
+      var(--glow),
+      transparent 62%
+    );
+    opacity: 0;
+    transition: opacity var(--base) var(--ease-out);
   }
   .project:hover {
+    border-color: var(--edge);
+  }
+  .project:hover::before {
+    opacity: 1;
+  }
+  .tags li {
+    transition: border-color var(--fast) var(--ease-out);
+  }
+  .project:hover .tags li {
     border-color: var(--edge);
   }
   .project-head {
@@ -580,6 +614,129 @@
     font-size: 1.0625rem;
     letter-spacing: -0.015em;
     color: var(--ink);
+  }
+
+  /* Atmosphere ------------------------------------------------------------
+     A volumetric cone from above the fold and a film of grain. Both are
+     gradients and a filter: no image, no canvas, nothing to download. */
+  .hero-beam {
+    position: absolute;
+    top: -14rem;
+    left: 50%;
+    z-index: -1;
+    width: min(46rem, 100%);
+    height: 40rem;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, var(--glow), transparent 72%);
+    clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+    filter: blur(44px);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute;
+    inset: -6rem calc(clamp(1.25rem, 4vw, 3rem) * -1) 0;
+    z-index: -1;
+    width: auto;
+    height: auto;
+    color: var(--edge);
+    mask-image: radial-gradient(92% 96% at 26% 22%, #000 0%, transparent 80%);
+    pointer-events: none;
+  }
+  .grain {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  /* Load choreography ------------------------------------------------------
+     The opening lines arrive in order rather than all at once, which is what
+     separates a page that loaded from a page that was composed. */
+  @media (prefers-reduced-motion: no-preference) {
+    .enter > * {
+      animation: enter var(--slow) var(--ease-out) both;
+    }
+    .enter > *:nth-child(2) {
+      animation-delay: 70ms;
+    }
+    .enter > *:nth-child(3) {
+      animation-delay: 140ms;
+    }
+    .enter > *:nth-child(4) {
+      animation-delay: 210ms;
+    }
+  }
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(0.875rem);
+    }
+  }
+
+  /* Marquee ---------------------------------------------------------------- */
+  .marquee {
+    overflow: hidden;
+    padding-block: clamp(2rem, 5vw, 3rem);
+    border-top: 1px solid var(--line);
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 6%,
+      #000 94%,
+      transparent
+    );
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    gap: 0.5rem;
+    animation: marquee 64s linear infinite;
+  }
+  .marquee-item {
+    border: 1px solid var(--line);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Page transitions ------------------------------------------------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root) {
+      animation: fade-out 180ms var(--ease-out) both;
+    }
+    ::view-transition-new(root) {
+      animation: fade-in 320ms var(--ease-out) both;
+    }
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
   }
 
   /* Entrance --------------------------------------------------------------

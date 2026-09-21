@@ -58,3 +58,22 @@ const { projects: catalog } = messages(locale);
     ))}
   </div>
 </PageSection>
+
+<script>
+  // The pointer carries a light across a card. Coordinates land on custom
+  // properties the stylesheet already reads; with no script the card is a
+  // plain bordered panel.
+  function bindSpotlight() {
+    for (const card of document.querySelectorAll<HTMLElement>('.project')) {
+      if (card.dataset.spotlight) continue;
+      card.dataset.spotlight = 'on';
+      card.addEventListener('pointermove', (event) => {
+        const box = card.getBoundingClientRect();
+        card.style.setProperty('--px', `${event.clientX - box.left}px`);
+        card.style.setProperty('--py', `${event.clientY - box.top}px`);
+      });
+    }
+  }
+  bindSpotlight();
+  document.addEventListener('astro:page-load', bindSpotlight);
+</script>

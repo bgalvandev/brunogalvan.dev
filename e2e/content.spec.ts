@@ -146,3 +146,51 @@ for (const colorScheme of ['light', 'dark'] as const) {
     ).toBe(true);
   });
 }
+
+// The entrance holds its first keyframe during its delay, so a mistake in the
+// animation hides the opening statement permanently. Both paths are asserted:
+// reduced motion must skip it entirely, and a normal visit must end visible.
+test('the opening statement is visible whether or not motion is allowed', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/es/');
+  const headline = page.getByRole('heading', { level: 1 });
+  await expect(headline).toBeVisible();
+  expect(
+    await headline.evaluate((node) => getComputedStyle(node).opacity),
+  ).toBe('1');
+  expect(
+    await page
+      .locator('.marquee-track')
+      .evaluate((node) => getComputedStyle(node).animationName),
+  ).toBe('none');
+
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/es/');
+  await expect(headline).toBeVisible();
+  await expect
+    .poll(async () =>
+      headline.evaluate((node) => getComputedStyle(node).opacity),
+    )
+    .toBe('1');
+});
+
+test('a client-side navigation keeps the theme and the working toggle', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/es/');
+  await page.getByRole('button', { name: 'Modo oscuro' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  // The router swaps the document rather than reloading it, so the pre-paint
+  // theme work and the button's handler both have to run again.
+  await page
+    .getByRole('link', { name: 'Caso de estudio — Star Wars API' })
+    .click();
+  await expect(page).toHaveURL('/es/proyectos/starwars-api/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('html')).toHaveClass(/js/);
+  await page.getByRole('button', { name: 'Modo oscuro' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+});

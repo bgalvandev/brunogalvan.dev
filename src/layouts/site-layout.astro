@@ -1,5 +1,6 @@
 ---
 import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
 import '@/styles/global.css';
 import SeoHead from '@/components/seo-head.astro';
 import ThemeInit from '@/components/theme-init.astro';
@@ -27,6 +28,7 @@ const { locale, ...metadata } = Astro.props;
     <Font cssVariable="--font-archivo" preload />
     <Font cssVariable="--font-jetbrains" preload />
     <SeoHead locale={locale} {...metadata} />
+    <ClientRouter />
     <ThemeInit />
   </head>
   <body>

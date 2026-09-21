@@ -1,0 +1,16 @@
+---
+import { stack } from './stack';
+// A running index of the toolchain. Every name is already listed, and named
+// properly, in the stack section below, so this band is decoration and is
+// hidden from assistive technology rather than read out twice.
+const names = stack.flatMap((group) => group.items);
+const lane = [...names, ...names];
+---
+
+<div class="marquee" aria-hidden="true">
+  <ul class="marquee-track">
+    {lane.map((name) => (
+      <li class="marquee-item">{name}</li>
+    ))}
+  </ul>
+</div>

@@ -14,27 +14,38 @@ const { theme } = messages(Astro.props.locale);
 <script>
   const preference = window.matchMedia('(prefers-color-scheme: dark)');
   const root = document.documentElement;
-  const button = document.querySelector<HTMLButtonElement>(
-    '[data-theme-toggle]',
-  );
+
   function isDark() {
     return root.dataset.theme
       ? root.dataset.theme === 'dark'
       : preference.matches;
   }
-  function update() {
-    button?.setAttribute('aria-pressed', String(isDark()));
+  function button() {
+    return document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
   }
-  button?.addEventListener('click', () => {
-    const theme = isDark() ? 'light' : 'dark';
-    root.dataset.theme = theme;
-    try {
-      localStorage.setItem('theme', theme);
-    } catch {
-      /* Keep the current page usable. */
-    }
+  function update() {
+    button()?.setAttribute('aria-pressed', String(isDark()));
+  }
+  // A client-side navigation swaps in a new button, so the handler is bound per
+  // page rather than once per session.
+  function bind() {
+    const current = button();
+    if (!current || current.dataset.bound) return;
+    current.dataset.bound = 'true';
+    current.addEventListener('click', () => {
+      const theme = isDark() ? 'light' : 'dark';
+      root.dataset.theme = theme;
+      try {
+        localStorage.setItem('theme', theme);
+      } catch {
+        /* Keep the current page usable. */
+      }
+      update();
+    });
     update();
-  });
+  }
+
+  bind();
+  document.addEventListener('astro:page-load', bind);
   preference.addEventListener('change', update);
-  update();
 </script>
