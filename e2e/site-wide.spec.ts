@@ -22,7 +22,9 @@ test('content and locale navigation work without JavaScript', async ({
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
       'Construyo plataformas, APIs e integraciones que un negocio usa todos los días.',
     );
-    await expect(page.getByRole('link', { name: contact })).toBeVisible();
+    await expect(
+      page.getByRole('contentinfo').getByRole('link', { name: contact }),
+    ).toBeVisible();
     await expect(page.locator('[data-theme-toggle]')).toBeHidden();
     await page.getByRole('link', { name: 'English', exact: true }).click();
     await expect(page).toHaveURL('/en/');
@@ -115,10 +117,12 @@ const compositions = {
 test('manual visual review evidence at narrow, tablet and desktop widths', async ({
   page,
 }, testInfo) => {
+  // Reduced motion pins the scroll-driven entrance at its resting state, so a
+  // full-page capture shows the composition rather than a frame of animation.
   for (const width of [360, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const colorScheme of ['light', 'dark'] as const) {
-      await page.emulateMedia({ colorScheme });
+      await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
       for (const [name, paths] of Object.entries(compositions)) {
         for (const locale of ['es', 'en'] as const) {
           await page.goto(paths[locale]);

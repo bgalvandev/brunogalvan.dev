@@ -1,4 +1,5 @@
 ---
+import BrandMark from '@/components/brand-mark.astro';
 import LanguageSwitcher from '@/components/language-switcher.astro';
 import ThemeToggle from '@/components/theme-toggle.astro';
 import { site } from '@/config/site';
@@ -14,6 +15,7 @@ const { locale, route, slug } = Astro.props;
 
 <header class="site-header">
   <a href={pagePath('home', locale)} class="site-name">
+    <BrandMark size={20} />
     {site.name}
   </a>
   <div class="header-controls">

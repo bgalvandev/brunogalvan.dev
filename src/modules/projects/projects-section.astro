@@ -12,7 +12,7 @@ const { locale } = Astro.props;
 const { projects: catalog } = messages(locale);
 ---
 
-<PageSection id="projects" label={catalog.heading}>
+<PageSection id="projects" index="02" label={catalog.heading}>
   <p class="section-intro">{catalog.intro}</p>
   <div class="project-list">
     {projects.map((project) => (

@@ -1,4 +1,5 @@
 ---
+import BrandMark from '@/components/brand-mark.astro';
 import { site } from '@/config/site';
 import type { Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
@@ -6,23 +7,38 @@ interface Props {
   locale: Locale;
 }
 const { contact } = messages(Astro.props.locale);
+const year = new Date().getFullYear();
 ---
 
 <footer class="section" id="contact" aria-labelledby="contact-heading">
   <h2 class="section-label" id="contact-heading">
-    {contact.heading}
+    <span class="section-index" aria-hidden="true">
+      05
+    </span>
+    <span>{contact.heading}</span>
   </h2>
   <div>
     <p class="section-intro">{contact.intro}</p>
     <div class="contact-links">
-      <a class="contact-link" href={`mailto:${site.email}`}>
+      <a
+        class="action action-primary contact-link"
+        href={`mailto:${site.email}`}
+      >
         {site.email}
       </a>
-      <a class="contact-link" href={site.github} rel="me">
+      <a class="action" href={site.github} rel="me">
         {contact.github}
       </a>
-      <a class="contact-link" href={site.linkedin} rel="me">
+      <a class="action" href={site.linkedin} rel="me">
         {contact.linkedin}
+      </a>
+    </div>
+    <div class="colophon">
+      <span class="site-name">
+        <BrandMark size={14} />© {year} {site.name}
+      </span>
+      <a class="inline-link" href={site.repository}>
+        {contact.source}
       </a>
     </div>
   </div>

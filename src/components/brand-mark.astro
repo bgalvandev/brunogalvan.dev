@@ -1,0 +1,34 @@
+---
+// Registration marks framing the initial. The same corner geometry frames the
+// page, so the mark and the layout are one system. Drawn in currentColor, so it
+// inverts with the theme without a second asset.
+interface Props {
+  size?: number;
+  class?: string;
+}
+const { size = 22, class: className } = Astro.props;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+  class={className}
+>
+  <path
+    d="M10 21V10h11M43 10h11v11M54 43v11H43M21 54H10V43"
+    stroke="currentColor"
+    stroke-width="4"
+    stroke-linecap="square"
+  ></path>
+  <path
+    d="M25 19v26M25 19h8.5a6.5 6.5 0 0 1 0 13H25M25 32h9.5a6.5 6.5 0 0 1 0 13H25"
+    stroke="currentColor"
+    stroke-width="5"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  ></path>
+</svg>

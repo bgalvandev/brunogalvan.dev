@@ -1,19 +1,23 @@
 ---
-// A labelled region: the mono label holds the left column and sticks beside the
-// content on wide screens, so a long section keeps its heading in view.
+// A labelled region. The index is typographic, not content: it gives the page a
+// measured rhythm and the label column something to anchor to.
 interface Props {
   id: string;
+  index: string;
   label: string;
 }
-const { id, label } = Astro.props;
+const { id, index, label } = Astro.props;
 const headingId = `${id}-heading`;
 ---
 
 <section class="section" id={id} aria-labelledby={headingId}>
   <h2 class="section-label" id={headingId}>
-    {label}
+    <span class="section-index" aria-hidden="true">
+      {index}
+    </span>
+    <span>{label}</span>
   </h2>
-  <div>
+  <div class="reveal">
     <slot />
   </div>
 </section>

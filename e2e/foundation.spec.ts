@@ -28,11 +28,12 @@ for (const locale of ['es', 'en'] as const) {
         ? 'Construyo plataformas, APIs e integraciones que un negocio usa todos los días.'
         : 'I build the platforms, APIs and integrations a business uses every day.',
     );
-    await expect(page.getByRole('link', { name: contact })).toHaveAttribute(
+    const footer = page.getByRole('contentinfo');
+    await expect(footer.getByRole('link', { name: contact })).toHaveAttribute(
       'href',
       `mailto:${contact}`,
     );
-    await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+    await expect(footer.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
       'href',
       'https://github.com/bgalvandev',
     );
@@ -156,7 +157,9 @@ test('theme remains usable when browser storage fails', async ({ page }) => {
   await page.goto('/en/');
   await page.getByRole('button').click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(page.getByRole('link', { name: contact })).toBeVisible();
+  await expect(
+    page.getByRole('contentinfo').getByRole('link', { name: contact }),
+  ).toBeVisible();
 });
 
 test('invalid stored theme falls back to OS and follows OS changes', async ({

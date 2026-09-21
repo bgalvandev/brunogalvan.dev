@@ -11,9 +11,9 @@ is private or whose deployment is gone says so instead of linking nowhere.
 
 ## Shared decisions
 
-- Retain restrained typography and generous spacing for readable baseline content.
-  Archivo Variable is the primary face; JetBrains Mono Variable labels controls
-  and metadata. Fonts are self-hosted build assets.
+- Archivo Variable is the primary face and JetBrains Mono Variable labels every
+  piece of metadata: periods, technologies, section indices, link names. Two
+  self-hosted latin files, and no third face without measuring what it costs.
 - Keep identity and language/theme controls in the header, then the hero, then
   the sections, then contact. The root entry opens the Spanish home page without
   a language-selection screen.
@@ -28,7 +28,7 @@ is private or whose deployment is gone says so instead of linking nowhere.
 - Narrow screens wrap controls and long contact text without horizontal scrolling.
   Keyboard users have visible focus and a skip link into main content.
 
-### Editorial-technical direction (2026-09-20)
+### Editorial-technical direction (2026-09-20) — superseded by Instrument
 
 - **Objective.** Carry a seven-year record of production work, public code and a
   technology inventory in one page without the page reading as a résumé dump.
@@ -52,6 +52,37 @@ is private or whose deployment is gone says so instead of linking nowhere.
 - **Verification.** Rendered captures at 360, 768 and 1440px in both themes and
   both languages; axe clean in both themes on desktop and mobile; no horizontal
   overflow at any width; the section order asserted in the browser suite.
+
+### Instrument (2026-09-21)
+
+- **Objective.** The editorial baseline was correct and forgettable: it read as a
+  well-set document, not as a person with a practice. This direction has to hold
+  a brand — recognisable, deliberate, and closer to the work of the product
+  teams this visitor already respects — without inventing evidence the site does
+  not have. Bruno has no product screenshots to show, so the visual payload must
+  be typography, generated structure and a mark.
+- **Decision.** A near-black canvas with a true light twin, and one drawing
+  across the whole page. The brand mark is an initial inside registration marks;
+  the same corner geometry frames the viewport, so mark and layout are one
+  system rather than a logo placed on a page. The opening statement is set large
+  and light — 4.5rem at weight 400, leading 1, tracking −0.035em — over a 1px
+  lattice faded by a radial mask with a single accent bloom, all gradients and
+  no asset. Sections are numbered in mono and keep a sticky label column.
+  Raised surfaces are hairline-bordered, lightly rounded and lit along the top
+  edge by an inset highlight. Entrance motion is scroll-driven CSS with no
+  script, and disappears under reduced motion.
+- **Rejected alternatives.** Cloning the reference sites' layered product
+  surfaces: they are carrying screenshots this site does not have, and an empty
+  frame reads as a missing image. A 3D or canvas hero: it buys attention at the
+  cost of a runtime dependency, a CSP exception and a battery draw, on a page
+  whose job is to be read. A third display face: the two-file font budget is a
+  decision this repository already made and measured, and the scale and weight
+  changes carry the display work without it.
+- **Verification.** Contrast is asserted on the tokens themselves in
+  `src/styles/contrast.spec.ts`, so a failing pair breaks before anything is
+  rendered; axe then runs on the home page and a case study in both themes,
+  desktop and mobile. Captures at 360, 768 and 1440px in both themes and
+  languages, for both compositions.
 
 ## Working on visible changes
 

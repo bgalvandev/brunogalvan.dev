@@ -33,6 +33,12 @@ const { locale, ...metadata } = Astro.props;
     <a class="skip-link" href="#main">
       {messages(locale).navigation.skip}
     </a>
+    <div class="frame" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
     <div class="site-shell">
       <slot />
     </div>

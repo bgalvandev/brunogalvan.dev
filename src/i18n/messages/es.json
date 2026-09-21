@@ -8,7 +8,11 @@
     "role": "Desarrollador Full Stack Senior",
     "location": "Lima, Perú",
     "headline": "Construyo plataformas, APIs e integraciones que un negocio usa todos los días.",
-    "intro": "{years} años trabajando en software para salud, educación, retail y ERP, de la interfaz a la base de datos: APIs, integraciones con sistemas externos y automatización con modelos de lenguaje."
+    "intro": "{years} años trabajando en software para salud, educación, retail y ERP, de la interfaz a la base de datos: APIs, integraciones con sistemas externos y automatización con modelos de lenguaje.",
+    "actions": {
+      "email": "Escríbeme",
+      "work": "Ver proyectos"
+    }
   },
   "navigation": {
     "language": "Idioma",
@@ -238,7 +242,8 @@
     "heading": "Contacto",
     "intro": "Escríbeme para conversar sobre un proyecto o una colaboración.",
     "github": "GitHub",
-    "linkedin": "LinkedIn"
+    "linkedin": "LinkedIn",
+    "source": "Código de este sitio"
   },
   "notFound": {
     "title": "Página no encontrada",

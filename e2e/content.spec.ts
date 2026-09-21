@@ -19,27 +19,32 @@ for (const locale of ['es', 'en'] as const) {
   }) => {
     await page.goto(`/${locale}/`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
-    await expect(page.getByRole('heading', { level: 2 })).toHaveText([
-      ...sections[locale],
-    ]);
+    // Each section heading carries a decorative index that is hidden from the
+    // accessibility tree, so the accessible name is the label alone.
+    const headings = page.getByRole('heading', { level: 2 });
+    await expect(headings).toHaveCount(sections[locale].length);
+    for (const [index, label] of sections[locale].entries()) {
+      await expect(headings.nth(index)).toHaveAccessibleName(label);
+    }
   });
 
   test(`${locale}: profile links reach the approved destinations`, async ({
     page,
   }) => {
     await page.goto(`/${locale}/`);
-    await expect(page.getByRole('link', { name: site.email })).toHaveAttribute(
-      'href',
-      `mailto:${site.email}`,
-    );
-    await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+    // The hero repeats the contact affordances, so these are scoped to the
+    // contact footer rather than matched across the whole document.
+    const footer = page.getByRole('contentinfo');
+    await expect(
+      footer.getByRole('link', { name: site.email }),
+    ).toHaveAttribute('href', `mailto:${site.email}`);
+    await expect(footer.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
       'href',
       site.github,
     );
-    await expect(page.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
-      'href',
-      site.linkedin,
-    );
+    await expect(
+      footer.getByRole('link', { name: 'LinkedIn' }),
+    ).toHaveAttribute('href', site.linkedin);
   });
 
   test(`${locale}: a case study carries its own reciprocal metadata`, async ({

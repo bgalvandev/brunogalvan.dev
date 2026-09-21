@@ -8,7 +8,11 @@
     "role": "Senior Full Stack Developer",
     "location": "Lima, Peru",
     "headline": "I build the platforms, APIs and integrations a business uses every day.",
-    "intro": "{years} years working on software for healthcare, education, retail and ERP, from the interface to the database: APIs, integrations with external systems and automation with language models."
+    "intro": "{years} years working on software for healthcare, education, retail and ERP, from the interface to the database: APIs, integrations with external systems and automation with language models.",
+    "actions": {
+      "email": "Write to me",
+      "work": "See projects"
+    }
   },
   "navigation": {
     "language": "Language",
@@ -238,7 +242,8 @@
     "heading": "Contact",
     "intro": "Write to me to talk about a project or a collaboration.",
     "github": "GitHub",
-    "linkedin": "LinkedIn"
+    "linkedin": "LinkedIn",
+    "source": "Source of this site"
   },
   "notFound": {
     "title": "Page not found",

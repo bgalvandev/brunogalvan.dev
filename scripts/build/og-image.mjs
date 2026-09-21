@@ -42,20 +42,29 @@ const catalogs = {
   ),
 };
 
+// The brand mark, drawn from the same paths as the favicon and the header.
+const mark = (size) =>
+  `<svg width="${size}" height="${size}" viewBox="0 0 64 64" fill="none" stroke="#f2f1ee">` +
+  '<path d="M10 21V10h11M43 10h11v11M54 43v11H43M21 54H10V43" stroke-width="4" stroke-linecap="square"/>' +
+  '<path d="M25 19v26M25 19h8.5a6.5 6.5 0 0 1 0 13H25M25 32h9.5a6.5 6.5 0 0 1 0 13H25" stroke-width="5" stroke-linecap="square"/></svg>';
+
 function card(locale) {
   return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><style>
     @font-face { font-family: Archivo; src: url("${archivo}") format("woff2"); font-weight: 100 900; }
     @font-face { font-family: Mono; src: url("${mono}") format("woff2"); font-weight: 100 900; }
     html, body { margin: 0; }
-    body { width: 1200px; height: 630px; background: #fcfcfa; color: #14140f; font-family: Archivo, sans-serif;
-      display: flex; flex-direction: column; justify-content: space-between; padding: 88px 96px; box-sizing: border-box; }
-    .domain { font-family: Mono, monospace; font-size: 28px; color: #6c6a61; letter-spacing: 0.02em; }
-    h1 { margin: 0; font-size: 96px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.05; }
-    p { margin: 20px 0 0; font-size: 44px; color: #6c6a61; font-weight: 400; }
-    .mark { width: 72px; height: 10px; background: #2b4be3; border-radius: 2px; }
+    body { width: 1200px; height: 630px; background: #08090a; color: #f2f1ee; font-family: Archivo, sans-serif;
+      display: flex; flex-direction: column; justify-content: space-between; padding: 88px 96px; box-sizing: border-box;
+      background-image:
+        repeating-linear-gradient(to right, #1c1d21 0 1px, transparent 1px 88px),
+        repeating-linear-gradient(to bottom, #1c1d21 0 1px, transparent 1px 88px); }
+    .top { display: flex; align-items: center; gap: 20px; }
+    .domain { font-family: Mono, monospace; font-size: 26px; color: #8d8d96; letter-spacing: 0.06em; }
+    h1 { margin: 0; font-size: 104px; font-weight: 400; letter-spacing: -0.038em; line-height: 1; }
+    p { margin: 24px 0 0; font-size: 40px; color: #8d8d96; font-weight: 400; letter-spacing: -0.01em; }
   </style></head><body>
-    <div class="domain">${new URL(site.url).host}</div>
-    <div><div class="mark"></div><h1 style="margin-top:28px">${site.name}</h1><p>${catalogs[locale].home.role}</p></div>
+    <div class="top">${mark(44)}<span class="domain">${new URL(site.url).host}</span></div>
+    <div><h1>${site.name}</h1><p>${catalogs[locale].home.role}</p></div>
   </body></html>`;
 }
 
@@ -79,9 +88,8 @@ try {
     viewport: { width: 180, height: 180 },
     deviceScaleFactor: 1,
   });
-  const svg = await readFile(path.join(root, 'public/favicon.svg'), 'utf8');
   await icon.setContent(
-    `<!doctype html><html><body style="margin:0;background:#14140f">${svg.replace('<svg ', '<svg width="180" height="180" ')}</body></html>`,
+    `<!doctype html><html><body style="margin:0;background:#08090a;display:flex;align-items:center;justify-content:center">${mark(132)}</body></html>`,
   );
   await icon.screenshot({
     path: path.join(root, 'public/apple-touch-icon.png'),
