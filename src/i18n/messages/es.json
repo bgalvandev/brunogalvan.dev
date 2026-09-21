@@ -250,6 +250,7 @@
   },
   "about": {
     "heading": "Sobre mí",
+    "portraitAlt": "Retrato de Bruno Galván",
     "paragraphs": [
       "Trabajo desde 2019 en sistemas que se usan todos los días: historias clínicas, matrículas, inventarios, facturación y pedidos. Casi siempre sobre código que ya existía y no podía dejar de funcionar.",
       "Me muevo igual en frontend y en backend, y me interesa sobre todo la frontera entre ambos: contratos de API explícitos, modelos de datos que resisten el cambio y límites claros entre capas. Aplico Clean Architecture y Domain-Driven Design cuando el problema lo justifica, no por costumbre.",

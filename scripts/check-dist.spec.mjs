@@ -61,3 +61,15 @@ test('reports missing documents, extra fonts, missing preloads, foreign scripts,
     );
   }
 });
+
+test('reports an image the pages reference but the build never wrote', async (t) => {
+  const root = await dist(t, {
+    home: `${preload('a.woff2')}${preload('b.woff2')}<style>@font-face{}</style><script>init()</script><script type="module" src="/_astro/x.js"></script><img src="/_astro/portrait.webp" srcset="/_astro/portrait.webp 220w, /_astro/portrait@2x.webp 440w" alt="">`,
+  });
+  const problems = await checkDist(root);
+  assert.equal(
+    problems.filter((problem) => problem.includes('missing')).length,
+    2,
+    'both the src and the second srcset candidate are reported',
+  );
+});

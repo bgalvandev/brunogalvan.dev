@@ -250,6 +250,7 @@
   },
   "about": {
     "heading": "About",
+    "portraitAlt": "Portrait of Bruno Galván",
     "paragraphs": [
       "Since 2019 I have worked on systems people use every day: medical records, enrolments, inventory, invoicing and orders. Almost always on code that already existed and could not stop working.",
       "I am equally at home on the frontend and the backend, and what interests me most is the border between them: explicit API contracts, data models that survive change and clear boundaries between layers. I apply Clean Architecture and Domain-Driven Design when the problem justifies it, not out of habit.",
