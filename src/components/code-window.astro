@@ -1,0 +1,205 @@
+---
+import type { ComponentProps } from 'astro/types';
+import { Code } from 'astro:components';
+import PixelIcon from '@/components/pixel-icon.astro';
+// A dark code window: a header naming the file, linked to it at the exact
+// commit, and the code highlighted at build time.
+interface Props {
+  code: string;
+  lang: NonNullable<ComponentProps<typeof Code>['lang']>;
+  repository: string;
+  commit: string;
+  path: string;
+  // An excerpt names its first and last line; a whole file names none.
+  lines?: readonly [number, number];
+  class?: string;
+}
+const {
+  code,
+  lang,
+  repository,
+  commit,
+  path,
+  lines,
+  class: className,
+} = Astro.props;
+const project = repository.split('/').at(-1);
+const file = path.split('/').at(-1);
+const href = `https://github.com/${repository}/blob/${commit}/${path}${
+  lines ? `#L${lines[0]}-L${lines[1]}` : ''
+}`;
+
+// Shiki writes colours as inline styles, which the Content Security Policy
+// forbids. This theme paints each kind of token a sentinel colour, and the
+// transformer trades the sentinel for a class, so the colours come from the
+// syntax tokens in tokens.css and no style attribute ships.
+const kinds = {
+  '#000002': 'comment',
+  '#000003': 'keyword',
+  '#000004': 'string',
+  '#000005': 'constant',
+  '#000006': 'function',
+  '#000007': 'type',
+} as const;
+const theme = {
+  name: 'site-tokens',
+  type: 'dark' as const,
+  fg: '#000001',
+  bg: '#000000',
+  settings: [
+    { settings: { foreground: '#000001', background: '#000000' } },
+    {
+      scope: ['comment', 'punctuation.definition.comment'],
+      settings: { foreground: '#000002' },
+    },
+    {
+      scope: [
+        'keyword',
+        'storage',
+        'storage.type',
+        'storage.modifier',
+        'keyword.other.use',
+      ],
+      settings: { foreground: '#000003' },
+    },
+    {
+      scope: ['string', 'punctuation.definition.string'],
+      settings: { foreground: '#000004' },
+    },
+    {
+      scope: [
+        'constant',
+        'constant.numeric',
+        'constant.language',
+        'variable.language',
+      ],
+      settings: { foreground: '#000005' },
+    },
+    {
+      scope: ['entity.name.function', 'support.function', 'meta.function-call'],
+      settings: { foreground: '#000006' },
+    },
+    {
+      scope: [
+        'entity.name.type',
+        'entity.name.class',
+        'support.class',
+        'entity.other.inherited-class',
+        'entity.name.namespace',
+        'entity.name.tag',
+      ],
+      settings: { foreground: '#000007' },
+    },
+  ],
+};
+type Transformer = NonNullable<
+  ComponentProps<typeof Code>['transformers']
+>[number];
+const toClasses: Transformer = {
+  pre(node) {
+    delete node.properties['style'];
+  },
+  span(node) {
+    const style = String(node.properties['style'] ?? '');
+    delete node.properties['style'];
+    const colour = /color:\s*(#[0-9a-f]{6})/i.exec(style)?.[1]?.toLowerCase();
+    const kind = colour ? kinds[colour as keyof typeof kinds] : undefined;
+    if (kind) node.properties['class'] = `token-${kind}`;
+  },
+};
+---
+
+<figure class:list={['code-window', 'band', className]}>
+  <figcaption class="code-window-header">
+    <span class="code-window-lights" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <a class="code-window-file" href={href}>
+      {project} / {file}
+      {lines && ` · L${lines[0]}–${lines[1]}`}
+      <PixelIcon name="arrow-up-right" class="code-window-icon" />
+    </a>
+  </figcaption>
+  <Code
+    code={code}
+    lang={lang}
+    theme={theme}
+    wrap={null}
+    transformers={[toClasses]}
+    class="code-window-body"
+  />
+</figure>
+
+<style>
+  .code-window {
+    min-width: 0;
+    margin: 0;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .code-window-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 3rem;
+    padding: 0.75rem 1rem;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+  }
+  .code-window-lights {
+    display: flex;
+    gap: 0.375rem;
+  }
+  .code-window-lights span {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--decor);
+  }
+  .code-window-file {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+  .code-window-file:hover {
+    color: var(--ink);
+  }
+  .code-window :global(.code-window-icon) {
+    flex: none;
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+  .code-window :global(.code-window-body) {
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    letter-spacing: 0;
+    tab-size: 4;
+  }
+  .code-window :global(.token-comment) {
+    color: var(--faint);
+  }
+  .code-window :global(.token-keyword) {
+    color: var(--syntax-keyword);
+  }
+  .code-window :global(.token-string) {
+    color: var(--syntax-string);
+  }
+  .code-window :global(.token-constant) {
+    color: var(--syntax-constant);
+  }
+  .code-window :global(.token-function) {
+    color: var(--syntax-function);
+  }
+  .code-window :global(.token-type) {
+    color: var(--syntax-type);
+  }
+</style>

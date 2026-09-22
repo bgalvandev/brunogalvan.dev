@@ -1,0 +1,209 @@
+---
+import PixelIcon from '@/components/pixel-icon.astro';
+import { roles, type Month } from '@/data/experience';
+import { roleMonths } from '@/data/figures';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+// The master's changelog as the career: a centre line, each period sitting on
+// it, a dashed leader past a marker to the entry. `detail` adds each role's
+// length and, where the record names them, its clients.
+interface Props {
+  locale: Locale;
+  detail?: boolean;
+}
+const { locale, detail = false } = Astro.props;
+const { experience, experiencePage } = messages(locale);
+const monthFormat = new Intl.DateTimeFormat(locale, {
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const format = (month: Month) => {
+  const [year, index] = month.split('-').map(Number);
+  return monthFormat.format(new Date(Date.UTC(year ?? 0, (index ?? 1) - 1)));
+};
+const { duration } = experiencePage;
+const length = (months: number) => {
+  const years = Math.floor(months / 12);
+  const rest = months % 12;
+  return [
+    years && `${years} ${years === 1 ? duration.year : duration.years}`,
+    rest && `${rest} ${rest === 1 ? duration.month : duration.months}`,
+  ]
+    .filter(Boolean)
+    .join(' ');
+};
+const today = new Date();
+const items = roles.map((role) => ({
+  ...role,
+  ...experience.roles[role.id],
+  from: format(role.start),
+  to: role.end ? format(role.end) : experience.present,
+  length: length(roleMonths(role, today)),
+  clients: 'clients' in role ? role.clients : [],
+}));
+// A neutral marker for every role: an accent beside the current one would
+// read as an availability signal.
+const marker = ['######', '#....#', '#....#', '#....#', '#....#', '######'];
+---
+
+<ol class="experience-timeline">
+  {items.map((item) => (
+    <li class="experience-item">
+      <div class="experience-head">
+        <p class="experience-date">
+          <time datetime={item.start}>{item.from}</time> —{' '}
+          {item.end ? <time datetime={item.end}>{item.to}</time> : item.to}
+        </p>
+        <span class="experience-dash" aria-hidden="true" />
+        <span class="experience-marker" aria-hidden="true">
+          <PixelIcon rows={marker} />
+        </span>
+        <h3 class="experience-company">{item.company}</h3>
+      </div>
+      <p class="experience-role">{item.role}</p>
+      <p class="experience-line">{item.line}</p>
+      {detail && (
+        <dl class="experience-facts">
+          <div>
+            <dt class="sr-only">{experiencePage.durationLabel}</dt>
+            <dd class="tag">{item.length}</dd>
+          </div>
+          {item.clients.length > 0 && (
+            <div>
+              <dt>{experiencePage.clients}</dt>
+              <dd>{item.clients.join(' · ')}</dd>
+            </div>
+          )}
+        </dl>
+      )}
+    </li>
+  ))}
+</ol>
+
+<style>
+  /* The master's changelog: a centre line, each date sitting on it, a dashed
+     leader running from the date past a marker to the entry. */
+  .experience-timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    margin: -2.125rem 0 -2.5rem;
+    padding: 2.875rem 0 2.5rem 11rem;
+    list-style: none;
+    border-left: 1px solid var(--line);
+  }
+  .experience-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .experience-head {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .experience-date {
+    position: absolute;
+    left: -11rem;
+    z-index: 1;
+    margin: 0;
+    padding: 0.2em 0.25em;
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 500;
+    line-height: 1.3;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+  .experience-dash {
+    position: absolute;
+    left: -11rem;
+    right: 0;
+    top: 50%;
+    border-top: 1px dashed var(--line);
+  }
+  .experience-marker {
+    position: absolute;
+    left: -3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .experience-marker :global(svg) {
+    width: 0.625rem;
+  }
+  .experience-company {
+    position: relative;
+    margin: 0;
+    padding-right: 0.75rem;
+    background: var(--paper);
+    font-size: var(--text-medium);
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+  }
+  .experience-role {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+  }
+  .experience-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0.5rem 0 0;
+    font-size: var(--text-label);
+  }
+  .experience-facts div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .experience-facts dt {
+    color: var(--faint);
+  }
+  .experience-facts dd {
+    margin: 0;
+    color: var(--muted);
+  }
+  .experience-line {
+    max-width: 24rem;
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-label);
+  }
+  @media (width < 62rem) {
+    .experience-timeline {
+      margin: 0;
+      padding: 0 0 0 3.5rem;
+    }
+    .experience-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .experience-date {
+      position: static;
+      transform: none;
+    }
+    .experience-dash {
+      display: none;
+    }
+    .experience-marker {
+      top: 0;
+      left: -4.5rem;
+    }
+  }
+</style>

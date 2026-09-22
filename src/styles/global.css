@@ -126,6 +126,25 @@
       --gutter: 1.5rem;
     }
   }
+  /* A statement on the left, the record on the right; stacked on tablets. */
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .split-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3rem;
+    padding-right: 1rem;
+  }
+  @media (width < 62rem) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4rem;
+    }
+  }
   .section-body {
     display: flex;
     flex-direction: column;

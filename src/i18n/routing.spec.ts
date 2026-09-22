@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { locales } from './locales';
-import { alternatePages, pagePath } from './routes';
+import { alternatePages, pagePath, segment } from './routes';
 import { messages } from './messages';
 
 function leafPaths(value: Record<string, unknown>, prefix = ''): string[] {
@@ -30,5 +30,22 @@ describe('localized content and route contract', () => {
       expect(path).toBe(`/${locale}/`);
       expect(pagePath('home', locale)).toBe(path);
     }
+  });
+  it('translates every page by its pair, never by rewriting a prefix', () => {
+    expect(alternatePages('experience').map(({ path }) => path)).toEqual([
+      '/es/experiencia/',
+      '/en/experience/',
+    ]);
+    expect(alternatePages('about').map(({ path }) => path)).toEqual([
+      '/es/sobre-mi/',
+      '/en/about/',
+    ]);
+    expect(segment('about', 'es')).toBe('sobre-mi');
+    expect(segment('caseStudy', 'en')).toBe('projects');
+  });
+  it('carries a case study slug across both languages', () => {
+    expect(
+      alternatePages('caseStudy', 'starwars-api').map(({ path }) => path),
+    ).toEqual(['/es/proyectos/starwars-api/', '/en/projects/starwars-api/']);
   });
 });

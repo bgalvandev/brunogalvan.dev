@@ -7,12 +7,17 @@
 interface Props {
   lines: readonly string[];
   id?: string;
-  level?: 'h2' | 'h3';
+  level?: 'h1' | 'h2' | 'h3';
+  size?: 'headline' | 'display';
 }
-const { lines, id, level: Tag = 'h2' } = Astro.props;
+const { lines, id, level: Tag = 'h2', size = 'headline' } = Astro.props;
 ---
 
-<Tag class="headline text-headline" id={id} aria-label={lines.join(' ')}>
+<Tag
+  class:list={['headline', `text-${size}`]}
+  id={id}
+  aria-label={lines.join(' ')}
+>
   <span aria-hidden="true" data-reveal>
     {lines.map((line, index) => (
       <>

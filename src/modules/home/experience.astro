@@ -1,13 +1,12 @@
 ---
 import Button from '@/components/button.astro';
+import CareerTimeline from '@/components/career-timeline.astro';
 import Headline from '@/components/headline.astro';
 import NumberedSection from '@/components/numbered-section.astro';
-import PixelIcon from '@/components/pixel-icon.astro';
-import { site } from '@/config/site';
-import { roles, type Month } from '@/data/experience';
 import { figures } from '@/data/figures';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
+import { pagePath } from '@/i18n/routes';
 import { sectionNumber, sections } from './sections';
 interface Props {
   locale: Locale;
@@ -20,24 +19,6 @@ const headline = t.headline.map((line) =>
     .replace('{companies}', String(counts.companies))
     .replace('{year}', String(counts.firstYear)),
 );
-const monthFormat = new Intl.DateTimeFormat(locale, {
-  month: 'short',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
-const format = (month: Month) => {
-  const [year, index] = month.split('-').map(Number);
-  return monthFormat.format(new Date(Date.UTC(year ?? 0, (index ?? 1) - 1)));
-};
-const items = roles.map((role) => ({
-  ...role,
-  ...t.roles[role.id],
-  from: format(role.start),
-  to: role.end ? format(role.end) : t.present,
-}));
-// A neutral marker for every role: an accent beside the current one would
-// read as an availability signal.
-const marker = ['######', '#....#', '#....#', '#....#', '#....#', '######'];
 ---
 
 <NumberedSection
@@ -48,155 +29,18 @@ const marker = ['######', '#....#', '#....#', '#....#', '#....#', '######'];
   locale={locale}
   headingId="experience-title"
 >
-  <div class="experience-main">
-    <div class="experience-left">
+  <div class="split experience-main">
+    <div class="split-side">
       <Headline id="experience-title" lines={headline} />
-      <Button href={site.linkedin} label={t.action} icon="arrow-up-right" />
+      <Button href={pagePath('experience', locale)} label={t.action} />
     </div>
-    <ol class="experience-timeline">
-      {items.map((item) => (
-        <li class="experience-item">
-          <div class="experience-head">
-            <p class="experience-date">
-              <time datetime={item.start}>{item.from}</time> —{' '}
-              {item.end ? <time datetime={item.end}>{item.to}</time> : item.to}
-            </p>
-            <span class="experience-dash" aria-hidden="true" />
-            <span class="experience-marker" aria-hidden="true">
-              <PixelIcon rows={marker} />
-            </span>
-            <h3 class="experience-company">{item.company}</h3>
-          </div>
-          <p class="experience-role">{item.role}</p>
-          <p class="experience-line">{item.line}</p>
-        </li>
-      ))}
-    </ol>
+    <CareerTimeline locale={locale} />
   </div>
 </NumberedSection>
 
 <style>
   .experience-main {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     padding-bottom: 2.5rem;
     border-bottom: 1px solid var(--line);
-  }
-  .experience-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 3rem;
-    padding-right: 1rem;
-  }
-  /* The master's changelog: a centre line, each date sitting on it, a dashed
-     leader running from the date past a marker to the entry. */
-  .experience-timeline {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 3.5rem;
-    margin: -2.125rem 0 -2.5rem;
-    padding: 2.875rem 0 2.5rem 11rem;
-    list-style: none;
-    border-left: 1px solid var(--line);
-  }
-  .experience-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .experience-head {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  .experience-date {
-    position: absolute;
-    left: -11rem;
-    z-index: 1;
-    margin: 0;
-    padding: 0.2em 0.25em;
-    background: var(--surface);
-    color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: var(--text-small);
-    font-weight: 500;
-    line-height: 1.3;
-    text-transform: uppercase;
-    white-space: nowrap;
-    transform: translateX(-50%);
-  }
-  .experience-dash {
-    position: absolute;
-    left: -11rem;
-    right: 0;
-    top: 50%;
-    border-top: 1px dashed var(--line);
-  }
-  .experience-marker {
-    position: absolute;
-    left: -3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border: 1px solid var(--line);
-    background: var(--paper);
-  }
-  .experience-marker :global(svg) {
-    width: 0.625rem;
-  }
-  .experience-company {
-    position: relative;
-    margin: 0;
-    padding-right: 0.75rem;
-    background: var(--paper);
-    font-size: var(--text-medium);
-    font-weight: 400;
-    line-height: 1.3;
-    letter-spacing: var(--text-medium--letter-spacing);
-  }
-  .experience-role {
-    margin: 0;
-    font-family: var(--font-mono);
-    font-size: var(--text-label);
-    font-weight: 500;
-    letter-spacing: var(--text-label--letter-spacing);
-    text-transform: uppercase;
-  }
-  .experience-line {
-    max-width: 24rem;
-    margin: 0;
-    color: var(--muted);
-    font-size: var(--text-label);
-  }
-  @media (width < 62rem) {
-    .experience-main {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 4rem;
-    }
-    .experience-timeline {
-      margin: 0;
-      padding: 0 0 0 3.5rem;
-    }
-    .experience-head {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-    .experience-date {
-      position: static;
-      transform: none;
-    }
-    .experience-dash {
-      display: none;
-    }
-    .experience-marker {
-      top: 0;
-      left: -4.5rem;
-    }
   }
 </style>

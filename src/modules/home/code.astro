@@ -1,10 +1,8 @@
 ---
-import type { ComponentProps } from 'astro/types';
-import { Code } from 'astro:components';
 import Button from '@/components/button.astro';
+import CodeWindow from '@/components/code-window.astro';
 import Headline from '@/components/headline.astro';
 import NumberedSection from '@/components/numbered-section.astro';
-import PixelIcon from '@/components/pixel-icon.astro';
 import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
@@ -16,89 +14,9 @@ interface Props {
 const { locale } = Astro.props;
 const { code } = messages(locale);
 
-// Shiki writes colours as inline styles, which the Content Security Policy
-// forbids. This theme paints each kind of token a sentinel colour, and the
-// transformer trades the sentinel for a class, so the colours come from the
-// syntax tokens in tokens.css and no style attribute ships.
-const kinds = {
-  '#000002': 'comment',
-  '#000003': 'keyword',
-  '#000004': 'string',
-  '#000005': 'constant',
-  '#000006': 'function',
-  '#000007': 'type',
-} as const;
-const theme = {
-  name: 'site-tokens',
-  type: 'dark' as const,
-  fg: '#000001',
-  bg: '#000000',
-  settings: [
-    { settings: { foreground: '#000001', background: '#000000' } },
-    {
-      scope: ['comment', 'punctuation.definition.comment'],
-      settings: { foreground: '#000002' },
-    },
-    {
-      scope: [
-        'keyword',
-        'storage',
-        'storage.type',
-        'storage.modifier',
-        'keyword.other.use',
-      ],
-      settings: { foreground: '#000003' },
-    },
-    {
-      scope: ['string', 'punctuation.definition.string'],
-      settings: { foreground: '#000004' },
-    },
-    {
-      scope: [
-        'constant',
-        'constant.numeric',
-        'constant.language',
-        'variable.language',
-      ],
-      settings: { foreground: '#000005' },
-    },
-    {
-      scope: ['entity.name.function', 'support.function', 'meta.function-call'],
-      settings: { foreground: '#000006' },
-    },
-    {
-      scope: [
-        'entity.name.type',
-        'entity.name.class',
-        'support.class',
-        'entity.other.inherited-class',
-        'entity.name.namespace',
-      ],
-      settings: { foreground: '#000007' },
-    },
-  ],
-};
-type Transformer = NonNullable<
-  ComponentProps<typeof Code>['transformers']
->[number];
-const toClasses: Transformer = {
-  pre(node) {
-    delete node.properties['style'];
-  },
-  span(node) {
-    const style = String(node.properties['style'] ?? '');
-    delete node.properties['style'];
-    const colour = /color:\s*(#[0-9a-f]{6})/i.exec(style)?.[1]?.toLowerCase();
-    const kind = colour ? kinds[colour as keyof typeof kinds] : undefined;
-    if (kind) node.properties['class'] = `token-${kind}`;
-  },
-};
 const samples = snippets.map((snippet) => ({
   ...snippet,
   ...code.samples[snippet.id],
-  file: snippet.path.split('/').at(-1),
-  href: `https://github.com/${snippet.repository}/blob/${snippet.commit}/${snippet.path}`,
-  project: snippet.repository.split('/').at(-1),
 }));
 ---
 
@@ -116,29 +34,14 @@ const samples = snippets.map((snippet) => ({
       <div class="code-frame ticked">
         <div class="code-windows">
           {samples.map((sample) => (
-            <figure
-              class:list={['code-window', 'band', `code-window-${sample.id}`]}
-            >
-              <figcaption class="code-window-header">
-                <span class="code-window-lights" aria-hidden="true">
-                  <span />
-                  <span />
-                  <span />
-                </span>
-                <a class="code-window-file" href={sample.href}>
-                  {sample.project} / {sample.file}
-                  <PixelIcon name="arrow-up-right" class="code-window-icon" />
-                </a>
-              </figcaption>
-              <Code
-                code={sample.code}
-                lang={sample.lang}
-                theme={theme}
-                wrap={null}
-                transformers={[toClasses]}
-                class="code-window-body"
-              />
-            </figure>
+            <CodeWindow
+              code={sample.code}
+              lang={sample.lang}
+              repository={sample.repository}
+              commit={sample.commit}
+              path={sample.path}
+              class={`code-window-${sample.id}`}
+            />
           ))}
         </div>
       </div>
@@ -191,79 +94,11 @@ const samples = snippets.map((snippet) => ({
     display: grid;
     grid-template-columns: minmax(0, 1fr);
   }
-  .code-window {
-    min-width: 0;
-    margin: 0;
-    background: var(--surface);
-    color: var(--ink);
-  }
-  .code-window-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    min-height: 3rem;
-    padding: 0.75rem 1rem;
-    background: var(--paper);
-    border-bottom: 1px solid var(--line);
-    font-family: var(--font-mono);
-    font-size: var(--text-label);
-  }
-  .code-window-lights {
-    display: flex;
-    gap: 0.375rem;
-  }
-  .code-window-lights span {
-    width: 0.5rem;
-    height: 0.5rem;
-    background: var(--decor);
-  }
-  .code-window-file {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--muted);
-    overflow-wrap: anywhere;
-  }
-  .code-window-file:hover {
-    color: var(--ink);
-  }
-  .code-window :global(.code-window-icon) {
-    flex: none;
-    width: 0.625rem;
-    height: 0.625rem;
-  }
-  .code-window :global(.code-window-body) {
-    margin: 0;
-    padding: 1rem;
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    letter-spacing: 0;
-    tab-size: 4;
-  }
-  .code-window :global(.token-comment) {
-    color: var(--faint);
-  }
-  .code-window :global(.token-keyword) {
-    color: var(--syntax-keyword);
-  }
-  .code-window :global(.token-string) {
-    color: var(--syntax-string);
-  }
-  .code-window :global(.token-constant) {
-    color: var(--syntax-constant);
-  }
-  .code-window :global(.token-function) {
-    color: var(--syntax-function);
-  }
-  .code-window :global(.token-type) {
-    color: var(--syntax-type);
-  }
   /* The checked radio decides which window shows. */
-  .code-main:has(input[value='ts']:checked) .code-window:not(.code-window-ts),
+  .code-main:has(input[value='ts']:checked)
+    :global(.code-window:not(.code-window-ts)),
   .code-main:has(input[value='php']:checked)
-    .code-window:not(.code-window-php) {
+    :global(.code-window:not(.code-window-php)) {
     display: none;
   }
   .code-side {
