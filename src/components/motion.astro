@@ -1,6 +1,7 @@
 <!-- The site's motion. It runs only while motion is allowed: no reduced-motion preference and not paused from the header. Everything is created in one gsap.context, so turning motion off reverts every split, tween and trigger and restores the static HTML. -->
 <script>
   import { gsap } from 'gsap';
+  import Lenis from 'lenis';
   import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   import { SplitText } from 'gsap/SplitText';
@@ -274,6 +275,27 @@
     });
   }
 
+  // Inertial wheel scrolling, driven by GSAP's ticker so ScrollTrigger reads
+  // the same position the page shows. Anchors keep their native jump, so the
+  // skip link still moves focus; keyboard and touch scrolling stay native, and
+  // a code window scrolls on its own.
+  function smoothScroll() {
+    const lenis = new Lenis({
+      autoRaf: false,
+      anchors: false,
+      prevent: (node) => node.closest('pre') !== null,
+    });
+    lenis.on('scroll', ScrollTrigger.update);
+    const tick = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+    return () => {
+      gsap.ticker.remove(tick);
+      gsap.ticker.lagSmoothing(500, 33);
+      lenis.destroy();
+    };
+  }
+
   function start() {
     document
       .querySelectorAll<HTMLElement>('[data-typewriter]')
@@ -282,6 +304,7 @@
       ...document.querySelectorAll<HTMLElement>('[data-scramble-hover]'),
     ]
       .map(scrambleOnHover)
+      .concat(smoothScroll())
       .concat(
         [...document.querySelectorAll<HTMLElement>('[data-pixel-field]')].map(
           pixelField,

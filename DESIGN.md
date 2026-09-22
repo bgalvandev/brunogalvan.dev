@@ -109,6 +109,45 @@ anywhere. Depth lives on extension pages, never on the home page.
 - **Theme.** The system preference works without JavaScript; the toggle is a
   progressively enhanced override, hidden until its script runs.
 
+## Beyond the master
+
+What this site does that the master does not, and why each earns its cost:
+
+- **Truth.** Every figure is computed from the record at build time, the code
+  shown is the cited file at a pinned commit, and nothing links where nothing
+  can be followed. The master fills its slots with invented customers.
+- **Two designed themes.** Light and dark, with bands that stay distinct in
+  both; the master has one.
+- **Two languages.** Spanish and English with reciprocal `hreflang` and an
+  `x-default`; the master is monolingual.
+- **Accessible motion.** Split headings keep their phrase on `aria-label`,
+  scrambling links pin their name, nothing runs under reduced motion, and a
+  pause control stops everything that moves on its own (WCAG 2.2.2).
+- **Prerendered navigation.** Speculation Rules prerender an internal page as
+  the pointer settles on its link, so the click is instant where supported.
+  Cost: one inline JSON block, hashed into the CSP.
+- **Page transitions without JavaScript.** Cross-document view transitions
+  cross-fade between pages while the header holds still; unsupported browsers
+  just load the page. Cost: a few lines of CSS, off under reduced or paused
+  motion.
+- **A social card per page.** Twelve cards, one per page and language, drawn
+  in the site's grammar by the existing card script (no new dependency;
+  508 kB of committed PNGs). A browser test fails if a page names a card that
+  does not exist.
+- **Smooth scroll.** Lenis eases the wheel so the scrubbed Method room moves
+  continuously (ADR 0009, 5.4 kB gzip); keyboard, touch and anchors stay
+  native.
+- **Printable as a CV.** Printed, the site drops its chrome and decoration,
+  prints light in either theme, shows both code samples and spells out the
+  address of each profile.
+- **Structured data.** Each case study describes itself as
+  `SoftwareSourceCode` with a `BreadcrumbList`; the Person carries languages
+  and education.
+- **Lit dark panels.** The code window's header carries an inset top
+  highlight, the Raycast technique, from a themed token.
+- **No framework runtime.** Static Astro output; the master ships jQuery and
+  the Webflow runtime on every page.
+
 ## Deliberate differences from the master
 
 Each difference found in side-by-side captures at 1440px, and why it stays:

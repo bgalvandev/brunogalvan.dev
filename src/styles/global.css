@@ -54,6 +54,45 @@
   initial-value: 48px;
 }
 
+/* Moving between pages cross-fades while the header holds still, with no
+   JavaScript: browsers without cross-document view transitions simply load
+   the next page. Off under reduced motion and when motion is paused. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+:root[data-motion='paused']::view-transition-group(*),
+:root[data-motion='paused']::view-transition-old(*),
+:root[data-motion='paused']::view-transition-new(*) {
+  animation: none;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.25s;
+}
+
+/* The two rules Lenis needs (its stylesheet is not exported by the package):
+   the page keeps its natural height, and a stopped scroll clips. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Printed, the page is light whatever the theme. Outside any layer, so it
+   outranks the scheme tokens.css sets on the root. */
+@media print {
+  :root,
+  :root[data-theme],
+  .band {
+    --paper: var(--page-paper);
+    color-scheme: light;
+  }
+}
+
 @layer base {
   html {
     scroll-padding-top: 4rem;
@@ -312,8 +351,44 @@
       opacity: 0;
     }
   }
-  /* A heading that was never scrolled into view still prints whole. */
+  /* Printed, the site is a CV: light paper whatever the theme, no chrome or
+     decoration, every room at its natural height, both code samples, and the
+     address of each profile written after it. A heading that was never
+     scrolled into view still prints whole. */
   @media print {
+    .site-header,
+    .skip-link,
+    .preloader,
+    .marquee,
+    .pixel-field,
+    .hero-scroll,
+    .site-menu,
+    .case-nav {
+      display: none !important;
+    }
+    .hero-band,
+    .method[data-scrubbing] .section-body {
+      position: static !important;
+    }
+    .hero,
+    .hero-band,
+    .method[data-scrubbing] {
+      min-height: 0 !important;
+      height: auto !important;
+    }
+    .code-window {
+      display: block !important;
+    }
+    .site-footer a[href^='http']::after {
+      content: ' (' attr(href) ')';
+      color: var(--muted);
+      font-size: 0.75em;
+      overflow-wrap: anywhere;
+    }
+    li,
+    figure {
+      break-inside: avoid;
+    }
     .reveal-char {
       width: auto !important;
       opacity: 1 !important;

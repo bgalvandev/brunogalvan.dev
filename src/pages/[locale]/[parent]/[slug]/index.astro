@@ -1,4 +1,6 @@
 ---
+import { site } from '@/config/site';
+import { projects } from '@/data/projects';
 import { locales, type Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
 import { pagePath, segment } from '@/i18n/routes';
@@ -22,7 +24,38 @@ interface Props {
   id: CaseStudyId;
 }
 const { locale, id } = Astro.props;
-const { meta } = messages(locale).caseStudies[id];
+const t = messages(locale);
+const { meta, summary } = t.caseStudies[id];
+const project = projects.find((candidate) => candidate.id === id)!;
+const url = (path: string) => new URL(path, site.url).href;
+// The case as source code for search engines, and where it sits in the site.
+const structured = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareSourceCode',
+    name: project.name,
+    description: summary,
+    url: url(pagePath('caseStudy', locale, id)),
+    codeRepository: project.repository,
+    programmingLanguage: project.technologies,
+    inLanguage: locale,
+    author: { '@type': 'Person', name: site.name, url: site.url },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      [t.navigation.home, url(pagePath('home', locale))],
+      [t.projects.label, url(`${pagePath('home', locale)}#projects`)],
+      [project.name, url(pagePath('caseStudy', locale, id))],
+    ].map(([name, item], index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name,
+      item,
+    })),
+  },
+];
 ---
 
 <SiteLayout
@@ -32,6 +65,7 @@ const { meta } = messages(locale).caseStudies[id];
   canonicalPath={pagePath('caseStudy', locale, id)}
   route="caseStudy"
   slug={id}
+  structured={structured}
 >
   <CaseStudyPage locale={locale} id={id} />
 </SiteLayout>
