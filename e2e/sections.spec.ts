@@ -4,6 +4,7 @@ import { roles } from '@/data/experience';
 import { career, figures } from '@/data/figures';
 import { projects } from '@/data/projects';
 import { messages } from '@/i18n/messages';
+import { pagePath } from '@/i18n/routes';
 import { snippets } from '@/modules/home/snippets';
 
 const t = messages('es');
@@ -37,7 +38,11 @@ test('a project with nothing public to follow is plain text, never a link', asyn
     const card = page
       .locator('.project-card')
       .filter({ has: page.getByRole('heading', { name: project.name }) });
-    const expected = [project.repository, project.demo].filter(Boolean);
+    const expected = [
+      'caseStudy' in project ? pagePath('caseStudy', 'es', project.id) : null,
+      project.repository,
+      project.demo,
+    ].filter(Boolean);
     await expect(card.getByRole('link')).toHaveCount(expected.length);
     for (const href of expected) {
       await expect(card.locator(`a[href="${href}"]`)).toHaveCount(1);

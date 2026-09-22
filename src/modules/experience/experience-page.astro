@@ -1,0 +1,90 @@
+---
+import Button from '@/components/button.astro';
+import CareerTimeline from '@/components/career-timeline.astro';
+import Headline from '@/components/headline.astro';
+import NumberedSection from '@/components/numbered-section.astro';
+import PageHero from '@/components/page-hero.astro';
+import SiteFooter from '@/components/site-footer.astro';
+import SiteHeader from '@/components/site-header.astro';
+import { site } from '@/config/site';
+import { figures } from '@/data/figures';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { experience, experiencePage: page } = messages(locale);
+const counts = figures(new Date());
+const headline = experience.headline.map((line) =>
+  line
+    .replace('{companies}', String(counts.companies))
+    .replace('{year}', String(counts.firstYear)),
+);
+---
+
+<SiteHeader locale={locale} route="experience" />
+<main id="main" tabindex="-1">
+  <PageHero label={page.label} lines={page.headline} />
+  <NumberedSection
+    id="roles"
+    number={1}
+    total={2}
+    label={experience.label}
+    locale={locale}
+    headingId="roles-title"
+  >
+    <div class="split record">
+      <div class="split-side">
+        <Headline id="roles-title" lines={headline} />
+        <Button
+          href={site.linkedin}
+          label={experience.linkedin}
+          icon="arrow-up-right"
+        />
+      </div>
+      <CareerTimeline locale={locale} detail />
+    </div>
+  </NumberedSection>
+  <NumberedSection
+    id="education"
+    number={2}
+    total={2}
+    label={page.education.label}
+    locale={locale}
+  >
+    <div class="education">
+      <p class="tag">{page.education.period}</p>
+      <p class="education-title">{page.education.title}</p>
+      <p class="education-school">{page.education.school}</p>
+    </div>
+  </NumberedSection>
+</main>
+<SiteFooter locale={locale} />
+
+<style>
+  .record {
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .education {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 40rem;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+  }
+  .education .tag,
+  .education p {
+    margin: 0;
+  }
+  .education-title {
+    font-size: var(--text-large);
+    line-height: var(--text-large--line-height);
+    letter-spacing: var(--text-large--letter-spacing);
+  }
+  .education-school {
+    color: var(--muted);
+  }
+</style>

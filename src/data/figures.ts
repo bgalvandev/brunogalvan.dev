@@ -11,6 +11,16 @@ const toMonths = (month: Month) => {
 const monthOf = (date: Date): Month =>
   `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}` as Month;
 
+// How long a role lasted, in whole months, counting its first and last month;
+// an open role runs to the current month.
+export function roleMonths(
+  role: { start: Month; end: Month | null },
+  today: Date,
+) {
+  const end = role.end ? toMonths(role.end) : toMonths(monthOf(today));
+  return end - toMonths(role.start) + 1;
+}
+
 export function figures(today: Date) {
   const now = toMonths(monthOf(today));
   const first = Math.min(...roles.map((role) => toMonths(role.start)));

@@ -11,9 +11,12 @@
   "navigation": {
     "language": "Language",
     "skip": "Skip to content",
-    "main": "Pages",
+    "main": "Main",
     "home": "Home",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "About",
+    "experience": "Experience",
+    "menu": "Menu"
   },
   "theme": {
     "darkMode": "Dark mode"
@@ -176,7 +179,7 @@
   "experience": {
     "label": "Experience",
     "headline": ["{companies} companies.", "Since {year}."],
-    "action": "See LinkedIn",
+    "action": "Full record",
     "present": "Present",
     "roles": {
       "clinicsay": {
@@ -195,6 +198,229 @@
         "role": "Web Programmer · SAP Analyst",
         "line": "Web applications for retail, electronic invoicing, and reports joining SAP with SQL."
       }
+    },
+    "linkedin": "See LinkedIn"
+  },
+  "experiencePage": {
+    "meta": {
+      "title": "Experience — Bruno Galván",
+      "description": "The full professional record of Bruno Galván, senior full stack developer: four companies since 2019, with periods, what each role involved, and education."
+    },
+    "label": "Record",
+    "headline": ["Every role, with its period.", "And what I did in it."],
+    "duration": {
+      "year": "year",
+      "years": "years",
+      "month": "month",
+      "months": "months"
+    },
+    "clients": "Clients",
+    "education": {
+      "label": "Education",
+      "title": "Computación Informática (computing)",
+      "school": "Universidad San Ignacio de Loyola",
+      "period": "2015 — 2017"
+    },
+    "durationLabel": "Length"
+  },
+  "aboutPage": {
+    "meta": {
+      "title": "About — Bruno Galván",
+      "description": "Bruno Galván, senior full stack developer in Lima, Peru: his working rules, his stack, his education and languages."
+    },
+    "label": "About",
+    "headline": ["I'm Bruno Galván.", "I build end to end."],
+    "intro": "Senior full stack developer in Lima, Peru. I build web platforms, APIs and integrations, from the database to production.",
+    "method": {
+      "label": "Method",
+      "headline": ["My working rules.", "As I wrote them."],
+      "rules": [
+        {
+          "title": "Boundaries are explicit.",
+          "text": "Dependency runs one way — interface to application, application to domain. The domain knows nothing of the framework, the database or the transport. A boundary is crossed by a written decision."
+        },
+        {
+          "title": "The smallest change that works.",
+          "text": "No abstraction for a future that has not arrived; whatever stops being used goes in the same change."
+        },
+        {
+          "title": "Verify before claiming.",
+          "text": "Nothing is done because it compiles. It is done when the gates pass and it has been seen in the production build."
+        },
+        {
+          "title": "Decisions are written down.",
+          "text": "What cannot be read off the code goes into a dated record with at least two options compared."
+        }
+      ]
+    },
+    "stack": {
+      "label": "Stack",
+      "headline": ["The tools.", "Grouped by layer."]
+    },
+    "languages": {
+      "label": "Languages",
+      "items": [
+        {
+          "name": "Spanish",
+          "level": "Native"
+        },
+        {
+          "name": "English",
+          "level": "Elementary"
+        }
+      ]
+    }
+  },
+  "caseStudy": {
+    "label": "Case study",
+    "back": "All projects",
+    "context": "Context",
+    "architecture": "Architecture",
+    "decisions": "Decisions",
+    "code": "In the code",
+    "excerpt": "Excerpt of {file}, lines {from} to {to}",
+    "whole": "{file}, whole",
+    "facts": {
+      "kind": "Kind",
+      "stack": "Stack",
+      "repository": "Repository",
+      "demo": "Demo",
+      "noDemo": "No public demo"
+    },
+    "read": "Read the case",
+    "readOf": "Case study of {name}"
+  },
+  "caseStudies": {
+    "starwars-api": {
+      "meta": {
+        "title": "Star Wars API — Case study — Bruno Galván",
+        "description": "A serverless API on AWS Lambda that translates SWAPI characters into Spanish and stores them in DynamoDB, in four layers."
+      },
+      "headline": ["A serverless API.", "In four layers."],
+      "summary": "An API on AWS Lambda that translates SWAPI characters into Spanish and stores them in DynamoDB.",
+      "context": "A project built with the Serverless Framework. It exposes two groups of REST endpoints: one reads from SWAPI and returns each character with its fields in Spanish; the other creates and queries characters in a DynamoDB table.",
+      "layers": [
+        {
+          "name": "Presentation",
+          "text": "Express routes and controllers, one per source: dynamo and swapi. Each controller maps a character to Spanish field names."
+        },
+        {
+          "name": "Domain",
+          "text": "The IPeopleRepository interface and a CustomError with a factory per HTTP status."
+        },
+        {
+          "name": "Infrastructure",
+          "text": "DynamoDBPeopleRepository implements the interface with the Scan, Get and Put commands of the AWS SDK v3."
+        },
+        {
+          "name": "Data",
+          "text": "The DynamoDB client and the Person model."
+        }
+      ],
+      "decisions": [
+        {
+          "title": "One function",
+          "text": "Serverless declares a single function with one HTTP event that catches every route; Express routes inside it through serverless-http."
+        },
+        {
+          "title": "Permissions for one table",
+          "text": "The IAM role grants exactly five DynamoDB actions, and only on the ARN of the service’s table."
+        },
+        {
+          "title": "The table as code",
+          "text": "The table is declared in the same serverless.yml, with a string partition key, id."
+        },
+        {
+          "title": "Required configuration",
+          "text": "env-var marks the SWAPI URL, the region and the table name as required: without them the function does not start."
+        }
+      ]
+    },
+    "idbi-invoice": {
+      "meta": {
+        "title": "IDBI Invoice Recorder — Case study — Bruno Galván",
+        "description": "A Laravel REST API that records XML invoices in the background, behind JWT, with single-action controllers, Form Requests and API Resources."
+      },
+      "headline": ["XML invoices.", "Recorded in the background."],
+      "summary": "A Laravel REST API that records XML electronic invoices, extracts their data and queries them with filters, behind JWT.",
+      "context": "A technical challenge for IDBI. The API takes one or more XML files, processes them on a queue and emails a summary of the invoices recorded and of those that failed.",
+      "layers": [
+        {
+          "name": "Versioned routes",
+          "text": "routes/api.php loads the public v1 routes and, inside a group with the jwt.verify middleware, the protected ones."
+        },
+        {
+          "name": "Single-action controllers",
+          "text": "Each endpoint is a class with __invoke; the invoice ones list, record, delete, total and regularize."
+        },
+        {
+          "name": "Form Requests and API Resources",
+          "text": "GetVouchersRequest validates the page, the size, the dates and optional filters; VoucherResource shapes the response and loads lines and user only when asked."
+        },
+        {
+          "name": "Service",
+          "text": "VoucherService reads the XML with SimpleXML and XPath over the UBL cbc and cac nodes."
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Answer before processing",
+          "text": "Recording answers 202 and dispatches the ProcessVouchers job, which implements ShouldQueue."
+        },
+        {
+          "title": "A domain event",
+          "text": "When it finishes, the job emits VouchersCreated; a listener sends the email with successes and failures."
+        },
+        {
+          "title": "JWT as the guard",
+          "text": "With tymon/jwt-auth, the api guard uses the jwt driver, and jwt.verify is an alias of Laravel’s Authenticate middleware."
+        },
+        {
+          "title": "A reproducible environment",
+          "text": "compose.yml starts PHP 8.1 with Nginx, MySQL 8.0 and MailHog to read the emails."
+        }
+      ]
+    },
+    "rimac-frontend": {
+      "meta": {
+        "title": "RIMAC Frontend — Case study — Bruno Galván",
+        "description": "A three-screen flow in React and TypeScript, with a Sass module per component, Axios and no state library."
+      },
+      "headline": ["Three screens.", "No state library."],
+      "summary": "A three-screen flow in React and TypeScript: a form, the plans filtered by age, and a summary.",
+      "context": "A technical test organised by Softtek. The app consumes a user API and a plans API, and is published on Netlify.",
+      "layers": [
+        {
+          "name": "Routes",
+          "text": "Three React Router routes: home, plans and summary."
+        },
+        {
+          "name": "Styles",
+          "text": "One Sass module per component, following BEM."
+        },
+        {
+          "name": "Data",
+          "text": "Axios in services/api, services that filter the plans by age, and hooks that hand them to the pages."
+        },
+        {
+          "name": "State",
+          "text": "React local state and custom hooks: useUser and usePlans."
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Four dependencies",
+          "text": "react, react-dom, react-router-dom and axios. Nothing else at runtime."
+        },
+        {
+          "title": "Layers in the client",
+          "text": "The API, the services, the hooks and the pages, each in its own folder."
+        },
+        {
+          "title": "Validated forms",
+          "text": "The start form validates the document, phone and consents with validateForm, and continues only when they are valid."
+        }
+      ]
     }
   }
 }

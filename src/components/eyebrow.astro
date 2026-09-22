@@ -8,12 +8,15 @@ interface Props {
   label: string;
   // Read aloud instead of the visual index, e.g. "Sección 1 de 7".
   spoken: string;
+  // A room with no statement of its own takes the eyebrow as its heading.
+  id?: string | undefined;
 }
-const { number, total, label, spoken } = Astro.props;
+const { number, total, label, spoken, id } = Astro.props;
+const Tag = id ? 'h2' : 'p';
 const pad = (value: number) => String(value).padStart(2, '0');
 ---
 
-<p class="eyebrow">
+<Tag class="eyebrow" id={id}>
   <span class="sr-only">
     {spoken}: {label}
   </span>
@@ -29,7 +32,7 @@ const pad = (value: number) => String(value).padStart(2, '0');
     <span>&gt; {label}</span>
   </span>
   <span class="eyebrow-rule" aria-hidden="true"></span>
-</p>
+</Tag>
 
 <style>
   .eyebrow {

@@ -8,12 +8,14 @@ import { figures } from '@/data/figures';
 import { projects } from '@/data/projects';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
+import { pagePath } from '@/i18n/routes';
 import { sectionNumber, sections } from './sections';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const t = messages(locale).projects;
+const caseLabels = messages(locale).caseStudy;
 const counts = figures(new Date());
 const headline = t.headline.map((line) =>
   line
@@ -27,13 +29,32 @@ const cards = [...projects]
       Number('featured' in b && b.featured) -
       Number('featured' in a && a.featured),
   )
-  .map((project, index) => ({
-    ...project,
-    featured: 'featured' in project && project.featured,
-    number: String(index + 1).padStart(3, '0'),
-    kindLabel: t.kinds[project.kind],
-    line: t.items[project.id],
-  }));
+  .map((project, index) => {
+    const caseStudy = 'caseStudy' in project && project.caseStudy;
+    // A card follows its case study when there is one, else its code.
+    const primary = caseStudy
+      ? {
+          href: pagePath('caseStudy', locale, project.id),
+          label: caseLabels.read,
+          name: caseLabels.readOf.replace('{name}', project.name),
+        }
+      : project.repository
+        ? {
+            href: project.repository,
+            label: t.code,
+            name: t.codeOf.replace('{name}', project.name),
+          }
+        : null;
+    return {
+      ...project,
+      caseStudy,
+      primary,
+      featured: 'featured' in project && project.featured,
+      number: String(index + 1).padStart(3, '0'),
+      kindLabel: t.kinds[project.kind],
+      line: t.items[project.id],
+    };
+  });
 ---
 
 <NumberedSection
@@ -85,36 +106,51 @@ const cards = [...projects]
             <span class="project-card-cover-name">{card.name}</span>
           </div>
           <div class="project-card-links">
-            {card.repository ? (
+            {card.primary ? (
               <a
                 class="project-card-link project-card-primary"
-                href={card.repository}
-                aria-label={t.codeOf.replace('{name}', card.name)}
+                href={card.primary.href}
+                aria-label={card.primary.name}
               >
                 <span class="project-card-arrow" aria-hidden="true">
                   <PixelIcon name="arrow-up-right" />
                   <PixelIcon name="arrow-up-right" />
                 </span>
-                {t.code}
+                {card.primary.label}
               </a>
             ) : (
               <span class="project-card-link project-card-private">
                 {t.private}
               </span>
             )}
-            {card.demo && (
-              <a
-                class="project-card-link"
-                href={card.demo}
-                aria-label={t.demoOf.replace('{name}', card.name)}
-              >
-                {t.demo}
-                <PixelIcon
-                  name="arrow-up-right"
-                  class="project-card-demo-icon"
-                />
-              </a>
-            )}
+            <span class="project-card-secondary">
+              {card.caseStudy && card.repository && (
+                <a
+                  class="project-card-link"
+                  href={card.repository}
+                  aria-label={t.codeOf.replace('{name}', card.name)}
+                >
+                  {t.code}
+                  <PixelIcon
+                    name="arrow-up-right"
+                    class="project-card-demo-icon"
+                  />
+                </a>
+              )}
+              {card.demo && (
+                <a
+                  class="project-card-link"
+                  href={card.demo}
+                  aria-label={t.demoOf.replace('{name}', card.name)}
+                >
+                  {t.demo}
+                  <PixelIcon
+                    name="arrow-up-right"
+                    class="project-card-demo-icon"
+                  />
+                </a>
+              )}
+            </span>
           </div>
           <span class="project-card-border" aria-hidden="true" />
         </li>
@@ -244,6 +280,7 @@ const cards = [...projects]
   }
   .project-card-links {
     display: flex;
+    flex-wrap: wrap;
     align-items: stretch;
     justify-content: space-between;
     margin-top: auto;
@@ -288,6 +325,9 @@ const cards = [...projects]
     position: absolute;
     inset: 0;
     z-index: 1;
+  }
+  .project-card-secondary {
+    display: flex;
   }
   .project-card-links a:not(.project-card-primary) {
     position: relative;
@@ -336,6 +376,9 @@ const cards = [...projects]
     }
     .project-card-cover-name {
       font-size: var(--text-medium);
+    }
+    .project-card-link {
+      padding-inline: 1rem;
     }
     .project-card-featured .project-card-cover-name {
       font-size: var(--text-large);

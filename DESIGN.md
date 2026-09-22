@@ -91,6 +91,17 @@ anywhere. Depth lives on extension pages, never on the home page.
   cards) and Experience (a changelog timeline), then the closing room and the
   footer. Every figure, count and period is computed from `src/data` at build
   time.
+- **Extension pages.** Each opens in a dark gridded band with a tag and its
+  statement as the h1, then numbered rooms in the home page's grammar.
+  Experience shows every role with its length computed from its period and,
+  where the record names them, its clients, then education. About carries the
+  four working rules in full, the stack and the languages. A case study states
+  its facts (stack, repository, demo), then four rooms: context, architecture,
+  decisions and one excerpt of code pinned to its commit, and leads to the next
+  case. Detail beyond Section 2 of the plan (the CV's longer role bullets) is
+  not published until it is supplied.
+- **Menu.** Below the tablet breakpoint the page tabs fold into a native
+  disclosure, so the menu works without JavaScript.
 - **Words.** Measured on 2026-09-22 with `innerText` of each room, decoration
   excluded: 526 visible words in Spanish, 513 in English, of which 69 are tool
   names and about 40 are code. Section 4 of the plan sets a target near 300;

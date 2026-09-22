@@ -10,6 +10,8 @@ a separate future requirement and gets its own decision record when it arrives.
 src/
   pages/                     URL mapping and composition roots
     [locale]/index.astro      Statically generated /es/ and /en/
+    [locale]/[page]/          /es/experiencia/ ↔ /en/experience/, sobre-mi ↔ about
+    [locale]/[parent]/[slug]/ /es/proyectos/<slug>/ ↔ /en/projects/<slug>/
     404.astro                Bilingual recovery, noindex
     robots.txt.ts            Static crawler endpoint
   layouts/                   HTML document, global assets, metadata wiring
@@ -18,6 +20,8 @@ src/
                              preloader, motion, SEO, language, theme, pause
   modules/
     home/                    Home page rooms and the ordered section list
+    experience/ about/       The two single extension pages
+    case-study/              Case study pages and their pinned code excerpts
   config/site.ts             Approved public identity and canonical origin
   data/                      The verified record: roles, projects, stack, and
                              the figures computed from it at build time
@@ -65,11 +69,13 @@ responsibilities or the first request-time capability.
 
 ## Adding a page
 
-Add a feature folder under `src/modules`, both message catalogs, a route pair in
-`src/i18n/routes.ts` and thin route composition. For editorial content, use a
-schema-validated Astro content collection when entries need structured fields.
-Add equivalent locale links and metadata tests, including an appropriate
-x-default for that page.
+Add a feature folder under `src/modules`, both message catalogs and a route pair
+in `src/i18n/routes.ts`; `segment()` gives each language's path segment to
+`getStaticPaths`, so a page is defined once. A family of pages (the case
+studies) is a parent route plus a slug that is the same in both languages:
+`pagePath('caseStudy', locale, slug)`. Every internal link, canonical and
+reciprocal `hreflang` comes from those pairs, never from rewriting a URL. Add
+the page to the reciprocal-metadata loop in `e2e/pages.spec.ts`.
 
 A form or database-backed page changes the deployment model: it needs an adapter
 and host decision recorded as an ADR, server-only environment validation, input

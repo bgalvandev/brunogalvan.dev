@@ -72,7 +72,14 @@ test('the built Content Security Policy allows everything the pages do', async (
 
   for (const colorScheme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme });
-    for (const path of ['/es/', '/en/', '/fr/']) {
+    for (const path of [
+      '/es/',
+      '/en/',
+      '/fr/',
+      '/es/experiencia/',
+      '/en/about/',
+      '/es/proyectos/starwars-api/',
+    ]) {
       const response = await page.goto(path);
       expect(response?.headers()['content-security-policy']).toBe(csp);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();

@@ -1,6 +1,7 @@
 // Projects verified against GitHub on 2026-09-20. `repository` and `demo` are
 // null when nothing public can be followed, and a null renders as plain text,
-// never as a link. `featured` is the one pulled out large on the home page.
+// never as a link. `featured` is the one pulled out large on the home page;
+// `caseStudy` marks the three with a written case study, read off their code.
 // Kinds and one-line summaries live in the catalogs under `projects`.
 export const projects = [
   {
@@ -20,6 +21,7 @@ export const projects = [
   },
   {
     id: 'starwars-api',
+    caseStudy: true,
     name: 'Star Wars API',
     kind: 'project',
     featured: true,
@@ -34,6 +36,7 @@ export const projects = [
   },
   {
     id: 'idbi-invoice',
+    caseStudy: true,
     name: 'IDBI Invoice Recorder',
     kind: 'challenge',
     repository: 'https://github.com/bgalvandev/idbi-invoice-challenge',
@@ -42,6 +45,7 @@ export const projects = [
   },
   {
     id: 'rimac-frontend',
+    caseStudy: true,
     name: 'RIMAC Frontend',
     kind: 'challenge',
     repository: 'https://github.com/bgalvandev/rimac-frontend-challenge',
@@ -69,6 +73,7 @@ export const projects = [
   name: string;
   kind: 'product' | 'project' | 'challenge';
   featured?: boolean;
+  caseStudy?: boolean;
   repository: string | null;
   demo: string | null;
   technologies: readonly string[];

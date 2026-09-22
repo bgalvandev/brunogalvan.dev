@@ -9,15 +9,21 @@ import type { Locale } from '@/i18n/locales';
 import { pagePath, type RouteKey } from '@/i18n/routes';
 // Fixed boxed tabs hanging from the top edge, as in the design master: pages on
 // the left, language, theme and contact on the right. Below the tablet
-// breakpoint the page tabs give way to the name, which links home.
+// breakpoint the page tabs fold into a menu, a native disclosure that works
+// without JavaScript, and the name links home.
 interface Props {
   locale: Locale;
   route: RouteKey;
-  contactHref: string;
+  slug?: string | undefined;
 }
-const { locale, route, contactHref } = Astro.props;
+const { locale, route, slug } = Astro.props;
 const { navigation } = messages(locale);
-const pages = [{ route: 'home', label: navigation.home }] as const;
+const pages = [
+  { route: 'home', label: navigation.home },
+  { route: 'experience', label: navigation.experience },
+  { route: 'about', label: navigation.about },
+] as const;
+const contactHref = `${pagePath('home', locale)}#contact`;
 ---
 
 <header class="site-header">
@@ -38,7 +44,7 @@ const pages = [{ route: 'home', label: navigation.home }] as const;
       ))}
     </nav>
     <div class="site-tools">
-      <LanguageSwitcher locale={locale} route={route} />
+      <LanguageSwitcher locale={locale} route={route} slug={slug} />
       <div class="tabs">
         <ThemeToggle locale={locale} />
         <MotionToggle locale={locale} />
@@ -52,6 +58,20 @@ const pages = [{ route: 'home', label: navigation.home }] as const;
           {navigation.contact}
         </span>
       </a>
+      <details class="site-menu">
+        <summary class="tab">{navigation.menu}</summary>
+        <nav class="site-menu-panel" aria-label={navigation.main}>
+          {pages.map((page) => (
+            <a
+              class="site-menu-link"
+              href={pagePath(page.route, locale)}
+              aria-current={page.route === route ? 'page' : undefined}
+            >
+              {page.label}
+            </a>
+          ))}
+        </nav>
+      </details>
     </div>
   </div>
 </header>
@@ -118,7 +138,50 @@ const pages = [{ route: 'home', label: navigation.home }] as const;
   .site-contact:focus-visible .site-contact-arrow :global(svg:last-child) {
     transform: none;
   }
+  .site-menu {
+    display: none;
+  }
+  .site-menu summary {
+    list-style: none;
+  }
+  .site-menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .site-menu[open] summary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .site-menu-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 5%;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .site-menu-link {
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .site-menu-link[aria-current='page'] {
+    color: var(--accent);
+  }
+  .site-menu-link[aria-current='page']::before {
+    content: '<' / '';
+  }
+  .site-menu-link[aria-current='page']::after {
+    content: '>' / '';
+  }
   @media (width < 62rem) {
+    .site-menu {
+      display: block;
+    }
     .site-header {
       background: var(--paper);
       border-bottom: 1px solid var(--line);

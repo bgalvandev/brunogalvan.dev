@@ -2,13 +2,14 @@
 import { site } from '@/config/site';
 import { defaultLocale, openGraphLocales, type Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
-import { alternatePages, pagePath, type RouteKey } from '@/i18n/routes';
+import { alternatePages, type RouteKey } from '@/i18n/routes';
 interface Props {
   locale: Locale;
   title: string;
   description: string;
   canonicalPath: string;
   route?: RouteKey;
+  slug?: string;
   noindex?: boolean;
 }
 const {
@@ -17,8 +18,14 @@ const {
   description,
   canonicalPath,
   route,
+  slug,
   noindex = false,
 } = Astro.props;
+// Every language version of this page, the default one first.
+const alternates = route ? alternatePages(route, slug) : [];
+const fallback = alternates.find(
+  (alternate) => alternate.locale === defaultLocale,
+);
 const canonical = new URL(canonicalPath, site.url).href;
 const image = new URL(`/og/${locale}.png`, site.url).href;
 const { meta, identity } = messages(locale);
@@ -60,33 +67,31 @@ const person = {
 ) : (
   <>
     <link rel="canonical" href={canonical} />
-    {route &&
-      alternatePages(route).map(({ locale: alternate, path }) => (
-        <link
-          rel="alternate"
-          hreflang={alternate}
-          href={new URL(path, site.url).href}
-        />
-      ))}
-    {route && (
+    {alternates.map(({ locale: alternate, path }) => (
+      <link
+        rel="alternate"
+        hreflang={alternate}
+        href={new URL(path, site.url).href}
+      />
+    ))}
+    {fallback && (
       <link
         rel="alternate"
         hreflang="x-default"
-        href={new URL(pagePath(route, defaultLocale), site.url).href}
+        href={new URL(fallback.path, site.url).href}
       />
     )}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content={openGraphLocales[locale]} />
-    {route &&
-      alternatePages(route)
-        .filter((alternate) => alternate.locale !== locale)
-        .map((alternate) => (
-          <meta
-            property="og:locale:alternate"
-            content={openGraphLocales[alternate.locale]}
-          />
-        ))}
+    {alternates
+      .filter((alternate) => alternate.locale !== locale)
+      .map((alternate) => (
+        <meta
+          property="og:locale:alternate"
+          content={openGraphLocales[alternate.locale]}
+        />
+      ))}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

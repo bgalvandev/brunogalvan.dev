@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { career, figures } from './figures';
+import { roles } from './experience';
+import { career, figures, roleMonths } from './figures';
 
 const today = new Date(Date.UTC(2026, 8, 22));
 
@@ -46,5 +47,15 @@ describe('the career by month', () => {
     expect(gap).toMatchObject({ role: null, tenure: 0 });
     const first = months.find((month) => month.role === 'surtidores');
     expect(first).toMatchObject({ year: 2022, month: 7, tenure: 1 });
+  });
+});
+
+describe('the length of a role', () => {
+  it('counts its first and last month, and runs an open role to today', () => {
+    const [clinicsay, metrica, surtidores, platanitos] = roles;
+    expect(roleMonths(clinicsay, today)).toBe(22);
+    expect(roleMonths(metrica, today)).toBe(7);
+    expect(roleMonths(surtidores, today)).toBe(10);
+    expect(roleMonths(platanitos, today)).toBe(35);
   });
 });

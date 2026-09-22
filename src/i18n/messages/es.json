@@ -11,9 +11,12 @@
   "navigation": {
     "language": "Idioma",
     "skip": "Ir al contenido",
-    "main": "Páginas",
+    "main": "Principal",
     "home": "Inicio",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "about": "Sobre mí",
+    "experience": "Experiencia",
+    "menu": "Menú"
   },
   "theme": {
     "darkMode": "Modo oscuro"
@@ -180,7 +183,7 @@
   "experience": {
     "label": "Experiencia",
     "headline": ["{companies} empresas.", "Desde {year}."],
-    "action": "Ver LinkedIn",
+    "action": "Trayectoria completa",
     "present": "Hoy",
     "roles": {
       "clinicsay": {
@@ -199,6 +202,229 @@
         "role": "Programador Web · Analista SAP",
         "line": "Aplicaciones web para retail, facturación electrónica y reportes que cruzan SAP con SQL."
       }
+    },
+    "linkedin": "Ver LinkedIn"
+  },
+  "experiencePage": {
+    "meta": {
+      "title": "Experiencia — Bruno Galván",
+      "description": "La trayectoria completa de Bruno Galván, desarrollador full stack senior: cuatro empresas desde 2019, con periodos, lo hecho en cada rol y la formación."
+    },
+    "label": "Trayectoria",
+    "headline": ["Cada rol, con su periodo.", "Y lo que hice en él."],
+    "duration": {
+      "year": "año",
+      "years": "años",
+      "month": "mes",
+      "months": "meses"
+    },
+    "clients": "Clientes",
+    "education": {
+      "label": "Formación",
+      "title": "Computación Informática",
+      "school": "Universidad San Ignacio de Loyola",
+      "period": "2015 — 2017"
+    },
+    "durationLabel": "Duración"
+  },
+  "aboutPage": {
+    "meta": {
+      "title": "Sobre mí — Bruno Galván",
+      "description": "Bruno Galván, desarrollador full stack senior en Lima, Perú: sus reglas de trabajo, su stack, su formación e idiomas."
+    },
+    "label": "Sobre mí",
+    "headline": ["Soy Bruno Galván.", "Desarrollo de principio a fin."],
+    "intro": "Desarrollador full stack senior en Lima, Perú. Construyo plataformas web, APIs e integraciones, de la base de datos a producción.",
+    "method": {
+      "label": "Método",
+      "headline": ["Mis reglas de trabajo.", "Tal como las escribí."],
+      "rules": [
+        {
+          "title": "Los límites son explícitos.",
+          "text": "La dependencia va en un solo sentido: de la interfaz a la aplicación, de la aplicación al dominio. El dominio no sabe nada del framework, la base de datos ni el transporte. Un límite se cruza con una decisión escrita."
+        },
+        {
+          "title": "El cambio más pequeño que funciona.",
+          "text": "Ninguna abstracción para un futuro que no ha llegado; lo que deja de usarse se va en el mismo cambio."
+        },
+        {
+          "title": "Verificar antes de afirmar.",
+          "text": "Nada está hecho porque compila. Está hecho cuando las verificaciones pasan y se ha visto en el build de producción."
+        },
+        {
+          "title": "Las decisiones se escriben.",
+          "text": "Lo que no se lee en el código va a un registro fechado con al menos dos opciones comparadas."
+        }
+      ]
+    },
+    "stack": {
+      "label": "Stack",
+      "headline": ["Las herramientas.", "Agrupadas por capa."]
+    },
+    "languages": {
+      "label": "Idiomas",
+      "items": [
+        {
+          "name": "Español",
+          "level": "Nativo"
+        },
+        {
+          "name": "Inglés",
+          "level": "Elemental"
+        }
+      ]
+    }
+  },
+  "caseStudy": {
+    "label": "Caso de estudio",
+    "back": "Todos los proyectos",
+    "context": "Contexto",
+    "architecture": "Arquitectura",
+    "decisions": "Decisiones",
+    "code": "En el código",
+    "excerpt": "Extracto de {file}, líneas {from} a {to}",
+    "whole": "{file}, completo",
+    "facts": {
+      "kind": "Tipo",
+      "stack": "Stack",
+      "repository": "Repositorio",
+      "demo": "Demo",
+      "noDemo": "Sin demo pública"
+    },
+    "read": "Leer caso",
+    "readOf": "Caso de estudio de {name}"
+  },
+  "caseStudies": {
+    "starwars-api": {
+      "meta": {
+        "title": "Star Wars API — Caso de estudio — Bruno Galván",
+        "description": "Una API serverless en AWS Lambda que traduce los personajes de SWAPI al español y los guarda en DynamoDB, en cuatro capas."
+      },
+      "headline": ["Una API serverless.", "En cuatro capas."],
+      "summary": "Una API en AWS Lambda que traduce al español los personajes de SWAPI y los guarda en DynamoDB.",
+      "context": "Un proyecto construido con Serverless Framework. Expone dos grupos de endpoints REST: uno lee de SWAPI y devuelve cada personaje con sus campos en español; el otro crea y consulta personajes en una tabla de DynamoDB.",
+      "layers": [
+        {
+          "name": "Presentación",
+          "text": "Rutas y controladores de Express, uno por fuente: dynamo y swapi. Cada controlador transforma el personaje a campos en español."
+        },
+        {
+          "name": "Dominio",
+          "text": "La interfaz IPeopleRepository y un CustomError con una fábrica por código HTTP."
+        },
+        {
+          "name": "Infraestructura",
+          "text": "DynamoDBPeopleRepository implementa la interfaz con los comandos Scan, Get y Put del SDK v3 de AWS."
+        },
+        {
+          "name": "Datos",
+          "text": "El cliente de DynamoDB y el modelo Person."
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Una sola función",
+          "text": "Serverless declara una única función con un evento HTTP que atrapa todas las rutas; Express enruta dentro, a través de serverless-http."
+        },
+        {
+          "title": "Permisos para una tabla",
+          "text": "El rol de IAM concede exactamente cinco acciones de DynamoDB, y solo sobre el ARN de la tabla del servicio."
+        },
+        {
+          "title": "La tabla como código",
+          "text": "La tabla se declara en el mismo serverless.yml, con una clave de partición id de tipo texto."
+        },
+        {
+          "title": "Configuración exigida",
+          "text": "env-var marca como obligatorias la URL de SWAPI, la región y el nombre de la tabla: sin ellas, la función no arranca."
+        }
+      ]
+    },
+    "idbi-invoice": {
+      "meta": {
+        "title": "IDBI Invoice Recorder — Caso de estudio — Bruno Galván",
+        "description": "Una API REST en Laravel que registra comprobantes XML en segundo plano, detrás de JWT, con controladores de acción única, Form Requests y API Resources."
+      },
+      "headline": ["Comprobantes XML.", "Registrados en segundo plano."],
+      "summary": "Una API REST en Laravel que registra comprobantes electrónicos en XML, extrae sus datos y los consulta con filtros, detrás de JWT.",
+      "context": "Un reto técnico para IDBI. La API recibe uno o varios archivos XML, los procesa en una cola y envía por correo el resumen de los comprobantes registrados y de los que fallaron.",
+      "layers": [
+        {
+          "name": "Rutas versionadas",
+          "text": "routes/api.php carga las rutas públicas de v1 y, dentro de un grupo con el middleware jwt.verify, las protegidas."
+        },
+        {
+          "name": "Controladores de acción única",
+          "text": "Cada endpoint es una clase con __invoke; los de comprobantes listan, registran, eliminan, totalizan y regularizan."
+        },
+        {
+          "name": "Form Requests y API Resources",
+          "text": "GetVouchersRequest valida la página, el tamaño, las fechas y los filtros opcionales; VoucherResource da forma a la respuesta y carga líneas y usuario solo si se pidieron."
+        },
+        {
+          "name": "Servicio",
+          "text": "VoucherService lee el XML con SimpleXML y XPath sobre los nodos UBL cbc y cac."
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Responder antes de procesar",
+          "text": "El registro responde 202 y despacha el job ProcessVouchers, que implementa ShouldQueue."
+        },
+        {
+          "title": "Un evento de dominio",
+          "text": "Al terminar, el job emite VouchersCreated; un listener envía el correo con éxitos y fallos."
+        },
+        {
+          "title": "JWT como guard",
+          "text": "Con tymon/jwt-auth, el guard api usa el driver jwt, y jwt.verify es un alias del middleware Authenticate de Laravel."
+        },
+        {
+          "title": "Entorno reproducible",
+          "text": "compose.yml levanta PHP 8.1 con Nginx, MySQL 8.0 y MailHog para ver los correos."
+        }
+      ]
+    },
+    "rimac-frontend": {
+      "meta": {
+        "title": "RIMAC Frontend — Caso de estudio — Bruno Galván",
+        "description": "Un flujo de tres pantallas en React y TypeScript, con módulos Sass por componente, Axios y sin librería de estado."
+      },
+      "headline": ["Tres pantallas.", "Sin librería de estado."],
+      "summary": "Un flujo de tres pantallas en React y TypeScript: un formulario, los planes filtrados por edad y un resumen.",
+      "context": "Una prueba técnica organizada por Softtek. La aplicación consume una API de usuario y otra de planes, y está publicada en Netlify.",
+      "layers": [
+        {
+          "name": "Rutas",
+          "text": "Tres rutas de React Router: inicio, planes y resumen."
+        },
+        {
+          "name": "Estilos",
+          "text": "Un módulo Sass por componente, con la metodología BEM."
+        },
+        {
+          "name": "Datos",
+          "text": "Axios en services/api, servicios que filtran los planes por edad y hooks que los exponen a las páginas."
+        },
+        {
+          "name": "Estado",
+          "text": "Estado local de React y hooks propios: useUser y usePlans."
+        }
+      ],
+      "decisions": [
+        {
+          "title": "Cuatro dependencias",
+          "text": "react, react-dom, react-router-dom y axios. Nada más en tiempo de ejecución."
+        },
+        {
+          "title": "Capas en el cliente",
+          "text": "La API, los servicios, los hooks y las páginas, cada uno en su carpeta."
+        },
+        {
+          "title": "Formularios validados",
+          "text": "El formulario de inicio valida documento, celular y consentimientos con validateForm, y solo continúa si son válidos."
+        }
+      ]
     }
   }
 }

@@ -1,0 +1,57 @@
+---
+import Headline from '@/components/headline.astro';
+import PixelField from '@/components/pixel-field.astro';
+// The opening room of an extension page: the dark gridded band, a tag, the
+// page's statement as its h1, and room for an intro or facts below.
+interface Props {
+  label: string;
+  lines: readonly string[];
+  intro?: string;
+}
+const { label, lines, intro } = Astro.props;
+---
+
+<section class="section band page-hero" aria-labelledby="page-title">
+  <PixelField />
+  <div class="measure page-hero-body">
+    <p class="tag">{label}</p>
+    <Headline id="page-title" level="h1" size="display" lines={lines} />
+    {intro && <p class="page-hero-intro">{intro}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .page-hero-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    padding-block: 9rem 5rem;
+    pointer-events: none;
+  }
+  .page-hero-body > :global(*) {
+    pointer-events: auto;
+  }
+  .page-hero-body .tag {
+    margin: 0;
+  }
+  .page-hero-intro {
+    max-width: 40rem;
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-medium);
+    line-height: var(--text-medium--line-height);
+    letter-spacing: var(--text-medium--letter-spacing);
+  }
+  @media (width < 62rem) {
+    .page-hero-body {
+      padding-top: 7rem;
+    }
+  }
+</style>

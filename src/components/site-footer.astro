@@ -12,7 +12,11 @@ interface Props {
 const { locale } = Astro.props;
 const { footer, navigation, identity } = messages(locale);
 const year = new Date().getFullYear();
-const pages = [{ href: pagePath('home', locale), label: navigation.home }];
+const pages = [
+  { href: pagePath('home', locale), label: navigation.home },
+  { href: pagePath('experience', locale), label: navigation.experience },
+  { href: pagePath('about', locale), label: navigation.about },
+];
 const profiles = [
   { label: 'GitHub', href: site.github },
   { label: 'LinkedIn', href: site.linkedin },
