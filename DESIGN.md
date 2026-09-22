@@ -145,6 +145,13 @@ What this site does that the master does not, and why each earns its cost:
   and education.
 - **Lit dark panels.** The code window's header carries an inset top
   highlight, the Raycast technique, from a themed token.
+- **A numbered rail.** From 992px a fixed rail in the right gutter lists the
+  seven rooms by number, slides out each label on hover or focus, marks the
+  room crossing the middle of the viewport with the accent and
+  `aria-current="location"`, and fills a hairline as the page is read. The
+  links are plain anchors; the fill is a CSS scroll-driven animation, absent
+  where unsupported; one observer marks the room. Below 992px the gutter is too
+  narrow, and the eyebrow already numbers each room.
 - **No framework runtime.** Static Astro output; the master ships jQuery and
   the Webflow runtime on every page.
 
@@ -194,6 +201,18 @@ Each difference found in side-by-side captures at 1440px, and why it stays:
   the current one would read as an availability signal.
 - The closing room keeps the master's card and marquees; the email and the
   profiles appear once, in the footer. The footer has no newsletter form.
+- Every section button leads somewhere true (this repository, every
+  repository, the whole career, the email) where the master's all say contact
+  us or get started.
+- Code offers two languages, not three: there are two public files worth
+  reading. The window's title bar names the repository and file and links to
+  it at the pinned commit, where the master's names the product.
+- Experience has no paragraph under its button: the headline already states
+  the span, and the page is over its word budget. The timeline has four
+  entries because there are four roles.
+- The footer sets the name as its wordmark where the master sets a logo, lists
+  profiles without brand icons (no artwork is carried over), and ends with the
+  source link instead of legal pages the site does not need.
 - Hovering a `What I do` card changes nothing: the cards are not links, and
   a hover response would make them look actionable.
 

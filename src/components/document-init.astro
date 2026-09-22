@@ -1,4 +1,11 @@
-<!-- Runs before paint. Marks JavaScript as available (CSS shows the toggles from that flag), restores a valid saved theme and a paused-motion choice, and decides whether this is the first view of the session, the only one that opens behind the preloader. Without JavaScript none of this exists: the system theme applies and nothing covers the page. -->
+---
+// Runs before paint. Marks JavaScript as available (CSS shows the toggles from
+// that flag), restores a valid saved theme and a paused-motion choice, and
+// decides whether this is the first view of the session, the only one that
+// opens behind the preloader. Without JavaScript none of this exists: the
+// system theme applies and nothing covers the page.
+---
+
 <script is:inline>
   // A block keeps these names out of the page's global scope.
   {

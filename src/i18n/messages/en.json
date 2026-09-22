@@ -15,7 +15,8 @@
     "contact": "Contact",
     "about": "About",
     "experience": "Experience",
-    "menu": "Menu"
+    "menu": "Menu",
+    "sections": "Sections"
   },
   "theme": {
     "darkMode": "Dark mode"

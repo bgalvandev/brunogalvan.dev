@@ -140,3 +140,31 @@ test('the timeline lists every role with its period', async ({ page }) => {
     await expect(item).toContainText(t.experience.roles[role.id].role);
   }
 });
+
+test('on a wide screen a numbered rail marks the room being read and fills as the page is read', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/es/');
+  const rail = page.getByRole('navigation', { name: t.navigation.sections });
+  await expect(rail).toBeVisible();
+  const links = rail.getByRole('link');
+  await expect(links).toHaveCount(7);
+  await expect(links.first()).toHaveAccessibleName(`01 ${t.whatIDo.label}`);
+  await expect(links.first()).toHaveAttribute('href', '#what-i-do');
+  await page.locator('#projects').scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, 200));
+  await expect(
+    rail.getByRole('link', { name: `06 ${t.projects.label}` }),
+  ).toHaveAttribute('aria-current', 'location');
+  await page.evaluate(() =>
+    window.scrollTo(0, document.documentElement.scrollHeight),
+  );
+  await expect(page.locator('.rail-fill')).toHaveCSS(
+    'transform',
+    'matrix(1, 0, 0, 1, 0, 0)',
+  );
+  await page.setViewportSize({ width: 360, height: 800 });
+  await expect(rail).toBeHidden();
+});

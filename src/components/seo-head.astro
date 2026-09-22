@@ -1,4 +1,6 @@
 ---
+// The theme-color metas below carry the --paper token values from
+// src/styles/tokens.css, for the browser chrome.
 import { site } from '@/config/site';
 import { defaultLocale, openGraphLocales, type Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
@@ -59,7 +61,6 @@ const person = {
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<!-- Browser chrome color: the --paper token values from src/styles/tokens.css. -->
 <meta
   name="theme-color"
   media="(prefers-color-scheme: light)"

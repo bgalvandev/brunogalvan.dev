@@ -1,4 +1,9 @@
 ---
+// Pauses everything that moves on its own (marquees, the preloader, reveals,
+// scrambles and the pixel trail), so no motion outlasts five seconds without a
+// way to stop it (WCAG 2.2.2). The choice persists like the theme. Hidden
+// without JavaScript, which has no motion to pause, and under reduced motion,
+// which already stops it.
 import PixelIcon from '@/components/pixel-icon.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
@@ -8,7 +13,6 @@ interface Props {
 const { motion } = messages(Astro.props.locale);
 ---
 
-<!-- Pauses everything that moves on its own (marquees, the preloader, reveals, scrambles and the pixel trail), so no motion outlasts five seconds without a way to stop it (WCAG 2.2.2). The choice persists like the theme. Hidden without JavaScript, which has no motion to pause, and under reduced motion, which already stops it. -->
 <button
   type="button"
   class="tab motion-toggle"

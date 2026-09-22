@@ -1,4 +1,11 @@
-<!-- The first view of a session opens behind a sheet of accent that clears square by square. It exists only when the pre-paint script has marked the document .preloading (JavaScript, motion allowed, first view); the motion script breaks it into squares and removes it, and a CSS failsafe hides it even if that script never runs. -->
+---
+// The first view of a session opens behind a sheet of accent that clears square
+// by square. It exists only when the pre-paint script has marked the document
+// .preloading (JavaScript, motion allowed, first view); the motion script
+// breaks it into squares and removes it, and a CSS failsafe hides it even if
+// that script never runs.
+---
+
 <div class="preloader" aria-hidden="true" data-preloader></div>
 
 <style>
