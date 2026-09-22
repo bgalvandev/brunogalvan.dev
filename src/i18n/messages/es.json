@@ -27,8 +27,8 @@
     "closing": "Desarrollador senior.",
     "spoken": "Hola, soy Bruno, desarrollador Full Stack Senior.",
     "line": "Construyo plataformas web, APIs e integraciones, de la base de datos a producción.",
-    "primary": "Escríbeme",
-    "secondary": "Código en GitHub",
+    "primary": "Ver proyectos",
+    "secondary": "Escríbeme",
     "scroll": "Baja para ver más"
   },
   "whatIDo": {
@@ -39,7 +39,7 @@
       {
         "title": "Plataformas",
         "tag": "Frontend + backend",
-        "text": "Aplicaciones web completas, de la base de datos a la interfaz."
+        "text": "De la base de datos a la interfaz."
       },
       {
         "title": "APIs",
@@ -54,17 +54,23 @@
       {
         "title": "Automatización",
         "tag": "IA · Mensajería",
-        "text": "Flujos en WhatsApp y Salesbot, y una API de IA dentro de un CRM."
+        "text": "WhatsApp, Salesbot y una API de IA en un CRM."
       }
     ]
   },
   "contact": {
     "label": "Contacto",
-    "headline": ["Un correo basta.", "Lo leo yo."]
+    "headline": ["Un correo basta.", "Lo leo yo."],
+    "fragment": "Escríbeme",
+    "action": "Enviar un correo",
+    "marquee": ["[#Frontend]", "&", "[#Backend]", "//", "[#Producción]", "//"]
   },
   "footer": {
     "colophon": "Hecho con Astro, sin frameworks en el navegador.",
-    "source": "Código fuente"
+    "source": "Código fuente",
+    "pages": "Páginas",
+    "profiles": "Perfiles",
+    "contact": "Contacto"
   },
   "notFound": {
     "title": "Página no encontrada",
@@ -81,5 +87,118 @@
       "cambios pequeños",
       "verificado en producción"
     ]
+  },
+  "numbers": {
+    "label": "En cifras",
+    "headline": ["Cifras leídas del registro.", "Ninguna escrita a mano."],
+    "action": "Ver experiencia",
+    "stats": {
+      "years": "años desde el primer rol",
+      "companies": "empresas",
+      "publicProjects": "proyectos con código público",
+      "technologies": "tecnologías en el stack"
+    },
+    "chart": {
+      "caption": "Cada barra es un mes; su altura, los meses en el rol.",
+      "summary": "{months} meses desde {year}, en {companies} empresas."
+    }
+  },
+  "stack": {
+    "label": "Stack",
+    "headline": ["Herramientas por capa.", "Del navegador a la base de datos."],
+    "groups": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "data": "Datos",
+      "ai": "IA e integraciones",
+      "architecture": "Arquitectura",
+      "platform": "Plataforma y calidad"
+    }
+  },
+  "method": {
+    "label": "Método",
+    "headline": ["Cuatro reglas.", "Escritas, no supuestas."],
+    "action": "Ver este repositorio",
+    "rules": [
+      {
+        "title": "Límites explícitos",
+        "text": "Dependencia en un solo sentido; el dominio no conoce el framework."
+      },
+      {
+        "title": "El cambio más pequeño",
+        "text": "Ninguna abstracción para un futuro que no ha llegado."
+      },
+      {
+        "title": "Verificar antes de afirmar",
+        "text": "Hecho es: verificaciones en verde y visto en producción."
+      },
+      {
+        "title": "Decisiones por escrito",
+        "text": "Lo que el código no dice va a un registro fechado."
+      }
+    ]
+  },
+  "code": {
+    "label": "Código",
+    "headline": ["Código real.", "De repositorios públicos."],
+    "action": "Más en GitHub",
+    "tabs": "Lenguaje",
+    "samples": {
+      "ts": {
+        "title": "TypeScript",
+        "text": "Las rutas REST de starwars-api, con Express en AWS Lambda."
+      },
+      "php": {
+        "title": "PHP",
+        "text": "Controlador de acción única de idbi-invoice: Form Request de entrada, API Resource de salida."
+      }
+    }
+  },
+  "projects": {
+    "label": "Proyectos",
+    "headline": ["{total} proyectos.", "{public} con el código a la vista."],
+    "action": "Todos los repositorios",
+    "kinds": {
+      "product": "Producto propio",
+      "project": "Proyecto",
+      "challenge": "Reto técnico"
+    },
+    "code": "Código",
+    "demo": "Demo",
+    "private": "Código privado",
+    "items": {
+      "vitalpro": "Producto propio; sin caso de estudio porque el código es privado.",
+      "starwars-api": "API serverless en Lambda que traduce SWAPI y guarda en DynamoDB.",
+      "idbi-invoice": "API REST con JWT para registrar y consultar comprobantes XML.",
+      "rimac-frontend": "Flujo en React de tres pantallas: formulario, planes y resumen.",
+      "rollpay-auth": "Autenticación en PHP con JWT: registro, inicio de sesión y auditoría.",
+      "placer-sano": "Sitio de restaurante en Astro: carta, reservas y equipo."
+    },
+    "codeOf": "Código de {name}",
+    "demoOf": "Demo de {name}"
+  },
+  "experience": {
+    "label": "Experiencia",
+    "headline": ["{companies} empresas.", "Desde {year}."],
+    "action": "Ver LinkedIn",
+    "present": "Hoy",
+    "roles": {
+      "clinicsay": {
+        "role": "Desarrollador Full Stack Senior",
+        "line": "Plataforma de gestión clínica y una API de IA conectada a un CRM. Frontend, backend y producción."
+      },
+      "metrica-andina": {
+        "role": "Analista Programador Senior",
+        "line": "Microservicios, una integración REST con Salesforce y automatización de WhatsApp para clientes de educación."
+      },
+      "surtidores": {
+        "role": "Programador PHP",
+        "line": "Lideré el nuevo ERP web en Laravel y mantuve en marcha el anterior, en PHP 5."
+      },
+      "platanitos": {
+        "role": "Programador Web · Analista SAP",
+        "line": "Aplicaciones web para retail, facturación electrónica y reportes que cruzan SAP con SQL."
+      }
+    }
   }
 }

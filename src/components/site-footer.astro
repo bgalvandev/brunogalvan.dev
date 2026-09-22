@@ -1,48 +1,228 @@
 ---
+import PixelIcon from '@/components/pixel-icon.astro';
 import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
+import { pagePath } from '@/i18n/routes';
+// The master's footer grid, without its newsletter: a static site has no form
+// to post to. The name stands where the master's logo stands.
 interface Props {
   locale: Locale;
 }
-const { footer } = messages(Astro.props.locale);
+const { locale } = Astro.props;
+const { footer, navigation, identity } = messages(locale);
 const year = new Date().getFullYear();
+const pages = [{ href: pagePath('home', locale), label: navigation.home }];
+const profiles = [
+  { label: 'GitHub', href: site.github },
+  { label: 'LinkedIn', href: site.linkedin },
+] as const;
 ---
 
 <footer class="site-footer">
-  <div class="measure site-footer-body">
-    <p>
-      © {year} {site.name}
-    </p>
-    <p>{footer.colophon}</p>
-    <a class="site-footer-link" href={site.repository}>
-      {footer.source}
-    </a>
+  <div class="measure">
+    <div class="site-footer-grid">
+      <div class="site-footer-name">
+        <p class="site-footer-wordmark">{site.name}</p>
+        <p class="site-footer-role">
+          {identity.role} · {identity.location}
+        </p>
+      </div>
+      <div class="site-footer-cards">
+        <nav class="site-footer-card" aria-label={footer.pages}>
+          <p class="site-footer-title">{footer.pages}</p>
+          <ul class="site-footer-list">
+            {pages.map((page) => (
+              <li>
+                <a class="site-footer-link" href={page.href}>
+                  {page.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div class="site-footer-card">
+          <p class="site-footer-title">{footer.profiles}</p>
+          <ul class="site-footer-list">
+            {profiles.map((profile) => (
+              <li>
+                <a class="site-footer-profile" href={profile.href} rel="me">
+                  <span>{profile.label}</span>
+                  <span class="site-footer-dash" aria-hidden="true" />
+                  <PixelIcon name="arrow-up-right" class="site-footer-icon" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="site-footer-card site-footer-contact">
+          <p class="site-footer-title">{footer.contact}</p>
+          <a class="site-footer-link" href={`mailto:${site.email}`}>
+            {site.email}
+          </a>
+          <p class="site-footer-info">{identity.location}</p>
+        </div>
+      </div>
+    </div>
+    <div class="site-footer-bottom">
+      <p>
+        © {year} {site.name}
+      </p>
+      <p>{footer.colophon}</p>
+      <a class="site-footer-source" href={site.repository}>
+        {footer.source}
+      </a>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
     border-top: 1px solid var(--line);
-    color: var(--faint);
-    font-size: var(--text-label);
+    background: var(--paper);
   }
-  .site-footer-body {
+  .site-footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-inline: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .site-footer-name {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 2.5rem;
+    border-right: 1px solid var(--line);
+  }
+  .site-footer-wordmark {
+    margin: 0;
+    font-size: var(--text-display);
+    line-height: var(--text-display--line-height);
+    letter-spacing: var(--text-display--letter-spacing);
+  }
+  /* The name ends on a block, as the master's wordmark ends on its mark. */
+  .site-footer-wordmark::after {
+    content: '';
+    display: inline-block;
+    width: 0.3em;
+    height: 0.75em;
+    margin-left: 0.1em;
+    background: var(--accent);
+  }
+  .site-footer-role {
+    margin: 0;
+    color: var(--muted);
+  }
+  .site-footer-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .site-footer-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2.5rem;
+  }
+  .site-footer-card + .site-footer-card:not(.site-footer-contact) {
+    border-left: 1px solid var(--line);
+  }
+  .site-footer-contact {
+    grid-column: span 2;
+    border-top: 1px solid var(--line);
+  }
+  .site-footer-title {
+    margin: 0;
+    font-size: var(--text-label);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--text-label--letter-spacing);
+  }
+  .site-footer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .site-footer-link,
+  .site-footer-profile {
+    color: var(--muted);
+    overflow-wrap: anywhere;
+    transition: color 0.2s ease;
+  }
+  .site-footer-link:hover,
+  .site-footer-profile:hover {
+    color: var(--accent);
+  }
+  .site-footer-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .site-footer-dash {
+    flex: 1;
+    border-bottom: 1px dashed var(--line);
+  }
+  .site-footer :global(.site-footer-icon) {
+    flex: none;
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+  .site-footer-info {
+    margin: 0;
+    color: var(--muted);
+  }
+  .site-footer-bottom {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 1rem 2rem;
-    padding-block: 2rem;
+    padding-block: 3rem;
+    color: var(--faint);
+    font-size: var(--text-label);
   }
-  .site-footer-body p {
+  .site-footer-bottom p {
     margin: 0;
   }
-  .site-footer-link {
+  .site-footer-source {
     color: var(--muted);
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
-  .site-footer-link:hover {
-    color: var(--ink);
+  .site-footer-source:hover {
+    color: var(--accent);
+  }
+  @media (width < 62rem) {
+    .site-footer-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .site-footer-name {
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+  @media (width < 48rem) {
+    .site-footer-cards {
+      grid-template-columns: 1fr;
+    }
+    .site-footer-card,
+    .site-footer-name {
+      padding: 1.5rem;
+    }
+    .site-footer-card + .site-footer-card:not(.site-footer-contact) {
+      border-left: none;
+      border-top: 1px solid var(--line);
+    }
+    .site-footer-contact {
+      grid-column: auto;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer-link,
+    .site-footer-profile {
+      transition: none;
+    }
   }
 </style>

@@ -3,17 +3,21 @@
 // loop at -50%; the whole band is decoration (the same items are listed where
 // they carry meaning), hidden from assistive technology. It pauses on hover,
 // stops under reduced motion and when the visitor pauses motion.
+// `cells` is a band of bordered cells; `text` is a line of accent mono words,
+// repeated so a short list still fills the widest screen.
 interface Props {
   items: readonly string[];
+  variant?: 'cells' | 'text';
 }
-const { items } = Astro.props;
+const { items, variant = 'cells' } = Astro.props;
+const run = variant === 'text' ? [items, items, items, items].flat() : items;
 ---
 
-<div class="marquee" aria-hidden="true">
+<div class:list={['marquee', `marquee-${variant}`]} aria-hidden="true">
   <div class="marquee-track">
     {[0, 1].map(() => (
       <ul class="marquee-group">
-        {items.map((item) => (
+        {run.map((item) => (
           <li class="marquee-item">{item}</li>
         ))}
       </ul>
@@ -72,6 +76,24 @@ const { items } = Astro.props;
     letter-spacing: var(--text-label--letter-spacing);
     text-transform: uppercase;
     white-space: nowrap;
+  }
+  .marquee-text {
+    border-block: none;
+    padding-block: 1.5rem;
+    background: var(--paper);
+  }
+  .marquee-text .marquee-track {
+    animation-duration: 45s;
+  }
+  .marquee-text .marquee-group {
+    gap: 2.5rem;
+    padding-right: 2.5rem;
+  }
+  .marquee-text .marquee-item {
+    width: auto;
+    height: auto;
+    border: none;
+    color: var(--accent);
   }
   @keyframes marquee {
     to {

@@ -3,7 +3,13 @@ import SiteFooter from '@/components/site-footer.astro';
 import SiteHeader from '@/components/site-header.astro';
 import type { Locale } from '@/i18n/locales';
 import Contact from './contact.astro';
+import Experience from './experience.astro';
 import Hero from './hero.astro';
+import Code from './code.astro';
+import Method from './method.astro';
+import Numbers from './numbers.astro';
+import Projects from './projects.astro';
+import Stack from './stack.astro';
 import WhatIDo from './what-i-do.astro';
 interface Props {
   locale: Locale;
@@ -15,6 +21,12 @@ const { locale } = Astro.props;
 <main id="main" tabindex="-1">
   <Hero locale={locale} />
   <WhatIDo locale={locale} />
+  <Numbers locale={locale} />
+  <Stack locale={locale} />
+  <Method locale={locale} />
+  <Code locale={locale} />
+  <Projects locale={locale} />
+  <Experience locale={locale} />
   <Contact locale={locale} />
 </main>
 <SiteFooter locale={locale} />

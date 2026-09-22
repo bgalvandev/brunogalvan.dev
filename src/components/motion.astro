@@ -236,6 +236,44 @@
     });
   }
 
+  // A numbered process driven by the scroll, as in the master's how-it-works:
+  // the room grows tall, its content sticks, and each step's line is drawn in
+  // turn while the steps reached so far are marked active. Only where the
+  // steps sit in one row; stacked steps would not fit a sticky frame.
+  function steps(section: HTMLElement) {
+    const cards = [...section.querySelectorAll<HTMLElement>('[data-step]')];
+    const lines = cards.flatMap(
+      (card) => card.querySelector<HTMLElement>('[data-step-line]') ?? [],
+    );
+    gsap.matchMedia().add('(min-width: 62rem)', () => {
+      section.dataset.scrubbing = '';
+      const mark = (progress: number) =>
+        cards.forEach((card, index) =>
+          card.classList.toggle(
+            'is-active',
+            index === 0 || progress * cards.length > index,
+          ),
+        );
+      mark(0);
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.8,
+          onUpdate: (trigger) => mark(trigger.progress),
+        },
+      });
+      lines.forEach((line) =>
+        timeline.fromTo(line, { width: '0%' }, { width: '100%', ease: 'none' }),
+      );
+      return () => {
+        delete section.dataset.scrubbing;
+        cards.forEach((card) => card.classList.remove('is-active'));
+      };
+    });
+  }
+
   function start() {
     document
       .querySelectorAll<HTMLElement>('[data-typewriter]')
@@ -249,7 +287,11 @@
           pixelField,
         ),
       );
+    // Steps first: they make their room taller, which moves every trigger
+    // below them.
+    document.querySelectorAll<HTMLElement>('[data-steps]').forEach(steps);
     document.querySelectorAll<HTMLElement>('[data-reveal]').forEach(reveal);
+    ScrollTrigger.refresh();
     clearPreloader();
     // Motion switched off mid-visit. GSAP has already reverted every split and
     // tween by the time this runs, so the markup is back; restore the typed

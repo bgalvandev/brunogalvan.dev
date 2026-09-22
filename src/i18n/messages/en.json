@@ -27,8 +27,8 @@
     "closing": "Senior developer.",
     "spoken": "Hi, I'm Bruno, a Senior Full Stack Developer.",
     "line": "I build web platforms, APIs and integrations, from the database to production.",
-    "primary": "Write to me",
-    "secondary": "Code on GitHub",
+    "primary": "See projects",
+    "secondary": "Write to me",
     "scroll": "Scroll for more"
   },
   "whatIDo": {
@@ -39,7 +39,7 @@
       {
         "title": "Platforms",
         "tag": "Frontend + backend",
-        "text": "Complete web applications, from the database to the interface."
+        "text": "From the database to the interface."
       },
       {
         "title": "APIs",
@@ -54,17 +54,23 @@
       {
         "title": "Automation",
         "tag": "AI · Messaging",
-        "text": "WhatsApp and Salesbot flows, and an AI API inside a CRM."
+        "text": "WhatsApp, Salesbot and an AI API inside a CRM."
       }
     ]
   },
   "contact": {
     "label": "Contact",
-    "headline": ["An email is enough.", "I read it myself."]
+    "headline": ["An email is enough.", "I read it myself."],
+    "fragment": "Write to me",
+    "action": "Send an email",
+    "marquee": ["[#Frontend]", "&", "[#Backend]", "//", "[#Production]", "//"]
   },
   "footer": {
     "colophon": "Built with Astro, with no framework in the browser.",
-    "source": "Source code"
+    "source": "Source code",
+    "pages": "Pages",
+    "profiles": "Profiles",
+    "contact": "Contact"
   },
   "notFound": {
     "title": "Page not found",
@@ -77,5 +83,118 @@
   "positioning": {
     "spoken": "Explicit boundaries, small changes, verified in production.",
     "parts": ["Explicit boundaries", "small changes", "verified in production"]
+  },
+  "numbers": {
+    "label": "By the numbers",
+    "headline": ["Figures read off the record.", "None typed by hand."],
+    "action": "See experience",
+    "stats": {
+      "years": "years since the first role",
+      "companies": "companies",
+      "publicProjects": "projects with public code",
+      "technologies": "technologies in the stack"
+    },
+    "chart": {
+      "caption": "Each bar is a month; its height, months into the role.",
+      "summary": "{months} months since {year}, across {companies} companies."
+    }
+  },
+  "stack": {
+    "label": "Stack",
+    "headline": ["Tools by layer.", "From the browser to the database."],
+    "groups": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "data": "Data",
+      "ai": "AI and integrations",
+      "architecture": "Architecture",
+      "platform": "Platform and quality"
+    }
+  },
+  "method": {
+    "label": "Method",
+    "headline": ["Four rules.", "Written down, not assumed."],
+    "action": "See this repository",
+    "rules": [
+      {
+        "title": "Explicit boundaries",
+        "text": "Dependency runs one way; the domain knows nothing of the framework."
+      },
+      {
+        "title": "The smallest change",
+        "text": "No abstraction for a future that has not arrived."
+      },
+      {
+        "title": "Verify before claiming",
+        "text": "Done means the gates are green and it was seen in production."
+      },
+      {
+        "title": "Decisions in writing",
+        "text": "What the code cannot say goes into a dated record."
+      }
+    ]
+  },
+  "code": {
+    "label": "Code",
+    "headline": ["Real code.", "From public repositories."],
+    "action": "More on GitHub",
+    "tabs": "Language",
+    "samples": {
+      "ts": {
+        "title": "TypeScript",
+        "text": "The REST routes of starwars-api, on Express in AWS Lambda."
+      },
+      "php": {
+        "title": "PHP",
+        "text": "A single-action controller from idbi-invoice: a Form Request in, an API Resource out."
+      }
+    }
+  },
+  "projects": {
+    "label": "Projects",
+    "headline": ["{total} projects.", "{public} with the code in the open."],
+    "action": "All repositories",
+    "kinds": {
+      "product": "Own product",
+      "project": "Project",
+      "challenge": "Technical challenge"
+    },
+    "code": "Code",
+    "demo": "Demo",
+    "private": "Private code",
+    "items": {
+      "vitalpro": "My own product; no case study, because the code is private.",
+      "starwars-api": "A serverless API on Lambda that translates SWAPI and stores in DynamoDB.",
+      "idbi-invoice": "A JWT-protected REST API to record and query XML invoices.",
+      "rimac-frontend": "A three-screen React flow: form, plans and summary.",
+      "rollpay-auth": "PHP authentication with JWT: sign-up, login and an audit trail.",
+      "placer-sano": "A restaurant site in Astro: menu, reservations and team."
+    },
+    "codeOf": "Code for {name}",
+    "demoOf": "Demo of {name}"
+  },
+  "experience": {
+    "label": "Experience",
+    "headline": ["{companies} companies.", "Since {year}."],
+    "action": "See LinkedIn",
+    "present": "Present",
+    "roles": {
+      "clinicsay": {
+        "role": "Senior Full Stack Developer",
+        "line": "Clinic management platform and an AI API wired into a CRM. Frontend, backend, production."
+      },
+      "metrica-andina": {
+        "role": "Senior Analyst Programmer",
+        "line": "Microservices, a Salesforce REST integration and WhatsApp automation for education clients."
+      },
+      "surtidores": {
+        "role": "PHP Programmer",
+        "line": "Led the new web ERP in Laravel; kept the previous one, on PHP 5, running."
+      },
+      "platanitos": {
+        "role": "Web Programmer · SAP Analyst",
+        "line": "Web applications for retail, electronic invoicing, and reports joining SAP with SQL."
+      }
+    }
   }
 }

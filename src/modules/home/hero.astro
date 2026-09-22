@@ -6,7 +6,7 @@ import PixelIcon from '@/components/pixel-icon.astro';
 import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
-import { stack } from './stack';
+import { stack } from '@/data/stack';
 interface Props {
   locale: Locale;
 }
@@ -43,11 +43,9 @@ const tools = Object.values(stack).flat();
           data-reveal-duration="0.6"
         >
           <span class="hero-line">{hero.greeting}</span>
-          <span class="hero-line hero-highlight" data-reveal-skip>
+          <span class="hero-line pixel-highlight" data-reveal-skip>
             {'[ '}
-            <span class="hero-fragment" data-typewriter>
-              {hero.fragment}
-            </span>
+            <span data-typewriter>{hero.fragment}</span>
             {' ]'}
           </span>
           <span class="hero-line">{hero.closing}</span>
@@ -56,13 +54,11 @@ const tools = Object.values(stack).flat();
       <div class="hero-content">
         <p class="hero-summary">{hero.line}</p>
         <div class="hero-actions">
-          <Button href={`mailto:${site.email}`} label={hero.primary} />
+          <Button href="#projects" label={hero.primary} icon="arrow-down" />
           <Button
-            href={site.github}
+            href={`mailto:${site.email}`}
             label={hero.secondary}
             variant="line"
-            icon="arrow-up-right"
-            rel="me"
           />
         </div>
       </div>
@@ -169,35 +165,6 @@ const tools = Object.values(stack).flat();
   .hero-visual,
   .hero-line {
     display: block;
-  }
-  .hero-highlight {
-    color: var(--accent);
-    font-family: var(--font-pixel);
-    letter-spacing: 0;
-    white-space: nowrap;
-  }
-  /* The block cursor follows the fragment as generated content, so markup
-     formatting can never open a gap between them. */
-  .hero-fragment::after {
-    content: '';
-    display: inline-block;
-    width: 0.55em;
-    height: 0.9em;
-    margin-left: 0.05em;
-    background: currentColor;
-    vertical-align: -0.05em;
-  }
-  /* The cursor blinks four times and then holds, so nothing on the page
-     blinks for longer than five seconds. */
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-fragment::after {
-      animation: hero-cursor-blink 0.8s steps(1) 4;
-    }
-  }
-  @keyframes hero-cursor-blink {
-    50% {
-      opacity: 0;
-    }
   }
   .hero-content {
     display: flex;

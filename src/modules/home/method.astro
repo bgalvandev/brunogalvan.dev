@@ -1,0 +1,240 @@
+---
+import Button from '@/components/button.astro';
+import Headline from '@/components/headline.astro';
+import NumberedSection from '@/components/numbered-section.astro';
+import PixelIcon from '@/components/pixel-icon.astro';
+import { site } from '@/config/site';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import { sectionNumber, sections } from './sections';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { method } = messages(locale);
+// One bitmap per rule: a one-way arrow through a boundary, a single square,
+// a check and a page.
+const icons = [
+  [
+    '.....#......',
+    '.....#......',
+    '.....#..#...',
+    '.....#...#..',
+    '###########.',
+    '.....#...#..',
+    '.....#..#...',
+    '.....#......',
+    '.....#......',
+  ],
+  [
+    '............',
+    '............',
+    '............',
+    '....####....',
+    '....#..#....',
+    '....#..#....',
+    '....####....',
+    '............',
+    '............',
+  ],
+  [
+    '............',
+    '..........#.',
+    '.........#..',
+    '........#...',
+    '.#.....#....',
+    '..#...#.....',
+    '...#.#......',
+    '....#.......',
+    '............',
+  ],
+  [
+    '.#######....',
+    '.#.....##...',
+    '.#.###..##..',
+    '.#.......#..',
+    '.#.#####.#..',
+    '.#.......#..',
+    '.#.####..#..',
+    '.#.......#..',
+    '.#########..',
+  ],
+] as const;
+---
+
+<!-- As in the master, the four cards sit in a sticky frame inside a tall room and the scroll draws each process line in turn. That only happens while motion runs (data-steps is the hook); otherwise every card shows complete. -->
+<NumberedSection
+  id="method"
+  number={sectionNumber('method')}
+  total={sections.length}
+  label={method.label}
+  locale={locale}
+  headingId="method-title"
+  class="method"
+  data-steps
+>
+  <div class="method-main">
+    <div class="method-heading">
+      <Headline id="method-title" lines={method.headline} />
+      <Button href={site.repository} label={method.action} />
+    </div>
+    <ol class="method-cards">
+      {method.rules.map((rule, index) => (
+        <li class="method-card" data-step>
+          <div class="method-card-top">
+            <span class="method-card-number" aria-hidden="true">
+              // {String(index + 1).padStart(3, '0')}
+            </span>
+            <p class="method-card-text">{rule.text}</p>
+          </div>
+          <div class="method-card-process field-dotted" aria-hidden="true">
+            <span class="method-card-line" data-step-line />
+            <span class="method-card-dot" />
+          </div>
+          <div class="method-card-bottom">
+            <h3 class="method-card-title">{rule.title}</h3>
+            <PixelIcon rows={icons[index] ?? []} class="method-card-icon" />
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</NumberedSection>
+
+<style>
+  .method-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  .method-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+  .method-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    min-height: 24rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block: 1px solid var(--line);
+  }
+  /* The process strips line up across the row; the title block sinks to the
+     bottom however many lines it takes. */
+  .method-card {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-block: 1rem;
+    border-inline: 1px solid var(--line);
+  }
+  .method-card-top,
+  .method-card-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-inline: 1rem;
+  }
+  .method-card-bottom {
+    margin-top: auto;
+  }
+  .method-card-top {
+    justify-content: space-between;
+    min-height: 8.5rem;
+  }
+  .method-card-number {
+    color: var(--accent);
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  .method-card-text {
+    margin: 0;
+    color: var(--muted);
+  }
+  /* The process strip: a dotted track, an accent line and a square that
+     leads it. */
+  .method-card-process {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 1.5rem;
+    padding-block: 0.5rem;
+  }
+  .method-card-line {
+    align-self: stretch;
+    width: 100%;
+    max-width: calc(100% - 0.75rem);
+    background: var(--accent);
+  }
+  .method-card-dot {
+    flex: none;
+    height: 100%;
+    aspect-ratio: 1;
+    background: var(--accent);
+  }
+  .method-card-title {
+    margin: 0;
+    color: var(--accent);
+    font-size: var(--text-medium);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+    transition: color 0.2s ease;
+  }
+  .method-card :global(.method-card-icon) {
+    align-self: flex-end;
+    width: 4rem;
+    color: var(--accent);
+    transition: color 0.2s ease;
+  }
+  /* While the scroll drives it, a card not reached yet is quiet: every text
+     still passes contrast, where the master drops to 30% opacity. */
+  .method[data-scrubbing] {
+    height: 250vh;
+  }
+  .method[data-scrubbing] :global(.section-body) {
+    position: sticky;
+    top: 10vh;
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-number,
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-title {
+    color: var(--faint);
+  }
+  .method[data-scrubbing]
+    .method-card:not(.is-active)
+    :global(.method-card-icon) {
+    color: var(--decor);
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-dot {
+    opacity: 0;
+  }
+  @media (width < 62rem) {
+    .method-cards {
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 0;
+    }
+    .method-card {
+      border-bottom: 1px solid var(--line);
+    }
+  }
+  @media (width < 48rem) {
+    .method-heading {
+      flex-direction: column;
+    }
+    .method-cards {
+      grid-template-columns: 1fr;
+      border-bottom: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .method-card-number,
+    .method-card-title,
+    .method-card :global(.method-card-icon) {
+      transition: none;
+    }
+  }
+</style>
