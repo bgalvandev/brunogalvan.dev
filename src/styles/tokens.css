@@ -32,6 +32,9 @@
   --accent: light-dark(#c8341a, #ff7a5c);
   --accent-contrast: light-dark(#ffffff, #141414);
   --band-paper: light-dark(#212121, #141414);
+  /* A raised panel's top edge catching the light, the one thing that makes a
+     dark surface read as lit rather than flat. */
+  --highlight: light-dark(rgb(255 255 255 / 70%), rgb(255 255 255 / 6%));
   /* Syntax, read inside the code window, which is always a dark room; the
      light values keep every pair valid. Keywords take the accent. */
   --syntax-keyword: var(--accent);

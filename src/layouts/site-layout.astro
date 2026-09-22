@@ -16,8 +16,15 @@ interface Props {
   route?: RouteKey;
   slug?: string;
   noindex?: boolean;
+  structured?: readonly Record<string, unknown>[];
 }
 const { locale, ...metadata } = Astro.props;
+// Browsers that support Speculation Rules prerender an internal page as the
+// pointer settles on its link, so the next page is already there on click.
+// Others ignore the block. It is inline, so its hash joins the CSP.
+const speculation = {
+  prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }],
+};
 ---
 
 <!doctype html>
@@ -31,6 +38,11 @@ const { locale, ...metadata } = Astro.props;
     <Font cssVariable="--font-geist-pixel" preload />
     <SeoHead locale={locale} {...metadata} />
     <DocumentInit />
+    <script
+      is:inline
+      type="speculationrules"
+      set:html={JSON.stringify(speculation)}
+    ></script>
   </head>
   <body>
     <Preloader />

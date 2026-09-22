@@ -11,6 +11,8 @@ interface Props {
   route?: RouteKey;
   slug?: string;
   noindex?: boolean;
+  // Further schema.org entities describing this page, beside the Person.
+  structured?: readonly Record<string, unknown>[];
 }
 const {
   locale,
@@ -20,6 +22,7 @@ const {
   route,
   slug,
   noindex = false,
+  structured = [],
 } = Astro.props;
 // Every language version of this page, the default one first.
 const alternates = route ? alternatePages(route, slug) : [];
@@ -27,8 +30,10 @@ const fallback = alternates.find(
   (alternate) => alternate.locale === defaultLocale,
 );
 const canonical = new URL(canonicalPath, site.url).href;
-const image = new URL(`/og/${locale}.png`, site.url).href;
-const { meta, identity } = messages(locale);
+// Each page has its own social card, rendered by scripts/build/og-image.mjs.
+const image = new URL(`/og/${locale}/${slug ?? route ?? 'home'}.png`, site.url)
+  .href;
+const { identity } = messages(locale);
 // Person entity for search engines. Contact, profiles and location come from
 // the single identity source; the job title from the rendered locale.
 const person = {
@@ -44,6 +49,11 @@ const person = {
     addressCountry: site.country,
   },
   sameAs: [site.github, site.linkedin],
+  knowsLanguage: ['es', 'en'],
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: 'Universidad San Ignacio de Loyola',
+  },
 };
 ---
 
@@ -98,12 +108,15 @@ const person = {
     <meta property="og:image" content={image} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={meta.ogImageAlt} />
+    <meta property="og:image:alt" content={title} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image:alt" content={meta.ogImageAlt} />
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(person)}
-    ></script>
+    <meta name="twitter:image:alt" content={title} />
+    {[person, ...structured].map((entity) => (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify(entity)}
+      ></script>
+    ))}
   </>
 )}

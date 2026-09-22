@@ -62,7 +62,7 @@ for (const locale of ['es', 'en'] as const) {
     );
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
       'content',
-      `${origin}/og/${locale}.png`,
+      `${origin}/og/${locale}/home.png`,
     );
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
       'content',
