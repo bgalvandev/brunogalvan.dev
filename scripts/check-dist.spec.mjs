@@ -12,22 +12,25 @@ const preload = (file) =>
 
 async function dist(
   t,
-  { fonts = ['a.woff2', 'b.woff2', 'c.woff2'], home, headers } = {},
+  {
+    fonts = ['a.woff2', 'b.woff2', 'c.woff2'],
+    home,
+    headers,
+    redirects = '/ /en/ 301',
+    refresh = '<meta http-equiv="refresh" content="0;url=/en/">',
+  } = {},
 ) {
   const root = await mkdtemp(path.join(tmpdir(), 'dist-'));
   t.after(() => rm(root, { recursive: true, force: true }));
-  await mkdir(path.join(root, 'es'));
+  await mkdir(path.join(root, 'en'));
   await mkdir(path.join(root, '_astro', 'fonts'), { recursive: true });
   for (const font of fonts)
     await writeFile(path.join(root, '_astro', 'fonts', font), '');
   await writeFile(path.join(root, '404.html'), '<h1>404</h1>');
-  await writeFile(path.join(root, '_redirects'), '/ /es/ 301');
+  await writeFile(path.join(root, '_redirects'), redirects);
+  await writeFile(path.join(root, 'index.html'), refresh);
   await writeFile(
-    path.join(root, 'index.html'),
-    '<meta http-equiv="refresh" content="0;url=/es/">',
-  );
-  await writeFile(
-    path.join(root, 'es', 'index.html'),
+    path.join(root, 'en', 'index.html'),
     home ??
       `${preload('a.woff2')}${preload('b.woff2')}${preload('c.woff2')}<style>@font-face{}</style><script>init()</script><script type="module" src="/_astro/x.js"></script>`,
   );
@@ -53,7 +56,7 @@ test('reports missing documents, extra fonts, missing preloads, foreign scripts,
   for (const expected of [
     '404.html is missing',
     'found 4',
-    'expected 4 font preloads on /es/, found 0',
+    'expected 4 font preloads on /en/, found 0',
     'unexpected script source https://cdn.example/x.js',
     'credential-like',
     '_headers lacks',
@@ -63,4 +66,16 @@ test('reports missing documents, extra fonts, missing preloads, foreign scripts,
       `missing "${expected}" in:\n${problems.join('\n')}`,
     );
   }
+});
+
+test('reports a root that leads anywhere but the default language', async (t) => {
+  const root = await dist(t, {
+    redirects: '/ /es/ 301',
+    refresh: '<meta http-equiv="refresh" content="0;url=/es/">',
+  });
+  const problems = await checkDist(root);
+  assert.deepEqual(problems, [
+    'index.html does not refresh to /en/',
+    '_redirects does not send / to /en/',
+  ]);
 });

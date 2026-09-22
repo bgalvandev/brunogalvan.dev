@@ -71,17 +71,23 @@ test('the code shown is the file it cites, verbatim, and the switch works withou
       ).toBe(snippet.code);
       await expect(window.locator('a')).toHaveAttribute(
         'href',
-        `https://github.com/${snippet.repository}/blob/${snippet.commit}/${snippet.path}`,
+        `https://github.com/${snippet.repository}/blob/${snippet.commit}/${snippet.path}${
+          'lines' in snippet ? `#L${snippet.lines[0]}-L${snippet.lines[1]}` : ''
+        }`,
       );
     }
     await expect(page.locator('.code-window-ts')).toBeVisible();
-    await expect(page.locator('.code-window-php')).toBeHidden();
+    await expect(page.locator('.code-window-astro')).toBeHidden();
     // A pointer clicks the label; a keyboard moves through the radio group.
-    await page.locator('.code-tab', { hasText: 'PHP' }).click();
-    await expect(page.getByRole('radio', { name: /PHP/ })).toBeChecked();
-    await expect(page.locator('.code-window-php')).toBeVisible();
+    await page.locator('.code-tab', { hasText: 'Astro' }).click();
+    await expect(page.getByRole('radio', { name: /Astro/ })).toBeChecked();
+    await expect(page.locator('.code-window-astro')).toBeVisible();
     await expect(page.locator('.code-window-ts')).toBeHidden();
-    await page.getByRole('radio', { name: /PHP/ }).focus();
+    await page.getByRole('radio', { name: /Astro/ }).focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('radio', { name: /Playwright/ })).toBeChecked();
+    await expect(page.locator('.code-window-playwright')).toBeVisible();
+    await page.keyboard.press('ArrowUp');
     await page.keyboard.press('ArrowUp');
     await expect(page.getByRole('radio', { name: /TypeScript/ })).toBeChecked();
     await expect(page.locator('.code-window-ts')).toBeVisible();

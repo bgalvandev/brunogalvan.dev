@@ -16,8 +16,8 @@ pnpm install --frozen-lockfile
 pnpm run dev
 ```
 
-Open `http://127.0.0.1:3000/es/` or `http://127.0.0.1:3000/en/`.
-The root URL redirects to `/es/`; the visible language selector links to `/en/`. Stop the owned terminal process with Ctrl+C.
+Open `http://127.0.0.1:3000/en/` or `http://127.0.0.1:3000/es/`.
+The root URL redirects to `/en/`; the visible language selector links to `/es/`. Stop the owned terminal process with Ctrl+C.
 No environment file, database or container service is required.
 
 ```sh

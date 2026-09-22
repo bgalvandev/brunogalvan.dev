@@ -98,14 +98,21 @@ anywhere. Depth lives on extension pages, never on the home page.
   four working rules in full, the stack and the languages. A case study states
   its facts (stack, repository, demo), then four rooms: context, architecture,
   decisions and one excerpt of code pinned to its commit, and leads to the next
-  case. Detail beyond Section 2 of the plan (the CV's longer role bullets) is
-  not published until it is supplied.
+  case. Where a role's work is verified in its repositories (ClinicSay, read
+  on 2026-09-22), the page lists what was built, at feature level; the other
+  roles keep one line until the updated CV supplies more.
 - **Menu.** Below the tablet breakpoint the page tabs fold into a native
   disclosure, so the menu works without JavaScript.
-- **Words.** Measured on 2026-09-22 with `innerText` of each room, decoration
-  excluded: 526 visible words in Spanish, 513 in English, of which 69 are tool
-  names and about 40 are code. Section 4 of the plan sets a target near 300;
-  the gap is the one line per role and per project the plan also requires.
+- **Content.** The record describes current work for large companies in the
+  United States: the stack is what Bruno's own 2025–2026 commits show, the
+  technical-challenge projects are gone, and work at an employer appears at
+  feature level with no code, internals or team-built parts. English is the
+  default language (ADR 0010).
+- **Words.** Measured on 2026-09-22 with `innerText` of the home page's main,
+  decoration and code excluded: 535 visible words in English, 543 in Spanish.
+  Section 4 of the plan set a target near 300; on 2026-09-22 the owner asked
+  for more information, experience and technology instead, so the record, not
+  the budget, sets the length.
 - **Theme.** The system preference works without JavaScript; the toggle is a
   progressively enhanced override, hidden until its script runs.
 
@@ -130,7 +137,7 @@ What this site does that the master does not, and why each earns its cost:
   cross-fade between pages while the header holds still; unsupported browsers
   just load the page. Cost: a few lines of CSS, off under reduced or paused
   motion.
-- **A social card per page.** Twelve cards, one per page and language, drawn
+- **A social card per page.** One card per page and language, drawn
   in the site's grammar by the existing card script (no new dependency;
   508 kB of committed PNGs). A browser test fails if a page names a card that
   does not exist.
@@ -189,14 +196,15 @@ Each difference found in side-by-side captures at 1440px, and why it stays:
 - Method is drawn by the scroll only from 992px up, where the four cards sit
   in one row. A card not reached yet dims to a colour that still passes
   contrast; the master drops it to 30% opacity and hides its text.
-- Code shows two whole files, verbatim, pinned to the commit they were read
-  at. The language switch is a radio group clicked by the visitor and working
+- Code shows three files from this site's own repository, verbatim, pinned to
+  the commit they were read at: the master has three tabs, and this is the
+  code the visitor can follow. The language switch is a radio group clicked by the visitor and working
   without JavaScript; the master switches its tabs with the scroll. Syntax
   colours come from classes, since Shiki's inline styles break the CSP.
-- Projects pulls one project out large, as portfolios do, and gives each card
-  a cover generated from its name, chosen from captures over cards with no
-  image. A card follows its code link; a project with no public code shows
-  plain text.
+- Projects pulls one project out across the first row, its text beside its
+  cover, as portfolios do, and gives each card a cover generated from its
+  name, chosen from captures over cards with no image. A card follows its code
+  link; a project with no public code shows plain text.
 - Experience marks every role with the same neutral square: an accent beside
   the current one would read as an availability signal.
 - The closing room keeps the master's card and marquees; the email and the

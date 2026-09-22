@@ -20,7 +20,9 @@ const { locale, id } = Astro.props;
 const t = messages(locale);
 const copy = t.caseStudies[id];
 const labels = t.caseStudy;
-const project = projects.find((candidate) => candidate.id === id)!;
+// Matched by a destructured id, so TypeScript keeps the type of any project
+// and a later case with a demo keeps its link.
+const project = projects.find(({ id: candidate }) => candidate === id)!;
 const excerpt = excerpts[id];
 const file = excerpt.path.split('/').at(-1) ?? excerpt.path;
 const caption =
@@ -30,7 +32,8 @@ const caption =
         .replace('{from}', String(excerpt.lines[0]))
         .replace('{to}', String(excerpt.lines[1]))
     : labels.whole.replace('{file}', file);
-// The case studies in record order, so each page can lead to the next.
+// The case studies in record order, so each page can lead to the next; a
+// single case leads only back.
 const order = Object.keys(excerpts) as CaseStudyId[];
 const next = order[(order.indexOf(id) + 1) % order.length]!;
 const nextName = projects.find((candidate) => candidate.id === next)!.name;
@@ -158,10 +161,12 @@ const number = (index: number) => String(index + 1).padStart(3, '0');
       <PixelIcon name="arrow-right" class="case-nav-back" />
       {labels.back}
     </a>
-    <a class="case-nav-link" href={pagePath('caseStudy', locale, next)}>
-      {nextName}
-      <PixelIcon name="arrow-right" class="case-nav-icon" />
-    </a>
+    {next !== id && (
+      <a class="case-nav-link" href={pagePath('caseStudy', locale, next)}>
+        {nextName}
+        <PixelIcon name="arrow-right" class="case-nav-icon" />
+      </a>
+    )}
   </nav>
 </main>
 <SiteFooter locale={locale} />

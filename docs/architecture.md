@@ -43,7 +43,8 @@ responsibilities or the first request-time capability.
 
 - `output: static` produces `dist/`, with no application server requirement.
 - `/es/` and `/en/` are independent, cacheable documents. Cookies and browser
-  language do not change their content. `/` redirects to `/es/`.
+  language do not change their content. `/` redirects to `/en/`, the default
+  (ADR 0010).
 - Central route pairs drive internal links, canonical paths and reciprocal
   `hreflang`; each page's default-locale URL is its `x-default`.
 - Catalog types catch missing values, and a parity test catches extra/missing keys
@@ -104,7 +105,7 @@ desktop/mobile coverage is not cross-engine browser certification.
 Hosting is Cloudflare Pages ([ADR 0007](adr/0007-hosting-on-cloudflare-pages.md)):
 the Git integration builds `main` with `pnpm run build`, serves `dist/` and gives
 every pull request a preview deployment. `public/_redirects` carries the HTTP 301
-from `/` to `/es/`; the build writes `dist/_headers` with a Content Security
+from `/` to `/en/`; the build writes `dist/_headers` with a Content Security
 Policy whose script sources are the sha256 hashes of the inline scripts in the
 built HTML, so the pre-paint initializer needs no `'unsafe-inline'`, plus a
 one-year immutable cache for `/_astro/*`. Pages serves `404.html` with status 404.

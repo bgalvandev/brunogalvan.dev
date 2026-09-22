@@ -1,9 +1,28 @@
-// Projects verified against GitHub on 2026-09-20. `repository` and `demo` are
-// null when nothing public can be followed, and a null renders as plain text,
-// never as a link. `featured` is the one pulled out large on the home page;
-// `caseStudy` marks the three with a written case study, read off their code.
-// Kinds and one-line summaries live in the catalogs under `projects`.
+// Projects verified against GitHub and the repositories on 2026-09-22.
+// `repository` and `demo` are null when nothing public can be followed, and a
+// null renders as plain text, never as a link. `featured` is the one pulled out
+// large on the home page; `caseStudy` marks the one with a written case study,
+// read off its code. Work at an employer is a project of kind `work`, described
+// at feature level only. Kinds and one-line summaries live in the catalogs under
+// `projects`.
 export const projects = [
+  {
+    id: 'clinicsay',
+    name: 'ClinicSay',
+    kind: 'work',
+    featured: true,
+    repository: null,
+    demo: null,
+    technologies: [
+      'React',
+      'TypeScript',
+      'TanStack Query',
+      'Fastify',
+      'Prisma',
+      'PostgreSQL',
+      'OpenAI API',
+    ],
+  },
   {
     id: 'vitalpro',
     name: 'VitalPro',
@@ -11,54 +30,23 @@ export const projects = [
     repository: null,
     demo: null,
     technologies: [
-      'TypeScript',
       'Next.js',
-      'Nx',
+      'Fastify',
+      'Better Auth',
       'Prisma',
       'PostgreSQL',
-      'Docker',
+      'Nx',
+      'Fly.io',
     ],
   },
   {
-    id: 'starwars-api',
+    id: 'brunogalvan-dev',
     caseStudy: true,
-    name: 'Star Wars API',
+    name: 'brunogalvan.dev',
     kind: 'project',
-    featured: true,
-    repository: 'https://github.com/bgalvandev/starwars-api',
+    repository: 'https://github.com/bgalvandev/brunogalvan.dev',
     demo: null,
-    technologies: [
-      'TypeScript',
-      'AWS Lambda',
-      'DynamoDB',
-      'Serverless Framework',
-    ],
-  },
-  {
-    id: 'idbi-invoice',
-    caseStudy: true,
-    name: 'IDBI Invoice Recorder',
-    kind: 'challenge',
-    repository: 'https://github.com/bgalvandev/idbi-invoice-challenge',
-    demo: null,
-    technologies: ['PHP', 'Laravel', 'MySQL', 'Docker', 'Nginx', 'JWT'],
-  },
-  {
-    id: 'rimac-frontend',
-    caseStudy: true,
-    name: 'RIMAC Frontend',
-    kind: 'challenge',
-    repository: 'https://github.com/bgalvandev/rimac-frontend-challenge',
-    demo: 'https://rimac-frontend-challeng.netlify.app',
-    technologies: ['React', 'TypeScript', 'Sass', 'Vite'],
-  },
-  {
-    id: 'rollpay-auth',
-    name: 'Rollpay Auth',
-    kind: 'challenge',
-    repository: 'https://github.com/bgalvandev/rollpay-php-challenge',
-    demo: null,
-    technologies: ['PHP', 'JWT'],
+    technologies: ['Astro', 'TypeScript', 'Tailwind CSS', 'GSAP', 'Playwright'],
   },
   {
     id: 'placer-sano',
@@ -71,7 +59,7 @@ export const projects = [
 ] as const satisfies readonly {
   id: string;
   name: string;
-  kind: 'product' | 'project' | 'challenge';
+  kind: 'work' | 'product' | 'project';
   featured?: boolean;
   caseStudy?: boolean;
   repository: string | null;
