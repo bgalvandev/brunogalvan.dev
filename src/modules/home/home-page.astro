@@ -1,42 +1,20 @@
 ---
-import { pagePath } from '@/i18n/routes';
-import { site } from '@/config/site';
-import { messages } from '@/i18n/messages';
+import SiteFooter from '@/components/site-footer.astro';
+import SiteHeader from '@/components/site-header.astro';
 import type { Locale } from '@/i18n/locales';
-import LanguageSwitcher from '@/components/language-switcher.astro';
-import ThemeToggle from '@/components/theme-toggle.astro';
+import Contact from './contact.astro';
+import Hero from './hero.astro';
+import WhatIDo from './what-i-do.astro';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
-const t = messages(locale);
 ---
 
-<header class="mb-16 flex flex-wrap items-center justify-between gap-6">
-  <a href={pagePath('home', locale)} class="font-mono text-sm text-muted">
-    {site.name}
-  </a>
-  <div class="flex items-center gap-3">
-    <LanguageSwitcher locale={locale} route="home" />
-    <ThemeToggle locale={locale} />
-  </div>
-</header>
+<SiteHeader locale={locale} route="home" contactHref="#contact" />
 <main id="main" tabindex="-1">
-  <h1 class="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-    {t.home.headline}
-  </h1>
-  <p class="mt-6 max-w-lg text-lg leading-relaxed text-muted">{t.home.intro}</p>
+  <Hero locale={locale} />
+  <WhatIDo locale={locale} />
+  <Contact locale={locale} />
 </main>
-<footer class="mt-20 border-t border-line pt-8">
-  <h2 class="font-mono text-xs uppercase tracking-widest text-muted">
-    {t.contact.heading}
-  </h2>
-  <div class="mt-4 flex flex-wrap gap-x-6 gap-y-3">
-    <a class="contact-link" href={`mailto:${site.email}`}>
-      {site.email}
-    </a>
-    <a class="contact-link" href={site.github} rel="me">
-      GitHub
-    </a>
-  </div>
-</footer>
+<SiteFooter locale={locale} />

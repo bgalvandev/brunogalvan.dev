@@ -1,0 +1,48 @@
+---
+import { site } from '@/config/site';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+}
+const { footer } = messages(Astro.props.locale);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="measure site-footer-body">
+    <p>
+      © {year} {site.name}
+    </p>
+    <p>{footer.colophon}</p>
+    <a class="site-footer-link" href={site.repository}>
+      {footer.source}
+    </a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    color: var(--faint);
+    font-size: var(--text-label);
+  }
+  .site-footer-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-block: 2rem;
+  }
+  .site-footer-body p {
+    margin: 0;
+  }
+  .site-footer-link {
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .site-footer-link:hover {
+    color: var(--ink);
+  }
+</style>

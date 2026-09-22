@@ -1,16 +1,74 @@
 @import 'tailwindcss';
 @import './tokens.css';
 
+/* Type scale read off the design master: display weight 400, negative tracking
+   on everything, and a 1.3 body leading so blocks read as specification text.
+   Sizes step down at the master's own breakpoints. */
+@theme {
+  --text-display: 4.5rem;
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.06em;
+  --text-headline: 3.5rem;
+  --text-headline--line-height: 1.1;
+  --text-headline--letter-spacing: -0.06em;
+  --text-large: 2rem;
+  --text-large--line-height: 1.3;
+  --text-large--letter-spacing: -0.025em;
+  --text-medium: 1.5rem;
+  --text-medium--line-height: 1.3;
+  --text-medium--letter-spacing: -0.033em;
+  --text-body: 1rem;
+  --text-body--line-height: 1.3;
+  --text-body--letter-spacing: -0.05em;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: -0.04em;
+  --text-small: 0.75rem;
+  --text-small--line-height: 1.4;
+  --text-small--letter-spacing: -0.04em;
+  --radius-*: initial;
+}
+@media (width < 62rem) {
+  :root {
+    --text-display: 4rem;
+    --text-headline: 3rem;
+  }
+}
+@media (width < 48rem) {
+  :root {
+    --text-display: 3.25rem;
+    --text-headline: 2.75rem;
+  }
+}
+@media (width < 30rem) {
+  :root {
+    --text-display: 2.75rem;
+    --text-headline: 2.25rem;
+  }
+}
+
 @layer base {
+  html {
+    scroll-padding-top: 4rem;
+  }
   body {
     margin: 0;
     background: var(--paper);
     color: var(--ink);
     font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-weight: 400;
   }
   :focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 4px;
+    outline-offset: 2px;
   }
   [hidden] {
     display: none !important;
@@ -22,23 +80,138 @@
 }
 
 @layer components {
-  .site-shell {
-    width: min(100%, 48rem);
-    margin-inline: auto;
-    padding: clamp(3rem, 8vw, 7rem) 1.5rem;
+  /* A section owns the full width; its content sits in the measure. Nothing
+     reaches for the viewport width, so a scrollbar never causes overflow. */
+  .section {
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
   }
-  .control {
-    display: inline-block;
-    border: 1px solid var(--line);
-    border-radius: 0.25rem;
-    padding: 0.5rem 0.75rem;
+  /* A band is a dark room: every light-dark() token inside re-resolves to its
+     dark value, so no colour is written twice, and its paper steps one shade
+     away from the page's in either theme. */
+  .band {
+    --paper: var(--band-paper);
+    color-scheme: dark;
+  }
+  /* The content column: the master's 8% gutter (5% on tablets, 1.5rem on
+     phones) capped at 80rem. The width is explicit, so the measure behaves
+     the same inside block, flex and grid parents. */
+  .measure {
+    --gutter: 8%;
+    width: min(100% - 2 * var(--gutter), 80rem);
+    margin-inline: auto;
+  }
+  @media (width < 62rem) {
+    .measure {
+      --gutter: 5%;
+    }
+  }
+  @media (width < 48rem) {
+    .measure {
+      --gutter: 1.5rem;
+    }
+  }
+  .section-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-block: 5rem;
+  }
+  .label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+  }
+  .tag {
+    align-self: flex-start;
+    padding: 0.2em 0.25em;
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+  }
+  /* Boxed tabs share their edges: every tab draws its left, top and bottom
+     rule and the last one in a group closes the right. */
+  .tabs {
+    display: flex;
+    align-items: flex-start;
+  }
+  .tab {
+    display: flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--line-strong);
+    border-right-style: none;
+    background: var(--paper);
     color: var(--ink);
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: var(--text-label);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
     cursor: pointer;
+    transition: background-color 0.25s ease;
   }
-  .control:hover {
-    background: var(--surface);
+  .tab:last-child {
+    border-right-style: solid;
+  }
+  .tab:hover {
+    background: var(--line);
+  }
+  /* The accent marks the current page and nothing else. A quiet tab (the
+     language pair) and a pressed toggle invert to ink instead. */
+  .tab[aria-current='page'] {
+    padding-block: 0.5rem;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 600;
+  }
+  .tab[aria-current='page']::before {
+    content: '<' / '';
+  }
+  .tab[aria-current='page']::after {
+    content: '>' / '';
+  }
+  .tab-quiet[aria-current='page'],
+  .tab[aria-pressed='true'] {
+    padding-block: 0.25rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+  }
+  .tab-quiet[aria-current='page']::before,
+  .tab-quiet[aria-current='page']::after {
+    content: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tab {
+      transition: none;
+    }
+  }
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 1000;
+    transform: translateY(-200%);
+    padding: 0.75rem 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
   }
   /* The theme button exists only where its script can run: the pre-paint
      initializer marks the document with .js. */
@@ -46,32 +219,6 @@
     display: none;
   }
   html.js [data-theme-toggle] {
-    display: inline-block;
-  }
-  .control[aria-current='page'] {
-    background: var(--accent);
-    color: var(--accent-contrast);
-    border-color: var(--accent);
-  }
-  .contact-link {
-    overflow-wrap: anywhere;
-    text-decoration: underline;
-    text-underline-offset: 0.25em;
-  }
-  .contact-link:hover {
-    color: var(--accent);
-  }
-  .skip-link {
-    position: fixed;
-    top: 0.5rem;
-    left: 0.5rem;
-    z-index: 10;
-    transform: translateY(-200%);
-    padding: 0.75rem;
-    background: var(--paper);
-    color: var(--ink);
-  }
-  .skip-link:focus {
-    transform: translateY(0);
+    display: flex;
   }
 }

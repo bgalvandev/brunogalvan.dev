@@ -23,8 +23,9 @@ const { locale, ...metadata } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <Font cssVariable="--font-archivo" preload />
-    <Font cssVariable="--font-jetbrains" preload />
+    <Font cssVariable="--font-geist" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+    <Font cssVariable="--font-geist-pixel" preload />
     <SeoHead locale={locale} {...metadata} />
     <ThemeInit />
   </head>
@@ -32,8 +33,6 @@ const { locale, ...metadata } = Astro.props;
     <a class="skip-link" href="#main">
       {messages(locale).navigation.skip}
     </a>
-    <div class="site-shell">
-      <slot />
-    </div>
+    <slot />
   </body>
 </html>

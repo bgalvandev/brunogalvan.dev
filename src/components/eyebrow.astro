@@ -1,0 +1,71 @@
+---
+// The section's specification line: [N.01/07] —— > LABEL ——————. Each piece of
+// the index is its own element so the number can animate on its own. Screen
+// readers get one plain sentence instead of the punctuation.
+interface Props {
+  number: number;
+  total: number;
+  label: string;
+  // Read aloud instead of the visual index, e.g. "Sección 1 de 7".
+  spoken: string;
+}
+const { number, total, label, spoken } = Astro.props;
+const pad = (value: number) => String(value).padStart(2, '0');
+---
+
+<p class="eyebrow">
+  <span class="sr-only">
+    {spoken}: {label}
+  </span>
+  <span class="eyebrow-main" aria-hidden="true">
+    <span class="eyebrow-index">
+      <span>[n.</span>
+      <span class="eyebrow-number">{pad(number)}</span>
+      <span>/</span>
+      <span>{pad(total)}</span>
+      <span>]</span>
+    </span>
+    <span class="eyebrow-rule eyebrow-rule-short"></span>
+    <span>&gt; {label}</span>
+  </span>
+  <span class="eyebrow-rule" aria-hidden="true"></span>
+</p>
+
+<style>
+  .eyebrow {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 1rem;
+    height: 1.25rem;
+    margin: 0;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .eyebrow-main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .eyebrow-index {
+    display: inline-flex;
+  }
+  /* The current number carries ink and the total recedes; the master does it
+     with a paler grey that fails contrast, this does it with value. */
+  .eyebrow-number {
+    color: var(--ink);
+  }
+  .eyebrow-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .eyebrow-rule-short {
+    flex: 0 0 1.5rem;
+  }
+</style>

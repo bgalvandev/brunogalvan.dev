@@ -1,0 +1,208 @@
+---
+import Button from '@/components/button.astro';
+import Headline from '@/components/headline.astro';
+import NumberedSection from '@/components/numbered-section.astro';
+import PixelIcon from '@/components/pixel-icon.astro';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import { sectionNumber, sections } from './sections';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { whatIDo } = messages(locale);
+// One bitmap per card, in catalog order: a window, braces, a node tree and a
+// fast-forward.
+const icons = [
+  [
+    '##############',
+    '#............#',
+    '#.#.#.#......#',
+    '#............#',
+    '##############',
+    '#...#........#',
+    '#...#.######.#',
+    '#...#........#',
+    '#...#.####...#',
+    '#...#........#',
+    '#...#.#####..#',
+    '#...#........#',
+    '##############',
+  ],
+  [
+    '...##....##...',
+    '..#........#..',
+    '..#........#..',
+    '..#........#..',
+    '..#...##...#..',
+    '##....##....##',
+    '..#........#..',
+    '..#...##...#..',
+    '..#...##...#..',
+    '..#........#..',
+    '..#........#..',
+    '...##....##...',
+    '..............',
+  ],
+  [
+    '.....####.....',
+    '.....#..#.....',
+    '.....####.....',
+    '.......#......',
+    '.......#......',
+    '..##########..',
+    '..#........#..',
+    '..#........#..',
+    '####......####',
+    '#..#......#..#',
+    '####......####',
+    '..............',
+    '..............',
+  ],
+  [
+    '#......#......',
+    '##.....##.....',
+    '#.#....#.#....',
+    '#..#...#..#...',
+    '#...#..#...#..',
+    '#....#.#....#.',
+    '#.....##.....#',
+    '#....#.#....#.',
+    '#...#..#...#..',
+    '#..#...#..#...',
+    '#.#....#.#....',
+    '##.....##.....',
+    '#......#......',
+  ],
+] as const;
+---
+
+<NumberedSection
+  id="what-i-do"
+  number={sectionNumber('what-i-do')}
+  total={sections.length}
+  label={whatIDo.label}
+  locale={locale}
+  headingId="what-i-do-title"
+>
+  <div class="value-main">
+    <div class="value-heading">
+      <Headline id="what-i-do-title" lines={whatIDo.headline} />
+      <Button href="#contact" label={whatIDo.action} />
+    </div>
+    <ol class="value-cards">
+      {whatIDo.cards.map((card, index) => (
+        <li class="value-card">
+          <div class="value-card-content">
+            <div class="value-card-top">
+              <PixelIcon rows={icons[index] ?? []} class="value-card-icon" />
+              <span class="value-card-number" aria-hidden="true">
+                <span class="value-card-slashes">//</span>
+                {String(index + 1).padStart(3, '0')}
+              </span>
+            </div>
+            <div class="value-card-text">
+              <h3 class="value-card-title">{card.title}</h3>
+              <p class="value-card-description">{card.text}</p>
+            </div>
+          </div>
+          <p class="tag">{card.tag}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</NumberedSection>
+
+<style>
+  .value-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  .value-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+  .value-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .value-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5rem;
+    min-height: 28rem;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+  }
+  .value-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  .value-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  /* At this size a cell is about nine pixels, so the one-cell strokes weigh
+     what the master's line drawings weigh. */
+  .value-card :global(.value-card-icon) {
+    width: 7.5rem;
+    height: auto;
+    color: var(--ink);
+  }
+  .value-card-number {
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .value-card-slashes {
+    color: var(--faint);
+  }
+  .value-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .value-card-title {
+    margin: 0;
+    font-size: var(--text-medium);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+  }
+  .value-card-description {
+    margin: 0;
+    color: var(--muted);
+  }
+  .value-card .tag {
+    margin: 0;
+  }
+  @media (width < 62rem) {
+    .value-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (width < 48rem) {
+    .value-heading {
+      flex-direction: column;
+    }
+    .value-cards {
+      grid-template-columns: 1fr;
+    }
+    .value-card {
+      gap: 2rem;
+      min-height: auto;
+    }
+    .value-card :global(.value-card-icon) {
+      width: 6rem;
+    }
+  }
+</style>

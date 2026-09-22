@@ -1,20 +1,71 @@
 {
   "meta": {
-    "title": "Bruno Galván — Software engineer",
-    "description": "Personal website of Bruno Galván, software engineer. Get in touch about projects and collaborations.",
-    "ogImageAlt": "Bruno Galván, software engineer"
+    "title": "Bruno Galván — Senior Full Stack Developer",
+    "description": "Bruno Galván, senior full stack developer in Lima, Peru: web platforms, APIs and integrations, from the database to production.",
+    "ogImageAlt": "Bruno Galván, senior full stack developer"
   },
-  "home": {
-    "headline": "Software engineer.",
-    "intro": "Get in touch to talk about a project or a collaboration."
+  "identity": {
+    "role": "Senior Full Stack Developer",
+    "location": "Lima, Peru"
   },
   "navigation": {
     "language": "Language",
     "skip": "Skip to content",
-    "home": "Home"
+    "main": "Pages",
+    "home": "Home",
+    "contact": "Contact"
   },
-  "theme": { "darkMode": "Dark mode" },
-  "contact": { "heading": "Contact" },
+  "theme": {
+    "darkMode": "Dark mode"
+  },
+  "section": {
+    "spoken": "Section {number} of {total}"
+  },
+  "hero": {
+    "greeting": "Hi, I'm Bruno.",
+    "fragment": "Full Stack",
+    "closing": "Senior developer.",
+    "spoken": "Hi, I'm Bruno, a Senior Full Stack Developer.",
+    "line": "I build web platforms, APIs and integrations, from the database to production.",
+    "primary": "Write to me",
+    "secondary": "Code on GitHub",
+    "scroll": "Scroll for more"
+  },
+  "whatIDo": {
+    "label": "What I do",
+    "headline": ["Frontend, backend and production.", "The whole system."],
+    "action": "Let's talk",
+    "cards": [
+      {
+        "title": "Platforms",
+        "tag": "Frontend + backend",
+        "text": "Complete web applications, from the database to the interface."
+      },
+      {
+        "title": "APIs",
+        "tag": "REST · Serverless",
+        "text": "Microservices and REST APIs with explicit boundaries."
+      },
+      {
+        "title": "Integrations",
+        "tag": "CRM · ERP",
+        "text": "Salesforce, Kommo, SAP and electronic invoicing, connected."
+      },
+      {
+        "title": "Automation",
+        "tag": "AI · Messaging",
+        "text": "WhatsApp and Salesbot flows, and an AI API inside a CRM."
+      }
+    ]
+  },
+  "contact": {
+    "label": "Contact",
+    "headline": ["An email is enough.", "I read it myself."]
+  },
+  "footer": {
+    "colophon": "Built with Astro, with no framework in the browser.",
+    "source": "Source code"
+  },
   "notFound": {
     "title": "Page not found",
     "description": "The page you are looking for is unavailable.",

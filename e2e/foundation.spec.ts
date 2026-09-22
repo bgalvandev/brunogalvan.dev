@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 import { site } from '@/config/site';
+import { messages } from '@/i18n/messages';
 
 const { name: identity, email: contact, url: origin } = site;
 
@@ -23,17 +24,21 @@ for (const locale of ['es', 'en'] as const) {
     expect(response?.status()).toBe(200);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page).toHaveTitle(new RegExp(identity));
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      locale === 'es' ? 'Ingeniero de software.' : 'Software engineer.',
+    await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
+      messages(locale).hero.spoken,
     );
     await expect(page.getByRole('link', { name: contact })).toHaveAttribute(
       'href',
       `mailto:${contact}`,
     );
-    await expect(page.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
-      'href',
-      'https://github.com/bgalvandev',
-    );
+    for (const { name, href } of [
+      { name: 'GitHub', href: site.github },
+      { name: 'LinkedIn', href: site.linkedin },
+    ]) {
+      await expect(
+        page.getByRole('link', { name, exact: true }),
+      ).toHaveAttribute('href', href);
+    }
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
       `${origin}/${locale}/`,
@@ -76,7 +81,9 @@ for (const locale of ['es', 'en'] as const) {
       '@type': 'Person',
       name: identity,
       url: origin,
-      sameAs: [site.github],
+      jobTitle: messages(locale).identity.role,
+      address: { addressLocality: site.locality, addressCountry: site.country },
+      sameAs: [site.github, site.linkedin],
     });
     expect(errors).toEqual([]);
   });
@@ -111,8 +118,8 @@ test('root opens default content and language links remain explicit', async ({
   await context.setExtraHTTPHeaders({ 'Accept-Language': 'en-US' });
   await page.goto('/');
   await expect(page).toHaveURL('/es/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Ingeniero de software.',
+  await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
+    messages('es').hero.spoken,
   );
   await page.getByRole('link', { name: 'English', exact: true }).click();
   await expect(page).toHaveURL('/en/');
@@ -192,4 +199,47 @@ test('unknown routes return an actual non-indexable 404', async ({ page }) => {
   await expect(
     page.getByRole('link', { name: 'Home', exact: true }),
   ).toHaveAttribute('href', '/en/');
+});
+
+test('section headers read as plain sentences, not punctuation', async ({
+  page,
+}) => {
+  await page.goto('/es/');
+  const { whatIDo } = messages('es');
+  // The slashes are generated content with an empty alternative.
+  await expect(
+    page.getByRole('heading', { level: 2, name: whatIDo.headline.join(' ') }),
+  ).toBeVisible();
+  const section = page.getByRole('region', {
+    name: whatIDo.headline.join(' '),
+  });
+  const total = await page.locator('section .eyebrow').count();
+  await expect(section.locator('.eyebrow .sr-only')).toHaveText(
+    `Sección 1 de ${total}: ${whatIDo.label}`,
+  );
+  // The index pieces are separate elements laid out without gaps.
+  const index = await section
+    .locator('.eyebrow-index')
+    .evaluate((element) => element.textContent?.replace(/\s+/g, ''));
+  expect(index).toBe(`[n.01/${String(total).padStart(2, '0')}]`);
+});
+
+test('every box is a sharp rectangle and every in-page link lands', async ({
+  page,
+}) => {
+  for (const path of ['/es/', '/en/', '/fr/']) {
+    await page.goto(path);
+    const rounded = await page.evaluate(() =>
+      [...document.querySelectorAll('*')]
+        .filter((element) => getComputedStyle(element).borderRadius !== '0px')
+        .map((element) => element.tagName + '.' + element.className),
+    );
+    expect(rounded, path).toEqual([]);
+    const missing = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')]
+        .map((link) => link.hash.slice(1))
+        .filter((id) => !document.getElementById(id)),
+    );
+    expect(missing, path).toEqual([]);
+  }
 });

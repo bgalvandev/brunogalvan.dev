@@ -9,10 +9,10 @@ interface Props {
 const { locale, route } = Astro.props;
 ---
 
-<nav aria-label={messages(locale).navigation.language} class="flex gap-1">
+<nav aria-label={messages(locale).navigation.language} class="tabs">
   {alternatePages(route).map((alternative) => (
     <a
-      class="control"
+      class="tab tab-quiet"
       href={alternative.path}
       lang={alternative.locale}
       hreflang={alternative.locale}

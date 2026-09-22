@@ -2,3 +2,11 @@
 allowBuilds:
   esbuild: true
   sharp: false
+# geist ships the Pixel face this site needs but declares Next.js as a peer for
+# its next/font wrappers, which this site never imports; optional stops pnpm
+# from auto-installing Next and React for a font file.
+packageExtensions:
+  geist:
+    peerDependenciesMeta:
+      next:
+        optional: true

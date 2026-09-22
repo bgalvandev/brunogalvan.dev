@@ -1,0 +1,95 @@
+---
+import Headline from '@/components/headline.astro';
+import PixelIcon from '@/components/pixel-icon.astro';
+import { site } from '@/config/site';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+}
+const { contact } = messages(Astro.props.locale);
+const profiles = [
+  { label: 'GitHub', href: site.github },
+  { label: 'LinkedIn', href: site.linkedin },
+] as const;
+---
+
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <div class="measure contact-body">
+    <p class="tag">{contact.label}</p>
+    <Headline id="contact-title" lines={contact.headline} />
+    <a class="contact-email" href={`mailto:${site.email}`}>
+      {site.email}
+    </a>
+    <ul class="contact-profiles">
+      {profiles.map((profile) => (
+        <li>
+          <a class="contact-profile" href={profile.href} rel="me">
+            {profile.label}
+            <PixelIcon name="arrow-up-right" class="contact-profile-icon" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .contact {
+    border-top: 1px solid var(--line);
+  }
+  .contact-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding-block: 5rem;
+    text-align: center;
+  }
+  .contact-body .tag {
+    align-self: center;
+    margin: 0;
+  }
+  .contact-email {
+    color: var(--accent);
+    font-size: clamp(1.125rem, 5.2vw, 2rem);
+    line-height: var(--text-large--line-height);
+    letter-spacing: var(--text-large--letter-spacing);
+    overflow-wrap: anywhere;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .contact-profiles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .contact-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--line-strong);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background-color 0.25s ease;
+  }
+  .contact-profile:hover {
+    background: var(--line);
+  }
+  .contact-profile :global(.contact-profile-icon) {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .contact-profile {
+      transition: none;
+    }
+  }
+</style>

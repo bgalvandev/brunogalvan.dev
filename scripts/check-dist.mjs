@@ -7,7 +7,7 @@ const credentialLike =
   /ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY/;
 
 // Checks the shape of the built site rather than its rendering: the root
-// redirect and 404 documents exist, exactly the two latin font files ship and
+// redirect and 404 documents exist, exactly the three latin font files ship and
 // are preloaded, every script is a build asset, the CSP covers every inline
 // block, and nothing credential-like reached the HTML.
 export async function checkDist(root) {
@@ -28,8 +28,8 @@ export async function checkDist(root) {
   const fonts = (
     await readdir(path.join(root, '_astro', 'fonts')).catch(() => [])
   ).filter((file) => file.endsWith('.woff2'));
-  if (fonts.length !== 2) {
-    problems.push(`expected the 2 latin font files, found ${fonts.length}`);
+  if (fonts.length !== 3) {
+    problems.push(`expected the 3 latin font files, found ${fonts.length}`);
   }
 
   const home = (await read(path.join('es', 'index.html'))) ?? '';

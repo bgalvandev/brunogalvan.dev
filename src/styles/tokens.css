@@ -1,13 +1,33 @@
-/* Paired values preserve system theming even without JavaScript. */
+/* Paired values preserve system theming even without JavaScript. Every pair
+   resolves against the element's own color-scheme, so a band that switches to
+   the dark scheme (see .band in global.css) re-themes everything inside it. */
+/* Registered, so it resolves once on the root against the page's scheme and
+   reaches the band as a finished colour: #212121 when the page is light, a
+   deeper #141414 when it is dark, so a band is always a different room. */
+@property --band-paper {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #141414;
+}
 :root {
   color-scheme: light dark;
-  --paper: light-dark(#fcfcfa, #121114);
-  --ink: light-dark(#14140f, #eceae3);
-  --muted: light-dark(#6c6a61, #aaa69e);
-  --line: light-dark(#dedcd3, #45414a);
-  --surface: light-dark(#f3f1ea, #1b1a1e);
-  --accent: light-dark(#2b4be3, #a1b1ff);
-  --accent-contrast: light-dark(#ffffff, #0b0b0d);
+  --paper: light-dark(#ffffff, #212121);
+  --field: light-dark(#f7f7f7, #141414);
+  --surface: light-dark(#f5f5f5, #2b2b2b);
+  --ink: light-dark(#1a1a1a, #fafafa);
+  --muted: light-dark(#474747, #cccccc);
+  /* Tertiary text. The reference's #7a7a7a fails 4.5:1 on white; these pass on
+     paper, field and surface in both schemes. */
+  --faint: light-dark(#6b6b6b, #a3a3a3);
+  --line: light-dark(#e0e0e0, #3d3d3d);
+  --line-strong: light-dark(#474747, #cccccc);
+  /* Decoration only: heading slashes, field dots, empty cells. Never text. */
+  --decor: light-dark(#cccccc, #474747);
+  /* Vermilion, chosen from captures on 2026-09-22 against indigo and green:
+     far enough from the master's #0055ff that the page never reads as a copy. */
+  --accent: light-dark(#c8341a, #ff7a5c);
+  --accent-contrast: light-dark(#ffffff, #141414);
+  --band-paper: light-dark(#212121, #141414);
 }
 :root[data-theme='light'] {
   color-scheme: light;
@@ -17,13 +37,18 @@
 }
 @theme inline {
   --color-paper: var(--paper);
+  --color-field: var(--field);
+  --color-surface: var(--surface);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
+  --color-faint: var(--faint);
   --color-line: var(--line);
-  --color-surface: var(--surface);
+  --color-line-strong: var(--line-strong);
+  --color-decor: var(--decor);
   --color-accent: var(--accent);
   --color-accent-contrast: var(--accent-contrast);
   /* The families themselves are declared by Astro's font pipeline (astro.config.ts). */
-  --font-sans: var(--font-archivo);
-  --font-mono: var(--font-jetbrains);
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+  --font-pixel: var(--font-geist-pixel);
 }

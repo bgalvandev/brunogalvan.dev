@@ -1,0 +1,78 @@
+---
+// Icons are drawn on a pixel grid, the same language as Geist Pixel and the
+// pixel field: '#' is a lit cell. Each row's runs merge into one rect.
+const icons = {
+  'arrow-right': [
+    '....#....',
+    '.....#...',
+    '......#..',
+    '.......#.',
+    '#########',
+    '.......#.',
+    '......#..',
+    '.....#...',
+    '....#....',
+  ],
+  'arrow-up-right': [
+    '.........',
+    '....#####',
+    '.......##',
+    '......#.#',
+    '.....#..#',
+    '....#...#',
+    '...#.....',
+    '..#......',
+    '.#.......',
+  ],
+  'arrow-down': [
+    '....#....',
+    '....#....',
+    '....#....',
+    '....#....',
+    '#...#...#',
+    '.#..#..#.',
+    '..#.#.#..',
+    '...###...',
+    '....#....',
+  ],
+  contrast: [
+    '#########',
+    '#####...#',
+    '#####...#',
+    '#####...#',
+    '#####...#',
+    '#####...#',
+    '#####...#',
+    '#####...#',
+    '#########',
+  ],
+} as const;
+export type IconName = keyof typeof icons;
+// A feature can pass its own bitmap instead of a registered name.
+type Props = { class?: string } & (
+  { name: IconName } | { rows: readonly string[] }
+);
+const { class: className, ...source } = Astro.props;
+const rows = 'name' in source ? icons[source.name] : source.rows;
+const width = Math.max(...rows.map((row) => row.length));
+const runs = rows.flatMap((row, y) =>
+  [...row.matchAll(/#+/g)].map((match) => ({
+    x: match.index,
+    y,
+    width: match[0].length,
+  })),
+);
+---
+
+<svg
+  class={className}
+  viewBox={`0 0 ${width} ${rows.length}`}
+  fill="currentColor"
+  shape-rendering="crispEdges"
+  aria-hidden="true"
+  focusable="false"
+>
+  {runs.map((run) => (
+    <rect x={run.x} y={run.y} width={run.width} height="1" />
+  ))}
+</svg>

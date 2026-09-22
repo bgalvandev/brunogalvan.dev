@@ -1,20 +1,71 @@
 {
   "meta": {
-    "title": "Bruno Galván — Ingeniero de software",
-    "description": "Espacio personal de Bruno Galván, ingeniero de software. Contacto para proyectos y colaboraciones.",
-    "ogImageAlt": "Bruno Galván, ingeniero de software"
+    "title": "Bruno Galván — Desarrollador Full Stack Senior",
+    "description": "Bruno Galván, desarrollador full stack senior en Lima, Perú: plataformas web, APIs e integraciones, de la base de datos a producción.",
+    "ogImageAlt": "Bruno Galván, desarrollador full stack senior"
   },
-  "home": {
-    "headline": "Ingeniero de software.",
-    "intro": "Puedes escribirme para conversar sobre un proyecto o una colaboración."
+  "identity": {
+    "role": "Desarrollador Full Stack Senior",
+    "location": "Lima, Perú"
   },
   "navigation": {
     "language": "Idioma",
     "skip": "Ir al contenido",
-    "home": "Inicio"
+    "main": "Páginas",
+    "home": "Inicio",
+    "contact": "Contacto"
   },
-  "theme": { "darkMode": "Modo oscuro" },
-  "contact": { "heading": "Contacto" },
+  "theme": {
+    "darkMode": "Modo oscuro"
+  },
+  "section": {
+    "spoken": "Sección {number} de {total}"
+  },
+  "hero": {
+    "greeting": "Hola, soy Bruno.",
+    "fragment": "Full Stack",
+    "closing": "Desarrollador senior.",
+    "spoken": "Hola, soy Bruno, desarrollador Full Stack Senior.",
+    "line": "Construyo plataformas web, APIs e integraciones, de la base de datos a producción.",
+    "primary": "Escríbeme",
+    "secondary": "Código en GitHub",
+    "scroll": "Baja para ver más"
+  },
+  "whatIDo": {
+    "label": "Qué hago",
+    "headline": ["Frontend, backend y producción.", "El sistema completo."],
+    "action": "Hablemos",
+    "cards": [
+      {
+        "title": "Plataformas",
+        "tag": "Frontend + backend",
+        "text": "Aplicaciones web completas, de la base de datos a la interfaz."
+      },
+      {
+        "title": "APIs",
+        "tag": "REST · Serverless",
+        "text": "Microservicios y APIs REST con límites explícitos."
+      },
+      {
+        "title": "Integraciones",
+        "tag": "CRM · ERP",
+        "text": "Salesforce, Kommo, SAP y facturación electrónica, conectados."
+      },
+      {
+        "title": "Automatización",
+        "tag": "IA · Mensajería",
+        "text": "Flujos en WhatsApp y Salesbot, y una API de IA dentro de un CRM."
+      }
+    ]
+  },
+  "contact": {
+    "label": "Contacto",
+    "headline": ["Un correo basta.", "Lo leo yo."]
+  },
+  "footer": {
+    "colophon": "Hecho con Astro, sin frameworks en el navegador.",
+    "source": "Código fuente"
+  },
   "notFound": {
     "title": "Página no encontrada",
     "description": "La página que buscas no está disponible.",
