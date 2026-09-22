@@ -1,0 +1,36 @@
+<!-- The design master's pixel grid: square cells, thirty to a row (cells stop shrinking below the tablet breakpoint, where the grid is 80rem wide and overflows on purpose). The lines are CSS; the motion script adds one canvas that lights the cells under the pointer and lets them fade, where the master animates 1,350 elements. Place it first inside a positioned parent that clips. -->
+<div class="pixel-field" aria-hidden="true" data-pixel-field>
+  <div class="pixel-field-lines"></div>
+</div>
+
+<style>
+  .pixel-field {
+    position: absolute;
+    inset: 0;
+    container-type: inline-size;
+    overflow: hidden;
+    color: var(--accent);
+  }
+  .pixel-field-lines,
+  .pixel-field :global(canvas) {
+    position: absolute;
+    inset: 0;
+  }
+  /* The bitmap carries the device pixel ratio; the box stays the field's. */
+  .pixel-field :global(canvas) {
+    width: 100%;
+    height: 100%;
+  }
+  .pixel-field-lines {
+    --cell: calc(100cqw / 30);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: var(--cell) var(--cell);
+  }
+  @media (width < 62rem) {
+    .pixel-field-lines {
+      --cell: calc(80rem / 30);
+    }
+  }
+</style>

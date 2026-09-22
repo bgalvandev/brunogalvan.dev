@@ -70,6 +70,20 @@ anywhere. Depth lives on extension pages, never on the home page.
   its phrase on `aria-label` and hides the characters, a scrambling link pins
   its name first, the cursor stops blinking within five seconds, and all of it
   is off under reduced motion. The library decision is ADR 0008.
+- **Texture.** The pixel field is the master's grid, thirty square cells to a
+  row (fixed at 80rem/30 below the tablet breakpoint, where it overflows on
+  purpose); the pointer lights the cells it crosses in the accent and each
+  fades over a second. Lines are CSS; the glow is one canvas, drawn only while
+  a cell glows, where the master animates 1,350 elements. The preloader covers
+  the first view of a session in accent and clears in tenth-of-the-width
+  squares, in random order, over about 1.2s; a CSS failsafe lifts it at 2.5s if
+  the script never arrives. The dotted field is a dot every 14px on the field
+  tone; corner ticks are a pair of 4px squares at each corner. Marquees are
+  bands of bordered cells that fade out at the edges, about 60px per second.
+- **Pause.** A header toggle pauses everything that moves on its own
+  (marquees, preloader, reveals, scrambles, the pixel trail) and persists like
+  the theme, so no motion runs past five seconds without a way to stop it. It
+  is hidden without JavaScript and under reduced motion, where nothing moves.
 - **Theme.** The system preference works without JavaScript; the toggle is a
   progressively enhanced override, hidden until its script runs.
 
@@ -90,6 +104,13 @@ Each difference found in side-by-side captures at 1440px, and why it stays:
 - The hero fragment is typed once and the cursor holds after four blinks; the
   master retypes three words forever, which WCAG 2.2.2 forbids without a pause
   control.
+- The preloader runs on the first view of a session only; the master covers
+  every load, which would tax each move between pages.
+- The toolchain band is a marquee at every width, with names in mono where the
+  master shows six static partner logos on desktop: there are thirty-seven
+  tools and no logos to show.
+- The positioning line quotes the Method's rules rather than a product slogan.
+- A pause control exists; the master has none.
 - Hovering a `What I do` card changes nothing: the cards are not links, and
   a hover response would make them look actionable.
 

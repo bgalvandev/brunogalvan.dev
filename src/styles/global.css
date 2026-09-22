@@ -47,6 +47,13 @@
   }
 }
 
+/* Registered so a script can read the pixel field's cell size in pixels. */
+@property --cell {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 48px;
+}
+
 @layer base {
   html {
     scroll-padding-top: 4rem;
@@ -212,6 +219,36 @@
   }
   .skip-link:focus {
     transform: translateY(0);
+  }
+  /* The master's dotted field: a faint dot every 14px on the field tone. */
+  .field-dotted {
+    background-color: var(--field);
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      var(--decor) 1px,
+      transparent 0
+    );
+    background-size: 14px 14px;
+  }
+  /* Corner ticks: a pair of small squares at each corner of a panel. */
+  .ticked {
+    position: relative;
+  }
+  .ticked::after {
+    --tick: linear-gradient(var(--ink), var(--ink));
+    content: '';
+    position: absolute;
+    inset: 0.375rem;
+    pointer-events: none;
+    background:
+      var(--tick) 0 0 / 4px 4px no-repeat,
+      var(--tick) 8px 0 / 4px 4px no-repeat,
+      var(--tick) 100% 0 / 4px 4px no-repeat,
+      var(--tick) calc(100% - 8px) 0 / 4px 4px no-repeat,
+      var(--tick) 0 100% / 4px 4px no-repeat,
+      var(--tick) 8px 100% / 4px 4px no-repeat,
+      var(--tick) 100% 100% / 4px 4px no-repeat,
+      var(--tick) calc(100% - 8px) 100% / 4px 4px no-repeat;
   }
   /* The reveal's pieces, created by the motion script: each character is its
      own box so its width can open, and a word never breaks between them. */

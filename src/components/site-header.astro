@@ -1,5 +1,6 @@
 ---
 import LanguageSwitcher from '@/components/language-switcher.astro';
+import MotionToggle from '@/components/motion-toggle.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
 import ThemeToggle from '@/components/theme-toggle.astro';
 import { site } from '@/config/site';
@@ -40,6 +41,7 @@ const pages = [{ route: 'home', label: navigation.home }] as const;
       <LanguageSwitcher locale={locale} route={route} />
       <div class="tabs">
         <ThemeToggle locale={locale} />
+        <MotionToggle locale={locale} />
       </div>
       <a class="site-contact" href={contactHref} data-scramble-hover>
         <span class="site-contact-arrow" aria-hidden="true">

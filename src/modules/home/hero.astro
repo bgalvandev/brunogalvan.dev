@@ -1,19 +1,23 @@
 ---
 import Button from '@/components/button.astro';
+import Marquee from '@/components/marquee.astro';
+import PixelField from '@/components/pixel-field.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
 import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
+import { stack } from './stack';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
-const { hero, identity } = messages(locale);
+const { hero, identity, positioning } = messages(locale);
+const tools = Object.values(stack).flat();
 ---
 
 <section class="section hero" aria-labelledby="hero-title">
   <div class="band hero-band">
-    <div class="hero-grid" aria-hidden="true"></div>
+    <PixelField />
     <div class="measure hero-band-content">
       <p class="hero-name">
         <span class="hero-name-text">{site.name}</span>
@@ -63,10 +67,36 @@ const { hero, identity } = messages(locale);
         </div>
       </div>
     </div>
+    <div class="measure hero-main">
+      <Marquee items={tools} />
+      <div class="hero-positioning field-dotted">
+        <p class="hero-positioning-text">
+          <span class="sr-only">{positioning.spoken}</span>
+          <span aria-hidden="true" data-reveal>
+            <span class="hero-positioning-bracket">&gt;</span>
+            {positioning.parts.map((part, index) => (
+              <>
+                <span class="hero-positioning-step">
+                  <span class="hero-positioning-part">{part}</span>
+                  {index < positioning.parts.length - 1 && ' →'}
+                </span>
+                {index < positioning.parts.length - 1 && ' '}
+              </>
+            ))}
+            <span class="hero-positioning-bracket">&lt;</span>
+          </span>
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
   /* The dark room sticks while the statement scrolls over it. */
   .hero-band {
     position: sticky;
@@ -76,18 +106,8 @@ const { hero, identity } = messages(locale);
     justify-content: center;
     min-height: 40vh;
     overflow: hidden;
-    container-type: inline-size;
     background: var(--paper);
     color: var(--ink);
-  }
-  /* A static grid of square cells, one thirtieth of the width each. */
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-size: calc(100cqw / 30) calc(100cqw / 30);
   }
   .hero-band-content {
     position: relative;
@@ -132,6 +152,7 @@ const { hero, identity } = messages(locale);
   .hero-body {
     position: relative;
     z-index: 1;
+    padding-bottom: 5rem;
     background: var(--paper);
   }
   .hero-top {
@@ -139,7 +160,7 @@ const { hero, identity } = messages(locale);
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 2rem;
-    padding-block: 3rem 5rem;
+    padding-block: 3rem 4rem;
   }
   .hero-heading {
     margin: 0;
@@ -199,12 +220,54 @@ const { hero, identity } = messages(locale);
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
   }
+  .hero-positioning {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 17.5rem;
+    padding: 2rem;
+  }
+  .hero-positioning-text {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-large);
+    line-height: var(--text-large--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    text-align: center;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  /* Each part keeps its arrow, so a line ends on an arrow and never starts
+     with one. */
+  .hero-positioning-step {
+    white-space: nowrap;
+  }
+  .hero-positioning-part {
+    color: var(--accent);
+  }
+  .hero-positioning-bracket {
+    margin-inline: 0.5em;
+  }
   @media (width < 62rem) {
     .hero-content {
       margin-left: 0;
     }
   }
+  @media (width < 48rem) {
+    .hero-positioning-text {
+      font-size: var(--text-medium);
+    }
+  }
   @media (width < 30rem) {
+    .hero-positioning {
+      padding: 1rem;
+    }
+    .hero-positioning-bracket {
+      display: none;
+    }
+    .hero-positioning-text {
+      font-size: 1.125rem;
+    }
     .hero-actions {
       grid-template-columns: 1fr;
     }

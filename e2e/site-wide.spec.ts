@@ -87,7 +87,7 @@ test('the built Content Security Policy allows everything the pages do', async (
   }
   // The theme button is the one script that runs after paint.
   await page.goto('/es/');
-  await page.getByRole('button').click();
+  await page.getByRole('button', { name: 'Modo oscuro' }).click();
   await expect(page.locator('html')).toHaveAttribute(
     'data-theme',
     /light|dark/,

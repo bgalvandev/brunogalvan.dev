@@ -1,0 +1,77 @@
+---
+import PixelIcon from '@/components/pixel-icon.astro';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+}
+const { motion } = messages(Astro.props.locale);
+---
+
+<!-- Pauses everything that moves on its own (marquees, the preloader, reveals, scrambles and the pixel trail), so no motion outlasts five seconds without a way to stop it (WCAG 2.2.2). The choice persists like the theme. Hidden without JavaScript, which has no motion to pause, and under reduced motion, which already stops it. -->
+<button
+  type="button"
+  class="tab motion-toggle"
+  data-motion-toggle
+  aria-pressed="false"
+>
+  <PixelIcon name="pause" class="motion-toggle-icon" />
+  <span class="motion-toggle-label">{motion.pause}</span>
+</button>
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>(
+    '[data-motion-toggle]',
+  );
+  function update() {
+    button?.setAttribute(
+      'aria-pressed',
+      String(root.dataset.motion === 'paused'),
+    );
+  }
+  button?.addEventListener('click', () => {
+    const paused = root.dataset.motion !== 'paused';
+    if (paused) root.dataset.motion = 'paused';
+    else delete root.dataset.motion;
+    try {
+      if (paused) localStorage.setItem('motion', 'paused');
+      else localStorage.removeItem('motion');
+    } catch {
+      /* The choice still holds for this page. */
+    }
+    update();
+  });
+  update();
+</script>
+
+<style>
+  .motion-toggle {
+    display: none;
+  }
+  :global(html.js) .motion-toggle {
+    display: flex;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .motion-toggle {
+      display: none;
+    }
+  }
+  .motion-toggle :global(.motion-toggle-icon) {
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-right: 0.375rem;
+  }
+  @media (width < 48rem) {
+    .motion-toggle :global(.motion-toggle-icon) {
+      margin-right: 0;
+    }
+    .motion-toggle-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+</style>
