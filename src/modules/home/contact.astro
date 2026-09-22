@@ -1,4 +1,7 @@
 ---
+// The master's closing room: a line of words above and below, a dark gridded
+// band, and a light card with a square at each corner. The email and profiles
+// live in the footer, once.
 import Button from '@/components/button.astro';
 import Marquee from '@/components/marquee.astro';
 import PixelField from '@/components/pixel-field.astro';
@@ -12,7 +15,6 @@ const { contact } = messages(Astro.props.locale);
 const [first, second] = contact.headline;
 ---
 
-<!-- The master's closing room: a line of words above and below, a dark gridded band, and a light card with a square at each corner. The email and profiles live in the footer, once. -->
 <section id="contact" class="section contact" aria-labelledby="contact-title">
   <Marquee items={contact.marquee} variant="text" />
   <div class="band contact-band">

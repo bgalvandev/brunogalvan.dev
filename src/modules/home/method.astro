@@ -1,4 +1,7 @@
 ---
+// As in the master, the four cards sit in a sticky frame inside a tall room and
+// the scroll draws each process line in turn. That only happens while motion
+// runs (data-steps is the hook); otherwise every card shows complete.
 import Button from '@/components/button.astro';
 import Headline from '@/components/headline.astro';
 import NumberedSection from '@/components/numbered-section.astro';
@@ -62,7 +65,6 @@ const icons = [
 ] as const;
 ---
 
-<!-- As in the master, the four cards sit in a sticky frame inside a tall room and the scroll draws each process line in turn. That only happens while motion runs (data-steps is the hook); otherwise every card shows complete. -->
 <NumberedSection
   id="method"
   number={sectionNumber('method')}

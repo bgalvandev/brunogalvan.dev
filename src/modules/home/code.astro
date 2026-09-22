@@ -1,4 +1,6 @@
 ---
+// The language switch is a radio group, so it works without JavaScript: CSS
+// shows the panel whose radio is checked.
 import Button from '@/components/button.astro';
 import CodeWindow from '@/components/code-window.astro';
 import Headline from '@/components/headline.astro';
@@ -20,7 +22,6 @@ const samples = snippets.map((snippet) => ({
 }));
 ---
 
-<!-- The language switch is a radio group, so it works without JavaScript: CSS shows the panel whose radio is checked. -->
 <NumberedSection
   id="code"
   number={sectionNumber('code')}

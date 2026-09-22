@@ -1,4 +1,7 @@
 ---
+// A toggle button: the label names the option and aria-pressed says whether it
+// is on, so the visible text never contradicts the state. Shown by CSS only
+// once the pre-paint script has marked JavaScript as available.
 import PixelIcon from '@/components/pixel-icon.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
@@ -8,7 +11,6 @@ interface Props {
 const { theme } = messages(Astro.props.locale);
 ---
 
-<!-- A toggle button: the label names the option and aria-pressed says whether it is on, so the visible text never contradicts the state. Shown by CSS only once the pre-paint script has marked JavaScript as available. -->
 <button
   type="button"
   class="tab theme-toggle"

@@ -1,4 +1,12 @@
-<!-- The design master's pixel grid: square cells, thirty to a row (cells stop shrinking below the tablet breakpoint, where the grid is 80rem wide and overflows on purpose). The lines are CSS; the motion script adds one canvas that lights the cells under the pointer and lets them fade, where the master animates 1,350 elements. Place it first inside a positioned parent that clips. -->
+---
+// The design master's pixel grid: square cells, thirty to a row (cells stop
+// shrinking below the tablet breakpoint, where the grid is 80rem wide and
+// overflows on purpose). The lines are CSS; the motion script adds one canvas
+// that lights the cells under the pointer and lets them fade, where the master
+// animates 1,350 elements. Place it first inside a positioned parent that
+// clips.
+---
+
 <div class="pixel-field" aria-hidden="true" data-pixel-field>
   <div class="pixel-field-lines"></div>
 </div>
