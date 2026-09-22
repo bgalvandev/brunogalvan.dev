@@ -1,7 +1,9 @@
 ---
 // The section statement: two short sentences between decorative slashes. The
 // slashes are generated content with an empty text alternative, so they are
-// neither read aloud nor measured as text.
+// neither read aloud nor measured as text. The name lives on the heading and
+// the visual copy is hidden, so the per-character reveal never reaches
+// assistive technology and the phrase reads whole.
 interface Props {
   lines: readonly string[];
   id?: string;
@@ -10,8 +12,8 @@ interface Props {
 const { lines, id, level: Tag = 'h2' } = Astro.props;
 ---
 
-<Tag class="headline text-headline" id={id}>
-  <span>
+<Tag class="headline text-headline" id={id} aria-label={lines.join(' ')}>
+  <span aria-hidden="true" data-reveal>
     {lines.map((line, index) => (
       <>
         {index > 0 && <br />}

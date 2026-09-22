@@ -213,6 +213,21 @@
   .skip-link:focus {
     transform: translateY(0);
   }
+  /* The reveal's pieces, created by the motion script: each character is its
+     own box so its width can open, and a word never breaks between them. */
+  .reveal-word {
+    white-space: nowrap;
+  }
+  .reveal-char {
+    display: inline-block;
+  }
+  /* A heading that was never scrolled into view still prints whole. */
+  @media print {
+    .reveal-char {
+      width: auto !important;
+      opacity: 1 !important;
+    }
+  }
   /* The theme button exists only where its script can run: the pre-paint
      initializer marks the document with .js. */
   [data-theme-toggle] {

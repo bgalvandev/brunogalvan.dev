@@ -27,13 +27,24 @@ const { hero, identity } = messages(locale);
   </div>
   <div class="hero-body">
     <div class="measure hero-top">
-      <h1 id="hero-title" class="hero-heading text-display">
-        <span class="sr-only">{hero.spoken}</span>
-        <span class="hero-visual" aria-hidden="true">
+      <h1
+        id="hero-title"
+        class="hero-heading text-display"
+        aria-label={hero.spoken}
+      >
+        <span
+          class="hero-visual"
+          aria-hidden="true"
+          data-reveal
+          data-reveal-duration="0.6"
+        >
           <span class="hero-line">{hero.greeting}</span>
-          <span class="hero-line hero-highlight">
-            [ <span class="hero-fragment">{hero.fragment}</span>
-            <span class="hero-cursor"></span> ]
+          <span class="hero-line hero-highlight" data-reveal-skip>
+            {'[ '}
+            <span class="hero-fragment" data-typewriter>
+              {hero.fragment}
+            </span>
+            {' ]'}
           </span>
           <span class="hero-line">{hero.closing}</span>
         </span>
@@ -144,13 +155,28 @@ const { hero, identity } = messages(locale);
     letter-spacing: 0;
     white-space: nowrap;
   }
-  .hero-cursor {
+  /* The block cursor follows the fragment as generated content, so markup
+     formatting can never open a gap between them. */
+  .hero-fragment::after {
+    content: '';
     display: inline-block;
     width: 0.55em;
     height: 0.9em;
     margin-left: 0.05em;
     background: currentColor;
     vertical-align: -0.05em;
+  }
+  /* The cursor blinks four times and then holds, so nothing on the page
+     blinks for longer than five seconds. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-fragment::after {
+      animation: hero-cursor-blink 0.8s steps(1) 4;
+    }
+  }
+  @keyframes hero-cursor-blink {
+    50% {
+      opacity: 0;
+    }
   }
   .hero-content {
     display: flex;

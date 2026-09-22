@@ -76,6 +76,12 @@ test('the built Content Security Policy allows everything the pages do', async (
       const response = await page.goto(path);
       expect(response?.headers()['content-security-policy']).toBe(csp);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      // Motion writes styles at runtime: scroll every reveal into play and
+      // hover a scrambling link before reading the violations.
+      await page.mouse.wheel(0, 20_000);
+      const scrambling = page.locator('[data-scramble-hover]').first();
+      if (await scrambling.count()) await scrambling.hover();
+      await page.waitForTimeout(500);
       expect(await violations(), `${path} in ${colorScheme}`).toEqual([]);
     }
   }
@@ -112,7 +118,8 @@ test('manual visual review evidence at narrow, tablet and desktop widths', async
   for (const width of [360, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const colorScheme of ['light', 'dark'] as const) {
-      await page.emulateMedia({ colorScheme });
+      // A capture taken during an entrance shows a frame, not the page.
+      await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
       for (const locale of ['es', 'en']) {
         await page.goto(`/${locale}/`);
         await page.evaluate(() => document.fonts.ready);
