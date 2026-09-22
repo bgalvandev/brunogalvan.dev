@@ -62,6 +62,14 @@ anywhere. Depth lives on extension pages, never on the home page.
 - **Icons.** Drawn as bitmaps on a pixel grid (`pixel-icon.astro`), the same
   language as the pixel face, with no artwork carried over. Card icons render at
   7.5rem so a one-cell stroke weighs what the master's line drawings weigh.
+- **Motion.** The master's, value for value: every headline opens character
+  by character, 0.04s apart, each character widening over 0.1s while it
+  scrambles for 0.4s, triggered once at `top 80%`; links and buttons scramble
+  their label for 0.8s on pointer hover; the hero types its fragment once.
+  Every hover transition is 0.2s. Beyond the master: a revealed heading keeps
+  its phrase on `aria-label` and hides the characters, a scrambling link pins
+  its name first, the cursor stops blinking within five seconds, and all of it
+  is off under reduced motion. The library decision is ADR 0008.
 - **Theme.** The system preference works without JavaScript; the toggle is a
   progressively enhanced override, hidden until its script runs.
 
@@ -79,6 +87,11 @@ Each difference found in side-by-side captures at 1440px, and why it stays:
 - The eyebrow's current number is ink and its total faint, where the master
   greys the total below readable contrast.
 - The hero has no rating row, avatars or partner logos: none is true here.
+- The hero fragment is typed once and the cursor holds after four blinks; the
+  master retypes three words forever, which WCAG 2.2.2 forbids without a pause
+  control.
+- Hovering a `What I do` card changes nothing: the cards are not links, and
+  a hover response would make them look actionable.
 
 ## Working on visible changes
 

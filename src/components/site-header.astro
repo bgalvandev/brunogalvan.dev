@@ -30,8 +30,9 @@ const pages = [{ route: 'home', label: navigation.home }] as const;
           class="tab"
           href={pagePath(page.route, locale)}
           aria-current={page.route === route ? 'page' : undefined}
+          data-scramble-hover
         >
-          <span>{page.label}</span>
+          <span data-scramble-text>{page.label}</span>
         </a>
       ))}
     </nav>
@@ -40,12 +41,14 @@ const pages = [{ route: 'home', label: navigation.home }] as const;
       <div class="tabs">
         <ThemeToggle locale={locale} />
       </div>
-      <a class="site-contact" href={contactHref}>
+      <a class="site-contact" href={contactHref} data-scramble-hover>
         <span class="site-contact-arrow" aria-hidden="true">
           <PixelIcon name="arrow-up-right" />
           <PixelIcon name="arrow-up-right" />
         </span>
-        <span class="site-contact-label">{navigation.contact}</span>
+        <span class="site-contact-label" data-scramble-text>
+          {navigation.contact}
+        </span>
       </a>
     </div>
   </div>

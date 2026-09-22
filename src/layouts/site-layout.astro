@@ -1,6 +1,7 @@
 ---
 import { Font } from 'astro:assets';
 import '@/styles/global.css';
+import Motion from '@/components/motion.astro';
 import SeoHead from '@/components/seo-head.astro';
 import ThemeInit from '@/components/theme-init.astro';
 import { messages } from '@/i18n/messages';
@@ -34,5 +35,6 @@ const { locale, ...metadata } = Astro.props;
       {messages(locale).navigation.skip}
     </a>
     <slot />
+    <Motion />
   </body>
 </html>

@@ -46,7 +46,11 @@ responsibilities or the first request-time capability.
   preserve trailing-slash URLs; verify that on the chosen host.
 - Astro markup requires no hydration framework. A short browser script enhances
   the theme button; an inline initializer restores the override before paint.
-  CSS follows the OS with no JavaScript. Fonts go through Astro's font
+  CSS follows the OS with no JavaScript. Motion is one deferred module,
+  `src/components/motion.astro`, bundling GSAP and three plugins
+  ([ADR 0008](adr/0008-motion-with-bundled-gsap.md)); it reads `data-reveal`,
+  `data-typewriter` and `data-scramble-hover` hooks from the markup and does
+  nothing under reduced motion. Fonts go through Astro's font
   pipeline from installed packages (Geist and Geist Mono from fontsource, Geist
   Pixel Square from Vercel's `geist`): only the three latin files ship,
   preloaded, with metric-matched fallbacks declared inline and hashed into the
