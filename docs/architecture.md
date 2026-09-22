@@ -14,7 +14,8 @@ src/
     robots.txt.ts            Static crawler endpoint
   layouts/                   HTML document, global assets, metadata wiring
   components/                Shared UI: header, footer, eyebrow, headline,
-                             button, pixel icons, SEO, language and theme
+                             button, pixel icons and field, marquee,
+                             preloader, motion, SEO, language, theme, pause
   modules/
     home/                    Home page rooms and the ordered section list
   config/site.ts             Approved public identity and canonical origin
@@ -49,8 +50,11 @@ responsibilities or the first request-time capability.
   CSS follows the OS with no JavaScript. Motion is one deferred module,
   `src/components/motion.astro`, bundling GSAP and three plugins
   ([ADR 0008](adr/0008-motion-with-bundled-gsap.md)); it reads `data-reveal`,
-  `data-typewriter` and `data-scramble-hover` hooks from the markup and does
-  nothing under reduced motion. Fonts go through Astro's font
+  `data-typewriter`, `data-scramble-hover`, `data-pixel-field` and
+  `data-preloader` hooks from the markup, and runs only while motion is
+  allowed: no reduced-motion preference and not paused from the header. The
+  pre-paint initializer (`document-init.astro`) restores the theme and the
+  pause, and marks the first view of a session for the preloader. Fonts go through Astro's font
   pipeline from installed packages (Geist and Geist Mono from fontsource, Geist
   Pixel Square from Vercel's `geist`): only the three latin files ship,
   preloaded, with metric-matched fallbacks declared inline and hashed into the
@@ -91,7 +95,7 @@ the Git integration builds `main` with `pnpm run build`, serves `dist/` and give
 every pull request a preview deployment. `public/_redirects` carries the HTTP 301
 from `/` to `/es/`; the build writes `dist/_headers` with a Content Security
 Policy whose script sources are the sha256 hashes of the inline scripts in the
-built HTML, so the pre-paint theme initializer needs no `'unsafe-inline'`, plus a
+built HTML, so the pre-paint initializer needs no `'unsafe-inline'`, plus a
 one-year immutable cache for `/_astro/*`. Pages serves `404.html` with status 404.
 `check:dist` proves the file lists every inline hash; one browser test replays
 the built `/*` headers on every preview response and asserts that no

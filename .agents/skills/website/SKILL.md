@@ -29,7 +29,8 @@ official guide before using it; this skill is project-authored, not official.
   framework island only when state justifies it, with an HTML fallback.
 - Tokens live in `src/styles/tokens.css` as `light-dark()` pairs mapped through
   `@theme inline`; components use `var(--token)` or the semantic utilities only.
-  `theme-init.astro` restores a valid stored theme; `theme-toggle.astro` enhances
+  `document-init.astro` restores a valid stored theme and a paused-motion choice
+  before paint; `theme-toggle.astro` and `motion-toggle.astro` enhance
   the button, and the page follows the OS without JavaScript.
 
 ## Browser suite

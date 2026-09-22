@@ -94,10 +94,9 @@ for (const locale of ['es', 'en'] as const) {
     }) => {
       await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
       await page.goto(`/${locale}/`);
-      await expect(page.getByRole('button')).toHaveAttribute(
-        'aria-pressed',
-        String(colorScheme === 'dark'),
-      );
+      await expect(
+        page.getByRole('button', { name: messages(locale).theme.darkMode }),
+      ).toHaveAttribute('aria-pressed', String(colorScheme === 'dark'));
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
         .analyze();
@@ -141,7 +140,7 @@ test('theme persists through locale navigation and reload', async ({
   );
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await page.getByRole('button').click();
+  await page.getByRole('button', { name: 'Dark mode' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 });
 
@@ -155,7 +154,7 @@ test('theme remains usable when browser storage fails', async ({ page }) => {
   });
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/en/');
-  await page.getByRole('button').click();
+  await page.getByRole('button', { name: 'Dark mode' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(page.getByRole('link', { name: contact })).toBeVisible();
 });
@@ -166,15 +165,10 @@ test('invalid stored theme falls back to OS and follows OS changes', async ({
   await page.addInitScript(() => localStorage.setItem('theme', 'invalid'));
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/en/');
-  await expect(page.getByRole('button')).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
+  const toggle = page.getByRole('button', { name: 'Dark mode' });
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
   await page.emulateMedia({ colorScheme: 'light' });
-  await expect(page.getByRole('button')).toHaveAttribute(
-    'aria-pressed',
-    'false',
-  );
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
 });
 
 test('keyboard skip link reaches main content', async ({ page }) => {

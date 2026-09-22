@@ -70,5 +70,16 @@
     "title": "Página no encontrada",
     "description": "La página que buscas no está disponible.",
     "navigation": "Inicio en español o en inglés"
+  },
+  "motion": {
+    "pause": "Pausar animación"
+  },
+  "positioning": {
+    "spoken": "Límites explícitos, cambios pequeños, verificado en producción.",
+    "parts": [
+      "Límites explícitos",
+      "cambios pequeños",
+      "verificado en producción"
+    ]
   }
 }

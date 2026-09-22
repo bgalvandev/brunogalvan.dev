@@ -1,0 +1,81 @@
+---
+// An infinite band of cells. The group is rendered twice so the track can
+// loop at -50%; the whole band is decoration (the same items are listed where
+// they carry meaning), hidden from assistive technology. It pauses on hover,
+// stops under reduced motion and when the visitor pauses motion.
+interface Props {
+  items: readonly string[];
+}
+const { items } = Astro.props;
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    {[0, 1].map(() => (
+      <ul class="marquee-group">
+        {items.map((item) => (
+          <li class="marquee-item">{item}</li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    border-block: 1px solid var(--line);
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      var(--ink) 8%,
+      var(--ink) 92%,
+      transparent
+    );
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 120s linear infinite;
+  }
+  .marquee:hover .marquee-track,
+  :global(html[data-motion='paused']) .marquee-track {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+  .marquee-group {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (width < 62rem) {
+    .marquee-item {
+      height: 7rem;
+    }
+  }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12.5rem;
+    height: 8.25rem;
+    border-right: 1px solid var(--line);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

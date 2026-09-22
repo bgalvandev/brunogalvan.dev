@@ -2,8 +2,9 @@
 import { Font } from 'astro:assets';
 import '@/styles/global.css';
 import Motion from '@/components/motion.astro';
+import Preloader from '@/components/preloader.astro';
 import SeoHead from '@/components/seo-head.astro';
-import ThemeInit from '@/components/theme-init.astro';
+import DocumentInit from '@/components/document-init.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 import type { RouteKey } from '@/i18n/routes';
@@ -28,9 +29,10 @@ const { locale, ...metadata } = Astro.props;
     <Font cssVariable="--font-geist-mono" preload />
     <Font cssVariable="--font-geist-pixel" preload />
     <SeoHead locale={locale} {...metadata} />
-    <ThemeInit />
+    <DocumentInit />
   </head>
   <body>
+    <Preloader />
     <a class="skip-link" href="#main">
       {messages(locale).navigation.skip}
     </a>

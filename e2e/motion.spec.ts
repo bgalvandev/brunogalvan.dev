@@ -146,7 +146,7 @@ test('a revealing heading holds its height, so nothing below it moves', async ({
     '0',
   );
   expect(await layout()).toEqual(still);
-  await page.evaluate(() => window.scrollTo(0, 400));
+  await page.locator('#what-i-do-title').scrollIntoViewIfNeeded();
   await expect(page.locator('#what-i-do-title .reveal-char').first()).toHaveCSS(
     'opacity',
     '1',

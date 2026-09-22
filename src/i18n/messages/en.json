@@ -70,5 +70,12 @@
     "title": "Page not found",
     "description": "The page you are looking for is unavailable.",
     "navigation": "Home in Spanish or in English"
+  },
+  "motion": {
+    "pause": "Pause motion"
+  },
+  "positioning": {
+    "spoken": "Explicit boundaries, small changes, verified in production.",
+    "parts": ["Explicit boundaries", "small changes", "verified in production"]
   }
 }
