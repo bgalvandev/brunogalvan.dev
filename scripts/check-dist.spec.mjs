@@ -10,7 +10,10 @@ import { checkDist } from './check-dist.mjs';
 const preload = (file) =>
   `<link rel="preload" href="/_astro/fonts/${file}" as="font" type="font/woff2" crossorigin>`;
 
-async function dist(t, { fonts = ['a.woff2', 'b.woff2'], home, headers } = {}) {
+async function dist(
+  t,
+  { fonts = ['a.woff2', 'b.woff2', 'c.woff2'], home, headers } = {},
+) {
   const root = await mkdtemp(path.join(tmpdir(), 'dist-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'es'));
@@ -26,7 +29,7 @@ async function dist(t, { fonts = ['a.woff2', 'b.woff2'], home, headers } = {}) {
   await writeFile(
     path.join(root, 'es', 'index.html'),
     home ??
-      `${preload('a.woff2')}${preload('b.woff2')}<style>@font-face{}</style><script>init()</script><script type="module" src="/_astro/x.js"></script>`,
+      `${preload('a.woff2')}${preload('b.woff2')}${preload('c.woff2')}<style>@font-face{}</style><script>init()</script><script type="module" src="/_astro/x.js"></script>`,
   );
   await writeFile(
     path.join(root, '_headers'),
@@ -41,7 +44,7 @@ test('accepts a complete build', async (t) => {
 
 test('reports missing documents, extra fonts, missing preloads, foreign scripts, secrets and uncovered inline blocks', async (t) => {
   const root = await dist(t, {
-    fonts: ['a.woff2', 'b.woff2', 'c.woff2'],
+    fonts: ['a.woff2', 'b.woff2', 'c.woff2', 'd.woff2'],
     home: '<script src="https://cdn.example/x.js"></script><script>alert(1)</script>ghp_abcdefghijklmnopqrstuv',
     headers: renderHeaders({ scripts: [], styles: [] }),
   });
@@ -49,8 +52,8 @@ test('reports missing documents, extra fonts, missing preloads, foreign scripts,
   const problems = await checkDist(root);
   for (const expected of [
     '404.html is missing',
-    'found 3',
-    'expected 3 font preloads on /es/, found 0',
+    'found 4',
+    'expected 4 font preloads on /es/, found 0',
     'unexpected script source https://cdn.example/x.js',
     'credential-like',
     '_headers lacks',

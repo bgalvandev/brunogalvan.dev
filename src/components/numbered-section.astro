@@ -1,0 +1,35 @@
+---
+import Eyebrow from '@/components/eyebrow.astro';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+// A numbered room: full-bleed section, content in the measure, the eyebrow
+// first. `band` turns the room into the opposite scheme.
+interface Props {
+  id: string;
+  number: number;
+  total: number;
+  label: string;
+  locale: Locale;
+  headingId: string;
+  band?: boolean;
+}
+const {
+  id,
+  number,
+  total,
+  label,
+  locale,
+  headingId,
+  band = false,
+} = Astro.props;
+const spoken = messages(locale)
+  .section.spoken.replace('{number}', String(number))
+  .replace('{total}', String(total));
+---
+
+<section id={id} class:list={['section', { band }]} aria-labelledby={headingId}>
+  <div class="measure section-body">
+    <Eyebrow number={number} total={total} label={label} spoken={spoken} />
+    <slot />
+  </div>
+</section>

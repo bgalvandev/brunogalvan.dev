@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+packageExtensionsChecksum: sha256-xNXJoe/LWZHQMuW9DvRq7vAoP3hgHsiu6+3ydtNSXL8=
+
 importers:
 
   .:
@@ -11,15 +13,18 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.7.4
         version: 3.7.4
-      '@fontsource-variable/archivo':
+      '@fontsource-variable/geist':
         specifier: 5.3.0
         version: 5.3.0
-      '@fontsource-variable/jetbrains-mono':
+      '@fontsource-variable/geist-mono':
         specifier: 5.3.0
         version: 5.3.0
       astro:
         specifier: ~7.3.3
         version: 7.3.3(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(@types/node@24.13.6)(jiti@2.7.0)(yaml@2.9.0)
+      geist:
+        specifier: 1.7.2
+        version: 1.7.2
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.10
@@ -575,11 +580,11 @@ packages:
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@fontsource-variable/archivo@5.3.0':
-    resolution: {integrity: sha512-HogK8FJelrD1o7TlZlkIVtHgc20bO5PZRWE7mUeUTdMN055alznQV6/00J00IBeu8FQAH4s3zW9UJNvKExXf+g==}
+  '@fontsource-variable/geist-mono@5.3.0':
+    resolution: {integrity: sha512-vBbuwDEo9AkrqADMXOrlAR3DFcJi4/JxeuU43FoiQERnNwsfXNnvxvReZG02cQKmyk4DZkZdBZX3oTDvy2zBAw==}
 
-  '@fontsource-variable/jetbrains-mono@5.3.0':
-    resolution: {integrity: sha512-F32xpS2NsGYoQi2ADSkKTgpJj7ozajsGgDJ8woTnqjmIB+dxDIqImjl4pXZVEExu8UFZ2ndhmX18EBS/hdz3Lw==}
+  '@fontsource-variable/geist@5.3.0':
+    resolution: {integrity: sha512-j0m+vLQuG5XAYoHtGCVu0spvlGreR3EzpECUVzkFmI1mTVnAO38l/NEPDCFgZ177JxzYJCLSmTQibIiYPilGrA==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -1823,6 +1828,14 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  geist@1.7.2:
+    resolution: {integrity: sha512-Gu5lDFa3pLRyoBlBPf0QIFHVdWAnpco7fS1bJm41jyLPFoguBgiubseUN2oLXMgqZ7uxAxDoXcHMhCY/fOTTgg==}
+    peerDependencies:
+      next: '>=13.2.0'
+    peerDependenciesMeta:
+      next:
+        optional: true
 
   get-caller-file@2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
@@ -3393,9 +3406,9 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@fontsource-variable/archivo@5.3.0': {}
+  '@fontsource-variable/geist-mono@5.3.0': {}
 
-  '@fontsource-variable/jetbrains-mono@5.3.0': {}
+  '@fontsource-variable/geist@5.3.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -4566,6 +4579,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  geist@1.7.2: {}
 
   get-caller-file@2.0.5: {}
 

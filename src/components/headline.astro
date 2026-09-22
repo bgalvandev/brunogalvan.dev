@@ -1,0 +1,40 @@
+---
+// The section statement: two short sentences between decorative slashes. The
+// slashes are generated content with an empty text alternative, so they are
+// neither read aloud nor measured as text.
+interface Props {
+  lines: readonly string[];
+  id?: string;
+  level?: 'h2' | 'h3';
+}
+const { lines, id, level: Tag = 'h2' } = Astro.props;
+---
+
+<Tag class="headline text-headline" id={id}>
+  <span>
+    {lines.map((line, index) => (
+      <>
+        {index > 0 && <br />}
+        {index < lines.length - 1 ? `${line} ` : line}
+      </>
+    ))}
+  </span>
+</Tag>
+
+<style>
+  .headline {
+    margin: 0;
+    text-wrap: balance;
+  }
+  .headline::before,
+  .headline::after {
+    color: var(--decor);
+    font-family: var(--font-pixel);
+  }
+  .headline::before {
+    content: '/\00a0' / '';
+  }
+  .headline::after {
+    content: '\00a0/' / '';
+  }
+</style>

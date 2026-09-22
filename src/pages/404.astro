@@ -13,20 +13,37 @@ const en = messages('en');
   canonicalPath="/404/"
   noindex
 >
-  <main id="main" tabindex="-1">
-    <p class="font-mono text-muted">404</p>
-    <h1 class="mt-4 text-3xl font-semibold">{es.notFound.title}</h1>
-    <p class="mt-4 text-muted">{es.notFound.description}</p>
-    <p class="mt-2 text-muted" lang="en">
+  <main id="main" tabindex="-1" class="measure not-found">
+    <p class="tag">404</p>
+    <h1 class="text-headline">{es.notFound.title}</h1>
+    <p class="not-found-text">{es.notFound.description}</p>
+    <p class="not-found-text" lang="en">
       {en.notFound.description}
     </p>
-    <nav class="mt-8 flex gap-4" aria-label={es.notFound.navigation}>
-      <a class="control" href={pagePath('home', 'es')} lang="es">
+    <nav class="tabs" aria-label={es.notFound.navigation}>
+      <a class="tab" href={pagePath('home', 'es')} lang="es">
         {es.navigation.home}
       </a>
-      <a class="control" href={pagePath('home', 'en')} lang="en">
+      <a class="tab" href={pagePath('home', 'en')} lang="en">
         {en.navigation.home}
       </a>
     </nav>
   </main>
 </SiteLayout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding-block: 8rem;
+  }
+  .not-found h1 {
+    margin: 0;
+  }
+  .not-found-text {
+    margin: 0;
+    color: var(--muted);
+  }
+</style>

@@ -1,8 +1,9 @@
 # brunogalvan.dev
 
-Bruno Galván's bilingual website foundation: Astro, strict TypeScript and Tailwind
-CSS v4. The initial home page is intentionally basic; final design, content and
-additional pages are future work.
+Bruno Galván's bilingual portfolio: Astro, strict TypeScript and Tailwind CSS v4,
+static output with no framework runtime in the browser. The design follows one
+master, <https://aeye-saas.webflow.io/>; its grammar, tokens and deliberate
+differences are recorded in [DESIGN.md](DESIGN.md).
 
 ## Local development
 
@@ -35,7 +36,8 @@ live in `public/_redirects` and the build writes `dist/_headers`. See ADR 0007.
   contract, rendering, routes, future database/server capabilities and tooling.
 - [Current decision](docs/adr/0005-astro-foundation.md): alternatives and tradeoffs.
 - [Contributor rules](AGENTS.md): standing standards; procedures in `.agents/skills`.
-- [Design memory](DESIGN.md): the restrained initial page and shared visual intent.
+- [Design memory](DESIGN.md): the design master, shared visual decisions and every
+  deliberate difference from the master.
 
 ```sh
 pnpm run check

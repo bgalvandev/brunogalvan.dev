@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { test, expect } from '@playwright/test';
 
 import { site } from '@/config/site';
+import { messages } from '@/i18n/messages';
 
 const { email: contact, url: origin } = site;
 
@@ -19,15 +20,15 @@ test('content and locale navigation work without JavaScript', async ({
     const page = await context.newPage();
     await page.goto('/');
     await expect(page).toHaveURL('/es/');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Ingeniero de software.',
+    await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
+      messages('es').hero.spoken,
     );
     await expect(page.getByRole('link', { name: contact })).toBeVisible();
     await expect(page.locator('[data-theme-toggle]')).toBeHidden();
     await page.getByRole('link', { name: 'English', exact: true }).click();
     await expect(page).toHaveURL('/en/');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Software engineer.',
+    await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
+      messages('en').hero.spoken,
     );
   } finally {
     await context.close();

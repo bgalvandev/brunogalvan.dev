@@ -1,9 +1,8 @@
 # Website architecture
 
-The application delivers a public bilingual website as static HTML with explicit
-feature ownership. The initial product is one basic home page in two languages.
-Design, editorial content, services, a CMS and a database are separate future
-requirements and get their own decision records when they arrive.
+The application delivers a public bilingual portfolio as static HTML with
+explicit feature ownership. A CMS, a database or any request-time capability is
+a separate future requirement and gets its own decision record when it arrives.
 
 ## Current structure
 
@@ -14,9 +13,10 @@ src/
     404.astro                Bilingual recovery, noindex
     robots.txt.ts            Static crawler endpoint
   layouts/                   HTML document, global assets, metadata wiring
-  components/                Shared SEO, language and theme controls
+  components/                Shared UI: header, footer, eyebrow, headline,
+                             button, pixel icons, SEO, language and theme
   modules/
-    home/                    Initial feature presentation
+    home/                    Home page rooms and the ordered section list
   config/site.ts             Approved public identity and canonical origin
   i18n/                      Locale types, route pairs, typed message catalogs
   styles/                    Semantic theme tokens and shared styling
@@ -47,9 +47,11 @@ responsibilities or the first request-time capability.
 - Astro markup requires no hydration framework. A short browser script enhances
   the theme button; an inline initializer restores the override before paint.
   CSS follows the OS with no JavaScript. Fonts go through Astro's font
-  pipeline from the installed fontsource packages: only the two latin files
-  ship, preloaded, with metric-matched fallbacks declared inline and hashed
-  into the CSP.
+  pipeline from installed packages (Geist and Geist Mono from fontsource, Geist
+  Pixel Square from Vercel's `geist`): only the three latin files ship,
+  preloaded, with metric-matched fallbacks declared inline and hashed into the
+  CSP. `geist` declares Next.js as a peer for wrappers this site never imports;
+  `pnpm-workspace.yaml` marks that peer optional so it is never installed.
 
 ## Adding a page
 
