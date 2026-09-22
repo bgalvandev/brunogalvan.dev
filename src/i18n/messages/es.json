@@ -15,7 +15,8 @@
     "contact": "Contacto",
     "about": "Sobre mí",
     "experience": "Experiencia",
-    "menu": "Menú"
+    "menu": "Menú",
+    "sections": "Secciones"
   },
   "theme": {
     "darkMode": "Modo oscuro"
