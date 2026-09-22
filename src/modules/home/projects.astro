@@ -1,0 +1,359 @@
+---
+import Headline from '@/components/headline.astro';
+import Button from '@/components/button.astro';
+import NumberedSection from '@/components/numbered-section.astro';
+import PixelIcon from '@/components/pixel-icon.astro';
+import { site } from '@/config/site';
+import { figures } from '@/data/figures';
+import { projects } from '@/data/projects';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import { sectionNumber, sections } from './sections';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = messages(locale).projects;
+const counts = figures(new Date());
+const headline = t.headline.map((line) =>
+  line
+    .replace('{total}', String(counts.projects))
+    .replace('{public}', String(counts.publicProjects)),
+);
+// The featured project leads; the numbers follow the order shown.
+const cards = [...projects]
+  .sort(
+    (a, b) =>
+      Number('featured' in b && b.featured) -
+      Number('featured' in a && a.featured),
+  )
+  .map((project, index) => ({
+    ...project,
+    featured: 'featured' in project && project.featured,
+    number: String(index + 1).padStart(3, '0'),
+    kindLabel: t.kinds[project.kind],
+    line: t.items[project.id],
+  }));
+---
+
+<NumberedSection
+  id="projects"
+  number={sectionNumber('projects')}
+  total={sections.length}
+  label={t.label}
+  locale={locale}
+  headingId="projects-title"
+>
+  <div class="projects-main">
+    <div class="projects-heading">
+      <Headline id="projects-title" lines={headline} />
+      <Button
+        href={`${site.github}?tab=repositories`}
+        label={t.action}
+        icon="arrow-up-right"
+      />
+    </div>
+    <ul class="projects-grid">
+      {cards.map((card) => (
+        <li
+          class:list={[
+            'project-card',
+            {
+              'project-card-featured': card.featured,
+              'project-card-linked': card.repository,
+            },
+          ]}
+        >
+          <div class="project-card-top">
+            <div class="project-card-heading">
+              <h3 class="project-card-title">{card.name}</h3>
+              <ul class="project-card-tags">
+                {card.technologies.map((technology) => (
+                  <li class="project-card-tag">{technology}</li>
+                ))}
+              </ul>
+            </div>
+            <p class="project-card-line">{card.line}</p>
+            <div class="project-card-meta">
+              <span class="project-card-number" aria-hidden="true">
+                // {card.number}
+              </span>
+              <span class="tag">{card.kindLabel}</span>
+            </div>
+          </div>
+          <div class="project-card-cover field-dotted" aria-hidden="true">
+            <span class="project-card-cover-name">{card.name}</span>
+          </div>
+          <div class="project-card-links">
+            {card.repository ? (
+              <a
+                class="project-card-link project-card-primary"
+                href={card.repository}
+                aria-label={t.codeOf.replace('{name}', card.name)}
+              >
+                <span class="project-card-arrow" aria-hidden="true">
+                  <PixelIcon name="arrow-up-right" />
+                  <PixelIcon name="arrow-up-right" />
+                </span>
+                {t.code}
+              </a>
+            ) : (
+              <span class="project-card-link project-card-private">
+                {t.private}
+              </span>
+            )}
+            {card.demo && (
+              <a
+                class="project-card-link"
+                href={card.demo}
+                aria-label={t.demoOf.replace('{name}', card.name)}
+              >
+                {t.demo}
+                <PixelIcon
+                  name="arrow-up-right"
+                  class="project-card-demo-icon"
+                />
+              </a>
+            )}
+          </div>
+          <span class="project-card-border" aria-hidden="true" />
+        </li>
+      ))}
+    </ul>
+  </div>
+</NumberedSection>
+
+<style>
+  .projects-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  .projects-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+  /* Three columns: the featured project takes a two-by-two block, the other
+     five fill the remaining cells exactly. */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .project-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    transition: color 0.2s ease;
+  }
+  .project-card-featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .project-card-top {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 13rem;
+    padding: 1.5rem 1.5rem 1rem;
+  }
+  .project-card-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .project-card-title {
+    margin: 0;
+    font-size: var(--text-medium);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+  }
+  .project-card-featured .project-card-title {
+    font-size: var(--text-large);
+  }
+  .project-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .project-card-tag {
+    padding: 0.2em 0.25em;
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: var(--text-small--letter-spacing);
+    text-transform: uppercase;
+  }
+  .project-card-line {
+    margin: 0;
+    color: var(--muted);
+  }
+  .project-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .project-card-meta .tag {
+    align-self: auto;
+  }
+  .project-card-number {
+    color: var(--muted);
+    font-weight: 500;
+  }
+  /* A cover generated from the name, chosen from captures on 2026-09-22
+     over cards with no image: no screenshot may be published, and the cover
+     keeps the master's document-card rhythm. */
+  .project-card-cover {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-height: 9rem;
+    margin-inline: 1px;
+    overflow: hidden;
+  }
+  .project-card-cover-name {
+    padding-inline: 1rem;
+    color: var(--ink);
+    font-family: var(--font-pixel);
+    font-size: var(--text-large);
+    line-height: 1.1;
+    text-align: center;
+    text-wrap: balance;
+    transition: transform 0.2s ease;
+  }
+  .project-card-featured .project-card-cover-name {
+    font-size: var(--text-display);
+  }
+  .project-card-links {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    margin-top: auto;
+    border-top: 1px solid var(--line);
+  }
+  .project-card-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3rem;
+    padding: 0.5rem 1.5rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .project-card-private {
+    color: var(--faint);
+  }
+  .project-card :global(.project-card-demo-icon) {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+  .project-card-arrow {
+    position: relative;
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    overflow: hidden;
+  }
+  .project-card-arrow :global(svg) {
+    position: absolute;
+    inset: 0.125rem;
+    transition: transform 0.2s ease;
+  }
+  .project-card-arrow :global(svg:last-child) {
+    transform: translate(-150%, 150%);
+  }
+  /* The whole card follows its code link: the link's box stretches over the
+     card, the demo link sits above it. */
+  .project-card-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .project-card-links a:not(.project-card-primary) {
+    position: relative;
+    z-index: 2;
+  }
+  .project-card-border {
+    position: absolute;
+    inset: -1px;
+    z-index: 2;
+    border: 1px solid var(--accent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .project-card-linked:hover,
+  .project-card-linked:focus-within {
+    color: var(--accent);
+  }
+  .project-card-linked:hover .project-card-border,
+  .project-card-linked:focus-within .project-card-border {
+    opacity: 1;
+  }
+  .project-card-linked:hover .project-card-cover-name {
+    transform: translateY(-0.5rem);
+  }
+  .project-card-linked:hover .project-card-arrow :global(svg:first-child) {
+    transform: translate(150%, -150%);
+  }
+  .project-card-linked:hover .project-card-arrow :global(svg:last-child) {
+    transform: none;
+  }
+  @media (width < 62rem) {
+    .projects-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .project-card-featured {
+      grid-row: auto;
+    }
+    .project-card:last-child {
+      grid-column: span 2;
+    }
+  }
+  @media (width < 48rem) {
+    .projects-heading {
+      flex-direction: column;
+    }
+    .project-card-cover-name {
+      font-size: var(--text-medium);
+    }
+    .project-card-featured .project-card-cover-name {
+      font-size: var(--text-large);
+    }
+    .projects-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .project-card-featured,
+    .project-card:last-child {
+      grid-column: auto;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .project-card,
+    .project-card-border,
+    .project-card-cover-name,
+    .project-card-arrow :global(svg) {
+      transition: none;
+    }
+  }
+</style>

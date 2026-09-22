@@ -1,0 +1,228 @@
+---
+import Button from '@/components/button.astro';
+import Headline from '@/components/headline.astro';
+import NumberedSection from '@/components/numbered-section.astro';
+import { roles } from '@/data/experience';
+import { career, figures } from '@/data/figures';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import { sectionNumber, sections } from './sections';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { numbers } = messages(locale);
+// Read at build time: the page states what the record says on the day it was
+// built, and nothing is typed by hand.
+const today = new Date();
+const counts = figures(today);
+const stats = [
+  { value: counts.yearsSinceFirstRole, label: numbers.stats.years },
+  { value: counts.companies, label: numbers.stats.companies },
+  { value: counts.publicProjects, label: numbers.stats.publicProjects },
+  { value: counts.technologies, label: numbers.stats.technologies },
+];
+// The chart: one bar per month since the first role, as tall as the months
+// into the role held that month; a month between roles has no bar. Geometry
+// is in percentages of the chart box, so it stays crisp at any width.
+const months = career(today);
+const longest = Math.max(...months.map((month) => month.tenure));
+const step = 100 / months.length;
+const percent = (value: number) => `${value.toFixed(3)}%`;
+const bars = months.flatMap((month, index) =>
+  month.role
+    ? [
+        {
+          x: percent(index * step + step * 0.2),
+          width: percent(step * 0.6),
+          height: percent((month.tenure / longest) * 88),
+          y: percent(100 - (month.tenure / longest) * 88),
+        },
+      ]
+    : [],
+);
+const years = months.flatMap((month, index) =>
+  month.month === 0 ? [{ x: percent(index * step), year: month.year }] : [],
+);
+const starts = roles.map((role) => {
+  const index = months.findIndex(
+    (month) => month.role === role.id && month.tenure === 1,
+  );
+  return { x: percent(index * step), company: role.company };
+});
+const summary = numbers.chart.summary
+  .replace('{months}', String(months.filter((month) => month.role).length))
+  .replace('{year}', String(counts.firstYear))
+  .replace('{companies}', String(counts.companies));
+---
+
+<NumberedSection
+  id="numbers"
+  number={sectionNumber('numbers')}
+  total={sections.length}
+  label={numbers.label}
+  locale={locale}
+  headingId="numbers-title"
+>
+  <div class="numbers-main">
+    <div class="numbers-top">
+      <div class="numbers-heading">
+        <Headline id="numbers-title" lines={numbers.headline} />
+        <Button href="#experience" label={numbers.action} />
+      </div>
+      <dl class="numbers-stats">
+        {stats.map((stat) => (
+          <div class="numbers-stat">
+            <dt>{stat.label}</dt>
+            <dd>{stat.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+    <figure class="numbers-chart">
+      <svg class="numbers-plot" aria-hidden="true" focusable="false">
+        {years.map((tick) => (
+          <line class="numbers-tick" x1={tick.x} x2={tick.x} y1="0" y2="100%" />
+        ))}
+        {starts.map((start) => (
+          <text class="numbers-company" x={start.x} y="1em" dx="0.5em">
+            {start.company}
+          </text>
+        ))}
+        <g class="numbers-bars">
+          {bars.map((bar) => (
+            <rect x={bar.x} y={bar.y} width={bar.width} height={bar.height} />
+          ))}
+        </g>
+      </svg>
+      <svg class="numbers-axis" aria-hidden="true" focusable="false">
+        {years.map((tick) => (
+          <text x={tick.x} y="70%">
+            {tick.year}
+          </text>
+        ))}
+      </svg>
+      <figcaption>
+        <span class="sr-only">{summary}</span>
+        <span class="numbers-caption">{numbers.chart.caption}</span>
+      </figcaption>
+    </figure>
+  </div>
+</NumberedSection>
+
+<style>
+  .numbers-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  .numbers-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+  .numbers-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.5rem;
+  }
+  /* The master's stat grid: cells share their rules, the grid closes the
+     top and right. */
+  /* As in the master, the grid rises to the eyebrow's rule and covers its
+     end. */
+  .numbers-stats {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    flex: none;
+    grid-template-columns: 1fr 1fr;
+    width: min(28rem, 40%);
+    margin: -2.125rem 0 0;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+  .numbers-stat {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .numbers-stat dd {
+    margin: 0;
+    font-size: var(--text-large);
+    line-height: 1.25;
+    letter-spacing: var(--text-large--letter-spacing);
+  }
+  .numbers-stat dt {
+    color: var(--muted);
+  }
+  .numbers-chart {
+    margin: 0;
+  }
+  .numbers-plot {
+    display: block;
+    width: 100%;
+    height: 24rem;
+    overflow: visible;
+  }
+  .numbers-tick {
+    stroke: var(--decor);
+    stroke-dasharray: 3 3;
+  }
+  .numbers-company {
+    fill: var(--faint);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    text-transform: uppercase;
+  }
+  .numbers-bars {
+    fill: var(--accent);
+  }
+  .numbers-axis {
+    display: block;
+    width: 100%;
+    height: 2rem;
+    overflow: visible;
+  }
+  .numbers-axis text {
+    fill: var(--muted);
+    font-size: var(--text-label);
+    text-anchor: middle;
+  }
+  .numbers-caption {
+    display: block;
+    margin-top: 1rem;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    letter-spacing: var(--text-small--letter-spacing);
+    text-transform: uppercase;
+  }
+  @media (width < 62rem) {
+    .numbers-top {
+      flex-direction: column;
+    }
+    .numbers-stats {
+      width: 100%;
+      max-width: 28rem;
+      margin-top: 0;
+    }
+    .numbers-plot {
+      height: 16rem;
+    }
+  }
+  @media (width < 48rem) {
+    .numbers-company {
+      display: none;
+    }
+    .numbers-axis text {
+      font-size: var(--text-small);
+    }
+  }
+</style>

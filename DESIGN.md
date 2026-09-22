@@ -84,6 +84,17 @@ anywhere. Depth lives on extension pages, never on the home page.
   (marquees, preloader, reveals, scrambles, the pixel trail) and persists like
   the theme, so no motion runs past five seconds without a way to stop it. It
   is hidden without JavaScript and under reduced motion, where nothing moves.
+- **Sections.** Seven numbered rooms after the hero, each built from a master
+  archetype: What I do (value cards), By the numbers (stat grid and a career
+  chart), Stack (capability cells in a band), Method (numbered cards drawn by
+  the scroll), Code (a code window on a dotted stage), Projects (document
+  cards) and Experience (a changelog timeline), then the closing room and the
+  footer. Every figure, count and period is computed from `src/data` at build
+  time.
+- **Words.** Measured on 2026-09-22 with `innerText` of each room, decoration
+  excluded: 526 visible words in Spanish, 513 in English, of which 69 are tool
+  names and about 40 are code. Section 4 of the plan sets a target near 300;
+  the gap is the one line per role and per project the plan also requires.
 - **Theme.** The system preference works without JavaScript; the toggle is a
   progressively enhanced override, hidden until its script runs.
 
@@ -111,6 +122,28 @@ Each difference found in side-by-side captures at 1440px, and why it stays:
   tools and no logos to show.
 - The positioning line quotes the Method's rules rather than a product slogan.
 - A pause control exists; the master has none.
+- By the numbers charts the career itself, one bar per month as tall as the
+  months into the role, with company names over each run; the master's chart
+  is a picture of invented data behind a with/without toggle, and there is no
+  second series here to toggle.
+- Stack is the master's capability cards as a three-by-two grid with the tools
+  as tags; its tabbed feature panel shows product screenshots, and there are
+  none to show. The headline leads, as in every other room.
+- Method is drawn by the scroll only from 992px up, where the four cards sit
+  in one row. A card not reached yet dims to a colour that still passes
+  contrast; the master drops it to 30% opacity and hides its text.
+- Code shows two whole files, verbatim, pinned to the commit they were read
+  at. The language switch is a radio group clicked by the visitor and working
+  without JavaScript; the master switches its tabs with the scroll. Syntax
+  colours come from classes, since Shiki's inline styles break the CSP.
+- Projects pulls one project out large, as portfolios do, and gives each card
+  a cover generated from its name, chosen from captures over cards with no
+  image. A card follows its code link; a project with no public code shows
+  plain text.
+- Experience marks every role with the same neutral square: an accent beside
+  the current one would read as an availability signal.
+- The closing room keeps the master's card and marquees; the email and the
+  profiles appear once, in the footer. The footer has no newsletter form.
 - Hovering a `What I do` card changes nothing: the cards are not links, and
   a hover response would make them look actionable.
 

@@ -11,7 +11,11 @@
 }
 :root {
   color-scheme: light dark;
-  --paper: light-dark(#ffffff, #212121);
+  /* The page's own scheme and paper, kept apart so a room inside a band can
+     return to them (see .unband). */
+  --page-scheme: light dark;
+  --page-paper: light-dark(#ffffff, #212121);
+  --paper: var(--page-paper);
   --field: light-dark(#f7f7f7, #141414);
   --surface: light-dark(#f5f5f5, #2b2b2b);
   --ink: light-dark(#1a1a1a, #fafafa);
@@ -28,11 +32,20 @@
   --accent: light-dark(#c8341a, #ff7a5c);
   --accent-contrast: light-dark(#ffffff, #141414);
   --band-paper: light-dark(#212121, #141414);
+  /* Syntax, read inside the code window, which is always a dark room; the
+     light values keep every pair valid. Keywords take the accent. */
+  --syntax-keyword: var(--accent);
+  --syntax-string: light-dark(#3d7a00, #b5e48c);
+  --syntax-constant: light-dark(#8f5400, #ffcb6b);
+  --syntax-function: light-dark(#2255aa, #9ac2ff);
+  --syntax-type: light-dark(#7a3d99, #d7b4ff);
 }
 :root[data-theme='light'] {
+  --page-scheme: light;
   color-scheme: light;
 }
 :root[data-theme='dark'] {
+  --page-scheme: dark;
   color-scheme: dark;
 }
 @theme inline {

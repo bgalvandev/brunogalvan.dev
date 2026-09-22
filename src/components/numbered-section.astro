@@ -1,10 +1,12 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import Eyebrow from '@/components/eyebrow.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 // A numbered room: full-bleed section, content in the measure, the eyebrow
-// first. `band` turns the room into the opposite scheme.
-interface Props {
+// first. `band` turns the room into the dark scheme; any other attribute
+// (a class, a data hook) lands on the section itself.
+interface Props extends HTMLAttributes<'section'> {
   id: string;
   number: number;
   total: number;
@@ -21,13 +23,20 @@ const {
   locale,
   headingId,
   band = false,
+  class: className,
+  ...rest
 } = Astro.props;
 const spoken = messages(locale)
   .section.spoken.replace('{number}', String(number))
   .replace('{total}', String(total));
 ---
 
-<section id={id} class:list={['section', { band }]} aria-labelledby={headingId}>
+<section
+  id={id}
+  class:list={['section', { band }, className]}
+  aria-labelledby={headingId}
+  {...rest}
+>
   <div class="measure section-body">
     <Eyebrow number={number} total={total} label={label} spoken={spoken} />
     <slot />

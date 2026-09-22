@@ -38,7 +38,7 @@ test('the hero opens, then types its fragment once, and keeps its name', async (
   await page.goto('/es/');
   const heading = page.getByRole('heading', { level: 1 });
   await expect(heading).toHaveAccessibleName(hero.spoken);
-  const fragment = page.locator('[data-typewriter]');
+  const fragment = page.locator('.hero [data-typewriter]');
   await expect(fragment).toHaveText('');
   await expect(fragment).toHaveText(hero.fragment);
   await expect(heading.locator('.reveal-char')).toHaveCount(0);
@@ -57,7 +57,9 @@ test('switching motion off mid-visit puts every piece of text back', async ({
   await expect(page.locator('.reveal-char').first()).toBeAttached();
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.reveal-char')).toHaveCount(0);
-  await expect(page.locator('[data-typewriter]')).toHaveText(hero.fragment);
+  await expect(page.locator('.hero [data-typewriter]')).toHaveText(
+    hero.fragment,
+  );
   expect(
     await page.locator('#what-i-do-title [data-reveal]').evaluate(visualText),
   ).toBe(phrase);
@@ -96,7 +98,9 @@ test('with reduced motion nothing is split, typed, scrambled or eased', async ({
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/es/');
   await expect(page.locator('.reveal-char')).toHaveCount(0);
-  await expect(page.locator('[data-typewriter]')).toHaveText(hero.fragment);
+  await expect(page.locator('.hero [data-typewriter]')).toHaveText(
+    hero.fragment,
+  );
   const link = page.locator('.value-heading .button');
   await link.hover();
   await expect(link.locator('[data-scramble-text]')).toHaveText(whatIDo.action);
@@ -106,7 +110,7 @@ test('with reduced motion nothing is split, typed, scrambled or eased', async ({
   );
   expect(
     await page
-      .locator('[data-typewriter]')
+      .locator('.hero [data-typewriter]')
       .evaluate(
         (element) => getComputedStyle(element, '::after').animationName,
       ),

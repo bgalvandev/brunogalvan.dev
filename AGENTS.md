@@ -22,8 +22,10 @@ and practice is the only thing forbidden without exception.
    CSS v4, Node from `.nvmrc`, pnpm from `package.json`, `--frozen-lockfile` in
    CI. The lockfile is never edited by hand.
 5. `src/pages` composes routes, `src/layouts` owns the document, `src/components`
-   is shared UI and `src/modules/<feature>` holds a feature's own files. Shared
-   code MUST NOT import a feature. Directories exist only when they hold files.
+   is shared UI, `src/data` is the verified record (roles, projects, stack) with
+   every figure derived from it, and `src/modules/<feature>` holds a feature's own
+   files. Shared code MUST NOT import a feature. Directories exist only when they
+   hold files.
 6. Changes MUST use the smallest code path that satisfies the requirement. No
    abstractions, adapters or utilities for hypothetical reuse; kebab-case file
    names; no `utils.ts` or `service.ts`.

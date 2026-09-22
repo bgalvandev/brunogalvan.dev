@@ -1,6 +1,7 @@
 ---
-import Headline from '@/components/headline.astro';
-import PixelIcon from '@/components/pixel-icon.astro';
+import Button from '@/components/button.astro';
+import Marquee from '@/components/marquee.astro';
+import PixelField from '@/components/pixel-field.astro';
 import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
@@ -8,88 +9,105 @@ interface Props {
   locale: Locale;
 }
 const { contact } = messages(Astro.props.locale);
-const profiles = [
-  { label: 'GitHub', href: site.github },
-  { label: 'LinkedIn', href: site.linkedin },
-] as const;
+const [first, second] = contact.headline;
 ---
 
+<!-- The master's closing room: a line of words above and below, a dark gridded band, and a light card with a square at each corner. The email and profiles live in the footer, once. -->
 <section id="contact" class="section contact" aria-labelledby="contact-title">
-  <div class="measure contact-body">
-    <p class="tag">{contact.label}</p>
-    <Headline id="contact-title" lines={contact.headline} />
-    <a class="contact-email" href={`mailto:${site.email}`}>
-      {site.email}
-    </a>
-    <ul class="contact-profiles">
-      {profiles.map((profile) => (
-        <li>
-          <a class="contact-profile" href={profile.href} rel="me">
-            {profile.label}
-            <PixelIcon name="arrow-up-right" class="contact-profile-icon" />
-          </a>
-        </li>
-      ))}
-    </ul>
+  <Marquee items={contact.marquee} variant="text" />
+  <div class="band contact-band">
+    <PixelField />
+    <div class="measure contact-layout">
+      <div class="unband contact-card">
+        <span class="contact-corners" aria-hidden="true"></span>
+        <div class="contact-top">
+          <p class="tag">{contact.label}</p>
+          <h2
+            id="contact-title"
+            class="contact-heading text-display"
+            aria-label={`${first} ${contact.fragment}. ${second}`}
+          >
+            <span aria-hidden="true" data-reveal data-reveal-duration="0.6">
+              <span class="contact-line">{first}</span>
+              <span class="contact-line pixel-highlight" data-reveal-skip>
+                {'[ '}
+                <span data-typewriter>{contact.fragment}</span>
+                {' ]'}
+              </span>
+              <span class="contact-line">{second}</span>
+            </span>
+          </h2>
+        </div>
+        <Button href={`mailto:${site.email}`} label={contact.action} />
+      </div>
+    </div>
   </div>
+  <Marquee items={contact.marquee} variant="text" />
 </section>
 
 <style>
   .contact {
     border-top: 1px solid var(--line);
   }
-  .contact-body {
+  .contact-band {
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .contact-layout {
+    position: relative;
+    padding-block: 5rem;
+    pointer-events: none;
+  }
+  .contact-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
-    padding-block: 5rem;
-    text-align: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+    min-height: 30rem;
+    padding: 2.5rem;
+    pointer-events: auto;
   }
-  .contact-body .tag {
+  .contact-corners {
+    position: absolute;
+    inset: 0.5rem;
+    pointer-events: none;
+    background:
+      linear-gradient(var(--ink), var(--ink)) 0 0 / 1.5rem 1.5rem no-repeat,
+      linear-gradient(var(--ink), var(--ink)) 100% 0 / 1.5rem 1.5rem no-repeat,
+      linear-gradient(var(--ink), var(--ink)) 0 100% / 1.5rem 1.5rem no-repeat,
+      linear-gradient(var(--ink), var(--ink)) 100% 100% / 1.5rem 1.5rem
+        no-repeat;
+  }
+  .contact-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .contact-top .tag {
     align-self: center;
     margin: 0;
+    color: var(--faint);
+    font-size: var(--text-small);
   }
-  .contact-email {
-    color: var(--accent);
-    font-size: clamp(1.125rem, 5.2vw, 2rem);
-    line-height: var(--text-large--line-height);
-    letter-spacing: var(--text-large--letter-spacing);
-    overflow-wrap: anywhere;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
-  }
-  .contact-profiles {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
+  .contact-heading {
     margin: 0;
-    padding: 0;
-    list-style: none;
+    text-align: center;
   }
-  .contact-profile {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--line-strong);
-    font-family: var(--font-mono);
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: background-color 0.25s ease;
+  .contact-line {
+    display: block;
   }
-  .contact-profile:hover {
-    background: var(--line);
-  }
-  .contact-profile :global(.contact-profile-icon) {
-    width: 0.75rem;
-    height: 0.75rem;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .contact-profile {
-      transition: none;
+  @media (width < 48rem) {
+    .contact-card {
+      min-height: auto;
+      padding: 3rem 1.5rem;
+    }
+    /* The fragment stays on one line with its cursor. */
+    .contact-heading .pixel-highlight {
+      font-size: 0.75em;
     }
   }
 </style>

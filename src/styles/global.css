@@ -104,6 +104,13 @@
   /* The content column: the master's 8% gutter (5% on tablets, 1.5rem on
      phones) capped at 80rem. The width is explicit, so the measure behaves
      the same inside block, flex and grid parents. */
+  /* A room inside a band that returns to the page's own scheme and paper. */
+  .unband {
+    --paper: var(--page-paper);
+    color-scheme: var(--page-scheme);
+    background: var(--paper);
+    color: var(--ink);
+  }
   .measure {
     --gutter: 8%;
     width: min(100% - 2 * var(--gutter), 80rem);
@@ -257,6 +264,34 @@
   }
   .reveal-char {
     display: inline-block;
+  }
+  /* The pixel fragment of a display heading, inside literal brackets, with
+     a block cursor after the typed text. The cursor blinks four times and
+     holds, so nothing blinks for longer than five seconds. */
+  .pixel-highlight {
+    color: var(--accent);
+    font-family: var(--font-pixel);
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  [data-typewriter]::after {
+    content: '';
+    display: inline-block;
+    width: 0.55em;
+    height: 0.9em;
+    margin-left: 0.05em;
+    background: currentColor;
+    vertical-align: -0.05em;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-typewriter]::after {
+      animation: cursor-blink 0.8s steps(1) 4;
+    }
+  }
+  @keyframes cursor-blink {
+    50% {
+      opacity: 0;
+    }
   }
   /* A heading that was never scrolled into view still prints whole. */
   @media print {

@@ -19,6 +19,8 @@ src/
   modules/
     home/                    Home page rooms and the ordered section list
   config/site.ts             Approved public identity and canonical origin
+  data/                      The verified record: roles, projects, stack, and
+                             the figures computed from it at build time
   i18n/                      Locale types, route pairs, typed message catalogs
   styles/                    Semantic theme tokens and shared styling
 scripts/
