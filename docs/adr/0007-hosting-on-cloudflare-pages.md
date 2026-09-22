@@ -1,6 +1,6 @@
 # ADR 0007: Hosting on Cloudflare Pages
 
-- Status: Accepted
+- Status: Accepted; the root now redirects to `/en/` ([0010](0010-english-default-entry.md))
 - Date: 2026-09-13
 
 ## Context

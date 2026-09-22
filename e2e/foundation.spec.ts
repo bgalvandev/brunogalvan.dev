@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 import { site } from '@/config/site';
+import { defaultLocale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
 
 const { name: identity, email: contact, url: origin } = site;
@@ -50,7 +51,7 @@ for (const locale of ['es', 'en'] as const) {
     }
     await expect(page.locator('link[hreflang="x-default"]')).toHaveAttribute(
       'href',
-      `${origin}/es/`,
+      `${origin}/${defaultLocale}/`,
     );
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
@@ -114,16 +115,16 @@ test('root opens default content and language links remain explicit', async ({
   page,
   context,
 }) => {
-  await context.setExtraHTTPHeaders({ 'Accept-Language': 'en-US' });
+  await context.setExtraHTTPHeaders({ 'Accept-Language': 'es-PE' });
   await page.goto('/');
-  await expect(page).toHaveURL('/es/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
-    messages('es').hero.spoken,
-  );
-  await page.getByRole('link', { name: 'English', exact: true }).click();
   await expect(page).toHaveURL('/en/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
+    messages('en').hero.spoken,
+  );
   await page.getByRole('link', { name: 'Español', exact: true }).click();
   await expect(page).toHaveURL('/es/');
+  await page.getByRole('link', { name: 'English', exact: true }).click();
+  await expect(page).toHaveURL('/en/');
 });
 
 test('theme persists through locale navigation and reload', async ({

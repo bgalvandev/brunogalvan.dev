@@ -41,6 +41,7 @@ const samples = snippets.map((snippet) => ({
               repository={sample.repository}
               commit={sample.commit}
               path={sample.path}
+              {...('lines' in sample ? { lines: sample.lines } : {})}
               class={`code-window-${sample.id}`}
             />
           ))}
@@ -95,11 +96,24 @@ const samples = snippets.map((snippet) => ({
     display: grid;
     grid-template-columns: minmax(0, 1fr);
   }
+  /* A long file scrolls inside its window, so the room keeps the master's
+     proportions; printed, it runs whole. */
+  .code-windows :global(.code-window-body) {
+    max-height: 32rem;
+    overflow-y: auto;
+  }
+  @media print {
+    .code-windows :global(.code-window-body) {
+      max-height: none;
+    }
+  }
   /* The checked radio decides which window shows. */
   .code-main:has(input[value='ts']:checked)
     :global(.code-window:not(.code-window-ts)),
-  .code-main:has(input[value='php']:checked)
-    :global(.code-window:not(.code-window-php)) {
+  .code-main:has(input[value='astro']:checked)
+    :global(.code-window:not(.code-window-astro)),
+  .code-main:has(input[value='playwright']:checked)
+    :global(.code-window:not(.code-window-playwright)) {
     display: none;
   }
   .code-side {

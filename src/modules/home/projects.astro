@@ -171,8 +171,8 @@ const cards = [...projects]
     justify-content: space-between;
     gap: 3rem;
   }
-  /* Three columns: the featured project takes a two-by-two block, the other
-     five fill the remaining cells exactly. */
+  /* Three columns: the featured project takes the first row, its text beside
+     its cover, and the other three fill the row below. */
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -190,8 +190,23 @@ const cards = [...projects]
     transition: color 0.2s ease;
   }
   .project-card-featured {
-    grid-column: span 2;
-    grid-row: span 2;
+    grid-column: 1 / -1;
+  }
+  @media (width >= 62rem) {
+    .project-card-featured {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+    .project-card-featured .project-card-cover {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+      min-height: 22rem;
+      border-left: 1px solid var(--line);
+    }
+    .project-card-featured .project-card-links {
+      grid-column: 1;
+    }
   }
   .project-card-top {
     display: flex;
@@ -362,9 +377,6 @@ const cards = [...projects]
   @media (width < 62rem) {
     .projects-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .project-card-featured {
-      grid-row: auto;
     }
     .project-card:last-child {
       grid-column: span 2;

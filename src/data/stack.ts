@@ -1,36 +1,50 @@
-// The public stack, grouped by capability. It stays inside what the CV and
-// LinkedIn already state; nothing here comes from a private repository. Group
-// names are visible text, so they live in the catalogs under `stack.groups`.
+// The current stack, grouped by capability: what Bruno's own commits show in
+// his 2025–2026 work (ClinicSay, VitalPro and this site), checked against the
+// repositories on 2026-09-22. Team-built parts of a product he did not touch
+// are left out, and so is anything only older work used; that history stays in
+// each role. Group names are visible text, so they live in the catalogs under
+// `stack.groups`.
 export const stack = {
   frontend: [
     'React',
+    'Next.js',
     'TypeScript',
-    'JavaScript',
-    'Astro',
-    'Angular',
+    'TanStack Query',
+    'React Hook Form',
     'Tailwind CSS',
-    'Sass',
+    'shadcn/ui',
     'Vite',
+    'Astro',
   ],
-  backend: ['Node.js', 'PHP', 'Laravel', 'Fastify', 'REST', 'JWT', 'Zod'],
-  data: [
-    'PostgreSQL',
-    'MySQL',
-    'MongoDB',
-    'DynamoDB',
-    'Redis',
-    'Prisma',
-    'SQL',
+  backend: [
+    'Node.js',
+    'Fastify',
+    'Zod',
+    'OpenAPI',
+    'REST',
+    'Better Auth',
+    'JWT',
   ],
-  ai: ['OpenAI', 'LangChain', 'Kommo CRM', 'Salesbot'],
-  architecture: ['Clean Architecture', 'Domain-Driven Design', 'MVC', 'SOLID'],
+  data: ['PostgreSQL', 'Prisma', 'Redis', 'SQL'],
+  ai: ['OpenAI API', 'LLM assistants', 'WhatsApp', 'Claude Code'],
+  architecture: [
+    'Hexagonal architecture',
+    'Domain-Driven Design',
+    'Domain events',
+    'Contract-first APIs',
+    'Modular monolith',
+    'Nx monorepo',
+    'ADRs',
+  ],
   platform: [
     'Docker',
-    'Git',
-    'AWS Lambda',
-    'Nginx',
-    'Playwright',
+    'GitHub Actions',
+    'Fly.io',
+    'Cloudflare',
     'Vitest',
+    'Playwright',
+    'Testing Library',
     'ESLint',
+    'Git',
   ],
 } as const;

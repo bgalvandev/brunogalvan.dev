@@ -33,19 +33,22 @@ describe('localized content and route contract', () => {
   });
   it('translates every page by its pair, never by rewriting a prefix', () => {
     expect(alternatePages('experience').map(({ path }) => path)).toEqual([
-      '/es/experiencia/',
       '/en/experience/',
+      '/es/experiencia/',
     ]);
     expect(alternatePages('about').map(({ path }) => path)).toEqual([
-      '/es/sobre-mi/',
       '/en/about/',
+      '/es/sobre-mi/',
     ]);
     expect(segment('about', 'es')).toBe('sobre-mi');
     expect(segment('caseStudy', 'en')).toBe('projects');
   });
   it('carries a case study slug across both languages', () => {
     expect(
-      alternatePages('caseStudy', 'starwars-api').map(({ path }) => path),
-    ).toEqual(['/es/proyectos/starwars-api/', '/en/projects/starwars-api/']);
+      alternatePages('caseStudy', 'brunogalvan-dev').map(({ path }) => path),
+    ).toEqual([
+      '/en/projects/brunogalvan-dev/',
+      '/es/proyectos/brunogalvan-dev/',
+    ]);
   });
 });

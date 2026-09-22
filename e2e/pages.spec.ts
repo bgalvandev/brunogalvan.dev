@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 
 import { site } from '@/config/site';
 import { projects } from '@/data/projects';
-import type { Locale } from '@/i18n/locales';
+import { defaultLocale, type Locale } from '@/i18n/locales';
 import { messages } from '@/i18n/messages';
 import {
   alternatePages,
@@ -46,7 +46,7 @@ for (const { route, slug } of pages) {
       }
       await expect(page.locator('link[hreflang="x-default"]')).toHaveAttribute(
         'href',
-        `${site.url}${path(route, 'es', slug)}`,
+        `${site.url}${path(route, defaultLocale, slug)}`,
       );
       await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
         'content',
@@ -88,7 +88,7 @@ test('every page passes axe in both themes, with no horizontal overflow', async 
   }
 });
 
-test('the navigation marks the current page and the case studies lead on', async ({
+test('the navigation marks the current page and a case study leads back, and on to the next when there is one', async ({
   page,
 }) => {
   const t = messages('es');
@@ -109,9 +109,16 @@ test('the navigation marks the current page and the case studies lead on', async
   await expect(
     page.getByRole('link', { name: t.caseStudy.back }),
   ).toHaveAttribute('href', `${pagePath('home', 'es')}#projects`);
+  const onward = page
+    .getByRole('navigation', { name: t.caseStudy.label })
+    .getByRole('link');
+  if (!second) {
+    await expect(onward).toHaveCount(1);
+    return;
+  }
   const next = projects.find((candidate) => candidate.id === second)!;
   await page.getByRole('link', { name: next.name, exact: true }).click();
-  await expect(page).toHaveURL(pagePath('caseStudy', 'es', second!));
+  await expect(page).toHaveURL(pagePath('caseStudy', 'es', second));
 });
 
 test('on a phone the pages fold into a menu that works without JavaScript', async ({

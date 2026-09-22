@@ -7,25 +7,25 @@ const en = messages('en');
 ---
 
 <SiteLayout
-  locale="es"
-  title={`404 — ${es.notFound.title}`}
-  description={es.notFound.description}
+  locale="en"
+  title={`404 — ${en.notFound.title}`}
+  description={en.notFound.description}
   canonicalPath="/404/"
   noindex
 >
   <main id="main" tabindex="-1" class="measure not-found">
     <p class="tag">404</p>
-    <h1 class="text-headline">{es.notFound.title}</h1>
-    <p class="not-found-text">{es.notFound.description}</p>
-    <p class="not-found-text" lang="en">
-      {en.notFound.description}
+    <h1 class="text-headline">{en.notFound.title}</h1>
+    <p class="not-found-text">{en.notFound.description}</p>
+    <p class="not-found-text" lang="es">
+      {es.notFound.description}
     </p>
-    <nav class="tabs" aria-label={es.notFound.navigation}>
-      <a class="tab" href={pagePath('home', 'es')} lang="es">
-        {es.navigation.home}
-      </a>
+    <nav class="tabs" aria-label={en.notFound.navigation}>
       <a class="tab" href={pagePath('home', 'en')} lang="en">
         {en.navigation.home}
+      </a>
+      <a class="tab" href={pagePath('home', 'es')} lang="es">
+        {es.navigation.home}
       </a>
     </nav>
   </main>

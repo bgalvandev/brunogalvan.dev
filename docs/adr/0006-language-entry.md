@@ -1,6 +1,6 @@
 # ADR 0006: Language URLs and direct default entry
 
-- Status: Accepted
+- Status: Accepted; the default language is superseded by [0010](0010-english-default-entry.md)
 - Date: 2026-09-12
 - Supersedes: the root selector and x-default policy in [0005](0005-astro-foundation.md)
 

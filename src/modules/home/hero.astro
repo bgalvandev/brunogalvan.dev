@@ -43,10 +43,13 @@ const tools = Object.values(stack).flat();
           data-reveal-duration="0.6"
         >
           <span class="hero-line">{hero.greeting}</span>
-          <span class="hero-line pixel-highlight" data-reveal-skip>
-            {'[ '}
+          <span
+            class="hero-line hero-fragment pixel-highlight"
+            data-reveal-skip
+          >
+            {'[\u00a0'}
             <span data-typewriter>{hero.fragment}</span>
-            {' ]'}
+            {'\u00a0]'}
           </span>
           <span class="hero-line">{hero.closing}</span>
         </span>
@@ -226,6 +229,12 @@ const tools = Object.values(stack).flat();
     }
   }
   @media (width < 30rem) {
+    /* On a phone the fragment may take two lines, and keeps room for both so
+       nothing below moves while it types. The brackets hold to its words. */
+    .hero-fragment {
+      min-height: calc(2em * var(--text-display--line-height));
+      white-space: normal;
+    }
     .hero-positioning {
       padding: 1rem;
     }

@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Bruno Galván — Senior Full Stack Developer",
-    "description": "Bruno Galván, senior full stack developer in Lima, Peru: web platforms, APIs and integrations, from the database to production."
+    "description": "Bruno Galván, senior full stack developer in Lima, Peru: SaaS platforms in React, Node.js and PostgreSQL, from the domain model to production."
   },
   "identity": {
     "role": "Senior Full Stack Developer",
@@ -25,39 +25,39 @@
     "spoken": "Section {number} of {total}"
   },
   "hero": {
-    "greeting": "Hi, I'm Bruno.",
-    "fragment": "Full Stack",
-    "closing": "Senior developer.",
-    "spoken": "Hi, I'm Bruno, a Senior Full Stack Developer.",
-    "line": "I build web platforms, APIs and integrations, from the database to production.",
+    "greeting": "I'm Bruno. I build",
+    "fragment": "SaaS platforms",
+    "closing": "end to end.",
+    "spoken": "I'm Bruno. I build SaaS platforms end to end.",
+    "line": "Senior full stack developer in Lima, Peru. React, Node.js and PostgreSQL, from the domain model to production.",
     "primary": "See projects",
     "secondary": "Write to me",
     "scroll": "Scroll for more"
   },
   "whatIDo": {
     "label": "What I do",
-    "headline": ["Frontend, backend and production.", "The whole system."],
+    "headline": ["From the domain model to production.", "The whole product."],
     "action": "Let's talk",
     "cards": [
       {
-        "title": "Platforms",
-        "tag": "Frontend + backend",
-        "text": "From the database to the interface."
+        "title": "SaaS platforms",
+        "tag": "Multi-tenant",
+        "text": "Products with organizations, scheduling and billing, from the schema to the screen."
       },
       {
-        "title": "APIs",
-        "tag": "REST · Serverless",
-        "text": "Microservices and REST APIs with explicit boundaries."
+        "title": "Typed APIs",
+        "tag": "Fastify · OpenAPI",
+        "text": "Contract-first REST in hexagonal layers, with domain events through an outbox."
       },
       {
-        "title": "Integrations",
-        "tag": "CRM · ERP",
-        "text": "Salesforce, Kommo, SAP and electronic invoicing, connected."
+        "title": "Product interfaces",
+        "tag": "React 19 · TanStack Query",
+        "text": "Calendars, billing screens and editors with optimistic updates."
       },
       {
-        "title": "Automation",
-        "tag": "AI · Messaging",
-        "text": "WhatsApp, Salesbot and an AI API inside a CRM."
+        "title": "AI in the product",
+        "tag": "OpenAI · WhatsApp",
+        "text": "LLM features where the work happens: bilingual documents and a booking assistant."
       }
     ]
   },
@@ -78,7 +78,7 @@
   "notFound": {
     "title": "Page not found",
     "description": "The page you are looking for is unavailable.",
-    "navigation": "Home in Spanish or in English"
+    "navigation": "Home in English or in Spanish"
   },
   "motion": {
     "pause": "Pause motion"
@@ -109,9 +109,9 @@
       "frontend": "Frontend",
       "backend": "Backend",
       "data": "Data",
-      "ai": "AI and integrations",
+      "ai": "AI",
       "architecture": "Architecture",
-      "platform": "Platform and quality"
+      "platform": "Cloud and quality"
     }
   },
   "method": {
@@ -139,17 +139,21 @@
   },
   "code": {
     "label": "Code",
-    "headline": ["Real code.", "From public repositories."],
+    "headline": ["Real code.", "From this site's repository."],
     "action": "More on GitHub",
     "tabs": "Language",
     "samples": {
       "ts": {
         "title": "TypeScript",
-        "text": "The REST routes of starwars-api, on Express in AWS Lambda."
+        "text": "Every figure on this page, computed from the record when the site builds."
       },
-      "php": {
-        "title": "PHP",
-        "text": "A single-action controller from idbi-invoice: a Form Request in, an API Resource out."
+      "astro": {
+        "title": "Astro",
+        "text": "A heading that opens character by character and still reads whole."
+      },
+      "playwright": {
+        "title": "Playwright",
+        "text": "Every page checked with axe in both themes, in a real browser."
       }
     }
   },
@@ -158,19 +162,17 @@
     "headline": ["{total} projects.", "{public} with the code in the open."],
     "action": "All repositories",
     "kinds": {
+      "work": "Work",
       "product": "Own product",
-      "project": "Project",
-      "challenge": "Technical challenge"
+      "project": "Project"
     },
     "code": "Code",
     "demo": "Demo",
     "private": "Private code",
     "items": {
-      "vitalpro": "My own product; no case study, because the code is private.",
-      "starwars-api": "A serverless API on Lambda that translates SWAPI and stores in DynamoDB.",
-      "idbi-invoice": "A JWT-protected REST API to record and query XML invoices.",
-      "rimac-frontend": "A three-screen React flow: form, plans and summary.",
-      "rollpay-auth": "PHP authentication with JWT: sign-up, login and an audit trail.",
+      "clinicsay": "Healthcare SaaS. I build billing, scheduling and documents across the React app and the Fastify API.",
+      "vitalpro": "My own multi-tenant SaaS for service businesses: an Nx monorepo with Next.js and Fastify.",
+      "brunogalvan-dev": "This site: static Astro in two languages, a CSP built from hashes, and axe in both themes.",
       "placer-sano": "A restaurant site in Astro: menu, reservations and team."
     },
     "codeOf": "Code for {name}",
@@ -184,7 +186,14 @@
     "roles": {
       "clinicsay": {
         "role": "Senior Full Stack Developer",
-        "line": "Clinic management platform and an AI API wired into a CRM. Frontend, backend, production."
+        "line": "Healthcare SaaS: billing, scheduling and documents across React 19 and a hexagonal Fastify API.",
+        "highlights": [
+          "Billing: invoices, receipts, credit notes, partial payments, refunds, cash sessions with reconciliation, and configurable numbering.",
+          "Scheduling: availability templates with exceptions, one appointments API with recurring series, and a drag-and-touch calendar with optimistic updates.",
+          "Documents: PDFs rebuilt on react-pdf, bilingual invoices and quotes through an OpenAI translation endpoint, and accounting exports to Excel.",
+          "Domain events: handlers on a transactional outbox, such as recalculating what a patient owes after any related change.",
+          "PostgreSQL performance on search, list and calendar queries, and virus scanning of uploaded files."
+        ]
       },
       "metrica-andina": {
         "role": "Senior Analyst Programmer",
@@ -221,7 +230,8 @@
       "school": "Universidad San Ignacio de Loyola",
       "period": "2015 — 2017"
     },
-    "durationLabel": "Length"
+    "durationLabel": "Length",
+    "highlights": "What I built"
   },
   "aboutPage": {
     "meta": {
@@ -230,7 +240,7 @@
     },
     "label": "About",
     "headline": ["I'm Bruno Galván.", "I build end to end."],
-    "intro": "Senior full stack developer in Lima, Peru. I build web platforms, APIs and integrations, from the database to production.",
+    "intro": "Senior full stack developer in Lima, Peru. I build SaaS platforms in React, Node.js and PostgreSQL, from the domain model to production.",
     "method": {
       "label": "Method",
       "headline": ["My working rules.", "As I wrote them."],
@@ -291,134 +301,48 @@
     "readOf": "Case study of {name}"
   },
   "caseStudies": {
-    "starwars-api": {
+    "brunogalvan-dev": {
       "meta": {
-        "title": "Star Wars API — Case study — Bruno Galván",
-        "description": "A serverless API on AWS Lambda that translates SWAPI characters into Spanish and stores them in DynamoDB, in four layers."
+        "title": "brunogalvan.dev — Case study — Bruno Galván",
+        "description": "The site itself: a static Astro build in two languages, a Content Security Policy built from hashes, and Playwright with axe on every page in both themes."
       },
-      "headline": ["A serverless API.", "In four layers."],
-      "summary": "An API on AWS Lambda that translates SWAPI characters into Spanish and stores them in DynamoDB.",
-      "context": "A project built with the Serverless Framework. It exposes two groups of REST endpoints: one reads from SWAPI and returns each character with its fields in Spanish; the other creates and queries characters in a DynamoDB table.",
+      "headline": ["The site you are reading.", "Every claim with a source."],
+      "summary": "A static Astro site in two languages, where every figure is computed from a typed record and every page is tested in a real browser.",
+      "context": "My portfolio, rebuilt in September 2026 in the grammar of one design master. It ships as static HTML with one bundled script for motion; every visible string lives in a Spanish and an English catalog, and every number is derived from the record when the site builds.",
       "layers": [
         {
-          "name": "Presentation",
-          "text": "Express routes and controllers, one per source: dynamo and swapi. Each controller maps a character to Spanish field names."
+          "name": "Record",
+          "text": "src/data holds the roles, projects and stack; years, counts and the career chart are computed from it at build time."
         },
-        {
-          "name": "Domain",
-          "text": "The IPeopleRepository interface and a CustomError with a factory per HTTP status."
-        },
-        {
-          "name": "Infrastructure",
-          "text": "DynamoDBPeopleRepository implements the interface with the Scan, Get and Put commands of the AWS SDK v3."
-        },
-        {
-          "name": "Data",
-          "text": "The DynamoDB client and the Person model."
-        }
-      ],
-      "decisions": [
-        {
-          "title": "One function",
-          "text": "Serverless declares a single function with one HTTP event that catches every route; Express routes inside it through serverless-http."
-        },
-        {
-          "title": "Permissions for one table",
-          "text": "The IAM role grants exactly five DynamoDB actions, and only on the ARN of the service’s table."
-        },
-        {
-          "title": "The table as code",
-          "text": "The table is declared in the same serverless.yml, with a string partition key, id."
-        },
-        {
-          "title": "Required configuration",
-          "text": "env-var marks the SWAPI URL, the region and the table name as required: without them the function does not start."
-        }
-      ]
-    },
-    "idbi-invoice": {
-      "meta": {
-        "title": "IDBI Invoice Recorder — Case study — Bruno Galván",
-        "description": "A Laravel REST API that records XML invoices in the background, behind JWT, with single-action controllers, Form Requests and API Resources."
-      },
-      "headline": ["XML invoices.", "Recorded in the background."],
-      "summary": "A Laravel REST API that records XML electronic invoices, extracts their data and queries them with filters, behind JWT.",
-      "context": "A technical challenge for IDBI. The API takes one or more XML files, processes them on a queue and emails a summary of the invoices recorded and of those that failed.",
-      "layers": [
-        {
-          "name": "Versioned routes",
-          "text": "routes/api.php loads the public v1 routes and, inside a group with the jwt.verify middleware, the protected ones."
-        },
-        {
-          "name": "Single-action controllers",
-          "text": "Each endpoint is a class with __invoke; the invoice ones list, record, delete, total and regularize."
-        },
-        {
-          "name": "Form Requests and API Resources",
-          "text": "GetVouchersRequest validates the page, the size, the dates and optional filters; VoucherResource shapes the response and loads lines and user only when asked."
-        },
-        {
-          "name": "Service",
-          "text": "VoucherService reads the XML with SimpleXML and XPath over the UBL cbc and cac nodes."
-        }
-      ],
-      "decisions": [
-        {
-          "title": "Answer before processing",
-          "text": "Recording answers 202 and dispatches the ProcessVouchers job, which implements ShouldQueue."
-        },
-        {
-          "title": "A domain event",
-          "text": "When it finishes, the job emits VouchersCreated; a listener sends the email with successes and failures."
-        },
-        {
-          "title": "JWT as the guard",
-          "text": "With tymon/jwt-auth, the api guard uses the jwt driver, and jwt.verify is an alias of Laravel’s Authenticate middleware."
-        },
-        {
-          "title": "A reproducible environment",
-          "text": "compose.yml starts PHP 8.1 with Nginx, MySQL 8.0 and MailHog to read the emails."
-        }
-      ]
-    },
-    "rimac-frontend": {
-      "meta": {
-        "title": "RIMAC Frontend — Case study — Bruno Galván",
-        "description": "A three-screen flow in React and TypeScript, with a Sass module per component, Axios and no state library."
-      },
-      "headline": ["Three screens.", "No state library."],
-      "summary": "A three-screen flow in React and TypeScript: a form, the plans filtered by age, and a summary.",
-      "context": "A technical test organised by Softtek. The app consumes a user API and a plans API, and is published on Netlify.",
-      "layers": [
         {
           "name": "Routes",
-          "text": "Three React Router routes: home, plans and summary."
+          "text": "Localized URLs live as pairs in one file, so every page exists in both languages with reciprocal hreflang."
         },
         {
-          "name": "Styles",
-          "text": "One Sass module per component, following BEM."
+          "name": "Tokens",
+          "text": "Colours and faces come from semantic tokens with a light and a dark value; a dark band re-resolves them by switching the colour scheme."
         },
         {
-          "name": "Data",
-          "text": "Axios in services/api, services that filter the plans by age, and hooks that hand them to the pages."
-        },
-        {
-          "name": "State",
-          "text": "React local state and custom hooks: useUser and usePlans."
+          "name": "Motion",
+          "text": "GSAP and Lenis run in one context that reverts completely under reduced motion or the pause control."
         }
       ],
       "decisions": [
         {
-          "title": "Four dependencies",
-          "text": "react, react-dom, react-router-dom and axios. Nothing else at runtime."
+          "title": "No framework in the browser",
+          "text": "Static output; the only script is the motion bundle, and every page works without JavaScript."
         },
         {
-          "title": "Layers in the client",
-          "text": "The API, the services, the hooks and the pages, each in its own folder."
+          "title": "A policy built from hashes",
+          "text": "The build hashes every inline script and style into the Content Security Policy, so an edited block can never ship with a stale hash."
         },
         {
-          "title": "Validated forms",
-          "text": "The start form validates the document, phone and consents with validateForm, and continues only when they are valid."
+          "title": "Tested as shipped",
+          "text": "Playwright runs the production build with axe in both themes and replays the policy on every page."
+        },
+        {
+          "title": "Decisions on record",
+          "text": "Hosting, the motion library and smooth scrolling each have an ADR with the options compared and the cost in kilobytes."
         }
       ]
     }

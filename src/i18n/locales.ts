@@ -1,6 +1,6 @@
-export const locales = ['es', 'en'] as const;
+export const locales = ['en', 'es'] as const;
 export type Locale = (typeof locales)[number];
-export const defaultLocale: Locale = 'es';
+export const defaultLocale: Locale = 'en';
 // Native language names read the same in every locale, so they are locale
 // metadata rather than translated messages.
 export const localeNames = {

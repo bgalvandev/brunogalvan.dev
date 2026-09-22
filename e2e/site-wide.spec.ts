@@ -19,16 +19,16 @@ test('content and locale navigation work without JavaScript', async ({
   try {
     const page = await context.newPage();
     await page.goto('/');
-    await expect(page).toHaveURL('/es/');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
-      messages('es').hero.spoken,
-    );
-    await expect(page.getByRole('link', { name: contact })).toBeVisible();
-    await expect(page.locator('[data-theme-toggle]')).toBeHidden();
-    await page.getByRole('link', { name: 'English', exact: true }).click();
     await expect(page).toHaveURL('/en/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
       messages('en').hero.spoken,
+    );
+    await expect(page.getByRole('link', { name: contact })).toBeVisible();
+    await expect(page.locator('[data-theme-toggle]')).toBeHidden();
+    await page.getByRole('link', { name: 'Español', exact: true }).click();
+    await expect(page).toHaveURL('/es/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(
+      messages('es').hero.spoken,
     );
   } finally {
     await context.close();
@@ -78,7 +78,7 @@ test('the built Content Security Policy allows everything the pages do', async (
       '/fr/',
       '/es/experiencia/',
       '/en/about/',
-      '/es/proyectos/starwars-api/',
+      '/es/proyectos/brunogalvan-dev/',
     ]) {
       const response = await page.goto(path);
       expect(response?.headers()['content-security-policy']).toBe(csp);
