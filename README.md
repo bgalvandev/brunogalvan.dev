@@ -1,7 +1,8 @@
 # brunogalvan.dev
 
-Bruno Galván's bilingual portfolio: Astro, strict TypeScript and Tailwind CSS v4,
-static output with no framework runtime in the browser. The design follows one
+Bruno Galván's bilingual portfolio, live at <https://brunogalvan.dev>: Astro,
+strict TypeScript and Tailwind CSS v4, static output with no framework runtime
+in the browser. The design follows one
 master, <https://aeye-saas.webflow.io/>; its grammar, tokens and deliberate
 differences are recorded in [DESIGN.md](DESIGN.md).
 
@@ -27,8 +28,11 @@ pnpm run preview
 
 Build output is static `dist/`; preview uses `http://127.0.0.1:3100` for local
 verification. Cloudflare Pages builds `main` and every pull request from the
-connected repository (build command `pnpm run build`, output `dist`); redirects
-live in `public/_redirects` and the build writes `dist/_headers`. See ADR 0007.
+connected repository (build command `pnpm run build`, output `dist`,
+`NODE_VERSION=24`, `PNPM_VERSION=11.15.1`); redirects live in
+`public/_redirects` and the build writes `dist/_headers`. `brunogalvan.dev` is
+the only origin; `www` and `brunogalvan.com` redirect to it at the edge. See
+ADRs 0007 and 0012.
 
 ## Engineering
 

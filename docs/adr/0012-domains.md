@@ -52,7 +52,16 @@ repository):
 
 ## Verification
 
-After the domain is connected:
+Run on 2026-09-22, the day the domain was connected, every check below passed:
+`/` 301 to `/en/`, `/fr/` 404, the CSP and security headers, `/_astro/*`
+immutable, the three redirected hosts keeping path and query, http to https in
+one hop, the null SPF and DMARC on both zones, and a browser pass over every
+page in both themes with no CSP violation or script error. Cloudflare's Web
+Analytics (RUM) had injected its beacon into the custom domain's HTML, which
+the CSP blocked; it is disabled completely in the `brunogalvan.dev` zone and
+must stay off unless an ADR adds it to the policy.
+
+After any change to the domains, redirects or zone settings:
 
 ```sh
 curl -sI https://brunogalvan.dev/ | grep -iE '^(HTTP|location)'             # 301 → /en/
