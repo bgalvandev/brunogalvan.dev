@@ -47,9 +47,19 @@ const items = roles.map((role) => {
     highlights: 'highlights' in copy ? copy.highlights : [],
   };
 });
-// A neutral marker for every role: an accent beside the current one would
-// read as an availability signal.
-const marker = ['######', '#....#', '#....#', '#....#', '#....#', '######'];
+// The master's changelog frames an icon per entry. The current role shows
+// code in progress and each past one a double check, in the same neutral ink:
+// an accent beside the current one would read as an availability signal.
+const icons = {
+  current: ['..#...#..', '.#.....#.', '#.......#', '.#.....#.', '..#...#..'],
+  past: [
+    '......#...#',
+    '.....#...#.',
+    '#...#.#.#..',
+    '.#.#...#...',
+    '..#........',
+  ],
+};
 ---
 
 <ol class="experience-timeline">
@@ -62,7 +72,7 @@ const marker = ['######', '#....#', '#....#', '#....#', '#....#', '######'];
         </p>
         <span class="experience-dash" aria-hidden="true" />
         <span class="experience-marker" aria-hidden="true">
-          <PixelIcon rows={marker} />
+          <PixelIcon rows={item.end ? icons.past : icons.current} />
         </span>
         <h3 class="experience-company">{item.company}</h3>
       </div>
@@ -153,8 +163,11 @@ const marker = ['######', '#....#', '#....#', '#....#', '#....#', '######'];
     border: 1px solid var(--line);
     background: var(--paper);
   }
+  .experience-marker {
+    color: var(--muted);
+  }
   .experience-marker :global(svg) {
-    width: 0.625rem;
+    width: 1rem;
   }
   .experience-company {
     position: relative;

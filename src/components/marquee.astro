@@ -1,24 +1,33 @@
 ---
+import TechLogo from './tech-logo.astro';
 // An infinite band of cells. The group is rendered twice so the track can
 // loop at -50%; the whole band is decoration (the same items are listed where
 // they carry meaning), hidden from assistive technology. It pauses on hover,
 // stops under reduced motion and when the visitor pauses motion.
-// `cells` is a band of bordered cells; `text` is a line of accent mono words,
-// repeated so a short list still fills the widest screen.
+// `cells` is a band of bordered cells; `logos` the same cells holding each
+// technology's mark and name; `text` is a line of accent mono words, repeated
+// so a short list still fills the widest screen.
+// `reverse` runs the band the other way, as the master's lower band does.
 interface Props {
   items: readonly string[];
-  variant?: 'cells' | 'text';
+  variant?: 'cells' | 'logos' | 'text';
+  reverse?: boolean;
 }
-const { items, variant = 'cells' } = Astro.props;
+const { items, variant = 'cells', reverse = false } = Astro.props;
 const run = variant === 'text' ? [items, items, items, items].flat() : items;
 ---
 
-<div class:list={['marquee', `marquee-${variant}`]} aria-hidden="true">
+<div
+  class:list={['marquee', `marquee-${variant}`, { 'marquee-reverse': reverse }]}
+  aria-hidden="true"
+>
   <div class="marquee-track">
     {[0, 1].map(() => (
       <ul class="marquee-group">
         {run.map((item) => (
-          <li class="marquee-item">{item}</li>
+          <li class="marquee-item">
+            {variant === 'logos' ? <TechLogo name={item} /> : item}
+          </li>
         ))}
       </ul>
     ))}
@@ -77,13 +86,32 @@ const run = variant === 'text' ? [items, items, items, items].flat() : items;
     text-transform: uppercase;
     white-space: nowrap;
   }
+  /* The master's logo row is a closed box with no fade at its ends; this one
+     moves (there are many more tools than six), about 60px a second. */
+  .marquee-logos {
+    border-inline: 1px solid var(--line);
+    mask-image: none;
+  }
+  .marquee-logos .marquee-track {
+    animation-duration: 96s;
+  }
+  .marquee-logos .marquee-item {
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    text-transform: none;
+  }
   .marquee-text {
     border-block: none;
     padding-block: 1.5rem;
     background: var(--paper);
   }
+  /* About 100px a second, the master's pace for its words. */
   .marquee-text .marquee-track {
-    animation-duration: 45s;
+    animation-duration: 21s;
+  }
+  .marquee-reverse .marquee-track {
+    animation-direction: reverse;
   }
   .marquee-text .marquee-group {
     gap: 2.5rem;

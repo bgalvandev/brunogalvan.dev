@@ -1,0 +1,100 @@
+---
+import {
+  bounds,
+  drawingId,
+  faces,
+  rasterize,
+  runs,
+  type Solid,
+} from './isometric';
+// One isometric scene drawn twice, as the master draws its card icons: a line
+// drawing (each visible face filled with the paper and outlined) and pixel
+// art (the left-facing faces solid, the others a grid of cells). Both stack in
+// one box; the feature decides which one shows, so a card can swap them.
+interface Props {
+  solids: readonly Solid[];
+  /** How many cells the pixel drawing is wide. */
+  columns?: number;
+  /** Where the drawing sits in a box of another shape, as in SVG. */
+  align?: 'xMinYMin' | 'xMaxYMax';
+  class?: string;
+}
+const {
+  solids,
+  columns = 24,
+  align = 'xMinYMin',
+  class: className,
+} = Astro.props;
+const scene = faces(solids);
+const box = bounds(scene);
+const pad = box.width * 0.02;
+const grid = rasterize(scene, columns);
+const solid = runs(grid, ['left']);
+const hollow = runs(grid, ['top', 'right']);
+// Each drawing keeps its own grid pattern, whose lines take the colour of the
+// drawing that holds them.
+const pattern = drawingId();
+const fmt = (value: number) => Number(value.toFixed(2));
+---
+
+<span class:list={['iso-icon', className]} aria-hidden="true">
+  <svg
+    class="iso-line"
+    preserveAspectRatio={`${align} meet`}
+    viewBox={`${fmt(box.x - pad)} ${fmt(box.y - pad)} ${fmt(box.width + pad * 2)} ${fmt(box.height + pad * 2)}`}
+    focusable="false"
+  >
+    {scene.map((face) => (
+      <path
+        d={`M${face.points.map(([x, y]) => `${fmt(x)} ${fmt(y)}`).join('L')}Z`}
+      />
+    ))}
+  </svg>
+  <svg
+    class="iso-pixel"
+    preserveAspectRatio={`${align} meet`}
+    viewBox={`-0.1 -0.1 ${columns + 0.2} ${grid.length + 0.2}`}
+    focusable="false"
+  >
+    <defs>
+      <pattern id={pattern} width="1" height="1" patternUnits="userSpaceOnUse">
+        <path class="iso-grid-line" d="M0 0H1M0 0V1"></path>
+      </pattern>
+    </defs>
+    <path class="iso-hollow" d={hollow} fill={`url(#${pattern})`}></path>
+    <path class="iso-solid" d={solid}></path>
+  </svg>
+</span>
+
+<style>
+  .iso-icon {
+    position: relative;
+    display: inline-grid;
+  }
+  .iso-icon svg {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .iso-line path {
+    fill: var(--paper);
+    stroke: currentColor;
+    stroke-width: 1.25px;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .iso-grid-line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 0.14;
+  }
+  .iso-hollow {
+    stroke: currentColor;
+    stroke-width: 0.14;
+  }
+  .iso-solid {
+    fill: currentColor;
+    shape-rendering: crispEdges;
+  }
+</style>

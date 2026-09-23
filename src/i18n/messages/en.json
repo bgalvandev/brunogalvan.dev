@@ -26,7 +26,12 @@
   },
   "hero": {
     "greeting": "I'm Bruno. I build",
-    "fragment": "SaaS platforms",
+    "fragments": [
+      "SaaS platforms",
+      "TypeScript APIs",
+      "React interfaces",
+      "AI features"
+    ],
     "closing": "end to end.",
     "spoken": "I'm Bruno. I build SaaS platforms end to end.",
     "line": "Senior full stack developer in Lima, Peru. React, Node.js and PostgreSQL, from the domain model to production.",
@@ -64,7 +69,7 @@
   "contact": {
     "label": "Contact",
     "headline": ["An email is enough.", "I read it myself."],
-    "fragment": "Write to me",
+    "fragments": ["Write to me", "Let's talk", "Say hello"],
     "action": "Send an email",
     "marquee": ["[#Frontend]", "&", "[#Backend]", "//", "[#Production]", "//"]
   },
@@ -84,8 +89,8 @@
     "pause": "Pause motion"
   },
   "positioning": {
-    "spoken": "Explicit boundaries, small changes, verified in production.",
-    "parts": ["Explicit boundaries", "small changes", "verified in production"]
+    "spoken": "Clear boundaries, small changes, proven in production.",
+    "parts": ["Clear boundaries", "small changes", "proven in production"]
   },
   "numbers": {
     "label": "By the numbers",
@@ -104,7 +109,7 @@
   },
   "stack": {
     "label": "Stack",
-    "headline": ["Tools by layer.", "From the browser to the database."],
+    "headline": ["Three layers.", "From screen to database."],
     "groups": {
       "frontend": "Frontend",
       "backend": "Backend",
@@ -112,6 +117,65 @@
       "ai": "AI",
       "architecture": "Architecture",
       "platform": "Cloud and quality"
+    },
+    "tabs": [
+      {
+        "tags": ["React 19", "Next.js"],
+        "title": "Interfaces",
+        "text": "Screens that answer at once: server rendering, optimistic updates and forms validated before they are sent."
+      },
+      {
+        "tags": ["Fastify", "PostgreSQL"],
+        "title": "Services",
+        "text": "Contract-first APIs in hexagonal layers, with domain events through an outbox and queries tuned in PostgreSQL."
+      },
+      {
+        "tags": ["OpenAI", "WhatsApp"],
+        "title": "AI in the product",
+        "text": "LLM features where the work happens: documents translated on request and a booking assistant on WhatsApp."
+      }
+    ],
+    "tabsLabel": "Layer",
+    "diagram": {
+      "screens": "Screens",
+      "screenItems": ["Calendar", "Billing", "Editor", "Forms"],
+      "state": "State",
+      "output": "Rendered",
+      "outputItems": ["Server", "Client", "Static"],
+      "layers": [
+        {
+          "name": "HTTP",
+          "format": "REST"
+        },
+        {
+          "name": "Contract",
+          "format": "OpenAPI"
+        },
+        {
+          "name": "Domain",
+          "format": "DDD"
+        },
+        {
+          "name": "Store",
+          "format": "SQL"
+        }
+      ],
+      "translating": "Translating the quote…",
+      "documents": ["Invoice", "Quote", "Receipt"]
+    },
+    "cards": {
+      "toolchain": {
+        "title": "The toolchain",
+        "text": "Every tool here appears in my own commits from the last two years."
+      },
+      "typed": {
+        "title": "Typed end to end",
+        "text": "Strict TypeScript from the schema to the screen."
+      },
+      "tested": {
+        "title": "Tested as shipped",
+        "text": "Vitest and Playwright against the production build."
+      }
     }
   },
   "method": {

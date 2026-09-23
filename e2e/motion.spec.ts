@@ -32,7 +32,7 @@ test('a heading reveals character by character and reads whole throughout', asyn
   expect(results.violations).toEqual([]);
 });
 
-test('the hero opens, then types its fragment once, and keeps its name', async ({
+test('the hero opens, types its first word, moves on to the next, and keeps its name', async ({
   page,
 }) => {
   await page.goto('/es/');
@@ -40,13 +40,14 @@ test('the hero opens, then types its fragment once, and keeps its name', async (
   await expect(heading).toHaveAccessibleName(hero.spoken);
   const fragment = page.locator('.hero [data-typewriter]');
   await expect(fragment).toHaveText('');
-  await expect(fragment).toHaveText(hero.fragment);
+  await expect(fragment).toHaveText(hero.fragments[0]!);
   await expect(heading.locator('.reveal-char')).toHaveCount(0);
   // The lines are blocks, so compare the glyphs, not the spacing.
   const glyphs = (text: string | undefined) => text?.replace(/\s+/g, '');
   expect(glyphs(await heading.evaluate(visualText))).toBe(
-    glyphs(`${hero.greeting}[${hero.fragment}]${hero.closing}`),
+    glyphs(`${hero.greeting}[${hero.fragments[0]}]${hero.closing}`),
   );
+  await expect(fragment).toHaveText(hero.fragments[1]!, { timeout: 8000 });
   await expect(heading).toHaveAccessibleName(hero.spoken);
 });
 
@@ -58,7 +59,7 @@ test('switching motion off mid-visit puts every piece of text back', async ({
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.reveal-char')).toHaveCount(0);
   await expect(page.locator('.hero [data-typewriter]')).toHaveText(
-    hero.fragment,
+    hero.fragments[0]!,
   );
   expect(
     await page.locator('#what-i-do-title [data-reveal]').evaluate(visualText),
@@ -99,7 +100,7 @@ test('with reduced motion nothing is split, typed, scrambled or eased', async ({
   await page.goto('/es/');
   await expect(page.locator('.reveal-char')).toHaveCount(0);
   await expect(page.locator('.hero [data-typewriter]')).toHaveText(
-    hero.fragment,
+    hero.fragments[0]!,
   );
   const link = page.locator('.value-heading .button');
   await link.hover();
@@ -156,4 +157,65 @@ test('a revealing heading holds its height, so nothing below it moves', async ({
     '1',
   );
   expect(await layout()).toEqual(still);
+});
+
+test('the closing word cycles between tight brackets while its bands run in opposite directions', async ({
+  page,
+}) => {
+  const { contact } = messages('es');
+  await page.goto('/es/#contact');
+  const word = page.locator('#contact [data-typewriter]');
+  await expect(word).toHaveText(contact.fragments[1]!, { timeout: 10_000 });
+  const line = page.locator('#contact .pixel-highlight');
+  expect(await line.evaluate(visualText)).toBe(`[${contact.fragments[1]}]`);
+  const directions = await page
+    .locator('#contact .marquee-track')
+    .evaluateAll((tracks) =>
+      tracks.map((track) => getComputedStyle(track).animationDirection),
+    );
+  expect(directions).toEqual(['normal', 'reverse']);
+});
+
+test('hovers follow the master: the bullet turns, the line button closes a frame, the contact tab takes the accent', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/es/');
+  const accent = await page.evaluate(() => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--accent)';
+    document.body.append(probe);
+    const value = getComputedStyle(probe).color;
+    probe.remove();
+    return value;
+  });
+  const solid = page.locator('.hero .button').first();
+  await solid.hover();
+  await expect(solid.locator('.button-dot')).toHaveCSS(
+    'transform',
+    /^matrix\(-1, /,
+  );
+  const line = page.locator('.hero .button-line').first();
+  await line.hover();
+  await expect(line.locator('.button-line-frame')).toHaveCSS('opacity', '1');
+  const contact = page.locator('.site-contact');
+  await contact.hover();
+  await expect(contact).toHaveCSS('color', accent);
+});
+
+test('without motion the stack diagrams stand still in their finished state', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/es/');
+  const names = await page
+    .locator('.dia *')
+    .evaluateAll((elements) =>
+      elements.map((element) => getComputedStyle(element).animationName),
+    );
+  expect(new Set(names)).toEqual(new Set(['none']));
+  await expect(page.locator('.cap-chip-row').first()).toHaveCSS(
+    'animation-name',
+    'none',
+  );
 });

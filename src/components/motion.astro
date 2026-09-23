@@ -85,18 +85,51 @@
   }
 
   // Types a fragment's text, which waits in data-typewriter-text; the cursor
-  // is CSS. A fragment outside any reveal starts on its own.
+  // is CSS. A fragment with a list of words runs the master's cycle: each word
+  // types at 50ms a letter under a cursor that covers the newest one, holds
+  // 0.8s, the cursor blinks off and on twice, the word clears at once and the
+  // next one follows 0.2s later, round and round. The pause control stops
+  // it; without motion the first word stands. A fragment outside any reveal
+  // starts on its own.
+  const TYPE = 0.05;
+  const HOLD = 0.8;
+  const BLINK = 0.4;
+  const GAP = 0.2;
   function type(element: HTMLElement) {
-    const text = element.dataset.typewriterText ?? '';
-    const state = { length: 0 };
-    gsap.to(state, {
-      length: text.length,
-      duration: text.length * 0.05,
-      ease: `steps(${text.length})`,
-      onUpdate: () => {
-        element.textContent = text.slice(0, Math.round(state.length));
-      },
-    });
+    const words = element.dataset.typewriterWords?.split('|') ?? [
+      element.dataset.typewriterText ?? '',
+    ];
+    const cycling = words.length > 1;
+    const timeline = gsap.timeline({ repeat: cycling ? -1 : 0 });
+    const cursor = (state: string) => () => {
+      element.dataset.cursor = state;
+    };
+    for (const word of words) {
+      const state = { length: 0 };
+      timeline.call(cursor('typing')).to(state, {
+        length: word.length,
+        duration: word.length * TYPE,
+        ease: `steps(${word.length})`,
+        onUpdate: () => {
+          element.textContent = word.slice(0, Math.round(state.length));
+        },
+      });
+      timeline.call(cursor('on'));
+      if (!cycling) continue;
+      timeline
+        .call(cursor('off'), [], `+=${HOLD}`)
+        .call(cursor('on'), [], `+=${BLINK}`)
+        .call(cursor('off'), [], `+=${BLINK}`)
+        .call(cursor('on'), [], `+=${BLINK}`)
+        .call(
+          () => {
+            element.textContent = '';
+          },
+          [],
+          `+=${BLINK}`,
+        )
+        .to({}, { duration: GAP });
+    }
   }
   function holdForTyping(element: HTMLElement) {
     element.dataset.typewriterText = element.textContent ?? '';
@@ -131,8 +164,11 @@
     };
   }
 
-  // The pixel field lights the cells the pointer crosses, in the accent, and
-  // lets each fade over a second. One canvas, drawn only while a cell glows.
+  // The pixel field lights the cells the pointer crosses, in the accent, as
+  // the master's does: a cell rises over a fifth of a second, stays lit half
+  // a second after the pointer leaves it, then fades over a fifth; the cell
+  // under a resting pointer stays lit. One canvas, drawn only while a cell
+  // glows.
   function pixelField(field: HTMLElement) {
     const lines = field.querySelector<HTMLElement>('.pixel-field-lines');
     const host = field.parentElement;
@@ -140,13 +176,17 @@
     const context = canvas.getContext('2d');
     if (!lines || !host || !context) return () => {};
     field.append(canvas);
-    const FADE = 1;
+    const RISE = 200;
+    const HOLD = 500;
+    const FADE = 200;
     let cell = 1;
     let columns = 0;
-    let glow = new Float32Array(0);
+    // When each cell lit and when it was last under the pointer, in ms.
+    let lit = new Float64Array(0);
+    let touched = new Float64Array(0);
+    let current = -1;
     let last: { x: number; y: number } | undefined;
     let frame = 0;
-    let previous = 0;
     function measure() {
       const ratio = window.devicePixelRatio || 1;
       cell = parseFloat(getComputedStyle(lines!).getPropertyValue('--cell'));
@@ -154,34 +194,47 @@
       canvas.height = Math.round(field.clientHeight * ratio);
       context!.setTransform(ratio, 0, 0, ratio, 0, 0);
       columns = Math.ceil(field.clientWidth / cell);
-      glow = new Float32Array(columns * Math.ceil(field.clientHeight / cell));
+      touched = new Float64Array(
+        columns * Math.ceil(field.clientHeight / cell),
+      ).fill(-Infinity);
+      lit = new Float64Array(touched.length);
     }
     function draw(now: number) {
-      const elapsed = previous ? (now - previous) / 1000 : 0;
-      previous = now;
       context!.clearRect(0, 0, field.clientWidth, field.clientHeight);
       context!.fillStyle = getComputedStyle(field).color;
+      if (current >= 0) touched[current] = now;
       let glowing = false;
-      glow.forEach((value, index) => {
-        if (value <= 0) return;
-        context!.globalAlpha = value;
+      touched.forEach((at, index) => {
+        const since = now - at;
+        if (since >= HOLD + FADE) return;
+        const rise = Math.min(1, (now - lit[index]!) / RISE);
+        const fall = since <= HOLD ? 1 : Math.max(0, 1 - (since - HOLD) / FADE);
+        context!.globalAlpha = Math.min(rise, fall);
         context!.fillRect(
           (index % columns) * cell,
           Math.floor(index / columns) * cell,
           cell,
           cell,
         );
-        glow[index] = Math.max(0, value - elapsed / FADE);
         glowing = true;
       });
       frame = glowing ? requestAnimationFrame(draw) : 0;
-      if (!glowing) previous = 0;
     }
-    function light(x: number, y: number) {
+    // A cell that had gone dark lights afresh, rising over a fifth of a
+    // second; one still glowing just stays lit.
+    function touch(index: number, now: number) {
+      if (now - touched[index]! >= HOLD + FADE) lit[index] = now;
+      touched[index] = now;
+    }
+    function indexAt(x: number, y: number) {
       const column = Math.floor(x / cell);
       const index = Math.floor(y / cell) * columns + column;
-      if (column >= 0 && column < columns && index >= 0 && index < glow.length)
-        glow[index] = 1;
+      return column >= 0 &&
+        column < columns &&
+        index >= 0 &&
+        index < touched.length
+        ? index
+        : -1;
     }
     function move(event: PointerEvent) {
       const bounds = field.getBoundingClientRect();
@@ -195,17 +248,21 @@
         1,
         Math.ceil(Math.hypot(point.x - from.x, point.y - from.y) / (cell / 2)),
       );
+      const now = performance.now();
       for (let step = 1; step <= steps; step += 1) {
-        light(
+        const index = indexAt(
           from.x + ((point.x - from.x) * step) / steps,
           from.y + ((point.y - from.y) * step) / steps,
         );
+        if (index >= 0) touch(index, now);
       }
+      current = indexAt(point.x, point.y);
       last = point;
       if (!frame) frame = requestAnimationFrame(draw);
     }
     const leave = () => {
       last = undefined;
+      current = -1;
     };
     const resize = new ResizeObserver(measure);
     resize.observe(field);
@@ -222,7 +279,7 @@
   }
 
   // The first view of a session: the accent sheet breaks into squares, one
-  // tenth of the width each, that clear in random order.
+  // tenth of the width each, that clear in random order, as the master's do.
   function clearPreloader() {
     const sheet = document.querySelector<HTMLElement>('[data-preloader]');
     if (!sheet || !root.classList.contains('preloading')) return;
@@ -234,11 +291,13 @@
     );
     sheet.append(...squares);
     sheet.style.background = 'transparent';
+    // Each square holds almost to the end of its 0.3s, then snaps off
+    // (expo.in), one every hundredth of a second in random order.
     gsap.to(squares, {
       opacity: 0,
-      duration: 0.25,
-      ease: 'none',
-      stagger: { amount: 0.9, from: 'random' },
+      duration: 0.3,
+      ease: 'expo.in',
+      stagger: { each: 0.01, from: 'random' },
       onComplete: () => root.classList.remove('preloading'),
     });
   }
@@ -281,6 +340,60 @@
     });
   }
 
+  // The master's installation room, where the scroll checks each file in
+  // turn: the first at the top, the second a third of the way through, the
+  // third at two thirds, while the rail's line grows over those two thirds.
+  // A file chosen by hand scrolls the room to its own stretch, so the page and
+  // the choice never disagree.
+  function codeSteps(section: HTMLElement) {
+    const radios = [
+      ...section.querySelectorAll<HTMLInputElement>('input[type="radio"]'),
+    ];
+    const line = section.querySelector<HTMLElement>('[data-code-line]');
+    if (!line || radios.length === 0) return;
+    gsap.matchMedia().add('(min-width: 62rem)', () => {
+      section.dataset.scrubbing = '';
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.8,
+        },
+        onUpdate: () => {
+          const index = Math.min(
+            radios.length - 1,
+            Math.floor(timeline.progress() * radios.length),
+          );
+          const radio = radios[index];
+          if (radio && !radio.checked) radio.checked = true;
+        },
+      });
+      timeline
+        .fromTo(
+          line,
+          { height: '0%' },
+          { height: '100%', ease: 'none', duration: radios.length - 1 },
+        )
+        .to({}, { duration: 1 });
+      const choose = (event: Event) => {
+        const trigger = timeline.scrollTrigger;
+        const index = radios.indexOf(event.target as HTMLInputElement);
+        if (!trigger || index < 0) return;
+        window.scrollTo({
+          top:
+            trigger.start +
+            ((index + 0.5) / radios.length) * (trigger.end - trigger.start),
+        });
+      };
+      radios.forEach((radio) => radio.addEventListener('change', choose));
+      return () => {
+        delete section.dataset.scrubbing;
+        radios.forEach((radio) => radio.removeEventListener('change', choose));
+      };
+    });
+  }
+
   // Inertial wheel scrolling, driven by GSAP's ticker so ScrollTrigger reads
   // the same position the page shows. Anchors keep their native jump, so the
   // skip link still moves focus; keyboard and touch scrolling stay native, and
@@ -316,9 +429,12 @@
           pixelField,
         ),
       );
-    // Steps first: they make their room taller, which moves every trigger
+    // Steps first: they make their rooms taller, which moves every trigger
     // below them.
     document.querySelectorAll<HTMLElement>('[data-steps]').forEach(steps);
+    document
+      .querySelectorAll<HTMLElement>('[data-code-steps]')
+      .forEach(codeSteps);
     document.querySelectorAll<HTMLElement>('[data-reveal]').forEach(reveal);
     ScrollTrigger.refresh();
     clearPreloader();
@@ -331,6 +447,7 @@
         .forEach((element) => {
           element.textContent = element.dataset.typewriterText ?? '';
           delete element.dataset.typewriterText;
+          delete element.dataset.cursor;
         });
       root.classList.remove('preloading');
       document.querySelector('[data-preloader]')?.replaceChildren();

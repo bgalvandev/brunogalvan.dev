@@ -1,0 +1,72 @@
+import {
+  siAstro,
+  siClaude,
+  siCloudflare,
+  siDocker,
+  siEslint,
+  siFastify,
+  siFlydotio,
+  siGit,
+  siGithubactions,
+  siGsap,
+  siNetlify,
+  siNextdotjs,
+  siNodedotjs,
+  siNx,
+  siOpenapiinitiative,
+  siPostgresql,
+  siPrisma,
+  siReact,
+  siReacthookform,
+  siReactquery,
+  siRedis,
+  siShadcnui,
+  siTailwindcss,
+  siTestinglibrary,
+  siTypescript,
+  siVite,
+  siVitest,
+  siWhatsapp,
+  siZod,
+} from 'simple-icons';
+
+// The published mark of each technology the record names, from Simple Icons
+// (CC0), bundled at build time. Keyed by the name as the record spells it; a
+// technology with no mark there (OpenAI, Playwright) is simply absent.
+export const marks = new Map(
+  Object.entries({
+    Astro: siAstro,
+    'Claude Code': siClaude,
+    Cloudflare: siCloudflare,
+    Docker: siDocker,
+    ESLint: siEslint,
+    Fastify: siFastify,
+    'Fly.io': siFlydotio,
+    Git: siGit,
+    'GitHub Actions': siGithubactions,
+    GSAP: siGsap,
+    Netlify: siNetlify,
+    'Next.js': siNextdotjs,
+    'Node.js': siNodedotjs,
+    'Nx monorepo': siNx,
+    OpenAPI: siOpenapiinitiative,
+    PostgreSQL: siPostgresql,
+    Prisma: siPrisma,
+    React: siReact,
+    'React Hook Form': siReacthookform,
+    'TanStack Query': siReactquery,
+    Redis: siRedis,
+    'shadcn/ui': siShadcnui,
+    'Tailwind CSS': siTailwindcss,
+    'Testing Library': siTestinglibrary,
+    TypeScript: siTypescript,
+    Vite: siVite,
+    Vitest: siVitest,
+    WhatsApp: siWhatsapp,
+    Zod: siZod,
+  }),
+);
+
+// The id of a mark's symbol in the page's sprite (tech-sprite.astro).
+export const markId = (name: string) =>
+  `tech-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;

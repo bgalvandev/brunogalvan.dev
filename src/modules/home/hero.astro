@@ -1,18 +1,23 @@
 ---
 import Button from '@/components/button.astro';
+import Logo from '@/components/logo.astro';
 import Marquee from '@/components/marquee.astro';
 import PixelField from '@/components/pixel-field.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
 import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
+import { marks } from '@/components/tech-marks';
 import { stack } from '@/data/stack';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const { hero, identity, positioning } = messages(locale);
-const tools = Object.values(stack).flat();
+// The toolchain band shows the tools that have a mark of their own.
+const tools = Object.values(stack)
+  .flat()
+  .filter((tool) => marks.has(tool));
 ---
 
 <section class="section hero" aria-labelledby="hero-title">
@@ -20,7 +25,7 @@ const tools = Object.values(stack).flat();
     <PixelField />
     <div class="measure hero-band-content">
       <p class="hero-name">
-        <span class="hero-name-text">{site.name}</span>
+        <Logo class="hero-name-text" />
         <span class="hero-name-tag">{identity.location}</span>
       </p>
       <p class="hero-scroll label" aria-hidden="true">
@@ -47,9 +52,18 @@ const tools = Object.values(stack).flat();
             class="hero-line hero-fragment pixel-highlight"
             data-reveal-skip
           >
-            {'[\u00a0'}
-            <span data-typewriter>{hero.fragment}</span>
-            {'\u00a0]'}
+            {/* An array, so no whitespace creeps between the brackets and
+                the word the script types. */}
+            {[
+              '[\u00a0',
+              <span
+                data-typewriter
+                data-typewriter-words={hero.fragments.join('|')}
+              >
+                {hero.fragments[0]}
+              </span>,
+              '\u00a0]',
+            ]}
           </span>
           <span class="hero-line">{hero.closing}</span>
         </span>
@@ -67,7 +81,7 @@ const tools = Object.values(stack).flat();
       </div>
     </div>
     <div class="measure hero-main">
-      <Marquee items={tools} />
+      <Marquee items={tools} variant="logos" />
       <div class="hero-positioning field-dotted">
         <p class="hero-positioning-text">
           <span class="sr-only">{positioning.spoken}</span>
@@ -77,7 +91,22 @@ const tools = Object.values(stack).flat();
               <>
                 <span class="hero-positioning-step">
                   <span class="hero-positioning-part">{part}</span>
-                  {index < positioning.parts.length - 1 && ' →'}
+                  {index === 0 && (
+                    <svg class="hero-positioning-glyph" viewBox="0 0 10 10">
+                      <path d="M0 4.4h8.3v1.2H0zM5.3 1.1l.85-.85L10 5 6.15 9.75 5.3 8.9 8.3 5z" />
+                    </svg>
+                  )}
+                  {index === 1 && (
+                    <svg
+                      class="hero-positioning-glyph hero-positioning-squares"
+                      viewBox="0 0 21 10"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M0 1h8v8H0zm.9.9v6.2h6.2V1.9zM8 2h1v8H1V9h7zM12 2h8v8h-8zm.9.9v6.2h6.2V2.9zM13 1V0h8v9h-1V1z"
+                      />
+                    </svg>
+                  )}
                 </span>
                 {index < positioning.parts.length - 1 && ' '}
               </>
@@ -122,15 +151,16 @@ const tools = Object.values(stack).flat();
     gap: 0.75rem;
     margin: 0;
   }
-  .hero-name-text {
+  .hero-name :global(.hero-name-text) {
     font-size: var(--text-large);
-    line-height: 1;
-    letter-spacing: -0.05em;
   }
+  /* The master's version chip: a lighter block than the band, its text kept
+     light enough to pass contrast. */
   .hero-name-tag {
     padding: 0.1em 0.25em;
-    background: var(--surface);
-    color: var(--faint);
+    background: var(--decor);
+    color: var(--muted);
+    line-height: 1.7;
     font-family: var(--font-mono);
     font-size: var(--text-small);
     letter-spacing: var(--text-small--letter-spacing);
@@ -207,10 +237,23 @@ const tools = Object.values(stack).flat();
     text-transform: uppercase;
     text-wrap: balance;
   }
-  /* Each part keeps its arrow, so a line ends on an arrow and never starts
-     with one. */
+  /* Each part keeps the glyph after it, so a line ends on a glyph and never
+     starts with one. The glyphs are drawn, where the master borrows an arrow
+     and two shadowed squares from whatever system font has them. */
   .hero-positioning-step {
     white-space: nowrap;
+  }
+  .hero-positioning-glyph {
+    display: inline-block;
+    width: 0.7em;
+    height: 0.7em;
+    margin-left: 0.5em;
+    fill: var(--ink);
+    vertical-align: -0.02em;
+  }
+  .hero-positioning-squares {
+    width: 1.3em;
+    height: 0.62em;
   }
   .hero-positioning-part {
     color: var(--accent);

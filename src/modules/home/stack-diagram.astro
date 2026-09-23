@@ -1,0 +1,724 @@
+---
+import LogoMark from '@/components/logo-mark.astro';
+import PixelIcon from '@/components/pixel-icon.astro';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+// The three diagrams of the Stack room, drawn in HTML where the master plays
+// three videos, each looping in about two and a half seconds:
+// - interfaces: screens and state meet at the core, and a pulse runs down
+//   to what is rendered;
+// - services: a request goes down the layers, one lighting after another;
+// - ai: a document is translated, its kinds filling in behind a progress
+//   bar.
+// Decoration: the tab beside it carries the words. Every loop is CSS, stops
+// with the pause control and is off under reduced motion, where each diagram
+// shows its finished state.
+interface Props {
+  kind: 'interfaces' | 'services' | 'ai';
+  locale: Locale;
+  class?: string;
+}
+const { kind, locale, class: className } = Astro.props;
+const { diagram } = messages(locale).stack;
+// Seven-cell pixel glyphs for the rows.
+const glyphs = {
+  calendar: [
+    '#######',
+    '#.#.#.#',
+    '#######',
+    '#.....#',
+    '#.#.#.#',
+    '#.....#',
+    '#######',
+  ],
+  receipt: [
+    '#######',
+    '#.....#',
+    '#.###.#',
+    '#.....#',
+    '#.##..#',
+    '#.....#',
+    '#.#.#.#',
+  ],
+  editor: [
+    '#######',
+    '#.....#',
+    '#.###.#',
+    '#.....#',
+    '#.####.',
+    '#.....#',
+    '#######',
+  ],
+  form: [
+    '#######',
+    '#.....#',
+    '#######',
+    '.......',
+    '#######',
+    '#.....#',
+    '#######',
+  ],
+  query: [
+    '..###..',
+    '.#...#.',
+    '#..#..#',
+    '#.###.#',
+    '#..#..#',
+    '.#...#.',
+    '..###..',
+  ],
+  check: [
+    '.......',
+    '......#',
+    '.....#.',
+    '#...#..',
+    '.#.#...',
+    '..#....',
+    '.......',
+  ],
+  server: [
+    '#######',
+    '#.#...#',
+    '#######',
+    '#.#...#',
+    '#######',
+    '#.#...#',
+    '#######',
+  ],
+  window: [
+    '#######',
+    '#######',
+    '#.....#',
+    '#.....#',
+    '#.....#',
+    '#.....#',
+    '#######',
+  ],
+  page: [
+    '#####..',
+    '#...##.',
+    '#....##',
+    '#.....#',
+    '#.....#',
+    '#.....#',
+    '#######',
+  ],
+  layer: [
+    '...#...',
+    '.##.##.',
+    '#.....#',
+    '.##.##.',
+    '#..#..#',
+    '.##.##.',
+    '...#...',
+  ],
+} as const;
+const screenIcons = [
+  glyphs.calendar,
+  glyphs.receipt,
+  glyphs.editor,
+  glyphs.form,
+];
+const state = ['Next.js', 'TanStack Query', 'React Hook Form', 'Zod'];
+const stateIcons = [glyphs.window, glyphs.query, glyphs.form, glyphs.check];
+const outputIcons = [glyphs.server, glyphs.window, glyphs.page];
+const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
+---
+
+<div class:list={['dia', `dia-${kind}`, className]}>
+  {kind === 'interfaces' && (
+    <>
+      <div class="dia-box dia-left">
+        <p class="dia-label">{diagram.screens}</p>
+        <ul class="dia-list">
+          {diagram.screenItems.map((item, index) => (
+            <li class="dia-item">
+              <PixelIcon rows={screenIcons[index] ?? []} class="dia-glyph" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="dia-core">
+        <LogoMark />
+      </div>
+      <div class="dia-box dia-right">
+        <p class="dia-label">{diagram.state}</p>
+        <ul class="dia-list">
+          {state.map((item, index) => (
+            <li class="dia-item">
+              <PixelIcon rows={stateIcons[index] ?? []} class="dia-glyph" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <span class="dia-flow" />
+      <div class="dia-out">
+        <p class="dia-label">{diagram.output}</p>
+        <ul class="dia-chips">
+          {diagram.outputItems.map((item, index) => (
+            <li class="dia-chip">
+              <PixelIcon rows={outputIcons[index] ?? []} class="dia-glyph" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  )}
+  {kind === 'services' && (
+    <>
+      <div class="dia-core">
+        <LogoMark />
+      </div>
+      <span class="dia-stem" />
+      <ol class="dia-rows">
+        {diagram.layers.map((layer, index) => (
+          <li class="dia-row">
+            <PixelIcon rows={layerIcons[index] ?? []} class="dia-glyph" />
+            <span class="dia-row-name">{layer.name}</span>
+            <span class="dia-row-format">{layer.format}</span>
+          </li>
+        ))}
+      </ol>
+    </>
+  )}
+  {kind === 'ai' && (
+    <>
+      <div class="dia-card dia-card-main">
+        <span class="dia-skeleton" />
+        <span class="dia-skeleton" />
+        <span class="dia-skeleton" />
+        <p class="dia-status">
+          <span class="dia-spinner" />
+          {diagram.translating}
+        </p>
+        <div class="dia-core dia-core-small">
+          <LogoMark />
+        </div>
+      </div>
+      <div class="dia-card dia-card-docs">
+        <p class="dia-langs">
+          <span>ES</span>
+          <PixelIcon name="arrow-right" class="dia-arrow" />
+          <span>EN</span>
+        </p>
+        <ul class="dia-docs">
+          {diagram.documents.map((document) => (
+            <li class="dia-doc">
+              <PixelIcon rows={glyphs.page} class="dia-glyph" />
+              {document}
+            </li>
+          ))}
+        </ul>
+        <span class="dia-progress" />
+      </div>
+      <span class="dia-pop">
+        <PixelIcon rows={glyphs.page} />
+      </span>
+    </>
+  )}
+</div>
+
+<style>
+  /* Shared pieces: a bordered box with a mono label, a list of rows with a
+     pixel glyph each, and the core, the mark in a black square. */
+  .dia {
+    --dia-loop: 2.4s;
+    position: relative;
+    width: 100%;
+    max-width: 34rem;
+    color: var(--faint);
+    font-size: 0.9375rem;
+  }
+  .dia-label {
+    margin: 0 0 0.75rem;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    text-transform: uppercase;
+  }
+  .dia-box,
+  .dia-out,
+  .dia-card,
+  .dia-row {
+    border: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .dia-box {
+    padding: 1rem;
+  }
+  .dia-list,
+  .dia-chips,
+  .dia-rows,
+  .dia-docs {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .dia-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .dia :global(.dia-glyph) {
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  .dia-core {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    background: var(--core);
+    color: var(--ink);
+  }
+  .dia-core :global(.logo-mark) {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  /* Interfaces: two boxes either side of the core, a pulse running down to
+     what is rendered. */
+  .dia-interfaces {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto 5rem auto;
+    column-gap: 2.5rem;
+    align-items: center;
+  }
+  .dia-interfaces .dia-left {
+    grid-area: 1 / 1;
+  }
+  .dia-interfaces .dia-core {
+    grid-area: 1 / 2;
+  }
+  .dia-interfaces .dia-right {
+    grid-area: 1 / 3;
+  }
+  /* The joins: a rule from each box into the core. */
+  .dia-interfaces .dia-core::before,
+  .dia-interfaces .dia-core::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 2.5rem;
+    border-top: 1px solid var(--line-strong);
+  }
+  .dia-interfaces .dia-core::before {
+    right: 100%;
+  }
+  .dia-interfaces .dia-core::after {
+    left: 100%;
+  }
+  .dia-flow {
+    grid-area: 2 / 2;
+    justify-self: center;
+    width: 2px;
+    height: 100%;
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--accent) 0 0.5rem,
+      transparent 0.5rem 0.75rem
+    );
+  }
+  .dia-out {
+    grid-area: 3 / 1 / 4 / 4;
+    justify-self: center;
+    padding: 1rem;
+    border-color: var(--accent);
+  }
+  .dia-out .dia-label {
+    text-align: center;
+  }
+  .dia-chips {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  .dia-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 5.5rem;
+    padding: 0.75rem 0.5rem;
+    border: 1px solid var(--line);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    text-transform: uppercase;
+  }
+  .dia-chip :global(.dia-glyph) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  /* Services: the core, a stem and the layers a request crosses. */
+  .dia-services {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .dia-stem {
+    width: 1px;
+    height: 2.5rem;
+    background: var(--accent);
+  }
+  .dia-rows {
+    gap: 1rem;
+    width: min(100%, 20rem);
+  }
+  .dia-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    color: var(--ink);
+  }
+  .dia-row-format {
+    margin-left: auto;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    text-transform: uppercase;
+  }
+  /* The row being crossed: accent, with a square at each side. */
+  .dia-row::before,
+  .dia-row::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0.375rem;
+    height: 0.375rem;
+    background: var(--accent);
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  .dia-row::before {
+    right: calc(100% + 0.75rem);
+  }
+  .dia-row::after {
+    left: calc(100% + 0.75rem);
+  }
+  .dia-row:last-child {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .dia-row:last-child::before,
+  .dia-row:last-child::after,
+  .dia-row:last-child .dia-row-format {
+    opacity: 1;
+    color: var(--accent);
+  }
+
+  /* AI: a card at work, a card of documents filling in, and the join. */
+  .dia-ai {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr 1fr;
+    grid-template-rows: auto 2rem auto;
+  }
+  .dia-card {
+    padding: 1.25rem;
+  }
+  .dia-card-main {
+    position: relative;
+    grid-area: 1 / 1 / 3 / 3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding-right: 6rem;
+    min-height: 13rem;
+  }
+  .dia-skeleton {
+    height: 0.875rem;
+    background: var(--surface);
+  }
+  .dia-skeleton:nth-child(1) {
+    width: 80%;
+  }
+  .dia-skeleton:nth-child(2) {
+    width: 55%;
+  }
+  .dia-skeleton:nth-child(3) {
+    width: 95%;
+  }
+  .dia-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    color: var(--muted);
+  }
+  /* Eight spokes, turning by steps. */
+  .dia-spinner {
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    background:
+      linear-gradient(var(--muted), var(--muted)) 50% 0 / 2px 30% no-repeat,
+      linear-gradient(var(--muted), var(--muted)) 50% 100% / 2px 30% no-repeat,
+      linear-gradient(var(--muted), var(--muted)) 0 50% / 30% 2px no-repeat,
+      linear-gradient(var(--muted), var(--muted)) 100% 50% / 30% 2px no-repeat;
+  }
+  .dia-core-small {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+  .dia-card-docs {
+    position: relative;
+    z-index: 1;
+    grid-area: 2 / 2 / 4 / 4;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-left: 1.5rem;
+  }
+  .dia-langs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+  }
+  .dia-langs :global(.dia-arrow) {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+  .dia-docs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .dia-doc {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-size: var(--text-small);
+  }
+  .dia-progress {
+    height: 2px;
+    background: var(--accent);
+  }
+  .dia-pop {
+    position: absolute;
+    z-index: 2;
+    top: calc(13rem - 1.25rem);
+    left: 1.5rem;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    color: var(--accent);
+  }
+  .dia-pop :global(svg) {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  /* The loops. Every rule above is the finished state, which is what shows
+     without motion; the keyframes below only play it out. */
+  @media (prefers-reduced-motion: no-preference) {
+    .dia-interfaces .dia-item {
+      animation: dia-light var(--dia-loop) steps(1) infinite;
+    }
+    .dia-interfaces .dia-item:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+    .dia-interfaces .dia-item:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+    .dia-interfaces .dia-item:nth-child(4) {
+      animation-delay: 0.45s;
+    }
+    .dia-interfaces .dia-core::before,
+    .dia-interfaces .dia-core::after {
+      animation: dia-join var(--dia-loop) var(--ease-power1-out) infinite;
+    }
+    .dia-interfaces .dia-core::before {
+      transform-origin: 100% 50%;
+    }
+    .dia-interfaces .dia-core::after {
+      transform-origin: 0 50%;
+    }
+    .dia-flow {
+      animation: dia-flow 0.6s linear infinite;
+    }
+    .dia-out {
+      animation: dia-out var(--dia-loop) steps(1) infinite;
+    }
+    .dia-row {
+      animation: dia-row var(--dia-loop) steps(1) infinite;
+    }
+    .dia-row::before,
+    .dia-row::after {
+      animation: dia-dots var(--dia-loop) steps(1) infinite;
+    }
+    .dia-row:nth-child(2),
+    .dia-row:nth-child(2)::before,
+    .dia-row:nth-child(2)::after {
+      animation-delay: 0.5s;
+    }
+    .dia-row:nth-child(3),
+    .dia-row:nth-child(3)::before,
+    .dia-row:nth-child(3)::after {
+      animation-delay: 1s;
+    }
+    .dia-row:nth-child(4),
+    .dia-row:nth-child(4)::before,
+    .dia-row:nth-child(4)::after {
+      animation-delay: 1.5s;
+    }
+    .dia-stem {
+      transform-origin: 50% 0;
+      animation: dia-stem var(--dia-loop) var(--ease-power1-out) infinite;
+    }
+    .dia-spinner {
+      animation: dia-spin 0.8s steps(8) infinite;
+    }
+    .dia-doc {
+      animation: dia-doc var(--dia-loop) steps(1) infinite;
+    }
+    .dia-doc:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+    .dia-doc:nth-child(3) {
+      animation-delay: 0.8s;
+    }
+    .dia-progress {
+      transform-origin: 0 50%;
+      animation: dia-progress var(--dia-loop) var(--ease-power1-out) infinite;
+    }
+    .dia-pop {
+      animation: dia-pop var(--dia-loop) var(--ease-power1-out) infinite;
+    }
+  }
+  :global(html[data-motion='paused']) .dia,
+  :global(html[data-motion='paused']) .dia *,
+  :global(html[data-motion='paused']) .dia *::before,
+  :global(html[data-motion='paused']) .dia *::after {
+    animation-play-state: paused;
+  }
+  @keyframes dia-light {
+    0%,
+    70% {
+      color: var(--ink);
+    }
+    75% {
+      color: var(--faint);
+    }
+  }
+  @keyframes dia-join {
+    0%,
+    15% {
+      transform: scaleX(0);
+    }
+    40%,
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes dia-flow {
+    to {
+      background-position: 0 0.75rem;
+    }
+  }
+  @keyframes dia-out {
+    0%,
+    55% {
+      border-color: var(--line);
+    }
+    60% {
+      border-color: var(--accent);
+    }
+  }
+  /* A row is ghosted until the request reaches it, accent while it is
+     crossed, then settles until the loop begins again. */
+  @keyframes dia-row {
+    0% {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    20% {
+      border-color: var(--line);
+      color: var(--ink);
+    }
+    85%,
+    100% {
+      border-color: var(--line);
+      color: var(--faint);
+    }
+  }
+  @keyframes dia-dots {
+    0% {
+      opacity: 1;
+    }
+    20%,
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes dia-stem {
+    0% {
+      transform: scaleY(0.2);
+    }
+    70%,
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes dia-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes dia-doc {
+    0% {
+      color: var(--faint);
+      border-color: var(--line);
+    }
+    25%,
+    90% {
+      color: var(--ink);
+    }
+  }
+  @keyframes dia-progress {
+    0% {
+      transform: scaleX(0.1);
+    }
+    85%,
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes dia-pop {
+    0%,
+    40% {
+      transform: scale(0);
+    }
+    50%,
+    100% {
+      transform: none;
+    }
+  }
+</style>

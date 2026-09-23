@@ -1,15 +1,63 @@
 ---
+// The master's core capabilities, for the stack: three layers as a radio
+// group down the left, each opening its tags, its square and its description
+// when chosen; the chosen layer's diagram on a dotted pane to the right; and
+// a row of three cards below, the first carrying the toolchain as two rows of
+// logo chips moving in opposite directions. The group works without
+// JavaScript: CSS opens the chosen layer and shows its diagram.
 import Headline from '@/components/headline.astro';
 import NumberedSection from '@/components/numbered-section.astro';
-import StackGrid from '@/components/stack-grid.astro';
+import PixelIcon from '@/components/pixel-icon.astro';
+import TechLogo from '@/components/tech-logo.astro';
+import { marks } from '@/components/tech-marks';
+import { stack } from '@/data/stack';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
+import StackDiagram from './stack-diagram.astro';
 import { sectionNumber, sections } from './sections';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const t = messages(locale).stack;
+const kinds = ['interfaces', 'services', 'ai'] as const;
+// The tools with a mark of their own, split into the two rows of chips:
+// the building side above, the running side below.
+const withMark = (tools: readonly string[]) =>
+  tools.filter((tool) => marks.has(tool));
+const rows = [
+  withMark([...stack.frontend, ...stack.backend, ...stack.ai]),
+  withMark([...stack.data, ...stack.architecture, ...stack.platform]),
+];
+// Two outline icons in pixels: a ring and two overlapping squares.
+const ring = [
+  '....####....',
+  '..##....##..',
+  '.#........#.',
+  '.#........#.',
+  '#..........#',
+  '#..........#',
+  '#..........#',
+  '#..........#',
+  '.#........#.',
+  '.#........#.',
+  '..##....##..',
+  '....####....',
+];
+const squares = [
+  '########....',
+  '#......#....',
+  '#......#....',
+  '#...########',
+  '#...#..#...#',
+  '#...#..#...#',
+  '#...#..#...#',
+  '#...#..#...#',
+  '########...#',
+  '....#......#',
+  '....#......#',
+  '....########',
+];
 ---
 
 <NumberedSection
@@ -21,16 +69,381 @@ const t = messages(locale).stack;
   headingId="stack-title"
   band
 >
-  <div class="stack-main">
-    <Headline id="stack-title" lines={t.headline} />
-    <StackGrid locale={locale} />
+  <div class="cap">
+    <div class="cap-top">
+      <div class="cap-left">
+        <fieldset class="cap-tabs">
+          <legend class="sr-only">{t.tabsLabel}</legend>
+          {t.tabs.map((tab, index) => (
+            <label class="cap-tab">
+              <input
+                type="radio"
+                name="stack-layer"
+                value={kinds[index]}
+                checked={index === 0}
+              />
+              <span class="cap-tab-top">
+                <span class="cap-tab-tags">
+                  {tab.tags.map((tag) => (
+                    <span class="cap-tag">{tag}</span>
+                  ))}
+                </span>
+              </span>
+              <span class="cap-tab-main">
+                <span class="cap-tab-dot" aria-hidden="true" />
+                <span class="cap-tab-title">{tab.title}</span>
+                <span class="cap-tab-line" aria-hidden="true" />
+                <span class="cap-tab-number" aria-hidden="true">
+                  // {String(index + 1).padStart(3, '0')}
+                </span>
+              </span>
+              <span class="cap-tab-bottom">
+                <span class="cap-tab-text">{tab.text}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+        <Headline id="stack-title" lines={t.headline} />
+      </div>
+      <div class="cap-pane field-dotted" aria-hidden="true">
+        {kinds.map((kind) => (
+          <StackDiagram
+            kind={kind}
+            locale={locale}
+            class={`cap-diagram cap-diagram-${kind}`}
+          />
+        ))}
+      </div>
+    </div>
+    <div class="cap-gap" aria-hidden="true"></div>
+    <div class="cap-cards">
+      <div class="cap-card cap-card-toolchain">
+        <div class="cap-card-text">
+          <h3 class="cap-card-title">{t.cards.toolchain.title}</h3>
+          <p class="cap-card-description">{t.cards.toolchain.text}</p>
+        </div>
+        <div class="cap-chips" aria-hidden="true">
+          {rows.map((row, index) => (
+            <div
+              class:list={['cap-chip-row', { 'cap-chip-reverse': index > 0 }]}
+            >
+              {[0, 1].map(() => (
+                <ul class="cap-chip-group">
+                  {row.map((tool) => (
+                    <li class="cap-chip">
+                      <TechLogo name={tool} />
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-text">
+          <h3 class="cap-card-title">{t.cards.typed.title}</h3>
+          <p class="cap-card-description">{t.cards.typed.text}</p>
+        </div>
+        <PixelIcon rows={ring} class="cap-card-icon" />
+      </div>
+      <div class="cap-card">
+        <div class="cap-card-text">
+          <h3 class="cap-card-title">{t.cards.tested.title}</h3>
+          <p class="cap-card-description">{t.cards.tested.text}</p>
+        </div>
+        <PixelIcon rows={squares} class="cap-card-icon" />
+      </div>
+    </div>
   </div>
 </NumberedSection>
 
 <style>
-  .stack-main {
+  .cap-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+  .cap-left {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    justify-content: space-between;
+    gap: 5rem;
+    padding: 5rem 3rem 5rem 0;
+  }
+  .cap-tabs {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .cap-tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-block: 1rem;
+    color: var(--faint);
+    cursor: pointer;
+    transition: color 0.35s ease;
+  }
+  .cap-tab input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .cap-tab:has(input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .cap-tab:hover,
+  .cap-tab:has(input:checked) {
+    color: var(--ink);
+  }
+  /* The chosen layer opens over 0.4s from a slow start, as the master's
+     tab does: its tags drop in above the title, its square slides in and
+     pushes the title right, and its description opens below. */
+  .cap-tab-top,
+  .cap-tab-bottom {
+    display: grid;
+    grid-template-rows: minmax(0, 0fr);
+    overflow: hidden;
+    transition: grid-template-rows 0.4s var(--ease-power1-in);
+  }
+  .cap-tab:has(input:checked) .cap-tab-top,
+  .cap-tab:has(input:checked) .cap-tab-bottom {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .cap-tab-tags {
+    display: flex;
+    gap: 0.5rem;
+    min-height: 0;
+  }
+  .cap-tab:has(input:checked) .cap-tab-tags {
+    padding-bottom: 0.5rem;
+  }
+  .cap-tag {
+    padding: 0.2em 0.25em;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+  }
+  .cap-tab-main {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .cap-tab-dot {
+    flex: none;
+    align-self: center;
+    width: 0;
+    height: 0.5rem;
+    overflow: hidden;
+    background: var(--accent);
+    transition: width 0.4s var(--ease-power1-in);
+  }
+  .cap-tab:has(input:checked) .cap-tab-dot {
+    width: 0.5rem;
+  }
+  .cap-tab-dot {
+    margin-right: -0.5rem;
+  }
+  .cap-tab-title {
+    font-size: var(--text-medium);
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+  }
+  .cap-tab-line {
+    flex: 1;
+    border-bottom: 1px dashed var(--line);
+  }
+  .cap-tab-number {
+    font-weight: 500;
+  }
+  .cap-tab-text {
+    min-height: 0;
+    max-width: 26.5rem;
+    padding-top: 0.75rem;
+    color: var(--muted);
+  }
+  /* The pane: one diagram per layer in the same place, the chosen one
+     faded in. */
+  .cap-pane {
+    display: grid;
+    place-items: center;
+    min-height: 40rem;
+    padding: 3rem;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    background-size: 13.13px;
+  }
+  .cap-pane :global(.cap-diagram) {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s;
+  }
+  .cap:has(input[value='interfaces']:checked) :global(.cap-diagram-interfaces),
+  .cap:has(input[value='services']:checked) :global(.cap-diagram-services),
+  .cap:has(input[value='ai']:checked) :global(.cap-diagram-ai) {
+    opacity: 1;
+    visibility: visible;
+  }
+  /* The cards: the toolchain under the tabs, two short ones under the pane,
+     sharing the room's rules. */
+  /* The master's junction: a 2rem strip between the pane and the cards,
+     the pane's edge running on down through it to the cards. */
+  .cap-gap {
+    height: 2rem;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100%
+      no-repeat;
+  }
+  .cap-cards {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .cap-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 15rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .cap-card-toolchain {
+    padding-inline: 0;
+    border-left: none;
+    overflow: hidden;
+  }
+  .cap-card-toolchain .cap-card-text {
+    padding-inline: 1.5rem 0;
+  }
+  .cap-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .cap-card-title {
+    margin: 0;
+    font-size: var(--text-medium);
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+  }
+  .cap-card-description {
+    max-width: 24rem;
+    margin: 0;
+    color: var(--faint);
+  }
+  .cap-card :global(.cap-card-icon) {
+    align-self: flex-end;
+    width: 4rem;
+    color: var(--faint);
+  }
+  /* Two rows of logo chips, one moving left and one right, about 72px a
+     second; they stop with the pause control and without motion. */
+  .cap-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .cap-chip-row {
+    display: flex;
+    width: max-content;
+    animation: cap-chips 40s linear infinite;
+  }
+  .cap-chip-reverse {
+    animation-direction: reverse;
+  }
+  :global(html[data-motion='paused']) .cap-chip-row {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cap-chip-row {
+      animation: none;
+    }
+    .cap-tab,
+    .cap-tab-top,
+    .cap-tab-bottom,
+    .cap-tab-dot,
+    .cap-pane :global(.cap-diagram) {
+      transition: none;
+    }
+  }
+  .cap-chip-group {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0 0.5rem 0 0;
+    list-style: none;
+  }
+  .cap-chip {
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    padding-inline: 1rem;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  @keyframes cap-chips {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (width < 62rem) {
+    .cap-top {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .cap-left {
+      padding: 3rem 0;
+    }
+    .cap-pane {
+      min-height: 32rem;
+      border-left: none;
+    }
+    .cap-gap {
+      background: none;
+    }
+    .cap-cards {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .cap-card-toolchain {
+      grid-column: 1 / -1;
+    }
+    .cap-card:nth-child(2) {
+      border-left: none;
+    }
+  }
+  /* A diagram is drawn for the desktop pane; a narrower pane shows it
+     smaller rather than rearranged. */
+  @media (width < 48rem) {
+    .cap-pane {
+      min-height: 26rem;
+      padding: 1.5rem 0.75rem;
+    }
+    .cap-pane :global(.dia) {
+      zoom: 0.8;
+    }
+    .cap-cards {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .cap-card {
+      border-left: none;
+    }
+  }
+  @media (width < 30rem) {
+    .cap-pane :global(.dia) {
+      zoom: 0.6;
+    }
   }
 </style>

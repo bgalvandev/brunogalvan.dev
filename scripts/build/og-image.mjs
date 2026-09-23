@@ -57,7 +57,7 @@ const catalogs = {
 // Every page's card, keyed as src/components/seo-head.astro names it.
 function cards(locale) {
   const t = catalogs[locale];
-  const role = `<span class="fragment">[ ${t.hero.fragment} ]</span> ${t.identity.role}`;
+  const role = `<span class="fragment">[ ${t.hero.fragments[0]} ]</span> ${t.identity.role}`;
   return [
     { key: 'home', label: '', title: site.name, line: role },
     {

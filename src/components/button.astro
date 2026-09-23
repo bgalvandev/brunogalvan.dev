@@ -1,8 +1,11 @@
 ---
 import PixelIcon, { type IconName } from '@/components/pixel-icon.astro';
-// Two forms from the design master. `solid`: a sharp ink rectangle with a
-// square bullet; on hover the accent slides in behind, the label steps left
-// and the arrow appears. `line`: a bottom rule whose accent underline grows.
+// Two forms from the design master, whose hovers run 0.3s from a slow start.
+// `solid`: a sharp ink rectangle with a square bullet; on hover the accent
+// slides in behind, the bullet turns half a turn, the label steps left and
+// the arrow appears. `line`: a bottom rule; on hover a 1px accent frame
+// closes around it, its accent underline grows and the icon and label step
+// in from the edges.
 interface Props {
   href: string;
   label: string;
@@ -33,7 +36,10 @@ const {
 ) : (
   <a class="button-line" href={href} rel={rel} data-scramble-hover>
     <PixelIcon name={icon} class="button-line-icon" />
-    <span data-scramble-text>{label}</span>
+    <span class="button-line-text" data-scramble-text>
+      {label}
+    </span>
+    <span class="button-line-frame" aria-hidden="true" />
     <span class="button-line-bar" aria-hidden="true" />
   </a>
 )}
@@ -58,13 +64,18 @@ const {
     background: var(--ink);
     color: var(--paper);
     font-weight: 600;
-    transition: color 0.2s ease;
+    transition: color 0.3s var(--ease-power1-in);
   }
   .button-dot {
     flex: none;
     width: 0.5rem;
     aspect-ratio: 1;
     background: currentColor;
+    transition: transform 0.3s var(--ease-power1-in);
+  }
+  .button:hover .button-dot,
+  .button:focus-visible .button-dot {
+    transform: rotate(-180deg);
   }
   .button-text-wrap {
     display: flex;
@@ -74,7 +85,7 @@ const {
   .button-text {
     position: relative;
     right: -1.5rem;
-    transition: right 0.2s ease;
+    transition: right 0.3s var(--ease-power1-in);
   }
   .button :global(.button-icon) {
     flex: none;
@@ -82,7 +93,7 @@ const {
     height: 1.25rem;
     padding: 0.2rem;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.3s var(--ease-power1-in);
   }
   .button-bg {
     position: absolute;
@@ -90,7 +101,7 @@ const {
     z-index: -1;
     background: var(--accent);
     transform: translateX(-100%);
-    transition: transform 0.2s ease;
+    transition: transform 0.3s var(--ease-power1-in);
   }
   .button:hover,
   .button:focus-visible {
@@ -116,12 +127,36 @@ const {
     color: var(--ink);
     font-weight: 500;
     overflow: visible;
-    transition: color 0.2s ease;
+    transition: color 0.3s var(--ease-power1-in);
+  }
+  .button-line :global(.button-line-icon),
+  .button-line-text {
+    transition: transform 0.3s var(--ease-power1-in);
   }
   .button-line :global(.button-line-icon) {
     flex: none;
     width: 1rem;
     height: 1rem;
+  }
+  .button-line-frame {
+    position: absolute;
+    inset: 0 0 -1px;
+    border: 1px solid var(--accent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease-power1-in);
+  }
+  .button-line:hover .button-line-frame,
+  .button-line:focus-visible .button-line-frame {
+    opacity: 1;
+  }
+  .button-line:hover :global(.button-line-icon),
+  .button-line:focus-visible :global(.button-line-icon) {
+    transform: translateX(0.5rem);
+  }
+  .button-line:hover .button-line-text,
+  .button-line:focus-visible .button-line-text {
+    transform: translateX(-0.5rem);
   }
   .button-line-bar {
     position: absolute;
@@ -129,7 +164,7 @@ const {
     width: 0;
     height: 4px;
     background: var(--accent);
-    transition: width 0.2s ease;
+    transition: width 0.3s var(--ease-power1-in);
   }
   .button-line:hover,
   .button-line:focus-visible {
@@ -141,10 +176,14 @@ const {
   }
   @media (prefers-reduced-motion: reduce) {
     .button,
+    .button-dot,
     .button-text,
     .button :global(.button-icon),
     .button-bg,
     .button-line,
+    .button-line :global(.button-line-icon),
+    .button-line-text,
+    .button-line-frame,
     .button-line-bar {
       transition: none;
     }

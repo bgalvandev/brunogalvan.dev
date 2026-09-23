@@ -103,7 +103,7 @@ test('under reduced motion the pause control is gone and nothing moves', async (
   await expect(page.locator('.pixel-field canvas')).toHaveCount(0);
 });
 
-test('the pixel field lights the cells under the pointer and lets them fade', async ({
+test('the pixel field lights the cell under the pointer, keeps it lit while the pointer rests, and lets it fade once it moves on', async ({
   page,
 }) => {
   await page.goto('/es/');
@@ -136,8 +136,13 @@ test('the pixel field lights the cells under the pointer and lets them fade', as
     }, at);
   await page.mouse.move(at.x - cell, at.y);
   await page.mouse.move(at.x, at.y);
-  await expect.poll(alpha).toBeGreaterThan(0);
-  await expect.poll(alpha, { timeout: 3_000 }).toBe(0);
+  await expect.poll(alpha).toBe(255);
+  // Longer than the hold and the fade together: a resting pointer's cell
+  // stays fully lit.
+  await page.waitForTimeout(900);
+  expect(await alpha()).toBe(255);
+  await page.mouse.move(at.x + 3 * cell, at.y);
+  await expect.poll(alpha, { timeout: 2_000 }).toBe(0);
 });
 
 test('decoration stays out of the accessibility tree and the positioning line reads whole', async ({

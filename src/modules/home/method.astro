@@ -5,7 +5,8 @@
 import Button from '@/components/button.astro';
 import Headline from '@/components/headline.astro';
 import NumberedSection from '@/components/numbered-section.astro';
-import PixelIcon from '@/components/pixel-icon.astro';
+import IsoIcon from '@/components/iso-icon.astro';
+import { box, extrude } from '@/components/isometric';
 import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
@@ -15,54 +16,47 @@ interface Props {
 }
 const { locale } = Astro.props;
 const { method } = messages(locale);
-// One bitmap per rule: a one-way arrow through a boundary, a single square,
-// a check and a page.
+// One isometric scene per rule, drawn in pixels: a block inside a walled
+// boundary, one small block raised on a row of tiles, a gate and a page with
+// its lines.
 const icons = [
   [
-    '.....#......',
-    '.....#......',
-    '.....#..#...',
-    '.....#...#..',
-    '###########.',
-    '.....#...#..',
-    '.....#..#...',
-    '.....#......',
-    '.....#......',
+    box(0, 0, 0, 11, 1.5, 1.8),
+    box(0, 1.5, 0, 1.5, 8, 1.8),
+    box(4, 4, 0, 3, 3, 3.5),
+    box(9.5, 1.5, 0, 1.5, 8, 1.8),
+    box(0, 9.5, 0, 11, 1.5, 1.8),
   ],
   [
-    '............',
-    '............',
-    '............',
-    '....####....',
-    '....#..#....',
-    '....#..#....',
-    '....####....',
-    '............',
-    '............',
+    box(0, 0, 0, 4.5, 4.5, 1.4),
+    box(5.5, 0, 0, 4.5, 4.5, 1.4),
+    box(0, 5.5, 0, 4.5, 4.5, 1.4),
+    box(5.5, 5.5, 0, 4.5, 4.5, 1.4),
+    box(6.75, 6.75, 1.4, 2, 2, 2),
   ],
   [
-    '............',
-    '..........#.',
-    '.........#..',
-    '........#...',
-    '.#.....#....',
-    '..#...#.....',
-    '...#.#......',
-    '....#.......',
-    '............',
+    box(0, 0, 0, 2, 2, 7),
+    box(3.5, 0, 0, 2, 2, 2),
+    box(7, 0, 0, 2, 2, 7),
+    box(0, 0, 7, 9, 2, 2),
   ],
   [
-    '.#######....',
-    '.#.....##...',
-    '.#.###..##..',
-    '.#.......#..',
-    '.#.#####.#..',
-    '.#.......#..',
-    '.#.####..#..',
-    '.#.......#..',
-    '.#########..',
+    extrude(
+      [
+        [0, 0],
+        [7, 0],
+        [7, 7],
+        [5, 9],
+        [0, 9],
+      ],
+      0,
+      1.4,
+    ),
+    box(1, 1.4, 5.8, 4, 0.6, 0.9),
+    box(1, 1.4, 3.8, 5, 0.6, 0.9),
+    box(1, 1.4, 1.8, 5, 0.6, 0.9),
   ],
-] as const;
+];
 ---
 
 <NumberedSection
@@ -95,7 +89,12 @@ const icons = [
           </div>
           <div class="method-card-bottom">
             <h3 class="method-card-title">{rule.title}</h3>
-            <PixelIcon rows={icons[index] ?? []} class="method-card-icon" />
+            <IsoIcon
+              solids={icons[index] ?? []}
+              columns={16}
+              align="xMaxYMax"
+              class="method-card-icon"
+            />
           </div>
         </li>
       ))}
@@ -156,6 +155,7 @@ const icons = [
   .method-card-text {
     margin: 0;
     color: var(--muted);
+    transition: opacity 0.2s ease;
   }
   /* The process strip: a dotted track, an accent line and a square that
      leads it. */
@@ -165,6 +165,7 @@ const icons = [
     gap: 0.25rem;
     height: 1.5rem;
     padding-block: 0.5rem;
+    background-size: 7.88px;
   }
   .method-card-line {
     align-self: stretch;
@@ -187,16 +188,23 @@ const icons = [
     letter-spacing: var(--text-medium--letter-spacing);
     transition: color 0.2s ease;
   }
+  /* A reached card shows its drawing as pixels; one not reached yet shows it
+     as lines, and the swap is instant, as in the master. */
   .method-card :global(.method-card-icon) {
     align-self: flex-end;
-    width: 4rem;
+    width: 5rem;
+    height: 5rem;
     color: var(--accent);
-    transition: color 0.2s ease;
   }
-  /* While the scroll drives it, a card not reached yet is quiet: every text
-     still passes contrast, where the master drops to 30% opacity. */
+  .method-card :global(.iso-line) {
+    visibility: hidden;
+  }
+  /* While the scroll drives it, a card not reached yet is quiet, as in the
+     master: its description waits unseen (a screen reader still reads it),
+     its drawing is a pale line drawing, and its number and title dim to a
+     colour that still passes contrast, where the master drops them to 30%. */
   .method[data-scrubbing] {
-    height: 250vh;
+    height: 200vh;
   }
   .method[data-scrubbing] :global(.section-body) {
     position: sticky;
@@ -206,10 +214,22 @@ const icons = [
   .method[data-scrubbing] .method-card:not(.is-active) .method-card-title {
     color: var(--faint);
   }
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-text {
+    opacity: 0;
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-title {
+    font-weight: 400;
+  }
   .method[data-scrubbing]
     .method-card:not(.is-active)
     :global(.method-card-icon) {
     color: var(--decor);
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) :global(.iso-line) {
+    visibility: visible;
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) :global(.iso-pixel) {
+    visibility: hidden;
   }
   .method[data-scrubbing] .method-card:not(.is-active) .method-card-dot {
     opacity: 0;
@@ -234,6 +254,7 @@ const icons = [
   }
   @media (prefers-reduced-motion: reduce) {
     .method-card-number,
+    .method-card-text,
     .method-card-title,
     .method-card :global(.method-card-icon) {
       transition: none;

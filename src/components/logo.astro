@@ -1,0 +1,55 @@
+---
+import LogoMark from '@/components/logo-mark.astro';
+import { site } from '@/config/site';
+// The mark and the name, as the master sets its mark before its wordmark.
+// The mark is the favicon's pixel B with its accent block, and it scales with
+// the font size, so one component serves the hero band and the footer.
+// `stacked` sets the name on two lines beside a mark as tall as both, for the
+// footer, where the master's logo fills its column.
+interface Props {
+  class?: string;
+  stacked?: boolean;
+}
+const { class: className, stacked = false } = Astro.props;
+const words = site.name.split(' ');
+---
+
+<span class:list={['logo', { 'logo-stacked': stacked }, className]}>
+  <LogoMark />
+  <span class="logo-name">
+    {stacked
+      ? words.map((word) => <span class="logo-word">{word}</span>)
+      : site.name}
+  </span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+  }
+  /* The mark stands as tall as a capital, on the baseline. */
+  .logo :global(.logo-mark) {
+    flex: none;
+    width: 0.72em;
+    height: 0.72em;
+  }
+  .logo-stacked {
+    align-items: flex-start;
+    gap: 0.2em;
+    line-height: 0.9;
+  }
+  .logo-stacked :global(.logo-mark) {
+    width: 1.5em;
+    height: 1.5em;
+    margin-top: 0.12em;
+  }
+  .logo-word {
+    display: block;
+  }
+</style>

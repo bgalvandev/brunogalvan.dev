@@ -1,11 +1,14 @@
 ---
+import Logo from '@/components/logo.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
+import { siGithub } from 'simple-icons';
 import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 import { pagePath } from '@/i18n/routes';
 // The master's footer grid, without its newsletter: a static site has no form
-// to post to. The name stands where the master's logo stands.
+// to post to. The logo stands where the master's stands, as wide as its
+// column allows.
 interface Props {
   locale: Locale;
 }
@@ -17,9 +20,15 @@ const pages = [
   { href: pagePath('experience', locale), label: navigation.experience },
   { href: pagePath('about', locale), label: navigation.about },
 ];
+// Each profile leads with its mark, as the master's do: GitHub's from Simple
+// Icons, LinkedIn's "in" drawn here, since Simple Icons does not carry it.
 const profiles = [
-  { label: 'GitHub', href: site.github },
-  { label: 'LinkedIn', href: site.linkedin },
+  { label: 'GitHub', href: site.github, mark: siGithub.path },
+  {
+    label: 'LinkedIn',
+    href: site.linkedin,
+    mark: 'M0 0h24v24H0zM5 4.5v3.2h3.2V4.5zM5 9.5V19h3.2V9.5zm5.2 0V19h3.2v-4.9c0-1.3.5-2.3 1.9-2.3s1.6 1.1 1.6 2.3V19h3.2v-5.4c0-2.6-.9-4.4-3.8-4.4-1.5 0-2.8.7-3.4 1.7V9.5z',
+  },
 ] as const;
 ---
 
@@ -27,7 +36,9 @@ const profiles = [
   <div class="measure">
     <div class="site-footer-grid">
       <div class="site-footer-name">
-        <p class="site-footer-wordmark">{site.name}</p>
+        <p class="site-footer-wordmark">
+          <Logo stacked />
+        </p>
         <p class="site-footer-role">
           {identity.role} · {identity.location}
         </p>
@@ -38,8 +49,12 @@ const profiles = [
           <ul class="site-footer-list">
             {pages.map((page) => (
               <li>
-                <a class="site-footer-link" href={page.href}>
-                  {page.label}
+                <a
+                  class="site-footer-link"
+                  href={page.href}
+                  data-scramble-hover
+                >
+                  <span data-scramble-text>{page.label}</span>
                 </a>
               </li>
             ))}
@@ -50,10 +65,26 @@ const profiles = [
           <ul class="site-footer-list">
             {profiles.map((profile) => (
               <li>
-                <a class="site-footer-profile" href={profile.href} rel="me">
-                  <span>{profile.label}</span>
+                <a
+                  class="site-footer-profile"
+                  href={profile.href}
+                  rel="me"
+                  data-scramble-hover
+                >
+                  <svg
+                    class="site-footer-mark"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path d={profile.mark} fill-rule="evenodd" />
+                  </svg>
                   <span class="site-footer-dash" aria-hidden="true" />
-                  <PixelIcon name="arrow-up-right" class="site-footer-icon" />
+                  <span data-scramble-text>{profile.label}</span>
+                  <span class="site-footer-arrow" aria-hidden="true">
+                    <PixelIcon name="arrow-up-right" />
+                    <PixelIcon name="arrow-up-right" />
+                  </span>
                 </a>
               </li>
             ))}
@@ -99,20 +130,12 @@ const profiles = [
     padding: 2.5rem;
     border-right: 1px solid var(--line);
   }
+  .site-footer-name {
+    container-type: inline-size;
+  }
   .site-footer-wordmark {
     margin: 0;
-    font-size: var(--text-display);
-    line-height: var(--text-display--line-height);
-    letter-spacing: var(--text-display--letter-spacing);
-  }
-  /* The name ends on a block, as the master's wordmark ends on its mark. */
-  .site-footer-wordmark::after {
-    content: '';
-    display: inline-block;
-    width: 0.3em;
-    height: 0.75em;
-    margin-left: 0.1em;
-    background: var(--accent);
+    font-size: 20cqi;
   }
   .site-footer-role {
     margin: 0;
@@ -154,7 +177,7 @@ const profiles = [
   .site-footer-profile {
     color: var(--muted);
     overflow-wrap: anywhere;
-    transition: color 0.2s ease;
+    transition: color 0.3s var(--ease-power1-out);
   }
   .site-footer-link:hover,
   .site-footer-profile:hover {
@@ -169,10 +192,40 @@ const profiles = [
     flex: 1;
     border-bottom: 1px dashed var(--line);
   }
-  .site-footer :global(.site-footer-icon) {
+  .site-footer-mark {
     flex: none;
-    width: 0.625rem;
-    height: 0.625rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: currentColor;
+  }
+  /* The master's twin arrow: on hover one steps out to the top right while
+     its copy steps in from the bottom left. */
+  .site-footer-arrow {
+    position: relative;
+    flex: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    overflow: hidden;
+  }
+  .site-footer-arrow :global(svg) {
+    position: absolute;
+    inset: 0.0625rem;
+    transition: transform 0.3s var(--ease-power1-out);
+  }
+  .site-footer-arrow :global(svg:last-child) {
+    transform: translate(-150%, 150%);
+  }
+  .site-footer-profile:hover .site-footer-arrow :global(svg:first-child),
+  .site-footer-profile:focus-visible
+    .site-footer-arrow
+    :global(svg:first-child) {
+    transform: translate(150%, -150%);
+  }
+  .site-footer-profile:hover .site-footer-arrow :global(svg:last-child),
+  .site-footer-profile:focus-visible
+    .site-footer-arrow
+    :global(svg:last-child) {
+    transform: none;
   }
   .site-footer-info {
     margin: 0;
@@ -225,7 +278,8 @@ const profiles = [
   }
   @media (prefers-reduced-motion: reduce) {
     .site-footer-link,
-    .site-footer-profile {
+    .site-footer-profile,
+    .site-footer-arrow :global(svg) {
       transition: none;
     }
   }

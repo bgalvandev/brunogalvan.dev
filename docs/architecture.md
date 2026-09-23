@@ -15,9 +15,11 @@ src/
     404.astro                Bilingual recovery, noindex
     robots.txt.ts            Static crawler endpoint
   layouts/                   HTML document, global assets, metadata wiring
-  components/                Shared UI: header, footer, eyebrow, headline,
-                             button, pixel icons and field, marquee,
-                             preloader, motion, SEO, language, theme, pause
+  components/                Shared UI: header, footer, logo, eyebrow,
+                             headline, button, pixel and isometric icons,
+                             technology marks and their sprite, pixel field,
+                             marquee, preloader, motion, SEO, language, theme,
+                             pause
   modules/
     home/                    Home page rooms and the ordered section list
     experience/ about/       The two single extension pages
