@@ -2,19 +2,31 @@
 import Button from '@/components/button.astro';
 import Logo from '@/components/logo.astro';
 import Marquee from '@/components/marquee.astro';
+import { marks } from '@/components/tech-marks';
 import PixelField from '@/components/pixel-field.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
 import { site } from '@/config/site';
+import { stack } from '@/data/stack';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
-import { marks } from '@/components/tech-marks';
-import { stack } from '@/data/stack';
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const { hero, identity, positioning } = messages(locale);
-// The toolchain band shows the tools that have a mark of their own.
+// The master's scroll cue: a stepped arrow 7 cells by 8, one pixel a cell.
+const scrollArrow = [
+  '...#...',
+  '...#...',
+  '...#...',
+  '...#...',
+  '#..#..#',
+  '.#.#.#.',
+  '..###..',
+  '...#...',
+];
+// The toolchain band carries every tool the record names that has a mark of
+// its own, as a carousel (the owner's choice), in the master's cells.
 const tools = Object.values(stack)
   .flat()
   .filter((tool) => marks.has(tool));
@@ -30,7 +42,7 @@ const tools = Object.values(stack)
       </p>
       <p class="hero-scroll label" aria-hidden="true">
         <span>{hero.scroll}</span>
-        <PixelIcon name="arrow-down" class="hero-scroll-icon" />
+        <PixelIcon rows={scrollArrow} class="hero-scroll-icon" />
       </p>
     </div>
   </div>
@@ -143,7 +155,7 @@ const tools = Object.values(stack)
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
-    padding-block: 4rem 2rem;
+    padding-block: 3rem;
   }
   .hero-name {
     display: flex;
@@ -160,7 +172,7 @@ const tools = Object.values(stack)
     padding: 0.1em 0.25em;
     background: var(--decor);
     color: var(--muted);
-    line-height: 1.7;
+    line-height: 1.3rem;
     font-family: var(--font-mono);
     font-size: var(--text-small);
     letter-spacing: var(--text-small--letter-spacing);
@@ -173,15 +185,20 @@ const tools = Object.values(stack)
     margin: 0;
     color: var(--faint);
     font-size: var(--text-small);
+    font-weight: 400;
+    line-height: 1.3rem;
+    letter-spacing: var(--text-small--letter-spacing);
   }
+  /* The master's arrow is drawn 7 by 8 in a 12px box. */
   .hero-scroll :global(.hero-scroll-icon) {
     width: 0.75rem;
     height: 0.75rem;
+    padding: 0.125rem 0.15625rem;
   }
   .hero-body {
     position: relative;
     z-index: 1;
-    padding-bottom: 5rem;
+    padding-bottom: 10rem;
     background: var(--paper);
   }
   .hero-top {
@@ -232,7 +249,7 @@ const tools = Object.values(stack)
     font-family: var(--font-mono);
     font-size: var(--text-large);
     line-height: var(--text-large--line-height);
-    letter-spacing: var(--text-label--letter-spacing);
+    letter-spacing: var(--text-large--letter-spacing);
     text-align: center;
     text-transform: uppercase;
     text-wrap: balance;
@@ -247,7 +264,7 @@ const tools = Object.values(stack)
     display: inline-block;
     width: 0.7em;
     height: 0.7em;
-    margin-left: 0.5em;
+    margin-left: 0.4em;
     fill: var(--ink);
     vertical-align: -0.02em;
   }
@@ -258,7 +275,12 @@ const tools = Object.values(stack)
   .hero-positioning-part {
     color: var(--accent);
   }
+  /* The master sets its brackets 3% of the line from its shorter words;
+     these keep 0.5em so the longer line still holds to one row. Both lift
+     them 2px. */
   .hero-positioning-bracket {
+    position: relative;
+    top: -0.0625em;
     margin-inline: 0.5em;
   }
   @media (width < 62rem) {

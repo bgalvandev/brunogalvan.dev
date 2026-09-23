@@ -25,7 +25,7 @@
   --text-label--letter-spacing: -0.04em;
   --text-small: 0.75rem;
   --text-small--line-height: 1.4;
-  --text-small--letter-spacing: -0.04em;
+  --text-small--letter-spacing: -0.05rem;
   --radius-*: initial;
 }
 @media (width < 62rem) {
@@ -199,6 +199,10 @@ html.lenis body {
     gap: 1.5rem;
     padding-block: 5rem;
   }
+  /* The rooms the master closes with 10rem below them. */
+  .section-deep > .section-body {
+    padding-bottom: 10rem;
+  }
   .label {
     font-family: var(--font-mono);
     font-size: var(--text-label);
@@ -209,7 +213,7 @@ html.lenis body {
   }
   .tag {
     align-self: flex-start;
-    padding: 0.2em 0.25em;
+    padding: 0.2em 0;
     background: var(--surface);
     color: var(--muted);
     font-family: var(--font-mono);
@@ -253,6 +257,7 @@ html.lenis body {
      language pair) and a pressed toggle invert to ink instead. */
   .tab[aria-current='page'] {
     padding-block: 0.5rem;
+    border-right-style: solid;
     background: var(--accent);
     color: var(--accent-contrast);
     font-weight: 600;
@@ -334,7 +339,7 @@ html.lenis body {
   .pixel-highlight {
     color: var(--accent);
     font-family: var(--font-pixel);
-    letter-spacing: 0;
+    letter-spacing: var(--text-display--letter-spacing);
     white-space: nowrap;
   }
   [data-typewriter]::after {

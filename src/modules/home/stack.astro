@@ -67,6 +67,7 @@ const squares = [
   label={t.label}
   locale={locale}
   headingId="stack-title"
+  class="section-deep stack"
   band
 >
   <div class="cap">
@@ -159,10 +160,35 @@ const squares = [
 </NumberedSection>
 
 <style>
+  /* As in the master, the eyebrow runs over the left column only and the
+     pane rises beside it: the room's body is the grid, and the wrappers step
+     aside so their parts sit in it. */
+  .cap,
   .cap-top {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    border-bottom: 1px solid var(--line);
+    display: contents;
+  }
+  @media (width >= 62rem) {
+    .stack > :global(.section-body) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0;
+    }
+    .stack > :global(.section-body > .eyebrow) {
+      grid-area: 1 / 1;
+    }
+    .cap-left {
+      grid-area: 2 / 1;
+    }
+    .cap-pane {
+      grid-area: 1 / 2 / 3 / 3;
+      margin-top: 0.625rem;
+    }
+    .cap-gap {
+      grid-area: 3 / 1 / 4 / 3;
+    }
+    .cap-cards {
+      grid-area: 4 / 1 / 5 / 3;
+    }
   }
   .cap-left {
     display: flex;
@@ -170,10 +196,12 @@ const squares = [
     justify-content: space-between;
     gap: 5rem;
     padding: 5rem 3rem 5rem 0;
+    border-bottom: 1px solid var(--line);
   }
   .cap-tabs {
     display: flex;
     flex-direction: column;
+    min-height: 20rem;
     margin: 0;
     padding: 0;
     border: none;
@@ -223,7 +251,7 @@ const squares = [
     padding-bottom: 0.5rem;
   }
   .cap-tag {
-    padding: 0.2em 0.25em;
+    padding: 0.2em 0;
     background: var(--accent);
     color: var(--accent-contrast);
     font-family: var(--font-mono);
@@ -263,13 +291,13 @@ const squares = [
     border-bottom: 1px dashed var(--line);
   }
   .cap-tab-number {
-    font-weight: 500;
+    font-weight: 400;
   }
   .cap-tab-text {
     min-height: 0;
     max-width: 26.5rem;
     padding-top: 0.75rem;
-    color: var(--muted);
+    color: var(--faint);
   }
   /* The pane: one diagram per layer in the same place, the chosen one
      faded in. */
@@ -279,6 +307,7 @@ const squares = [
     min-height: 40rem;
     padding: 3rem;
     border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
     border-left: 1px solid var(--line);
     background-size: 13.13px;
   }
@@ -309,20 +338,20 @@ const squares = [
   .cap-cards {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    border-right: 1px solid var(--line);
   }
   .cap-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
-    min-height: 15rem;
+    min-height: 18rem;
     padding: 1.5rem;
     border-bottom: 1px solid var(--line);
     border-left: 1px solid var(--line);
   }
   .cap-card-toolchain {
     padding-inline: 0;
-    border-left: none;
     overflow: hidden;
   }
   .cap-card-toolchain .cap-card-text {
@@ -340,13 +369,15 @@ const squares = [
     letter-spacing: var(--text-medium--letter-spacing);
   }
   .cap-card-description {
-    max-width: 24rem;
+    max-width: 22rem;
     margin: 0;
     color: var(--faint);
   }
+  /* A 64px box, the drawing about 53px inside it, as the master's. */
   .cap-card :global(.cap-card-icon) {
     align-self: flex-end;
     width: 4rem;
+    padding: 0.333rem;
     color: var(--faint);
   }
   /* Two rows of logo chips, one moving left and one right, about 72px a

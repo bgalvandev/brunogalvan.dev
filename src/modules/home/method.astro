@@ -16,45 +16,55 @@ interface Props {
 }
 const { locale } = Astro.props;
 const { method } = messages(locale);
-// One isometric scene per rule, drawn in pixels: a block inside a walled
-// boundary, one small block raised on a row of tiles, a gate and a page with
-// its lines.
+// One isometric scene per rule, each about as wide as it is tall so the four
+// weigh the same: layers narrowing upward (dependency one way), four blocks
+// and one more on top (the smallest change), a gate with a block passing
+// (verification) and two sheets with their lines (a written decision).
 const icons = [
   [
-    box(0, 0, 0, 11, 1.5, 1.8),
-    box(0, 1.5, 0, 1.5, 8, 1.8),
-    box(4, 4, 0, 3, 3, 3.5),
-    box(9.5, 1.5, 0, 1.5, 8, 1.8),
-    box(0, 9.5, 0, 11, 1.5, 1.8),
+    box(0, 0, 0, 6, 6, 1.4),
+    box(1, 1, 2.2, 4, 4, 1.4),
+    box(2, 2, 4.4, 2, 2, 1.4),
   ],
   [
-    box(0, 0, 0, 4.5, 4.5, 1.4),
-    box(5.5, 0, 0, 4.5, 4.5, 1.4),
-    box(0, 5.5, 0, 4.5, 4.5, 1.4),
-    box(5.5, 5.5, 0, 4.5, 4.5, 1.4),
-    box(6.75, 6.75, 1.4, 2, 2, 2),
+    box(0, 0, 0, 2.4, 2.4, 2.4),
+    box(2.8, 0, 0, 2.4, 2.4, 2.4),
+    box(0, 2.8, 0, 2.4, 2.4, 2.4),
+    box(2.8, 2.8, 0, 2.4, 2.4, 2.4),
+    box(2.8, 2.8, 2.8, 2.4, 2.4, 2.4),
   ],
   [
-    box(0, 0, 0, 2, 2, 7),
-    box(3.5, 0, 0, 2, 2, 2),
-    box(7, 0, 0, 2, 2, 7),
-    box(0, 0, 7, 9, 2, 2),
+    box(0, 0, 0, 1.8, 3, 4.2),
+    box(5, 0, 0, 1.8, 3, 4.2),
+    box(0, 0, 4.2, 6.8, 3, 1.6),
+    box(2.6, 0.7, 0, 1.6, 1.6, 1.6),
   ],
   [
     extrude(
       [
         [0, 0],
-        [7, 0],
-        [7, 7],
-        [5, 9],
-        [0, 9],
+        [6, 0],
+        [6, 5.5],
+        [4.5, 7],
+        [0, 7],
       ],
       0,
-      1.4,
+      0.8,
     ),
-    box(1, 1.4, 5.8, 4, 0.6, 0.9),
-    box(1, 1.4, 3.8, 5, 0.6, 0.9),
-    box(1, 1.4, 1.8, 5, 0.6, 0.9),
+    extrude(
+      [
+        [1.5, -1],
+        [7.5, -1],
+        [7.5, 4.5],
+        [6, 6],
+        [1.5, 6],
+      ],
+      2,
+      0.8,
+    ),
+    box(2.5, 2.8, 3.8, 3.5, 0.5, 0.7),
+    box(2.5, 2.8, 2.2, 4, 0.5, 0.7),
+    box(2.5, 2.8, 0.6, 4, 0.5, 0.7),
   ],
 ];
 ---
@@ -91,7 +101,7 @@ const icons = [
             <h3 class="method-card-title">{rule.title}</h3>
             <IsoIcon
               solids={icons[index] ?? []}
-              columns={16}
+              columns={20}
               align="xMaxYMax"
               class="method-card-icon"
             />
@@ -124,28 +134,31 @@ const icons = [
     list-style: none;
     border-block: 1px solid var(--line);
   }
-  /* The process strips line up across the row; the title block sinks to the
-     bottom however many lines it takes. */
+  /* The master's process card: padded 1rem, the number and description at
+     the top, the strip out of the flow across the card's middle, and the
+     title a fixed distance down (so every title lines up, one line or two)
+     with the drawing sunk to the corner, 1.5rem below it. */
   .method-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding-block: 1rem;
+    padding: 1rem;
     border-inline: 1px solid var(--line);
   }
-  .method-card-top,
-  .method-card-bottom {
+  .method-card-top {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 1rem;
-    padding-inline: 1rem;
+    min-height: 8.5rem;
   }
   .method-card-bottom {
-    margin-top: auto;
-  }
-  .method-card-top {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     justify-content: space-between;
-    min-height: 8.5rem;
+    gap: 1.5rem;
+    margin-top: 4.925rem;
   }
   .method-card-number {
     color: var(--accent);
@@ -154,23 +167,30 @@ const icons = [
   }
   .method-card-text {
     margin: 0;
-    color: var(--muted);
+    color: var(--ink);
     transition: opacity 0.2s ease;
   }
-  /* The process strip: a dotted track, an accent line and a square that
-     leads it. */
+  /* The process strip: a dotted track edge to edge, an accent line and a
+     square that leads it; a finished line fills the strip and pushes the
+     square out of sight. */
   .method-card-process {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
     display: flex;
     align-items: center;
     gap: 0.25rem;
     height: 1.5rem;
     padding-block: 0.5rem;
+    overflow: hidden;
     background-size: 7.88px;
+    transform: translateY(-50%);
   }
   .method-card-line {
+    flex: none;
     align-self: stretch;
     width: 100%;
-    max-width: calc(100% - 0.75rem);
     background: var(--accent);
   }
   .method-card-dot {
@@ -203,12 +223,17 @@ const icons = [
      master: its description waits unseen (a screen reader still reads it),
      its drawing is a pale line drawing, and its number and title dim to a
      colour that still passes contrast, where the master drops them to 30%. */
+  /* The room is padded by 10vh and its body pinned there with no padding of
+     its own, as the master's is, so the eyebrow lands at 10vh and the cards
+     fit the screen. */
   .method[data-scrubbing] {
     height: 200vh;
+    padding-top: 10vh;
   }
   .method[data-scrubbing] :global(.section-body) {
     position: sticky;
     top: 10vh;
+    padding-top: 0;
   }
   .method[data-scrubbing] .method-card:not(.is-active) .method-card-number,
   .method[data-scrubbing] .method-card:not(.is-active) .method-card-title {

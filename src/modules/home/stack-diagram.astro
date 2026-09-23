@@ -1,5 +1,4 @@
 ---
-import LogoMark from '@/components/logo-mark.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
@@ -10,6 +9,7 @@ import type { Locale } from '@/i18n/locales';
 // - services: a request goes down the layers, one lighting after another;
 // - ai: a document is translated, its kinds filling in behind a progress
 //   bar.
+// At the heart of each, the core: a black square holding a code glyph.
 // Decoration: the tab beside it carries the words. Every loop is CSS, stops
 // with the pause control and is off under reduced motion, where each diagram
 // shows its finished state.
@@ -103,6 +103,7 @@ const glyphs = {
     '#.....#',
     '#######',
   ],
+  code: ['..#...#..', '.#.....#.', '#.......#', '.#.....#.', '..#...#..'],
   layer: [
     '...#...',
     '.##.##.',
@@ -140,7 +141,7 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
         </ul>
       </div>
       <div class="dia-core">
-        <LogoMark />
+        <PixelIcon rows={glyphs.code} class="dia-core-glyph" />
       </div>
       <div class="dia-box dia-right">
         <p class="dia-label">{diagram.state}</p>
@@ -170,7 +171,7 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
   {kind === 'services' && (
     <>
       <div class="dia-core">
-        <LogoMark />
+        <PixelIcon rows={glyphs.code} class="dia-core-glyph" />
       </div>
       <span class="dia-stem" />
       <ol class="dia-rows">
@@ -195,7 +196,7 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
           {diagram.translating}
         </p>
         <div class="dia-core dia-core-small">
-          <LogoMark />
+          <PixelIcon rows={glyphs.code} class="dia-core-glyph" />
         </div>
       </div>
       <div class="dia-card dia-card-docs">
@@ -223,7 +224,7 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
 
 <style>
   /* Shared pieces: a bordered box with a mono label, a list of rows with a
-     pixel glyph each, and the core, the mark in a black square. */
+     pixel glyph each, and the core, a code glyph in a black square. */
   .dia {
     --dia-loop: 2.4s;
     position: relative;
@@ -283,9 +284,9 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     background: var(--core);
     color: var(--ink);
   }
-  .dia-core :global(.logo-mark) {
+  .dia-core :global(.dia-core-glyph) {
     width: 1.75rem;
-    height: 1.75rem;
+    height: auto;
   }
 
   /* Interfaces: two boxes either side of the core, a pulse running down to

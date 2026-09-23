@@ -109,7 +109,7 @@
   },
   "stack": {
     "label": "Stack",
-    "headline": ["Three layers.", "From screen to database."],
+    "headline": ["Three layers.", "One product."],
     "groups": {
       "frontend": "Frontend",
       "backend": "Backend",
@@ -203,7 +203,7 @@
   },
   "code": {
     "label": "Code",
-    "headline": ["Real code.", "From this site's repository."],
+    "headline": ["Real code.", "Open on GitHub."],
     "action": "More on GitHub",
     "tabs": "Language",
     "samples": {

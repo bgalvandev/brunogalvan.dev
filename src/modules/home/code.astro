@@ -87,37 +87,58 @@ const samples = snippets.map((snippet) => ({
 </NumberedSection>
 
 <style>
+  /* The master's installation grid: two equal columns and no gap, the text
+     column set in by 3rem. */
   .code-main {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    gap: 3rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
+  /* The stage is 80vh tall as the master's, the frame a 31 by 32rem box
+     centred on it with no fill, the window filling the frame. */
   .code-stage {
     background-size: 14.18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 40rem;
-    padding: 3rem;
+    height: 80vh;
+    min-height: 36rem;
+    padding: 1.5rem;
   }
   .code-frame {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    max-width: 31rem;
     min-width: 0;
-    padding: 1.125rem;
+    height: 32rem;
+    max-height: 100%;
+    padding: 1.25rem 0.75rem;
     border: 1px solid var(--line);
-    background: var(--paper);
   }
   .code-windows {
     display: grid;
+    flex: 1;
     grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .code-windows :global(.code-window) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
   /* A long file scrolls inside its window, so the room keeps the master's
      proportions; printed, it runs whole. */
   .code-windows :global(.code-window-body) {
-    max-height: 32rem;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
   }
   @media print {
+    .code-stage,
+    .code-frame {
+      height: auto;
+      max-height: none;
+    }
     .code-windows :global(.code-window-body) {
       max-height: none;
     }
@@ -136,6 +157,7 @@ const samples = snippets.map((snippet) => ({
     flex-direction: column;
     justify-content: space-between;
     gap: 3rem;
+    padding-left: 3rem;
   }
   .code-heading {
     display: flex;
@@ -248,34 +270,36 @@ const samples = snippets.map((snippet) => ({
     color: var(--muted);
   }
   /* The scroll drives the room: it grows tall and its content sticks. */
+  /* Padded and pinned as Method is, so the eyebrow lands at 10vh. */
   .code[data-scrubbing] {
     height: 250vh;
+    padding-top: 10vh;
   }
   .code[data-scrubbing] :global(.section-body) {
     position: sticky;
     top: 10vh;
+    padding-top: 0;
   }
   .code[data-scrubbing] .code-rail-line {
     transition: none;
   }
-  /* The sticky frame fits the viewport, as the master's 80vh stage does. */
-  .code[data-scrubbing] .code-stage {
-    min-height: 70vh;
-    padding-block: 2rem;
-  }
-  .code[data-scrubbing] .code-windows :global(.code-window-body) {
-    max-height: calc(70vh - 10rem);
-  }
   @media (width < 62rem) {
     .code-main {
       grid-template-columns: 1fr;
+      row-gap: 3rem;
     }
     .code-side {
       order: -1;
+      padding-left: 0;
     }
     .code-stage {
+      height: auto;
       min-height: auto;
       padding: 1.5rem;
+    }
+    .code-frame {
+      max-width: none;
+      height: 30rem;
     }
   }
   @media (width < 48rem) {

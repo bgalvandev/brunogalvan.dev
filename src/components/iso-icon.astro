@@ -67,9 +67,12 @@ const fmt = (value: number) => Number(value.toFixed(2));
 </span>
 
 <style>
+  /* One cell the size of the box, so each drawing fits inside it whatever
+     its proportions. */
   .iso-icon {
     position: relative;
     display: inline-grid;
+    grid-template: 100% / 100%;
   }
   .iso-icon svg {
     grid-area: 1 / 1;
