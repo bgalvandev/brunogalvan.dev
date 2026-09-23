@@ -60,8 +60,8 @@ responsibilities or the first request-time capability.
   `src/components/motion.astro`, bundling GSAP and three plugins
   ([ADR 0008](adr/0008-motion-with-bundled-gsap.md)) and Lenis for the wheel
   ([ADR 0009](adr/0009-smooth-scroll-with-lenis.md)); it reads `data-reveal`,
-  `data-typewriter`, `data-scramble-hover`, `data-pixel-field` and
-  `data-preloader` hooks from the markup, and runs only while motion is
+  `data-typewriter`, `data-scramble-hover`, `data-pixel-field`, `data-steps`,
+  `data-code-steps`, `data-slider` and `data-preloader` hooks from the markup, and runs only while motion is
   allowed: no reduced-motion preference and not paused from the header. The
   pre-paint initializer (`document-init.astro`) restores the theme and the
   pause, and marks the first view of a session for the preloader. An inline

@@ -3,7 +3,8 @@
 
 /* Type scale read off the design master: display weight 400, negative tracking
    on everything, and a 1.3 body leading so blocks read as specification text.
-   Sizes step down at the master's own breakpoints. */
+   Sizes step down at the master's own breakpoints, and a phone keeps the
+   master's 3.25rem display and 2.75rem headline, letting lines wrap. */
 @theme {
   --text-display: 4.5rem;
   --text-display--line-height: 1.1;
@@ -40,10 +41,37 @@
     --text-headline: 2.75rem;
   }
 }
+
+/* The master's space scale, which steps down at its breakpoints: a room's
+   padding is large, the gap under its eyebrow tiny, a deep room closes with
+   hugh, and a heading keeps small and medium around it. */
+:root {
+  --space-tiny: 1.5rem;
+  --space-small: 3rem;
+  --space-medium: 4rem;
+  --space-large: 5rem;
+  --space-hugh: 10rem;
+}
+@media (width < 62rem) {
+  :root {
+    --space-small: 2rem;
+    --space-medium: 3rem;
+    --space-large: 4rem;
+    --space-hugh: 8rem;
+  }
+}
+@media (width < 48rem) {
+  :root {
+    --space-tiny: 1rem;
+    --space-small: 1.5rem;
+    --space-medium: 2.5rem;
+    --space-large: 3.5rem;
+    --space-hugh: 7rem;
+  }
+}
 @media (width < 30rem) {
   :root {
-    --text-display: 2.75rem;
-    --text-headline: 2.25rem;
+    --space-hugh: 4rem;
   }
 }
 
@@ -196,12 +224,12 @@ html.lenis body {
   .section-body {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding-block: 5rem;
+    gap: var(--space-tiny);
+    padding-block: var(--space-large);
   }
-  /* The rooms the master closes with 10rem below them. */
+  /* The rooms the master closes with its hugh space below them. */
   .section-deep > .section-body {
-    padding-bottom: 10rem;
+    padding-bottom: var(--space-hugh);
   }
   .label {
     font-family: var(--font-mono);

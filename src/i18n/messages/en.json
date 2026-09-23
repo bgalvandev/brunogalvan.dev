@@ -43,6 +43,7 @@
     "label": "What I do",
     "headline": ["From the domain model to production.", "The whole product."],
     "action": "Let's talk",
+    "show": "Show card {number}",
     "cards": [
       {
         "title": "SaaS platforms",

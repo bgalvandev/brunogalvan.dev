@@ -5,8 +5,15 @@ import { messages } from '@/i18n/messages';
 
 const { whatIDo, hero } = messages('es');
 const phrase = whatIDo.headline.join(' ');
-const visualText = (element: Element) =>
-  element.textContent?.replace(/\s+/g, ' ').trim();
+// What the eye reads: the words a typed line holds unseen, only to keep its
+// height, are left out.
+const visualText = (element: Element) => {
+  const copy = element.cloneNode(true) as Element;
+  copy
+    .querySelectorAll('[data-typewriter-ghost]')
+    .forEach((ghost) => ghost.remove());
+  return copy.textContent?.replace(/\s+/g, ' ').trim();
+};
 
 test('a heading reveals character by character and reads whole throughout', async ({
   page,
@@ -137,7 +144,7 @@ test('a revealing heading holds its height, so nothing below it moves', async ({
       heading:
         document.querySelector<HTMLElement>('#what-i-do-title')!.offsetHeight,
       cards:
-        document.querySelector('.value-cards')!.getBoundingClientRect().top +
+        document.querySelector('.value-slider')!.getBoundingClientRect().top +
         scrollY,
     }));
   // The static page is the reference layout.
@@ -198,7 +205,7 @@ test('hovers follow the master: the bullet turns, the line button closes a frame
   const line = page.locator('.hero .button-line').first();
   await line.hover();
   await expect(line.locator('.button-line-frame')).toHaveCSS('opacity', '1');
-  const contact = page.locator('.site-contact');
+  const contact = page.locator('.site-tools .site-contact');
   await contact.hover();
   await expect(contact).toHaveCSS('color', accent);
 });
@@ -266,6 +273,45 @@ test('revealed text is as wide whole as split into letters, so the end of the re
   expect(Math.abs(whole! - split!)).toBeLessThan(0.5);
 });
 
+test('on a phone the line a word types into takes its height first, so nothing below moves while it types', async ({
+  page,
+}) => {
+  const { hero } = messages('en');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/en/');
+  await expect(page.locator('.hero [data-typewriter]')).toHaveText(
+    hero.fragments[0]!,
+    { timeout: 10_000 },
+  );
+  // The whole of the next word, from its first letter to its last.
+  const tops = await page.evaluate(
+    () =>
+      new Promise<number[]>((resolve) => {
+        const heading = document.querySelector('#hero-title')!;
+        const summary = document.querySelector('.hero-summary')!;
+        let tops: number[] | undefined;
+        new MutationObserver(() => {
+          const word = heading.querySelector<HTMLElement>('[data-typewriter]');
+          if (!word) return;
+          if (!tops && word.dataset.cursor === 'typing') {
+            if (word.textContent!.length === 1) tops = [];
+            else return;
+          }
+          if (!tops) return;
+          tops.push(summary.getBoundingClientRect().top);
+          if (word.dataset.cursor === 'on') resolve(tops);
+        }).observe(heading, {
+          subtree: true,
+          childList: true,
+          characterData: true,
+          attributes: true,
+        });
+      }),
+  );
+  expect(tops.length).toBeGreaterThan(3);
+  expect(new Set(tops).size).toBe(1);
+});
+
 test('on a phone the cursor and the closing bracket stay on the line of the last letter', async ({
   page,
 }) => {
@@ -282,9 +328,10 @@ test('on a phone the cursor and the closing bracket stay on the line of the last
         range.setEnd(node, end);
         return range.getBoundingClientRect().top;
       };
+      const typed = fragment.querySelector('[data-typewriter]')!;
       return {
-        letter: top(fragment.querySelector('[data-typewriter]')!.firstChild!),
-        bracket: top(fragment.lastChild!),
+        letter: top(typed.firstChild!),
+        bracket: top(typed.parentElement!.lastChild!),
       };
     });
   expect(Math.abs(bracket - letter)).toBeLessThan(1);

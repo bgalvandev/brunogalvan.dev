@@ -38,6 +38,9 @@ const order = Object.keys(excerpts) as CaseStudyId[];
 const next = order[(order.indexOf(id) + 1) % order.length]!;
 const nextName = projects.find((candidate) => candidate.id === next)!.name;
 const number = (index: number) => String(index + 1).padStart(3, '0');
+// An address without its scheme, in the parts between its slashes, so a
+// phone can wrap it after a slash rather than inside a name.
+const parts = (url: string) => url.replace('https://', '').split('/');
 ---
 
 <SiteHeader locale={locale} route="caseStudy" slug={id} />
@@ -46,6 +49,7 @@ const number = (index: number) => String(index + 1).padStart(3, '0');
     label={`${labels.label} · ${t.projects.kinds[project.kind]}`}
     lines={[project.name]}
     intro={copy.summary}
+    fit
   >
     <dl class="case-facts">
       <div class="case-fact">
@@ -58,32 +62,41 @@ const number = (index: number) => String(index + 1).padStart(3, '0');
           </ul>
         </dd>
       </div>
-      <div class="case-fact">
-        <dt>{labels.facts.repository}</dt>
-        <dd>
-          {project.repository ? (
-            <a class="case-link" href={project.repository}>
-              {project.repository.replace('https://', '')}
-              <PixelIcon name="arrow-up-right" class="case-link-icon" />
-            </a>
-          ) : (
-            <span class="case-none">{t.projects.private}</span>
-          )}
-        </dd>
-      </div>
-      <div class="case-fact">
-        <dt>{labels.facts.demo}</dt>
-        <dd>
-          {project.demo ? (
-            <a class="case-link" href={project.demo}>
-              {project.demo.replace('https://', '')}
-              <PixelIcon name="arrow-up-right" class="case-link-icon" />
-            </a>
-          ) : (
-            <span class="case-none">{labels.facts.noDemo}</span>
-          )}
-        </dd>
-      </div>
+      {[
+        {
+          label: labels.facts.repository,
+          url: project.repository,
+          none: t.projects.private,
+        },
+        {
+          label: labels.facts.demo,
+          url: project.demo,
+          none: labels.facts.noDemo,
+        },
+      ].map((fact) => (
+        <div class="case-fact">
+          <dt>{fact.label}</dt>
+          <dd>
+            {fact.url ? (
+              <a class="case-link" href={fact.url}>
+                {parts(fact.url).map((part, index) => (
+                  <>
+                    {index > 0 && (
+                      <>
+                        /<wbr />
+                      </>
+                    )}
+                    {part}
+                  </>
+                ))}
+                <PixelIcon name="arrow-up-right" class="case-link-icon" />
+              </a>
+            ) : (
+              <span class="case-none">{fact.none}</span>
+            )}
+          </dd>
+        </div>
+      ))}
     </dl>
   </PageHero>
   <NumberedSection
@@ -210,7 +223,7 @@ const number = (index: number) => String(index + 1).padStart(3, '0');
     align-items: center;
     gap: 0.5rem;
     color: var(--ink);
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }

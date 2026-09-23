@@ -19,7 +19,7 @@ const [first, second] = contact.headline;
 <section id="contact" class="section contact" aria-labelledby="contact-title">
   <Marquee items={contact.marquee} variant="text" />
   <div class="band contact-band">
-    <PixelField />
+    <PixelField rows={27} />
     <div class="measure contact-layout">
       <div class="unband contact-card">
         <span class="contact-corners" aria-hidden="true"></span>
@@ -62,12 +62,13 @@ const [first, second] = contact.headline;
   }
   .contact-band {
     position: relative;
+    container-type: inline-size;
     overflow: hidden;
     background: var(--paper);
   }
   .contact-layout {
     position: relative;
-    padding-block: 5rem;
+    padding-block: var(--space-large);
     pointer-events: none;
   }
   .contact-card {
@@ -114,12 +115,19 @@ const [first, second] = contact.headline;
   }
   @media (width < 48rem) {
     .contact-card {
+      justify-content: flex-start;
       min-height: auto;
       padding: 3rem 1.5rem;
     }
-    /* The fragment stays on one line with its cursor. */
-    .contact-heading .pixel-highlight {
-      font-size: 0.75em;
+  }
+  /* On a phone the master's heading is set to the band's width, 13% of it,
+     its word as large as the rest, and the card padded 4rem by 1rem. */
+  @media (width < 30rem) {
+    .contact-card {
+      padding: 4rem 1rem;
+    }
+    .contact-heading {
+      font-size: 13cqw;
     }
   }
 </style>

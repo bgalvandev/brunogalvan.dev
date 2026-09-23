@@ -1,23 +1,24 @@
 ---
 import LanguageSwitcher from '@/components/language-switcher.astro';
+import Logo from '@/components/logo.astro';
 import MotionToggle from '@/components/motion-toggle.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
 import ThemeToggle from '@/components/theme-toggle.astro';
-import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 import { pagePath, type RouteKey } from '@/i18n/routes';
 // Fixed boxed tabs hanging from the top edge, as in the design master: pages on
 // the left, language, theme and contact on the right. Below the tablet
-// breakpoint the page tabs fold into a menu, a native disclosure that works
-// without JavaScript, and the name links home.
+// breakpoint the bar is the master's: the name with its chip, and a menu
+// behind three lines, a native disclosure that works without JavaScript,
+// holding the pages, the contact button, the language and the toggles.
 interface Props {
   locale: Locale;
   route: RouteKey;
   slug?: string | undefined;
 }
 const { locale, route, slug } = Astro.props;
-const { navigation } = messages(locale);
+const { navigation, identity } = messages(locale);
 const pages = [
   { route: 'home', label: navigation.home },
   { route: 'experience', label: navigation.experience },
@@ -28,8 +29,9 @@ const contactHref = `${pagePath('home', locale)}#contact`;
 
 <header class="site-header">
   <div class="measure site-header-bar">
-    <a class="site-brand tab" href={pagePath('home', locale)}>
-      {site.name}
+    <a class="site-brand" href={pagePath('home', locale)}>
+      <Logo class="site-brand-name" />
+      <span class="site-brand-tag">{identity.location}</span>
     </a>
     <nav class="tabs site-pages" aria-label={navigation.main}>
       {pages.map((page) => (
@@ -54,13 +56,20 @@ const contactHref = `${pagePath('home', locale)}#contact`;
           <PixelIcon name="arrow-up-right" />
           <PixelIcon name="arrow-up-right" />
         </span>
-        <span class="site-contact-label" data-scramble-text>
-          {navigation.contact}
-        </span>
+        <span data-scramble-text>{navigation.contact}</span>
       </a>
-      <details class="site-menu">
-        <summary class="tab">{navigation.menu}</summary>
-        <nav class="site-menu-panel" aria-label={navigation.main}>
+    </div>
+    <details class="site-menu">
+      <summary class="site-menu-button">
+        <span class="sr-only">{navigation.menu}</span>
+        <span class="site-menu-icon" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </summary>
+      <div class="site-menu-panel">
+        <nav class="site-menu-pages" aria-label={navigation.main}>
           {pages.map((page) => (
             <a
               class="site-menu-link"
@@ -71,8 +80,22 @@ const contactHref = `${pagePath('home', locale)}#contact`;
             </a>
           ))}
         </nav>
-      </details>
-    </div>
+        <a class="site-contact site-menu-contact" href={contactHref}>
+          <span class="site-contact-arrow" aria-hidden="true">
+            <PixelIcon name="arrow-up-right" />
+            <PixelIcon name="arrow-up-right" />
+          </span>
+          {navigation.contact}
+        </a>
+        <div class="site-menu-tools">
+          <LanguageSwitcher locale={locale} route={route} slug={slug} />
+          <div class="tabs">
+            <ThemeToggle locale={locale} />
+            <MotionToggle locale={locale} />
+          </div>
+        </div>
+      </div>
+    </details>
   </div>
 </header>
 
@@ -153,10 +176,41 @@ const contactHref = `${pagePath('home', locale)}#contact`;
   .site-menu summary::-webkit-details-marker {
     display: none;
   }
-  .site-menu[open] summary {
-    background: var(--ink);
-    color: var(--paper);
+  /* The master's three lines in a 40px box, 6px apart; open, the outer two
+     cross and the middle one shrinks away. */
+  .site-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: -0.5rem;
+    color: var(--ink);
+    cursor: pointer;
   }
+  .site-menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 24px;
+  }
+  .site-menu-icon > span {
+    height: 2px;
+    background: currentColor;
+    transition: transform 0.4s ease;
+  }
+  .site-menu[open] .site-menu-icon > span:first-child {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .site-menu[open] .site-menu-icon > span:nth-child(2) {
+    transform: scale(0);
+  }
+  .site-menu[open] .site-menu-icon > span:last-child {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+  /* The master's panel: its pages in a column, the contact button under
+     them, over the page dimmed by half. Here the language and the toggles
+     follow, since the bar no longer has room for them. */
   .site-menu-panel {
     position: absolute;
     top: 100%;
@@ -164,19 +218,39 @@ const contactHref = `${pagePath('home', locale)}#contact`;
     left: 0;
     display: flex;
     flex-direction: column;
-    padding: 1rem 5%;
-    border-bottom: 1px solid var(--line);
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem var(--gutter);
+    border-top: 1px solid var(--line);
     background: var(--paper);
   }
+  .site-menu-panel::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    height: 100vh;
+    background: var(--scrim);
+    pointer-events: none;
+  }
+  .site-menu-pages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
   .site-menu-link {
-    padding-block: 0.75rem;
-    border-bottom: 1px solid var(--line);
+    color: var(--ink);
     font-family: var(--font-mono);
+    font-size: var(--text-label);
     font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: var(--text-label--letter-spacing);
     text-transform: uppercase;
   }
   .site-menu-link[aria-current='page'] {
     color: var(--accent);
+    font-weight: 600;
   }
   .site-menu-link[aria-current='page']::before {
     content: '<' / '';
@@ -184,51 +258,57 @@ const contactHref = `${pagePath('home', locale)}#contact`;
   .site-menu-link[aria-current='page']::after {
     content: '>' / '';
   }
+  .site-menu-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
   @media (width < 62rem) {
     .site-menu {
       display: block;
     }
     .site-header {
       background: var(--paper);
-      border-bottom: 1px solid var(--line);
       pointer-events: auto;
     }
     .site-header-bar {
       align-items: center;
-      min-height: 3.5rem;
+      min-height: 4.5rem;
     }
-    .site-pages {
+    .site-pages,
+    .site-tools {
       display: none;
     }
+    /* The name and its chip, where the master sets its logo and version. */
     .site-brand {
       display: flex;
-      padding-inline: 0;
-      border: none;
-      background: none;
-      font-weight: 600;
+      align-items: flex-end;
+      gap: 0.75rem;
     }
-    .site-contact {
-      min-height: 1.75rem;
-      padding: 0.25rem 0.5rem;
-      font-size: var(--text-label);
+    /* Its capitals stand as tall as the master's logo letters. */
+    .site-brand :global(.site-brand-name) {
+      font-size: 1.75rem;
+    }
+    .site-brand-tag {
+      padding: 0.1em 0.25em;
+      background: var(--surface);
+      color: var(--faint);
+      font-family: var(--font-mono);
+      font-size: var(--text-small);
+      line-height: 1.3rem;
+      letter-spacing: var(--text-small--letter-spacing);
+      text-transform: uppercase;
     }
   }
-  @media (width < 48rem) {
-    .site-contact-label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-    .site-contact {
-      padding-inline: 0.25rem;
+  @media (width < 22.5rem) {
+    .site-brand :global(.site-brand-name) {
+      font-size: 1.5rem;
     }
   }
   @media (prefers-reduced-motion: reduce) {
     .site-contact,
-    .site-contact-arrow :global(svg) {
+    .site-contact-arrow :global(svg),
+    .site-menu-icon > span {
       transition: none;
     }
   }

@@ -134,15 +134,52 @@ test('on a phone the pages fold into a menu that works without JavaScript', asyn
     const page = await context.newPage();
     const t = messages('es');
     await page.goto('/es/');
-    await page.getByText(t.navigation.menu, { exact: true }).click();
-    await page
-      .locator('.site-menu')
-      .getByRole('link', { name: t.navigation.about })
-      .click();
+    const menu = page.locator('.site-menu');
+    const button = menu.locator('summary');
+    await expect(button).toHaveAccessibleName(t.navigation.menu);
+    await button.click();
+    await expect(
+      menu.getByRole('link', { name: t.navigation.contact }),
+    ).toBeVisible();
+    await expect(
+      menu.getByRole('link', { name: 'English', exact: true }),
+    ).toBeVisible();
+    await menu.getByRole('link', { name: t.navigation.about }).click();
     await expect(page).toHaveURL(pagePath('about', 'es'));
   } finally {
     await context.close();
   }
+});
+
+test("on a phone the bar is the name and the master's three lines, and the menu holds the language, the theme and the pause", async ({
+  page,
+}) => {
+  const t = messages('es');
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto('/es/');
+  await expect(
+    page.getByRole('link', { name: `${site.name} ${t.identity.location}` }),
+  ).toBeVisible();
+  const tools = page.locator('.site-tools');
+  await expect(tools).toBeHidden();
+  const menu = page.locator('.site-menu');
+  await menu.locator('summary').click();
+  const theme = menu.getByRole('button', { name: t.theme.darkMode });
+  const pressed = await theme.getAttribute('aria-pressed');
+  await theme.click();
+  await expect(theme).not.toHaveAttribute('aria-pressed', pressed!);
+  // The bar's own button, hidden here, keeps the same state.
+  await expect(tools.locator('[data-theme-toggle]')).toHaveAttribute(
+    'aria-pressed',
+    (await theme.getAttribute('aria-pressed'))!,
+  );
+  await menu.getByRole('button', { name: t.motion.pause }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-motion', 'paused');
+  await expect(menu.getByRole('link', { name: 'English' })).toBeVisible();
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze();
+  expect(results.violations).toEqual([]);
 });
 
 test('the sitemap lists every page in both languages', async ({ request }) => {

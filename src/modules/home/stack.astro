@@ -431,19 +431,26 @@ const squares = [
       transform: translateX(-50%);
     }
   }
+  /* Below the desktop breakpoint the master leads with the headline, then
+     the layers, the pane and the cards, with no junction strip. */
   @media (width < 62rem) {
     .cap-top {
       grid-template-columns: minmax(0, 1fr);
     }
     .cap-left {
-      padding: 3rem 0;
+      padding: var(--space-small) 0 2rem;
+      border-bottom: none;
+    }
+    .cap-left :global(.headline) {
+      order: -1;
     }
     .cap-pane {
       min-height: 32rem;
-      border-left: none;
+      border-right: 1px solid var(--line);
+      border-left: 1px solid var(--line);
     }
     .cap-gap {
-      background: none;
+      display: none;
     }
     .cap-cards {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -456,7 +463,9 @@ const squares = [
     }
   }
   /* A diagram is drawn for the desktop pane; a narrower pane shows it
-     smaller rather than rearranged. */
+     smaller rather than rearranged. On a phone the two short cards share a
+     row above the toolchain, each its drawing, title and line, as the
+     master's do. */
   @media (width < 48rem) {
     .cap-pane {
       min-height: 26rem;
@@ -465,16 +474,46 @@ const squares = [
     .cap-pane :global(.dia) {
       zoom: 0.8;
     }
-    .cap-cards {
-      grid-template-columns: minmax(0, 1fr);
+    .cap-card-toolchain {
+      order: 1;
     }
-    .cap-card {
-      border-left: none;
+    .cap-card,
+    .cap-card:nth-child(2) {
+      justify-content: flex-start;
+      gap: 0.5rem;
+      min-height: auto;
+      border-left: 1px solid var(--line);
+    }
+    .cap-card :global(.cap-card-icon) {
+      order: -1;
+      align-self: flex-start;
+      width: 2rem;
+      margin-bottom: 1rem;
+      padding: 0.167rem;
+    }
+    .cap-card-title {
+      font-size: var(--text-body);
+      letter-spacing: var(--text-body--letter-spacing);
+    }
+    .cap-card-description {
+      font-size: var(--text-label);
+    }
+    .cap-card-text {
+      gap: 0.5rem;
     }
   }
   @media (width < 30rem) {
     .cap-pane :global(.dia) {
       zoom: 0.6;
+    }
+    .cap-card {
+      padding: 1rem;
+    }
+    .cap-card-toolchain {
+      padding-inline: 0;
+    }
+    .cap-card-toolchain .cap-card-text {
+      padding-inline: 1rem 0;
     }
   }
 </style>

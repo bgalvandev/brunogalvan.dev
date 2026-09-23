@@ -49,6 +49,8 @@
   /* The black square that holds the mark at the heart of a diagram, darker
      than any band around it. */
   --core: light-dark(#1a1a1a, #050505);
+  /* The page dimmed behind an open menu: the master's #1a1a1a at half. */
+  --scrim: light-dark(rgb(26 26 26 / 50%), rgb(0 0 0 / 50%));
   /* A raised panel's top edge catching the light, the one thing that makes a
      dark surface read as lit rather than flat. */
   --highlight: light-dark(rgb(255 255 255 / 70%), rgb(255 255 255 / 6%));

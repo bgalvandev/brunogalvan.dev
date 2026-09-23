@@ -28,8 +28,9 @@ anywhere. Depth lives on extension pages, never on the home page.
   negative tracking on everything (−0.06em display, −0.05em body, −0.04em mono);
   revealed text never kerns, as the master's letters stay split;
   body leading 1.3, so blocks read as specification text. Sizes step down at the
-  master's own breakpoints (992, 768, 480px). The scale lives in `@theme` in
-  `src/styles/global.css`.
+  master's own breakpoints (992 and 768px); a phone keeps its 3.25rem display
+  and 2.75rem headline and lets the lines wrap, as the master's do. The scale
+  lives in `@theme` in `src/styles/global.css`.
 - **Shape.** `border-radius` is zero everywhere; Tailwind's radius scale is
   removed and a browser test fails on any rounded box. Every border is 1px solid
   and adjacent cells share edges.
@@ -56,13 +57,19 @@ anywhere. Depth lives on extension pages, never on the home page.
   master's 8% gutter (5% tablet, 1.5rem phone) capped at 80rem, set as an
   explicit width so it behaves the same in block, flex and grid parents. Nothing
   measures the viewport, so a scrollbar never causes overflow. Space follows the
-  master's 8px system, 8 to 80px; only control padding goes below it.
+  master's 8px system, 8 to 80px; only control padding goes below it. A room's
+  padding and the gaps around its heading are the master's named steps (tiny,
+  small, medium, large, hugh), `--space-*` in `global.css`, which shrink at its
+  992, 768 and 480px breakpoints, so a phone gets the master's tighter rooms.
 - **Components.** The eyebrow `[N.01/07] —— > LABEL ———` is read off the
   section list, so the count cannot disagree with the page, and speaks as
   "Section 1 of 7: label". The headline is two short sentences between slashes,
   each balanced on its own lines so neither ends on a word by itself. The block
   cursor of a typed fragment holds to its last letter, so on a phone the
-  cursor and the closing bracket never take a line of their own.
+  cursor and the closing bracket never take a line of their own. Behind the
+  hero's typed word the whole word stands unseen in the same cell, so the line
+  takes that word's height before its first letter and nothing below moves
+  while it types.
   Buttons hover as the master's do, over 0.3s from a slow start (GSAP's
   power1.in, `--ease-power1-in`): the solid button is an ink rectangle whose
   accent slides in behind while its square turns half a turn, its label steps
@@ -70,9 +77,16 @@ anywhere. Depth lives on extension pages, never on the home page.
   4px accent underline and draws its icon and label in from the edges.
   Navigation is boxed tabs hanging from the top edge, the current page filled
   with the accent inside `<` `>`; the contact tab takes the accent on hover.
+  Below the desktop breakpoint the bar is the master's: the name with its
+  chip on the left and three lines on the right that cross into an X; the
+  menu opens under the bar over the page dimmed by half, with the pages in a
+  mono column, the contact button, then the language, theme and pause (chosen
+  on 2026-09-23 over keeping them in the bar, where the name broke onto two
+  lines at 340px).
   The name is the wordmark, where the master sets its product's logo: in the
-  hero band beside a version-style chip and, stacked, filling the footer's
-  first column. A personal site is signed by its name; the pixel B with its
+  hero band beside a version-style chip (in the header bar instead below the
+  desktop breakpoint, where the master moves its logo) and, stacked, filling
+  the footer's first column. A personal site is signed by its name; the pixel B with its
   accent block stays the favicon (decided on 2026-09-22 over a mark beside
   the name, which only repeated it).
 - **Icons.** Card icons are isometric scenes of simple solids (boxes,
@@ -98,16 +112,34 @@ anywhere. Depth lives on extension pages, never on the home page.
   at 10vh, scrub 0.8): Method activates a card at each quarter and swaps its
   drawing to pixels; Code checks each file at each third while its rail's line
   grows. The Stack's chosen layer opens over 0.4s, and its diagram loops in
-  about 2.4s. Beyond the master: a revealed heading keeps its phrase on
+  about 2.4s. Below 768px the value cards and the method are the master's
+  phone sliders (chosen on 2026-09-23 over keeping them stacked): the value
+  cards one at a time, the next every 3.5s with a half-second cross-fade, a
+  swipe or a dash choosing one; the method one card at a time, its line
+  filling over 5s before the next takes its place, round and round from when
+  its box comes into view. Every card stays in the page, so a screen reader
+  reads all of them, and both stack again without motion. Beyond the master:
+  a revealed heading keeps its phrase on
   `aria-label` and hides the characters, a scrambling link pins its name
   first, and all of it is off under reduced motion. The library decision is
   ADR 0008.
 - **Texture.** The pixel field is the master's grid, thirty square cells to a
   row (fixed at 80rem/30 below the tablet breakpoint, where it overflows on
-  purpose); a cell the pointer crosses rises to the accent over 0.2s, stays lit
+  purpose), laid as the master lays it: the thirty columns centred across the
+  room and its rows down it (18 in the hero, 27 in the closing room, 14 in a
+  page's opening, so a line or, with an odd count, a row crosses the middle),
+  each line the right or bottom edge of its cell, so a row stands a line
+  taller than a cell is wide; a cell the pointer crosses rises to the accent over 0.2s, stays lit
   0.5s after the pointer leaves it and fades over 0.2s, and the cell under a
-  resting pointer stays lit. Lines are CSS; the glow is one canvas, drawn only
-  while a cell glows, where the master animates 1,350 elements. The preloader
+  resting pointer stays lit. Below 992px the field also flickers, as the
+  master's does there: each cell rises to a fifth of the accent over a second
+  and goes dark at once, the cells starting in a random order spread over
+  three seconds and the whole field again every four, so about a third of it
+  glows at any moment and never all of it (sampled from the master on
+  2026-09-23). Lines are CSS; the glow is one canvas under them, so a lit cell
+  keeps its edges as the master's boxes keep their borders, drawn only while a
+  cell glows or the flickering field is in view, where the master animates
+  1,350 elements. The preloader
   covers the first view of a session in accent and clears in tenth-of-the-width
   squares that hold and then snap off (0.3s, expo.in, 0.01s apart in random
   order); a CSS failsafe lifts it at 2.5s if the script never arrives. The
@@ -117,12 +149,14 @@ anywhere. Depth lives on extension pages, never on the home page.
   the code stage). Corner ticks are a pair of 4px squares at each corner.
   The logo row is a carousel of every tool with a mark (the owner's choice) in
   the master's cells: 201.6px by 132px, a grey mark and name, a closed box
-  with no fade, about 60px a second. The closing room's words move at 100px
+  with no fade, about 60px a second. Below 992px the row and the positioning
+  run edge to edge, as the master's do, each cell three tenths of the row
+  (half on a phone) by 112px. The closing room's words move at 100px
   a second, above and below in opposite directions, and the Stack's logo
   chips in two rows moving opposite ways.
 - **Pause.** A header toggle pauses everything that moves on its own
   (marquees, word cycles, diagrams, preloader, reveals, scrambles, the pixel
-  trail) and persists like the theme, so no motion runs past five seconds
+  trail and flicker, the phone sliders) and persists like the theme, so no motion runs past five seconds
   without a way to stop it (WCAG 2.2.2). It is hidden without JavaScript and
   under reduced motion, where nothing moves.
 - **Sections.** Seven numbered rooms after the hero, each built from a master
@@ -143,8 +177,9 @@ anywhere. Depth lives on extension pages, never on the home page.
   case. Where a role's work is verified in its repositories (ClinicSay, read
   on 2026-09-22), the page lists what was built, at feature level; the other
   roles keep one line until the updated CV supplies more.
-- **Menu.** Below the tablet breakpoint the page tabs fold into a native
-  disclosure, so the menu works without JavaScript.
+- **Menu.** Below the desktop breakpoint the header folds into the master's
+  menu, a native disclosure, so it opens and its links work without
+  JavaScript.
 - **Content.** The record describes current work for large companies in the
   United States: the stack is what Bruno's own 2025–2026 commits show, the
   technical-challenge projects are gone, and work at an employer appears at
@@ -225,8 +260,6 @@ frame audit of the master's interactions on 2026-09-22, and why it stays:
 - The hero has no rating row, avatars or partner logos: none is true here.
 - The hero band's chip carries the location, where the master's carries a
   version, and its text is lighter than the master's so it passes contrast.
-- The word cycles begin once their heading has opened, where the master's
-  begin two seconds after load whatever is on screen.
 - The preloader runs on the first view of a session only; the master covers
   every load, which would tax each move between pages.
 - The logo row moves and carries every tool with a published mark
@@ -239,6 +272,15 @@ frame audit of the master's interactions on 2026-09-22, and why it stays:
   2026-09-23: each fills the capital height, a hairline square of 0.6em
   with a shadow 0.1em deep.
 - A pause control exists; the master has none.
+- The phone menu also holds the language, the theme and the pause, which the
+  master's header has no need of.
+- The master's three menu lines have rounded ends; these are square, as every
+  box here is, and at 2px the difference does not show.
+- The value slider's dashes are 24px buttons around the master's 16px dash,
+  so a finger can hit one and a keyboard can reach it.
+- A case study's title, one word (a project's name), shrinks on a phone to
+  11% of the room's width so the word never runs past it; the master's inner
+  headings keep 3.25rem.
 - By the numbers charts the career itself, one bar per month as tall as the
   months into the role, with company names over each run; the master's chart
   is a picture of invented data behind a with/without toggle, and there is no
@@ -249,7 +291,8 @@ frame audit of the master's interactions on 2026-09-22, and why it stays:
   (screens and state, the layers of a request, a document translated), where
   the master plays videos of its product.
 - Method is drawn by the scroll only from 992px up, where the four cards sit
-  in one row. A card not reached yet hides its description, as the master's
+  in one row; from 768 to 992px they stand two by two, and below 768px they
+  are the master's one-card slider. A card not reached yet hides its description, as the master's
   does, but dims its number and title to a colour that still passes contrast
   where the master drops the card to 30% opacity.
 - Code shows three files from this site's own repository, verbatim, pinned to

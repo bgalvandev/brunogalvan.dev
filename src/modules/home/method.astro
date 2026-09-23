@@ -84,31 +84,40 @@ const icons = [
       <Headline id="method-title" lines={method.headline} />
       <Button href={site.repository} label={method.action} />
     </div>
-    <ol class="method-cards">
-      {method.rules.map((rule, index) => (
-        <li class="method-card" data-step>
-          <div class="method-card-top">
-            <span class="method-card-number" aria-hidden="true">
-              // {String(index + 1).padStart(3, '0')}
-            </span>
-            <p class="method-card-text">{rule.text}</p>
-          </div>
-          <div class="method-card-process field-dotted" aria-hidden="true">
-            <span class="method-card-line" data-step-line />
-            <span class="method-card-dot" />
-          </div>
-          <div class="method-card-bottom">
-            <h3 class="method-card-title">{rule.title}</h3>
-            <IsoIcon
-              solids={icons[index] ?? []}
-              columns={20}
-              align="xMaxYMax"
-              class="method-card-icon"
-            />
-          </div>
-        </li>
-      ))}
-    </ol>
+    <div class="method-slider">
+      {/* The numbers of the master's phone slider, where one card shows at a
+          time and this list marks which. */}
+      <ol class="method-steps" aria-hidden="true">
+        {method.rules.map((_, index) => (
+          <li class="method-step">// {String(index + 1).padStart(3, '0')}</li>
+        ))}
+      </ol>
+      <ol class="method-cards">
+        {method.rules.map((rule, index) => (
+          <li class="method-card" data-step>
+            <div class="method-card-top">
+              <span class="method-card-number" aria-hidden="true">
+                // {String(index + 1).padStart(3, '0')}
+              </span>
+              <p class="method-card-text">{rule.text}</p>
+            </div>
+            <div class="method-card-process field-dotted" aria-hidden="true">
+              <span class="method-card-line" data-step-line />
+              <span class="method-card-dot" />
+            </div>
+            <div class="method-card-bottom">
+              <h3 class="method-card-title">{rule.title}</h3>
+              <IsoIcon
+                solids={icons[index] ?? []}
+                columns={20}
+                align="xMaxYMax"
+                class="method-card-icon"
+              />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
   </div>
 </NumberedSection>
 
@@ -116,7 +125,10 @@ const icons = [
   .method-main {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: var(--space-medium);
+  }
+  .method-steps {
+    display: none;
   }
   .method-heading {
     display: flex;
@@ -271,11 +283,87 @@ const icons = [
   @media (width < 48rem) {
     .method-heading {
       flex-direction: column;
+      gap: var(--space-small);
     }
     .method-cards {
       grid-template-columns: 1fr;
       border-bottom: none;
     }
+  }
+  /* The master's phone slider: one box, the cards in the same place, the
+     numbers at the top left and the drawing at the top right, the process
+     strip across at 11rem, and the title and rule under it. Each card's line
+     fills over five seconds and the next card takes its place. The cards
+     stay in the page, so a screen reader reads all four. */
+  .method[data-sliding] .method-slider {
+    position: relative;
+    height: 21rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .method[data-sliding] .method-steps {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-weight: 500;
+  }
+  .method[data-sliding] .method-step {
+    opacity: 0.5;
+  }
+  .method[data-sliding] .method-step.is-current {
+    color: var(--accent);
+    opacity: 1;
+  }
+  .method[data-sliding] .method-cards {
+    height: 100%;
+    min-height: 0;
+    border: none;
+  }
+  .method[data-sliding] .method-card {
+    display: grid;
+    grid-area: 1 / 1;
+    grid-template-rows: 12rem auto auto;
+    align-content: start;
+    row-gap: 0.75rem;
+    border: none;
+    background: var(--paper);
+    opacity: 0;
+  }
+  .method[data-sliding] .method-card.is-current {
+    opacity: 1;
+  }
+  .method[data-sliding] .method-card-top,
+  .method[data-sliding] .method-card-bottom {
+    display: contents;
+  }
+  .method[data-sliding] .method-card-number {
+    display: none;
+  }
+  .method[data-sliding] :global(.method-card-icon) {
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    width: 7rem;
+    height: 7rem;
+  }
+  .method[data-sliding] .method-card-process {
+    top: 11rem;
+    transform: none;
+  }
+  .method[data-sliding] .method-card-title {
+    grid-row: 2;
+    margin-top: 0.25rem;
+  }
+  .method[data-sliding] .method-card-text {
+    grid-row: 3;
+    color: var(--muted);
   }
   @media (prefers-reduced-motion: reduce) {
     .method-card-number,

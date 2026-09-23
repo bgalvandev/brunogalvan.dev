@@ -94,8 +94,11 @@ const run = variant === 'text' ? [items, items, items, items].flat() : items;
   }
   /* The master's logo row: a closed box with no fade at its ends, its left
      edge on the box and every cell closing its own right, each cell the
-     master's 201.6px by 132px. About 60px a second. */
+     master's 201.6px by 132px, and below the desktop breakpoint, where the
+     row runs edge to edge, three tenths of it (half on a phone) by 112px.
+     About 60px a second. */
   .marquee-logos {
+    container-type: inline-size;
     border-left: 1px solid var(--line);
     mask-image: none;
   }
@@ -108,6 +111,16 @@ const run = variant === 'text' ? [items, items, items, items].flat() : items;
     font-family: var(--font-sans);
     font-size: 1.125rem;
     text-transform: none;
+  }
+  @media (width < 62rem) {
+    .marquee-logos .marquee-item {
+      width: 30cqw;
+    }
+  }
+  @media (width < 48rem) {
+    .marquee-logos .marquee-item {
+      width: 50cqw;
+    }
   }
   .marquee-text {
     border-block: none;

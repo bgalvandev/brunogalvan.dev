@@ -251,10 +251,12 @@ const icons = {
     color: var(--muted);
     font-size: var(--text-label);
   }
+  /* Below the desktop breakpoint the line runs 1rem inside the room, each
+     marker centred on it at the room's edge, as the master's do. */
   @media (width < 62rem) {
     .experience-timeline {
-      margin: 0;
-      padding: 0 0 0 3.5rem;
+      margin: 0 0 0 1rem;
+      padding: 0 0 0 2rem;
     }
     .experience-head {
       flex-direction: column;
@@ -270,7 +272,7 @@ const icons = {
     }
     .experience-marker {
       top: 0;
-      left: -4.5rem;
+      left: -3rem;
     }
     .experience-role {
       margin-top: 0;

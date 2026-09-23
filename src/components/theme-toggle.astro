@@ -1,7 +1,8 @@
 ---
 // A toggle button: the label names the option and aria-pressed says whether it
 // is on, so the visible text never contradicts the state. Shown by CSS only
-// once the pre-paint script has marked JavaScript as available.
+// once the pre-paint script has marked JavaScript as available. The header
+// holds two, in the bar and in the phone menu, and both follow the theme.
 import PixelIcon from '@/components/pixel-icon.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
@@ -23,7 +24,7 @@ const { theme } = messages(Astro.props.locale);
 <script>
   const preference = window.matchMedia('(prefers-color-scheme: dark)');
   const root = document.documentElement;
-  const button = document.querySelector<HTMLButtonElement>(
+  const buttons = document.querySelectorAll<HTMLButtonElement>(
     '[data-theme-toggle]',
   );
   function isDark() {
@@ -32,9 +33,11 @@ const { theme } = messages(Astro.props.locale);
       : preference.matches;
   }
   function update() {
-    button?.setAttribute('aria-pressed', String(isDark()));
+    buttons.forEach((button) =>
+      button.setAttribute('aria-pressed', String(isDark())),
+    );
   }
-  button?.addEventListener('click', () => {
+  function toggle() {
     const theme = isDark() ? 'light' : 'dark';
     root.dataset.theme = theme;
     try {
@@ -43,7 +46,8 @@ const { theme } = messages(Astro.props.locale);
       /* Keep the current page usable. */
     }
     update();
-  });
+  }
+  buttons.forEach((button) => button.addEventListener('click', toggle));
   preference.addEventListener('change', update);
   update();
 </script>
@@ -53,18 +57,5 @@ const { theme } = messages(Astro.props.locale);
     width: 0.75rem;
     height: 0.75rem;
     margin-right: 0.375rem;
-  }
-  @media (width < 48rem) {
-    .theme-toggle :global(.theme-toggle-icon) {
-      margin-right: 0;
-    }
-    .theme-toggle-label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
   }
 </style>

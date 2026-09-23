@@ -63,20 +63,39 @@ const tools = Object.values(stack)
           <span
             class="hero-line hero-fragment pixel-highlight"
             data-reveal-skip
+            data-typewriter-line
           >
-            {/* An array, so no whitespace creeps between the brackets and
-                the word the script types. */}
-            {[
-              '[\u00a0',
+            {/* Arrays, so no whitespace creeps between the brackets and the
+                word the script types. Behind the typed word the whole word
+                stands unseen in the same cell, so the line takes its full
+                height before the first letter and nothing below moves while
+                it types; the script swaps the unseen word with each one. */}
+            <span>
+              {[
+                '[\u00a0',
+                <span
+                  data-typewriter
+                  data-typewriter-words={hero.fragments.join('|')}
+                  data-typewriter-delay="2"
+                >
+                  {hero.fragments[0]}
+                </span>,
+                '\u00a0]',
+              ]}
+            </span>
+            {hero.fragments.map((word, index) => (
               <span
-                data-typewriter
-                data-typewriter-words={hero.fragments.join('|')}
-                data-typewriter-delay="2"
+                class="hero-fragment-ghost"
+                data-typewriter-ghost
+                hidden={index > 0}
               >
-                {hero.fragments[0]}
-              </span>,
-              '\u00a0]',
-            ]}
+                {[
+                  '[\u00a0',
+                  <span class="hero-fragment-word">{word}</span>,
+                  '\u00a0]',
+                ]}
+              </span>
+            ))}
           </span>
           <span class="hero-line">{hero.closing}</span>
         </span>
@@ -199,7 +218,7 @@ const tools = Object.values(stack)
   .hero-body {
     position: relative;
     z-index: 1;
-    padding-bottom: 10rem;
+    padding-bottom: calc(2 * var(--space-large));
     background: var(--paper);
   }
   .hero-top {
@@ -207,7 +226,7 @@ const tools = Object.values(stack)
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 2rem;
-    padding-block: 3rem 4rem;
+    padding-block: var(--space-small) var(--space-medium);
   }
   .hero-heading {
     margin: 0;
@@ -217,12 +236,32 @@ const tools = Object.values(stack)
   .hero-line {
     display: block;
   }
+  /* On a narrow phone the greeting breaks between its sentences, as the
+     headlines do, rather than leaving a word alone at a line's end. */
+  .hero-line {
+    text-wrap: balance;
+  }
+  .hero-fragment {
+    display: grid;
+  }
+  .hero-fragment > * {
+    grid-area: 1 / 1;
+  }
+  .hero-fragment-ghost {
+    visibility: hidden;
+  }
+  /* The typed word's cursor, so a ghost wraps where the word will. */
+  .hero-fragment-word::after {
+    content: '\2060';
+    margin-left: 2px;
+    padding-left: 0.55em;
+  }
   .hero-content {
     display: flex;
     flex: 1;
     flex-direction: column;
     justify-content: space-between;
-    gap: 2rem;
+    gap: 1rem;
     max-width: 27.5rem;
     margin-left: auto;
     padding-block: 0.75rem;
@@ -292,37 +331,45 @@ const tools = Object.values(stack)
     top: -0.0625em;
     margin-inline: 0.5em;
   }
+  /* Below the desktop breakpoint the band is the master's: half the screen
+     tall, the name gone to the header bar, and the scroll cue at its foot on
+     the left; the logo row and the positioning run edge to edge. */
   @media (width < 62rem) {
+    .hero-band {
+      justify-content: flex-end;
+      min-height: 50vh;
+    }
+    .hero-band-content {
+      padding-block: 0 1rem;
+    }
+    .hero-name {
+      display: none;
+    }
     .hero-content {
       margin-left: 0;
+    }
+    .hero-main {
+      width: 100%;
     }
   }
   @media (width < 48rem) {
     .hero-positioning-text {
       font-size: var(--text-medium);
     }
-  }
-  @media (width < 30rem) {
-    /* On a phone the fragment may take two lines, and keeps room for both so
-       nothing below moves while it types. The brackets hold to its words. */
+    /* The fragment may take two lines; its brackets hold to its words. */
     .hero-fragment {
-      min-height: calc(2em * var(--text-display--line-height));
       white-space: normal;
     }
+  }
+  @media (width < 30rem) {
     .hero-positioning {
       padding: 1rem;
     }
     .hero-positioning-bracket {
       display: none;
     }
-    .hero-positioning-text {
-      font-size: 1.125rem;
-    }
     .hero-actions {
       grid-template-columns: 1fr;
-    }
-    .hero-scroll {
-      display: none;
     }
   }
 </style>
