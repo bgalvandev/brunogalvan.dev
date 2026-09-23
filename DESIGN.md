@@ -111,8 +111,11 @@ anywhere. Depth lives on extension pages, never on the home page.
   by the scroll from 992px up (Method over 200vh, Code over 250vh, both sticky
   at 10vh, scrub 0.8): Method activates a card at each quarter and swaps its
   drawing to pixels; Code checks each file at each third while its rail's line
-  grows. The Stack's chosen layer opens over 0.4s, and its diagram loops in
-  about 2.4s. Below 768px the value cards and the method are the master's
+  grows. The Stack's chosen layer opens over 0.4s, and its diagram plays the
+  master's video for it, frame for frame, in two seconds and again: the hub's
+  joins, brackets and channel draw out and the rows light one by one; the
+  layers of a request come up one at a time, each crossed in turn; the card
+  at work widens while the documents rise, arrive and fill their bar. Below 768px the value cards and the method are the master's
   phone sliders (chosen on 2026-09-23 over keeping them stacked): the value
   cards one at a time, the next every 3.5s with a half-second cross-fade, a
   swipe or a dash choosing one; the method one card at a time, its line
@@ -288,8 +291,17 @@ frame audit of the master's interactions on 2026-09-22, and why it stays:
 - The Stack's layers are a radio group that works without JavaScript; a layer
   not chosen dims to a colour that still passes contrast, where the master's
   tabs drop to half opacity. Its diagrams are drawn in HTML from the record
-  (screens and state, the layers of a request, a document translated), where
-  the master plays videos of its product.
+  (screens and state, the layers of a request, a document translated), where the
+  master plays videos of its product; each takes the matching video's shapes,
+  sizes (as its pane shows it, 96% of the video) and timing, measured frame by
+  frame on 2026-09-23. The second and third layers take the forms of the
+  master's third and second videos, since a request's layers read as its rows
+  and translated documents as its card at work. Every text in them keeps a grey
+  that passes contrast in every frame, where the master's labels sit near
+  #4c4c4c and its dark rows near #373737: a row waits in --faint and lights to
+  ink, and a layer arrives whole where the master fades it in from a ghost. The
+  state box's longest name sets its rows a size under the master's so the box
+  keeps the master's proportions.
 - Method is drawn by the scroll only from 992px up, where the four cards sit
   in one row; from 768 to 992px they stand two by two, and below 768px they
   are the master's one-card slider. A card not reached yet hides its description, as the master's

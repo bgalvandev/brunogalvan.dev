@@ -300,16 +300,16 @@ const squares = [
     color: var(--faint);
   }
   /* The pane: one diagram per layer in the same place, the chosen one
-     faded in. */
+     faded in, on dots 16px apart, as the master's videos draw them. */
   .cap-pane {
     display: grid;
     place-items: center;
     min-height: 40rem;
-    padding: 3rem;
+    padding: 3rem 1.5rem;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
     border-left: 1px solid var(--line);
-    background-size: 13.13px;
+    background-size: 16px;
   }
   .cap-pane :global(.cap-diagram) {
     grid-area: 1 / 1;
@@ -444,8 +444,11 @@ const squares = [
     .cap-left :global(.headline) {
       order: -1;
     }
+    /* The master's pane is square below the desktop breakpoint, its video
+       filling it (at half size on a phone). */
     .cap-pane {
-      min-height: 32rem;
+      aspect-ratio: 1;
+      min-height: 0;
       border-right: 1px solid var(--line);
       border-left: 1px solid var(--line);
     }
@@ -468,11 +471,10 @@ const squares = [
      master's do. */
   @media (width < 48rem) {
     .cap-pane {
-      min-height: 26rem;
-      padding: 1.5rem 0.75rem;
+      padding: 0.75rem;
     }
     .cap-pane :global(.dia) {
-      zoom: 0.8;
+      zoom: 0.7;
     }
     .cap-card-toolchain {
       order: 1;
@@ -504,7 +506,7 @@ const squares = [
   }
   @media (width < 30rem) {
     .cap-pane :global(.dia) {
-      zoom: 0.6;
+      zoom: 0.55;
     }
     .cap-card {
       padding: 1rem;

@@ -3,12 +3,16 @@ import PixelIcon from '@/components/pixel-icon.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 // The three diagrams of the Stack room, drawn in HTML where the master plays
-// three videos, each looping in about two and a half seconds:
-// - interfaces: screens and state meet at the core, and a pulse runs down
-//   to what is rendered;
-// - services: a request goes down the layers, one lighting after another;
-// - ai: a document is translated, its kinds filling in behind a progress
-//   bar.
+// three videos, each looping in two seconds:
+// - interfaces: the master's first video, sized as its pane shows it: two
+//   boxes with a bracket behind each, joined to the core, and a channel
+//   running down to what is rendered, which lights as the channel arrives,
+//   then the rows light one by one;
+// - services: the master's third video: from the core the layers of a
+//   request come up one by one, each crossed in turn;
+// - ai: the master's second video: a card at work widens while a card of
+//   documents rises beside it, the documents coming one by one as a bar
+//   runs, the core sliding in and the join appearing on the card's corner.
 // At the heart of each, the core: a black square holding a code glyph.
 // Decoration: the tab beside it carries the words. Every loop is CSS, stops
 // with the pause control and is off under reduced motion, where each diagram
@@ -104,6 +108,24 @@ const glyphs = {
     '#######',
   ],
   code: ['..#...#..', '.#.....#.', '#.......#', '.#.....#.', '..#...#..'],
+  chevron: [
+    '.......',
+    '.......',
+    '#.....#',
+    '.#...#.',
+    '..#.#..',
+    '...#...',
+    '.......',
+  ],
+  ring: [
+    '..###..',
+    '.#...#.',
+    '#.....#',
+    '#..#..#',
+    '#.....#',
+    '.#...#.',
+    '..###..',
+  ],
   layer: [
     '...#...',
     '.##.##.',
@@ -122,49 +144,110 @@ const screenIcons = [
 ];
 const state = ['Next.js', 'TanStack Query', 'React Hook Form', 'Zod'];
 const stateIcons = [glyphs.window, glyphs.query, glyphs.form, glyphs.check];
-const outputIcons = [glyphs.server, glyphs.window, glyphs.page];
+// The rendered cells carry finer glyphs, thirteen cells a side, so their
+// strokes are as light as the master's signal icons.
+const outputIcons = [
+  [
+    '#############',
+    '#...........#',
+    '#.##........#',
+    '#...........#',
+    '#############',
+    '#...........#',
+    '#.##........#',
+    '#...........#',
+    '#############',
+    '#...........#',
+    '#.##........#',
+    '#...........#',
+    '#############',
+  ],
+  [
+    '#############',
+    '#.#.#.......#',
+    '#############',
+    '#...........#',
+    '#...........#',
+    '#...........#',
+    '#...........#',
+    '#...........#',
+    '#...........#',
+    '#...........#',
+    '#...........#',
+    '#...........#',
+    '#############',
+  ],
+  [
+    '.########....',
+    '.#......##...',
+    '.#......#.#..',
+    '.#......#..#.',
+    '.#......####.',
+    '.#.........#.',
+    '.#.........#.',
+    '.#.........#.',
+    '.#.........#.',
+    '.#.........#.',
+    '.#.........#.',
+    '.#.........#.',
+    '.###########.',
+  ],
+];
 const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
 ---
 
 <div class:list={['dia', `dia-${kind}`, className]}>
   {kind === 'interfaces' && (
     <>
-      <div class="dia-box dia-left">
-        <p class="dia-label">{diagram.screens}</p>
-        <ul class="dia-list">
-          {diagram.screenItems.map((item, index) => (
-            <li class="dia-item">
-              <PixelIcon rows={screenIcons[index] ?? []} class="dia-glyph" />
-              {item}
+      {[
+        {
+          side: 'left',
+          label: diagram.screens,
+          items: diagram.screenItems,
+          icons: screenIcons,
+        },
+        {
+          side: 'right',
+          label: diagram.state,
+          items: state,
+          icons: stateIcons,
+        },
+      ].map((box) => (
+        <div class={`dia-box dia-${box.side}`}>
+          <p class="dia-label">{box.label}</p>
+          <ul class="dia-list">
+            {box.items.map((item, index) => (
+              <li class="dia-item">
+                <PixelIcon rows={box.icons[index] ?? []} class="dia-glyph" />
+                {item}
+              </li>
+            ))}
+            <li class="dia-more">
+              <span />
+              <span />
+              <span />
             </li>
-          ))}
-        </ul>
-      </div>
+          </ul>
+        </div>
+      ))}
       <div class="dia-core">
         <PixelIcon rows={glyphs.code} class="dia-core-glyph" />
+        <span class="dia-flow" />
       </div>
-      <div class="dia-box dia-right">
-        <p class="dia-label">{diagram.state}</p>
-        <ul class="dia-list">
-          {state.map((item, index) => (
-            <li class="dia-item">
-              <PixelIcon rows={stateIcons[index] ?? []} class="dia-glyph" />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <span class="dia-flow" />
       <div class="dia-out">
         <p class="dia-label">{diagram.output}</p>
-        <ul class="dia-chips">
-          {diagram.outputItems.map((item, index) => (
-            <li class="dia-chip">
-              <PixelIcon rows={outputIcons[index] ?? []} class="dia-glyph" />
-              <span>{item}</span>
-            </li>
+        <div class="dia-signals">
+          <span class="dia-end" />
+          {outputIcons.map((icon, index) => (
+            <>
+              {index > 0 && <span class="dia-dot" />}
+              <span class="dia-cell">
+                <PixelIcon rows={icon} class="dia-glyph" />
+              </span>
+            </>
           ))}
-        </ul>
+          <span class="dia-end" />
+        </div>
       </div>
     </>
   )}
@@ -193,17 +276,23 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
         <span class="dia-skeleton" />
         <p class="dia-status">
           <span class="dia-spinner" />
-          {diagram.translating}
+          <span class="dia-status-text">{diagram.translating}</span>
+        </p>
+        <p class="dia-foot">
+          <PixelIcon rows={glyphs.chevron} class="dia-glyph" />
+          ES
+          <PixelIcon name="arrow-right" class="dia-arrow" />
+          EN
         </p>
         <div class="dia-core dia-core-small">
           <PixelIcon rows={glyphs.code} class="dia-core-glyph" />
         </div>
       </div>
       <div class="dia-card dia-card-docs">
-        <p class="dia-langs">
-          <span>ES</span>
-          <PixelIcon name="arrow-right" class="dia-arrow" />
-          <span>EN</span>
+        <p class="dia-count">
+          <PixelIcon rows={glyphs.ring} class="dia-glyph" />
+          {diagram.documentsLabel}
+          <span class="dia-count-number">{diagram.documents.length}</span>
         </p>
         <ul class="dia-docs">
           {diagram.documents.map((document) => (
@@ -213,11 +302,13 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
             </li>
           ))}
         </ul>
-        <span class="dia-progress" />
+        <span class="dia-track">
+          <span class="dia-progress" />
+        </span>
+        <span class="dia-pop">
+          <PixelIcon rows={glyphs.page} />
+        </span>
       </div>
-      <span class="dia-pop">
-        <PixelIcon rows={glyphs.page} />
-      </span>
     </>
   )}
 </div>
@@ -226,7 +317,7 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
   /* Shared pieces: a bordered box with a mono label, a list of rows with a
      pixel glyph each, and the core, a code glyph in a black square. */
   .dia {
-    --dia-loop: 2.4s;
+    --dia-loop: 2s;
     position: relative;
     width: 100%;
     max-width: 34rem;
@@ -240,12 +331,13 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     font-size: var(--text-small);
     text-transform: uppercase;
   }
+  /* A box only covers the pane's dots, as the master's do: same ground. */
   .dia-box,
   .dia-out,
   .dia-card,
   .dia-row {
     border: 1px solid var(--line);
-    background: var(--paper);
+    background: var(--field);
   }
   .dia-box {
     padding: 1rem;
@@ -281,6 +373,7 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     place-items: center;
     width: 4rem;
     height: 4rem;
+    border: 1px solid var(--surface);
     background: var(--core);
     color: var(--ink);
   }
@@ -289,112 +382,241 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     height: auto;
   }
 
-  /* Interfaces: two boxes either side of the core, a pulse running down to
-     what is rendered. */
+  /* Interfaces, measured from the master's first video as its pane shows
+     it: boxes 151px wide and 249px tall, a bracket 32px deep behind each,
+     30px short of its box at either end, a join of 35px to a core of 94px,
+     and a channel of 10px down to a box of 301 by 124. */
   .dia-interfaces {
+    --box-h: 15.5625rem;
+    --core-size: 5.875rem;
+    --bracket: 2rem;
+    --join: 2.1875rem;
+    --drop: 4.25rem;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    grid-template-rows: auto 5rem auto;
-    column-gap: 2.5rem;
+    grid-template-rows: var(--box-h) var(--drop) auto;
+    column-gap: calc(var(--bracket) + var(--join));
     align-items: center;
+    width: max-content;
+    max-width: none;
+  }
+  .dia-interfaces .dia-box {
+    position: relative;
+    grid-row: 1;
+    align-self: stretch;
+    min-width: 9.4375rem;
+    padding: 1.1875rem 1rem 0;
   }
   .dia-interfaces .dia-left {
-    grid-area: 1 / 1;
+    grid-column: 1;
+  }
+  .dia-interfaces .dia-right {
+    grid-column: 3;
+  }
+  .dia-interfaces .dia-label {
+    margin-bottom: 0.4375rem;
+  }
+  /* A row stands 40px, as the master's do; its words are a size under
+     the master's so the state box's longest name keeps the master's
+     proportions. A row still dark keeps a grey that passes contrast, where
+     the master's nearly vanish, and lights to ink. */
+  .dia-interfaces .dia-item {
+    gap: 0.5rem;
+    padding-block: 0.75rem;
+    color: var(--ink);
+    font-size: 0.875rem;
+    line-height: 1.1;
+  }
+  .dia-interfaces :global(.dia-glyph) {
+    width: 1.0625rem;
+    height: 1.0625rem;
+  }
+  /* The row still loading: three small squares. */
+  .dia-more {
+    display: flex;
+    gap: 0.3125rem;
+    padding-block: 0.875rem;
+  }
+  .dia-more span {
+    width: 0.1875rem;
+    height: 0.1875rem;
+    background: currentColor;
+    color: var(--decor);
+  }
+  /* The bracket behind each box: a line standing a bracket's depth from the
+     box, and the two arms that tie it back. */
+  .dia-interfaces .dia-box::before,
+  .dia-interfaces .dia-box::after {
+    content: '';
+    position: absolute;
+    top: 1.875rem;
+    bottom: 1.875rem;
+  }
+  .dia-interfaces .dia-box::before {
+    width: 1px;
+    background: var(--decor);
+  }
+  .dia-interfaces .dia-box::after {
+    width: var(--bracket);
+    border-block: 1px solid var(--decor);
+  }
+  .dia-left::before {
+    left: calc(100% + var(--bracket) - 1px);
+  }
+  .dia-left::after {
+    left: 100%;
+    transform-origin: 100% 50%;
+  }
+  .dia-right::before {
+    right: calc(100% + var(--bracket) - 1px);
+  }
+  .dia-right::after {
+    right: 100%;
+    transform-origin: 0 50%;
   }
   .dia-interfaces .dia-core {
     grid-area: 1 / 2;
+    width: var(--core-size);
+    height: var(--core-size);
   }
-  .dia-interfaces .dia-right {
-    grid-area: 1 / 3;
+  .dia-interfaces .dia-core :global(.dia-core-glyph) {
+    width: 2.5rem;
   }
-  /* The joins: a rule from each box into the core. */
+  /* The joins: a rule from the core to each bracket. */
   .dia-interfaces .dia-core::before,
   .dia-interfaces .dia-core::after {
     content: '';
     position: absolute;
     top: 50%;
-    width: 2.5rem;
-    border-top: 1px solid var(--line-strong);
+    width: var(--join);
+    border-top: 1px solid var(--decor);
   }
   .dia-interfaces .dia-core::before {
-    right: 100%;
+    right: calc(100% + 1px);
+    transform-origin: 100% 50%;
   }
   .dia-interfaces .dia-core::after {
-    left: 100%;
+    left: calc(100% + 1px);
+    transform-origin: 0 50%;
   }
+  /* The channel: an accent rule on either edge over a dark accent ground,
+     its breaks travelling down, from the core to the box below. */
   .dia-flow {
-    grid-area: 2 / 2;
-    justify-self: center;
-    width: 2px;
-    height: 100%;
-    background: repeating-linear-gradient(
-      to bottom,
-      var(--accent) 0 0.5rem,
-      transparent 0.5rem 0.75rem
+    position: absolute;
+    top: calc(100% + 1px);
+    left: calc(50% - 0.3125rem);
+    width: 0.625rem;
+    height: calc((var(--box-h) - var(--core-size)) / 2 + var(--drop) - 1px);
+    background: linear-gradient(
+      90deg,
+      var(--accent) 0 2px,
+      color-mix(in srgb, var(--accent) 22%, transparent) 2px calc(100% - 2px),
+      var(--accent) calc(100% - 2px)
     );
+    mask-image: repeating-linear-gradient(
+      to bottom,
+      #000 0 2.25rem,
+      transparent 2.25rem 2.5rem
+    );
+    transform-origin: 50% 0;
   }
   .dia-out {
     grid-area: 3 / 1 / 4 / 4;
     justify-self: center;
-    padding: 1rem;
+    width: 18.8125rem;
+    padding: 1.25rem 0 1.125rem;
     border-color: var(--accent);
   }
   .dia-out .dia-label {
+    margin-bottom: 1.375rem;
     text-align: center;
   }
-  .dia-chips {
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-  .dia-chip {
+  /* A square at each end, three cells, and a dot between two cells. */
+  .dia-signals {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    min-width: 5.5rem;
-    padding: 0.75rem 0.5rem;
-    border: 1px solid var(--line);
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: var(--text-small);
-    text-transform: uppercase;
+    justify-content: center;
+    gap: 0.625rem;
   }
-  .dia-chip :global(.dia-glyph) {
-    width: 1.25rem;
-    height: 1.25rem;
+  .dia-end {
+    width: 0.375rem;
+    height: 0.375rem;
+    margin-inline: 1rem;
+    background: var(--decor);
+  }
+  .dia-signals {
+    color: var(--accent);
+  }
+  .dia-cell {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1px solid var(--line);
+  }
+  .dia-dot {
+    width: 0.25rem;
+    height: 0.25rem;
+    background: currentColor;
+  }
+  .dia-cell :global(.dia-glyph) {
+    width: 1.625rem;
+    height: 1.625rem;
   }
 
-  /* Services: the core, a stem and the layers a request crosses. */
+  /* Services, measured from the master's third video: a core of 94px, a
+     stem of 55px, and rows of 312 by 68, 18px apart, each with its glyph in
+     a square of 43px and its format on a chip. The row being crossed takes
+     the accent, with a square either side; a stem joins each row reached to
+     the one above. */
   .dia-services {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
+  .dia-services .dia-core {
+    width: 5.875rem;
+    height: 5.875rem;
+  }
+  .dia-services .dia-core :global(.dia-core-glyph) {
+    width: 2.5rem;
+  }
   .dia-stem {
-    width: 1px;
-    height: 2.5rem;
+    width: 2px;
+    height: 3.4375rem;
     background: var(--accent);
+    transform-origin: 50% 0;
   }
   .dia-rows {
-    gap: 1rem;
-    width: min(100%, 20rem);
+    gap: 1.125rem;
+    width: 19.5rem;
   }
   .dia-row {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 1rem;
-    color: var(--ink);
+    gap: 0.5rem;
+    height: 4.25rem;
+    padding-inline: 0.8125rem;
+    color: var(--muted);
+    font-size: 1.0625rem;
+  }
+  .dia-row :global(.dia-glyph) {
+    box-sizing: border-box;
+    width: 2.6875rem;
+    height: 2.6875rem;
+    padding: 0.875rem;
+    border: 1px solid var(--line);
   }
   .dia-row-format {
     margin-left: auto;
-    color: var(--faint);
+    padding: 0.2em 0.25em;
+    background: var(--surface);
+    color: var(--row-mark, var(--faint));
     font-family: var(--font-mono);
     font-size: var(--text-small);
     text-transform: uppercase;
   }
-  /* The row being crossed: accent, with a square at each side. */
   .dia-row::before,
   .dia-row::after {
     content: '';
@@ -403,63 +625,86 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     width: 0.375rem;
     height: 0.375rem;
     background: var(--accent);
-    opacity: 0;
+    opacity: var(--row-dot, 0);
     transform: translateY(-50%);
   }
   .dia-row::before {
-    right: calc(100% + 0.75rem);
+    right: calc(100% + 0.8125rem);
   }
   .dia-row::after {
-    left: calc(100% + 0.75rem);
+    left: calc(100% + 0.8125rem);
+  }
+  /* The stem from the row above, across the gap. */
+  .dia-row + .dia-row .dia-row-name::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: calc(50% - 1px);
+    width: 2px;
+    height: 1.125rem;
+    background: var(--accent);
   }
   .dia-row:last-child {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .dia-row:last-child::before,
-  .dia-row:last-child::after,
-  .dia-row:last-child .dia-row-format {
-    opacity: 1;
+    --row-mark: var(--accent);
+    --row-dot: 1;
     color: var(--accent);
   }
 
-  /* AI: a card at work, a card of documents filling in, and the join. */
+  /* AI, measured from the master's second video: a card at work 388 by
+     258, its core of 78px at the top right, and a card of documents 253 by
+     125 over its lower right, with the join, a square of 51px, on that
+     card's corner. */
+  /* As tall as the finished pair; the documents rise into it from below. */
   .dia-ai {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr 1fr;
-    grid-template-rows: auto 2rem auto;
-  }
-  .dia-card {
-    padding: 1.25rem;
+    position: relative;
+    width: 29.1875rem;
+    height: 20rem;
   }
   .dia-card-main {
-    position: relative;
-    grid-area: 1 / 1 / 3 / 3;
+    position: absolute;
+    top: 0;
+    left: 12.125rem;
     display: flex;
     flex-direction: column;
-    gap: 0.625rem;
-    padding-right: 6rem;
-    min-height: 13rem;
+    gap: 0.4375rem;
+    width: 24.25rem;
+    height: 16.125rem;
+    padding: 1.6875rem 1.625rem 1.5rem;
+    transform: translateX(-50%);
   }
   .dia-skeleton {
-    height: 0.875rem;
+    height: 1.375rem;
     background: var(--surface);
   }
   .dia-skeleton:nth-child(1) {
-    width: 80%;
+    width: 48%;
   }
   .dia-skeleton:nth-child(2) {
-    width: 55%;
+    width: 33%;
   }
   .dia-skeleton:nth-child(3) {
-    width: 95%;
+    width: 65%;
   }
-  .dia-status {
+  .dia-status,
+  .dia-foot {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 1rem 0 0;
+    margin: 0;
+    white-space: nowrap;
+  }
+  .dia-status {
+    margin-top: 1rem;
     color: var(--muted);
+  }
+  .dia-foot {
+    gap: 0.375rem;
+    margin-top: auto;
+    color: var(--faint);
+  }
+  .dia-foot :global(.dia-arrow) {
+    width: 0.625rem;
+    height: 0.625rem;
   }
   /* Eight spokes, turning by steps. */
   .dia-spinner {
@@ -474,141 +719,218 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
   }
   .dia-core-small {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 3.5rem;
-    height: 3.5rem;
+    top: 1.6875rem;
+    right: 0.875rem;
+    width: 4.875rem;
+    height: 4.875rem;
+  }
+  .dia-core-small :global(.dia-core-glyph) {
+    width: 2rem;
   }
   .dia-card-docs {
-    position: relative;
+    position: absolute;
+    top: 12.1875rem;
+    left: 13.375rem;
     z-index: 1;
-    grid-area: 2 / 2 / 4 / 4;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    margin-left: 1.5rem;
+    width: 15.8125rem;
+    height: 7.8125rem;
+    padding: 1rem;
   }
-  .dia-langs {
+  .dia-count {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: flex-end;
+    gap: 0.375rem;
     margin: 0;
     color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: var(--text-small);
   }
-  .dia-langs :global(.dia-arrow) {
-    width: 0.625rem;
-    height: 0.625rem;
+  .dia-count-number {
+    padding: 0 0.25em;
+    background: var(--surface);
   }
   .dia-docs {
     flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.25rem;
+    margin-top: auto;
   }
   .dia-doc {
     display: flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.5rem;
+    gap: 0.25rem;
+    padding: 0.25rem 0.4375rem;
     border: 1px solid var(--line);
-    color: var(--ink);
-    font-size: var(--text-small);
+    color: var(--muted);
+    font-size: var(--text-label);
+  }
+  .dia-doc :global(.dia-glyph) {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+  /* The progress: an accent bar along a grey track. */
+  .dia-track {
+    height: 2px;
+    margin-top: 0.625rem;
+    background: var(--line);
   }
   .dia-progress {
-    height: 2px;
+    display: block;
+    height: 100%;
     background: var(--accent);
+    transform-origin: 0 50%;
   }
+  /* The join sits on the card's corner, a square of the accent at its own
+     lower left. */
   .dia-pop {
     position: absolute;
-    z-index: 2;
-    top: calc(13rem - 1.25rem);
-    left: 1.5rem;
+    top: -1.625rem;
+    left: -1.5625rem;
     display: grid;
     place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 1px solid var(--line-strong);
-    background: var(--paper);
+    width: 3.1875rem;
+    height: 3.1875rem;
+    border: 1px solid var(--line);
+    background: var(--field);
     color: var(--accent);
   }
+  .dia-pop::after {
+    content: '';
+    position: absolute;
+    bottom: -0.1875rem;
+    left: -0.1875rem;
+    width: 0.375rem;
+    height: 0.375rem;
+    background: var(--accent);
+  }
   .dia-pop :global(svg) {
-    width: 1.125rem;
-    height: 1.125rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   /* The loops. Every rule above is the finished state, which is what shows
      without motion; the keyframes below only play it out. */
   @media (prefers-reduced-motion: no-preference) {
-    .dia-interfaces .dia-item {
-      animation: dia-light var(--dia-loop) steps(1) infinite;
-    }
-    .dia-interfaces .dia-item:nth-child(2) {
-      animation-delay: 0.15s;
-    }
-    .dia-interfaces .dia-item:nth-child(3) {
-      animation-delay: 0.3s;
-    }
-    .dia-interfaces .dia-item:nth-child(4) {
-      animation-delay: 0.45s;
-    }
+    /* The master's first video, over two seconds: the joins leave the core,
+       the bracket lines stand up from their middles and their arms reach
+       back to the boxes, while the channel runs down; as it arrives the box
+       below takes the accent and the rows light one by one, then all of it
+       starts again. */
     .dia-interfaces .dia-core::before,
     .dia-interfaces .dia-core::after {
-      animation: dia-join var(--dia-loop) var(--ease-power1-out) infinite;
+      animation: dia-join var(--dia-loop) linear infinite;
     }
-    .dia-interfaces .dia-core::before {
-      transform-origin: 100% 50%;
+    .dia-interfaces .dia-box::before {
+      animation: dia-stand var(--dia-loop) linear infinite;
     }
-    .dia-interfaces .dia-core::after {
-      transform-origin: 0 50%;
+    .dia-interfaces .dia-box::after {
+      animation: dia-reach var(--dia-loop) linear infinite;
     }
     .dia-flow {
-      animation: dia-flow 0.6s linear infinite;
+      animation:
+        dia-drop var(--dia-loop) linear infinite,
+        dia-travel 0.5s linear infinite;
     }
     .dia-out {
-      animation: dia-out var(--dia-loop) steps(1) infinite;
+      animation: dia-out var(--dia-loop) linear infinite;
+    }
+    .dia-signals {
+      animation: dia-signal var(--dia-loop) linear infinite;
+    }
+    /* Each row lights an eighth of a second after the one above, and the
+       loading squares appear with the rows after the first. */
+    .dia-interfaces .dia-item,
+    .dia-more span {
+      --dia-off: var(--faint);
+      --dia-on: var(--ink);
+      animation: dia-on-1 var(--dia-loop) linear infinite;
+    }
+    .dia-more span {
+      --dia-off: transparent;
+      --dia-on: var(--decor);
+    }
+    .dia-interfaces .dia-item:nth-child(2),
+    .dia-more span:nth-child(1) {
+      animation-name: dia-on-2;
+    }
+    .dia-interfaces .dia-item:nth-child(3),
+    .dia-more span:nth-child(2) {
+      animation-name: dia-on-3;
+    }
+    .dia-interfaces .dia-item:nth-child(4),
+    .dia-more span:nth-child(3) {
+      animation-name: dia-on-4;
+    }
+    /* The master's third video: the stem leaves the core, each row comes up
+       out of a ghost and is crossed in turn, the stem from the row above
+       drawn as it is reached, until the last holds and all of it starts
+       again. */
+    .dia-stem {
+      animation: dia-stem var(--dia-loop) linear infinite;
     }
     .dia-row {
-      animation: dia-row var(--dia-loop) steps(1) infinite;
+      animation:
+        dia-row-in-1 var(--dia-loop) linear infinite,
+        dia-row-on-1 var(--dia-loop) linear infinite;
     }
-    .dia-row::before,
-    .dia-row::after {
-      animation: dia-dots var(--dia-loop) steps(1) infinite;
+    .dia-row:nth-child(2) {
+      animation-name: dia-row-in-2, dia-row-on-2;
     }
-    .dia-row:nth-child(2),
-    .dia-row:nth-child(2)::before,
-    .dia-row:nth-child(2)::after {
-      animation-delay: 0.5s;
+    .dia-row:nth-child(3) {
+      animation-name: dia-row-in-3, dia-row-on-3;
     }
-    .dia-row:nth-child(3),
-    .dia-row:nth-child(3)::before,
-    .dia-row:nth-child(3)::after {
-      animation-delay: 1s;
+    .dia-row:nth-child(4) {
+      animation-name: dia-row-in-4, dia-row-on-4;
     }
-    .dia-row:nth-child(4),
-    .dia-row:nth-child(4)::before,
-    .dia-row:nth-child(4)::after {
-      animation-delay: 1.5s;
-    }
-    .dia-stem {
+    .dia-row + .dia-row .dia-row-name::before {
       transform-origin: 50% 0;
-      animation: dia-stem var(--dia-loop) var(--ease-power1-out) infinite;
+      animation: dia-link-2 var(--dia-loop) linear infinite;
+    }
+    .dia-row:nth-child(3) .dia-row-name::before {
+      animation-name: dia-link-3;
+    }
+    .dia-row:nth-child(4) .dia-row-name::before {
+      animation-name: dia-link-4;
     }
     .dia-spinner {
       animation: dia-spin 0.8s steps(8) infinite;
     }
+    /* The master's second video: the card at work widens as its lines
+       fill in, the card of documents rises into place, the documents come
+       one by one while the bar runs, the core slides in from the card's
+       edge and the join appears, then all of it starts again. */
+    .dia-card-main {
+      animation: dia-widen var(--dia-loop) linear infinite;
+    }
+    .dia-skeleton {
+      animation: dia-on-bar-1 var(--dia-loop) steps(1) infinite;
+    }
+    .dia-skeleton:nth-child(2) {
+      animation-name: dia-on-bar-2;
+    }
+    .dia-skeleton:nth-child(3) {
+      animation-name: dia-on-bar-3;
+    }
+    .dia-status-text {
+      animation: dia-status var(--dia-loop) linear infinite;
+    }
+    .dia-core-small {
+      animation: dia-slide var(--dia-loop) var(--ease-power1-out) infinite;
+    }
+    .dia-card-docs {
+      animation: dia-rise var(--dia-loop) var(--ease-power1-out) infinite;
+    }
     .dia-doc {
-      animation: dia-doc var(--dia-loop) steps(1) infinite;
+      animation: dia-doc-1 var(--dia-loop) steps(1) infinite;
     }
     .dia-doc:nth-child(2) {
-      animation-delay: 0.4s;
+      animation-name: dia-doc-2;
     }
     .dia-doc:nth-child(3) {
-      animation-delay: 0.8s;
+      animation-name: dia-doc-3;
     }
     .dia-progress {
-      transform-origin: 0 50%;
-      animation: dia-progress var(--dia-loop) var(--ease-power1-out) infinite;
+      animation: dia-progress var(--dia-loop) linear infinite;
     }
     .dia-pop {
       animation: dia-pop var(--dia-loop) var(--ease-power1-out) infinite;
@@ -620,70 +942,280 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
   :global(html[data-motion='paused']) .dia *::after {
     animation-play-state: paused;
   }
-  @keyframes dia-light {
+  /* Lit at 1.5, 1.625, 1.75 and 1.875s, each until the loop starts again. */
+  @keyframes dia-on-1 {
     0%,
-    70% {
-      color: var(--ink);
+    74.9% {
+      color: var(--dia-off);
     }
-    75% {
-      color: var(--faint);
+    75%,
+    100% {
+      color: var(--dia-on);
+    }
+  }
+  @keyframes dia-on-2 {
+    0%,
+    81.2% {
+      color: var(--dia-off);
+    }
+    81.25%,
+    100% {
+      color: var(--dia-on);
+    }
+  }
+  @keyframes dia-on-3 {
+    0%,
+    87.4% {
+      color: var(--dia-off);
+    }
+    87.5%,
+    100% {
+      color: var(--dia-on);
+    }
+  }
+  @keyframes dia-on-4 {
+    0%,
+    93.7% {
+      color: var(--dia-off);
+    }
+    93.75%,
+    100% {
+      color: var(--dia-on);
     }
   }
   @keyframes dia-join {
     0%,
-    15% {
+    5% {
       transform: scaleX(0);
     }
-    40%,
+    20%,
     100% {
       transform: none;
     }
   }
-  @keyframes dia-flow {
-    to {
-      background-position: 0 0.75rem;
+  @keyframes dia-stand {
+    0%,
+    15% {
+      transform: scaleY(0);
+    }
+    45%,
+    100% {
+      transform: none;
     }
   }
+  @keyframes dia-reach {
+    0%,
+    50% {
+      transform: scaleX(0);
+    }
+    62%,
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes dia-drop {
+    0%,
+    5% {
+      transform: scaleY(0);
+    }
+    69%,
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes dia-travel {
+    to {
+      mask-position: 0 2.5rem;
+    }
+  }
+  /* The box below has no edge until the channel reaches it. */
   @keyframes dia-out {
     0%,
-    55% {
-      border-color: var(--line);
+    69% {
+      border-color: transparent;
     }
-    60% {
+    75%,
+    100% {
       border-color: var(--accent);
     }
   }
-  /* A row is ghosted until the request reaches it, accent while it is
-     crossed, then settles until the loop begins again. */
-  @keyframes dia-row {
-    0% {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    20% {
-      border-color: var(--line);
-      color: var(--ink);
-    }
-    85%,
-    100% {
-      border-color: var(--line);
+  @keyframes dia-signal {
+    0%,
+    75% {
       color: var(--faint);
     }
-  }
-  @keyframes dia-dots {
-    0% {
-      opacity: 1;
-    }
-    20%,
+    81.25%,
     100% {
-      opacity: 0;
+      color: var(--accent);
     }
   }
   @keyframes dia-stem {
-    0% {
-      transform: scaleY(0.2);
+    0%,
+    5% {
+      transform: scaleY(0);
     }
-    70%,
+    12.5%,
+    100% {
+      transform: none;
+    }
+  }
+  /* Each row comes at 0.25, 0.5, 0.875 and 1.125s and settles to its size;
+     where the master fades a ghost in, the words here arrive whole, so no
+     frame shows them below contrast. */
+  @keyframes dia-row-in-1 {
+    0%,
+    12.4% {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    12.5% {
+      opacity: 1;
+      transform: scale(0.96);
+    }
+    25%,
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes dia-row-in-2 {
+    0%,
+    24.9% {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    25% {
+      opacity: 1;
+      transform: scale(0.96);
+    }
+    37.5%,
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes dia-row-in-3 {
+    0%,
+    43.7% {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    43.75% {
+      opacity: 1;
+      transform: scale(0.96);
+    }
+    56.25%,
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes dia-row-in-4 {
+    0%,
+    56.2% {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    56.25% {
+      opacity: 1;
+      transform: scale(0.96);
+    }
+    68.75%,
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  /* And is crossed from 0.5 to 0.8s, 0.8 to 1.25s, 1.25 to 1.7s and 1.7s
+     to the end. */
+  @keyframes dia-row-on-1 {
+    0%,
+    24.9%,
+    40%,
+    100% {
+      --row-mark: var(--faint);
+      --row-dot: 0;
+      color: var(--muted);
+    }
+    25%,
+    39.9% {
+      --row-mark: var(--accent);
+      --row-dot: 1;
+      color: var(--accent);
+    }
+  }
+  @keyframes dia-row-on-2 {
+    0%,
+    39.9%,
+    62.5%,
+    100% {
+      --row-mark: var(--faint);
+      --row-dot: 0;
+      color: var(--muted);
+    }
+    40%,
+    62.4% {
+      --row-mark: var(--accent);
+      --row-dot: 1;
+      color: var(--accent);
+    }
+  }
+  @keyframes dia-row-on-3 {
+    0%,
+    62.4%,
+    85%,
+    100% {
+      --row-mark: var(--faint);
+      --row-dot: 0;
+      color: var(--muted);
+    }
+    62.5%,
+    84.9% {
+      --row-mark: var(--accent);
+      --row-dot: 1;
+      color: var(--accent);
+    }
+  }
+  @keyframes dia-row-on-4 {
+    0%,
+    84.9% {
+      --row-mark: var(--faint);
+      --row-dot: 0;
+      color: var(--muted);
+    }
+    85%,
+    100% {
+      --row-mark: var(--accent);
+      --row-dot: 1;
+      color: var(--accent);
+    }
+  }
+  @keyframes dia-link-2 {
+    0%,
+    40% {
+      transform: scaleY(0);
+    }
+    43.75%,
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes dia-link-3 {
+    0%,
+    62.5% {
+      transform: scaleY(0);
+    }
+    66.25%,
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes dia-link-4 {
+    0%,
+    85% {
+      transform: scaleY(0);
+    }
+    88.75%,
     100% {
       transform: none;
     }
@@ -693,32 +1225,125 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
       transform: rotate(360deg);
     }
   }
-  @keyframes dia-doc {
+  /* From 215px to its full 388px over 1.875s. */
+  @keyframes dia-widen {
     0% {
-      color: var(--faint);
-      border-color: var(--line);
+      width: 13.4375rem;
     }
-    25%,
-    90% {
-      color: var(--ink);
+    93.75%,
+    100% {
+      width: 24.25rem;
+    }
+  }
+  @keyframes dia-on-bar-1 {
+    0%,
+    6.2% {
+      opacity: 0;
+    }
+    6.25%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes dia-on-bar-2 {
+    0%,
+    12.4% {
+      opacity: 0;
+    }
+    12.5%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes dia-on-bar-3 {
+    0%,
+    18.7% {
+      opacity: 0;
+    }
+    18.75%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes dia-status {
+    0%,
+    49.9% {
+      opacity: 0;
+    }
+    50%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes dia-slide {
+    0%,
+    56.25% {
+      clip-path: inset(0 0 0 100%);
+      transform: translateX(1.5rem);
+    }
+    75%,
+    100% {
+      clip-path: inset(0);
+      transform: none;
+    }
+  }
+  @keyframes dia-rise {
+    0% {
+      transform: translateY(2.0625rem);
+    }
+    50%,
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes dia-doc-1 {
+    0%,
+    31.2% {
+      opacity: 0;
+    }
+    31.25%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes dia-doc-2 {
+    0%,
+    56.2% {
+      opacity: 0;
+    }
+    56.25%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes dia-doc-3 {
+    0%,
+    74.9% {
+      opacity: 0;
+    }
+    75%,
+    100% {
+      opacity: 1;
     }
   }
   @keyframes dia-progress {
     0% {
-      transform: scaleX(0.1);
+      transform: scaleX(0);
     }
-    85%,
+    93.75%,
     100% {
       transform: none;
     }
   }
   @keyframes dia-pop {
     0%,
-    40% {
-      transform: scale(0);
+    75% {
+      opacity: 0;
+      transform: scale(0.6);
     }
-    50%,
+    81.25%,
     100% {
+      opacity: 1;
       transform: none;
     }
   }

@@ -142,7 +142,6 @@
       "screenItems": ["Agenda", "Facturación", "Editor", "Formularios"],
       "state": "Estado",
       "output": "Render",
-      "outputItems": ["Servidor", "Cliente", "Estático"],
       "layers": [
         {
           "name": "HTTP",
@@ -162,6 +161,7 @@
         }
       ],
       "translating": "Traduciendo el presupuesto…",
+      "documentsLabel": "Documentos",
       "documents": ["Factura", "Presupuesto", "Recibo"]
     },
     "cards": {
