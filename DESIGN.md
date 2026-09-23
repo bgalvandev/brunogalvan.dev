@@ -228,7 +228,10 @@ frame audit of the master's interactions on 2026-09-22, and why it stays:
   desktop: the owner's choice on 2026-09-22, from captures.
 - The positioning line quotes the Method's rules rather than a product slogan,
   and draws its arrow and its two shadowed squares, which the master takes
-  from whatever system font has them.
+  from whatever system font has them. The squares keep the proportions
+  Windows gives the master's, measured from the owner's screen on
+  2026-09-23: each fills the capital height, a hairline square of 0.6em
+  with a shadow 0.1em deep.
 - A pause control exists; the master has none.
 - By the numbers charts the career itself, one bar per month as tall as the
   months into the role, with company names over each run; the master's chart

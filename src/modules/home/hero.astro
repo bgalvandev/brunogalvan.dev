@@ -112,11 +112,11 @@ const tools = Object.values(stack)
                   {index === 1 && (
                     <svg
                       class="hero-positioning-glyph hero-positioning-squares"
-                      viewBox="0 0 21 10"
+                      viewBox="0 0 63 28"
                     >
                       <path
                         fill-rule="evenodd"
-                        d="M0 1h8v8H0zm.9.9v6.2h6.2V1.9zM8 2h1v8H1V9h7zM12 2h8v8h-8zm.9.9v6.2h6.2V2.9zM13 1V0h8v9h-1V1z"
+                        d="M0 0h24v24H0zm1 1v22h22V1zM24 4h4v24H4v-4h20zM35 4h24v24H35zm1 1v22h22V5zM39 0h24v24h-4V4H39z"
                       />
                     </svg>
                   )}
@@ -261,17 +261,25 @@ const tools = Object.values(stack)
   .hero-positioning-step {
     white-space: nowrap;
   }
+  /* Drawn to their box's edges, so a box snapped to the device grid must not
+     clip their last hairline. */
   .hero-positioning-glyph {
     display: inline-block;
     width: 0.7em;
     height: 0.7em;
     margin-left: 0.4em;
+    overflow: visible;
     fill: var(--ink);
     vertical-align: -0.02em;
   }
+  /* The squares as Windows draws the master's: each fills the capital
+     height, a hairline square of 0.6em with a shadow 0.1em deep, on a grid
+     of 0.025em. */
   .hero-positioning-squares {
-    width: 1.3em;
-    height: 0.62em;
+    width: 1.575em;
+    height: 0.7em;
+    margin-left: 0.6em;
+    vertical-align: baseline;
   }
   .hero-positioning-part {
     color: var(--accent);
