@@ -38,10 +38,14 @@ const { lines, id, level: Tag = 'h2', size = 'headline' } = Astro.props;
     color: var(--decor);
     font-family: var(--font-pixel);
   }
+  /* The slash alone, a Geist space's width from the words (0.19em), where
+     a no-break space set in the pixel face would open a wider gap. */
   .headline::before {
-    content: '/\00a0' / '';
+    content: '/' / '';
+    margin-inline-end: 0.19em;
   }
   .headline::after {
-    content: '\00a0/' / '';
+    content: '/' / '';
+    margin-inline-start: 0.19em;
   }
 </style>

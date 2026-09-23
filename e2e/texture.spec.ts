@@ -1,5 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
+import { marks } from '@/components/tech-marks';
+import { stack } from '@/data/stack';
 import { messages } from '@/i18n/messages';
 
 const { motion, positioning } = messages('es');
@@ -70,7 +72,8 @@ test('pausing motion stops the marquee and every reveal, and persists', async ({
   await page.goto('/es/');
   const toggle = page.getByRole('button', { name: motion.pause });
   await expect(toggle).toHaveAttribute('aria-pressed', 'false');
-  const track = page.locator('.marquee-track').first();
+  // The closing room's words move at every width.
+  const track = page.locator('.marquee-text .marquee-track').first();
   await expect(track).toHaveCSS('animation-play-state', 'running');
   await expect(page.locator('.reveal-char').first()).toBeAttached();
 
@@ -96,7 +99,7 @@ test('under reduced motion the pause control is gone and nothing moves', async (
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/es/');
   await expect(page.getByRole('button', { name: motion.pause })).toBeHidden();
-  await expect(page.locator('.marquee-track').first()).toHaveCSS(
+  await expect(page.locator('.marquee-text .marquee-track').first()).toHaveCSS(
     'animation-name',
     'none',
   );
@@ -183,4 +186,29 @@ test.describe('on a high-density screen', () => {
     );
     expect(bitmap).toBe(Math.round(css! * 2));
   });
+});
+
+test("the logo row is a carousel of every tool with a mark, in the master's even cells of a closed box", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/es/');
+  const row = page.locator('.marquee-logos');
+  const tools = Object.values(stack)
+    .flat()
+    .filter((tool) => marks.has(tool));
+  const cells = row.locator('.marquee-group').first().locator('.marquee-item');
+  await expect(cells).toHaveCount(tools.length);
+  await expect(row.locator('.marquee-track')).toHaveCSS(
+    'animation-name',
+    'marquee',
+  );
+  await expect(row).toHaveCSS('border-left-style', 'solid');
+  await expect(row).toHaveCSS('mask-image', 'none');
+  const widths = await cells.evaluateAll((items) =>
+    items.map(
+      (item) => Math.round(item.getBoundingClientRect().width * 10) / 10,
+    ),
+  );
+  expect(new Set(widths)).toEqual(new Set([201.6]));
 });

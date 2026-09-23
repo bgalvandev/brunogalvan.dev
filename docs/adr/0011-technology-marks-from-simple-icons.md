@@ -6,9 +6,10 @@
 ## Context
 
 The owner asked for the technologies to appear with their own marks, as the
-design master shows partner logos, and chose from captures on 2026-09-22 a
-band of every tool with a mark, in brand colour, moving. The same marks fill
-the Stack room's two rows of chips. The site ships no images of third-party
+design master shows partner logos. From captures on 2026-09-22 he chose a
+moving band of every tool with a mark, and then, the same day, the master's
+treatment of the marks themselves: one grey, in the master's closed box of
+even cells. The same marks fill the Stack room's two rows of chips. The site ships no images of third-party
 artwork and loads nothing from a CDN.
 
 ## Options
@@ -25,9 +26,7 @@ artwork and loads nothing from a CDN.
 
 Option 4, pinned (`simple-icons` 16.32.0), used only at build time. Each mark
 is a `<symbol>` in one sprite per page (`tech-sprite.astro`), and every logo
-is a `<use>` of it, filled with the brand colour as a presentation attribute,
-which the CSP allows where a style attribute would not; a brand colour too
-dark or too light to read on both papers falls back to the text colour. Marks
+is a `<use>` of it, filled with the text colour of wherever it sits. Marks
 Simple Icons does not carry are left out (OpenAI, Playwright: name only) or,
 for LinkedIn's "in" in the footer, drawn here.
 

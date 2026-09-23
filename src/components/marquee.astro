@@ -4,9 +4,10 @@ import TechLogo from './tech-logo.astro';
 // loop at -50%; the whole band is decoration (the same items are listed where
 // they carry meaning), hidden from assistive technology. It pauses on hover,
 // stops under reduced motion and when the visitor pauses motion.
-// `cells` is a band of bordered cells; `logos` the same cells holding each
-// technology's mark and name; `text` is a line of accent mono words, repeated
-// so a short list still fills the widest screen.
+// `cells` is a band of bordered cells; `logos` the same band in the master's
+// logo-row cells, each a grey mark and a name, in a closed box with no fade;
+// `text` is a line of accent mono words, repeated so a short list still fills
+// the widest screen.
 // `reverse` runs the band the other way, as the master's lower band does.
 interface Props {
   items: readonly string[];
@@ -25,7 +26,12 @@ const run = variant === 'text' ? [items, items, items, items].flat() : items;
     {[0, 1].map(() => (
       <ul class="marquee-group">
         {run.map((item) => (
-          <li class="marquee-item">
+          <li
+            class:list={[
+              'marquee-item',
+              { 'marquee-join': item === '&', 'marquee-break': item === '//' },
+            ]}
+          >
             {variant === 'logos' ? <TechLogo name={item} /> : item}
           </li>
         ))}
@@ -86,16 +92,18 @@ const run = variant === 'text' ? [items, items, items, items].flat() : items;
     text-transform: uppercase;
     white-space: nowrap;
   }
-  /* The master's logo row is a closed box with no fade at its ends; this one
-     moves (there are many more tools than six), about 60px a second. */
+  /* The master's logo row: a closed box with no fade at its ends, its left
+     edge on the box and every cell closing its own right, each cell the
+     master's 201.6px by 132px. About 60px a second. */
   .marquee-logos {
-    border-inline: 1px solid var(--line);
+    border-left: 1px solid var(--line);
     mask-image: none;
   }
   .marquee-logos .marquee-track {
-    animation-duration: 96s;
+    animation-duration: 97s;
   }
   .marquee-logos .marquee-item {
+    width: 12.6rem;
     color: var(--muted);
     font-family: var(--font-sans);
     font-size: 1.125rem;
@@ -113,15 +121,20 @@ const run = variant === 'text' ? [items, items, items, items].flat() : items;
   .marquee-reverse .marquee-track {
     animation-direction: reverse;
   }
-  .marquee-text .marquee-group {
-    gap: 2.5rem;
-    padding-right: 2.5rem;
-  }
+  /* The master's rhythm: 1rem either side of an "&", 5rem before a "//"
+     and 2.5rem after it. */
   .marquee-text .marquee-item {
     width: auto;
     height: auto;
     border: none;
     color: var(--accent);
+    letter-spacing: -0.05rem;
+  }
+  .marquee-text .marquee-join {
+    margin-inline: 1rem;
+  }
+  .marquee-text .marquee-break {
+    margin-inline: 5rem 2.5rem;
   }
   @keyframes marquee {
     to {

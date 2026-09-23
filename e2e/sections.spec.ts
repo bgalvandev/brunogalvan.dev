@@ -175,43 +175,44 @@ test('on a wide screen a numbered rail marks the room being read and fills as th
   await expect(rail).toBeHidden();
 });
 
-test('a value card opens its description and turns to pixels on hover, and a keyboard visitor sees every description', async ({
+test('a value card opens its description and turns to pixels on hover without growing, and a keyboard visitor sees every description', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/es/');
   const cards = page.locator('.value-card');
   const card = cards.first();
-  const height = (index: number) =>
-    cards
-      .nth(index)
-      .locator('.value-card-reveal')
-      .evaluate((element) => element.getBoundingClientRect().height);
-  const opacity = (selector: string) =>
-    card
-      .locator(selector)
-      .evaluate((element) => Number(getComputedStyle(element).opacity));
+  const opacity = (locator: typeof card) =>
+    locator.evaluate((element) => Number(getComputedStyle(element).opacity));
+  const open = (index: number) =>
+    opacity(cards.nth(index).locator('.value-card-reveal'));
+  const heights = () =>
+    cards.evaluateAll((items) =>
+      items.map((item) => item.getBoundingClientRect().height),
+    );
   await card.scrollIntoViewIfNeeded();
-  expect(await height(0)).toBe(0);
-  expect(await opacity('.iso-line')).toBe(1);
-  expect(await opacity('.iso-pixel')).toBe(0);
+  const before = await heights();
+  expect(await open(0)).toBe(0);
+  expect(await opacity(card.locator('.iso-line'))).toBe(1);
+  expect(await opacity(card.locator('.iso-pixel'))).toBe(0);
   await card.hover();
-  await expect.poll(() => height(0)).toBeGreaterThan(0);
-  await expect.poll(() => opacity('.iso-pixel')).toBe(1);
-  expect(await opacity('.iso-line')).toBe(0);
-  // The description is in the card's text whether it is open or not.
+  await expect.poll(() => open(0)).toBe(1);
+  await expect.poll(() => opacity(card.locator('.iso-pixel'))).toBe(1);
+  expect(await opacity(card.locator('.iso-line'))).toBe(0);
+  // Opening the description moves nothing: every card keeps its height.
+  expect(await heights()).toEqual(before);
   await expect(card).toContainText(t.whatIDo.cards[0]!.text);
   await page.mouse.move(0, 0);
-  await expect.poll(() => height(1)).toBe(0);
+  await expect.poll(() => open(1)).toBe(0);
   await page.keyboard.press('Tab');
-  for (const index of [0, 1, 2, 3]) {
-    await expect.poll(() => height(index)).toBeGreaterThan(0);
+  for (const index of t.whatIDo.cards.keys()) {
+    await expect.poll(() => open(index)).toBe(1);
   }
   // Below the desktop breakpoint there is nothing to hover for.
   await page.setViewportSize({ width: 360, height: 800 });
   await page.mouse.click(1, 1);
-  await expect.poll(() => height(0)).toBeGreaterThan(0);
-  await expect.poll(() => opacity('.iso-pixel')).toBe(1);
+  await expect.poll(() => open(0)).toBe(1);
+  await expect.poll(() => opacity(card.locator('.iso-pixel'))).toBe(1);
 });
 
 test('choosing a layer of the stack opens it and shows its diagram, without JavaScript', async ({
@@ -294,4 +295,43 @@ test('every technology logo points at a mark the page carries', async ({
   );
   expect(missing).toEqual([]);
   expect(await page.locator('.tech-logo-mark use').count()).toBeGreaterThan(20);
+});
+
+test('while the scroll drives Method and Code, each frame pins at 10vh and fits the screen', async ({
+  page,
+}) => {
+  for (const [width, height] of [
+    [1440, 900],
+    [1280, 720],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto('/es/');
+    for (const [id, last] of [
+      ['method', '.method-cards'],
+      ['code', '.code-stage'],
+    ] as const) {
+      const room = page.locator(`#${id}`);
+      await expect(room).toHaveAttribute('data-scrubbing', '');
+      await room.evaluate((element: HTMLElement) => {
+        const top = element.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(
+          0,
+          top + (element.offsetHeight - window.innerHeight) * 0.4,
+        );
+      });
+      await expect
+        .poll(() =>
+          room
+            .locator('.eyebrow')
+            .evaluate((element) =>
+              Math.round(element.getBoundingClientRect().top),
+            ),
+        )
+        .toBe(Math.round(height * 0.1));
+      const bottom = await room
+        .locator(last)
+        .evaluate((element) => element.getBoundingClientRect().bottom);
+      expect(bottom).toBeLessThanOrEqual(height);
+    }
+  }
 });

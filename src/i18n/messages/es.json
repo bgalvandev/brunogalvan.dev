@@ -89,8 +89,8 @@
     "pause": "Pausar animación"
   },
   "positioning": {
-    "spoken": "Límites claros, cambios pequeños, probado en producción.",
-    "parts": ["Límites claros", "cambios pequeños", "probado en producción"]
+    "spoken": "Límites claros, cambios pequeños, visto en producción.",
+    "parts": ["Límites claros", "cambios pequeños", "visto en producción"]
   },
   "numbers": {
     "label": "En cifras",
@@ -109,7 +109,7 @@
   },
   "stack": {
     "label": "Stack",
-    "headline": ["Tres capas.", "De la pantalla a los datos."],
+    "headline": ["Tres capas.", "Un solo producto."],
     "groups": {
       "frontend": "Frontend",
       "backend": "Backend",
@@ -203,7 +203,7 @@
   },
   "code": {
     "label": "Código",
-    "headline": ["Código real.", "Del repositorio de este sitio."],
+    "headline": ["Código real.", "Abierto en GitHub."],
     "action": "Más en GitHub",
     "tabs": "Lenguaje",
     "samples": {

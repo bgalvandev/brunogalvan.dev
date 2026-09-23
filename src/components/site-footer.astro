@@ -92,10 +92,12 @@ const profiles = [
         </div>
         <div class="site-footer-card site-footer-contact">
           <p class="site-footer-title">{footer.contact}</p>
-          <a class="site-footer-link" href={`mailto:${site.email}`}>
-            {site.email}
-          </a>
-          <p class="site-footer-info">{identity.location}</p>
+          <div class="site-footer-lines">
+            <a class="site-footer-link" href={`mailto:${site.email}`}>
+              {site.email}
+            </a>
+            <p class="site-footer-info">{identity.location}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -126,7 +128,7 @@ const profiles = [
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    gap: 1rem;
+    gap: 2.5rem;
     padding: 2.5rem;
     border-right: 1px solid var(--line);
   }
@@ -135,15 +137,18 @@ const profiles = [
   }
   .site-footer-wordmark {
     margin: 0;
-    font-size: 20cqi;
+    font-size: 24cqi;
   }
   .site-footer-role {
     margin: 0;
     color: var(--muted);
   }
+  /* The master's right column: its cards stand 8px apart, each drawing the
+     rule on its own side, so every junction reads as a double hairline. */
   .site-footer-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
   }
   .site-footer-card {
     display: flex;
@@ -151,12 +156,23 @@ const profiles = [
     gap: 1rem;
     padding: 2.5rem;
   }
-  .site-footer-card + .site-footer-card:not(.site-footer-contact) {
+  .site-footer-card:not(.site-footer-contact) {
+    border-bottom: 1px solid var(--line);
+  }
+  .site-footer-card:first-child {
+    border-right: 1px solid var(--line);
+  }
+  .site-footer-card:nth-child(2) {
     border-left: 1px solid var(--line);
   }
   .site-footer-contact {
     grid-column: span 2;
     border-top: 1px solid var(--line);
+  }
+  .site-footer-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   .site-footer-title {
     margin: 0;
@@ -203,13 +219,13 @@ const profiles = [
   .site-footer-arrow {
     position: relative;
     flex: none;
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 1.25rem;
+    height: 1.25rem;
     overflow: hidden;
   }
   .site-footer-arrow :global(svg) {
     position: absolute;
-    inset: 0.0625rem;
+    inset: 0.3rem;
     transition: transform 0.3s var(--ease-power1-out);
   }
   .site-footer-arrow :global(svg:last-child) {
@@ -236,15 +252,17 @@ const profiles = [
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 1rem 2rem;
-    padding-block: 3rem;
+    padding-block: 6.5rem 3rem;
     color: var(--faint);
     font-size: var(--text-label);
   }
-  .site-footer-bottom p {
+  .site-footer-bottom p,
+  .site-footer-source {
     margin: 0;
+    line-height: 1.5rem;
   }
   .site-footer-source {
-    color: var(--muted);
+    color: var(--faint);
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
@@ -268,8 +286,11 @@ const profiles = [
     .site-footer-name {
       padding: 1.5rem;
     }
-    .site-footer-card + .site-footer-card:not(.site-footer-contact) {
-      border-left: none;
+    .site-footer-card:first-child,
+    .site-footer-card:nth-child(2) {
+      border-inline: none;
+    }
+    .site-footer-card:nth-child(2) {
       border-top: 1px solid var(--line);
     }
     .site-footer-contact {

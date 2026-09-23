@@ -12,9 +12,10 @@ interface Props {
 }
 const { locale } = Astro.props;
 const { whatIDo } = messages(locale);
-// One isometric scene per card, in catalog order: stacked layers (a
-// platform), two blocks joined (an API between services), a screen on its
-// stand (an interface) and a cluster of cylinders (models and their data).
+// One isometric scene per card, in catalog order, each about as wide as it
+// is tall so the four weigh the same in their boxes: stacked layers (a
+// platform), two blocks joined (an API between services), a laptop (an
+// interface) and a cluster of cylinders (models and their data).
 const icons = [
   [
     box(0, 0, 0, 8, 8, 1.6),
@@ -23,17 +24,17 @@ const icons = [
   ],
   [box(7, 0, 0, 4, 4, 4), box(4, 1.5, 1.5, 3, 1, 1), box(0, 0, 0, 4, 4, 4)],
   [
-    box(4, 1, 0, 3, 3, 0.8),
-    box(5, 2, 0.8, 1, 1, 2),
+    box(0, 0, 0, 8, 6.5, 0.7),
+    box(1, 3, 0.7, 6, 2.5, 0.2),
     extrude(
       [
-        [0, 2.8],
-        [11, 2.8],
-        [11, 10],
-        [0, 10],
+        [0, 0.7],
+        [8, 0.7],
+        [8, 6.7],
+        [0, 6.7],
       ],
-      1.5,
-      1,
+      0,
+      0.5,
     ),
   ],
   [
@@ -97,7 +98,7 @@ const icons = [
   }
   .value-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.5rem;
     margin: 0;
     padding: 0;
@@ -108,7 +109,7 @@ const icons = [
     flex-direction: column;
     justify-content: space-between;
     gap: 5rem;
-    min-height: 28rem;
+    min-height: 31rem;
     padding: 1.5rem;
     border: 1px solid var(--line);
   }
@@ -123,10 +124,13 @@ const icons = [
     justify-content: space-between;
   }
   /* Every drawing sits in the same square, so the titles line up. */
+  /* The master draws its line icons in grey, about 140px inside the 160px
+     box, a little in from its top left. */
   .value-card :global(.value-card-icon) {
     width: 10rem;
     height: 10rem;
-    color: var(--ink);
+    padding: 0.625rem;
+    color: var(--muted);
   }
   /* Without a hover to wait for, the card shows its pixels and its
      description, as the master does below the desktop breakpoint. */
@@ -140,8 +144,10 @@ const icons = [
     color: var(--muted);
     font-weight: 500;
   }
+  /* The master's slashes are its number's grey at half strength. */
   .value-card-slashes {
-    color: var(--faint);
+    color: var(--muted);
+    opacity: 0.5;
   }
   .value-card-text {
     display: flex;
@@ -174,17 +180,14 @@ const icons = [
     .value-card-title {
       transition: color 0.3s var(--ease-power1-out);
     }
+    /* The description keeps its room at rest and is uncovered from the top
+       down, so opening it moves nothing: the card never grows on hover. */
     .value-card-reveal {
-      display: grid;
-      grid-template-rows: minmax(0, 0fr);
-      overflow: hidden;
+      clip-path: inset(0 0 100% 0);
       opacity: 0;
       transition:
-        grid-template-rows 0.3s var(--ease-power1-out),
+        clip-path 0.3s var(--ease-power1-out),
         opacity 0.3s var(--ease-power1-out);
-    }
-    .value-card-description {
-      min-height: 0;
     }
     .value-card :global(.iso-icon svg) {
       transition: opacity 0.1s var(--ease-power1-out);
@@ -194,7 +197,7 @@ const icons = [
     }
     .value-card:hover .value-card-reveal,
     :global(:root:has(:focus-visible)) .value-card-reveal {
-      grid-template-rows: minmax(0, 1fr);
+      clip-path: inset(0);
       opacity: 1;
     }
     .value-card:hover :global(.iso-line) {
@@ -213,7 +216,7 @@ const icons = [
   }
   @media print {
     .value-card-reveal {
-      grid-template-rows: minmax(0, 1fr);
+      clip-path: none;
       opacity: 1;
     }
   }
@@ -222,7 +225,7 @@ const icons = [
   }
   @media (width < 62rem) {
     .value-cards {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   @media (width < 48rem) {

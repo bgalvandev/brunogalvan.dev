@@ -1,9 +1,8 @@
 ---
 import { markId, marks } from './tech-marks';
 // A technology as its own mark and name, the way the master sets partner
-// logos. A mark keeps its brand colour as a fill attribute, which the CSP
-// allows where a style attribute would not; a brand colour too dark or too
-// light to read on both papers falls back to the text colour. A technology
+// logos: in one grey, the text colour of wherever it sits, as the master's
+// are (chosen by the owner on 2026-09-22 over brand colour). A technology
 // with no published mark shows its name alone. The mark points at the page's
 // sprite (tech-sprite.astro), which the page renders once.
 interface Props {
@@ -12,16 +11,6 @@ interface Props {
 }
 const { name, class: className } = Astro.props;
 const mark = marks.get(name);
-const luminance = (hex: string) => {
-  const [r = 0, g = 0, b = 0] = [0, 2, 4].map(
-    (at) => parseInt(hex.slice(at, at + 2), 16) / 255,
-  );
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-};
-const brand =
-  mark && luminance(mark.hex) > 0.12 && luminance(mark.hex) < 0.8
-    ? `#${mark.hex}`
-    : undefined;
 ---
 
 <span class:list={['tech-logo', className]}>
@@ -29,7 +18,7 @@ const brand =
     <svg
       class="tech-logo-mark"
       viewBox="0 0 24 24"
-      fill={brand ?? 'currentColor'}
+      fill="currentColor"
       aria-hidden="true"
       focusable="false"
     >
@@ -43,8 +32,8 @@ const brand =
   .tech-logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.5em;
-    font-weight: 500;
+    gap: 0.4em;
+    font-weight: 600;
     letter-spacing: -0.04em;
     white-space: nowrap;
   }

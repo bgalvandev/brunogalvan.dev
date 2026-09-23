@@ -64,9 +64,11 @@ anywhere. Depth lives on extension pages, never on the home page.
   4px accent underline and draws its icon and label in from the edges.
   Navigation is boxed tabs hanging from the top edge, the current page filled
   with the accent inside `<` `>`; the contact tab takes the accent on hover.
-  The logo is the favicon's pixel B and its accent block before the name, in
-  the hero band beside a version-style chip and, stacked, filling the footer's
-  first column.
+  The name is the wordmark, where the master sets its product's logo: in the
+  hero band beside a version-style chip and, stacked, filling the footer's
+  first column. A personal site is signed by its name; the pixel B with its
+  accent block stays the favicon (decided on 2026-09-22 over a mark beside
+  the name, which only repeated it).
 - **Icons.** Card icons are isometric scenes of simple solids (boxes,
   cylinders, upright profiles) built in `isometric.ts` and drawn twice by
   `iso-icon.astro`: a line drawing and two-tone pixel art (faces turned left
@@ -74,8 +76,8 @@ anywhere. Depth lives on extension pages, never on the home page.
   object. The scenes are ours; no artwork is carried over. Small glyphs (arrows,
   row icons, the changelog's `<>` and double check) are bitmaps on a pixel grid
   (`pixel-icon.astro`). Technology logos are their own published marks, from
-  Simple Icons (CC0), in brand colour (chosen by the owner on 2026-09-22 from
-  captures over grey), with LinkedIn's "in" drawn here.
+  Simple Icons (CC0), in one grey as the master's partner logos are (the
+  owner's choice on 2026-09-22), with LinkedIn's "in" drawn here.
 - **Motion.** The master's, value for value, read from its interaction data:
   every headline opens character by character, 0.04s apart, each character
   widening over 0.1s while it scrambles for 0.4s, triggered once at `top 80%`;
@@ -107,9 +109,11 @@ anywhere. Depth lives on extension pages, never on the home page.
   translucent grey for both schemes; a component scales the tile as the
   master's do (7.9px on the Method strips, 12.6px on project covers, 14.2px on
   the code stage). Corner ticks are a pair of 4px squares at each corner.
-  Marquees are bands of bordered cells or words: the toolchain's logos about
-  60px a second, the closing room's words 100px a second, above and below in
-  opposite directions, the Stack's logo chips in two rows moving opposite ways.
+  The logo row is a carousel of every tool with a mark (the owner's choice) in
+  the master's cells: 201.6px by 132px, a grey mark and name, a closed box
+  with no fade, about 60px a second. The closing room's words move at 100px
+  a second, above and below in opposite directions, and the Stack's logo
+  chips in two rows moving opposite ways.
 - **Pause.** A header toggle pauses everything that moves on its own
   (marquees, word cycles, diagrams, preloader, reveals, scrambles, the pixel
   trail) and persists like the theme, so no motion runs past five seconds
@@ -200,8 +204,13 @@ Each difference found in side-by-side captures at 1440px, and in the frame by
 frame audit of the master's interactions on 2026-09-22, and why it stays:
 
 - `What I do` has four cards, not three: the content has four capabilities.
-  Cards stand 28rem rather than 31rem so four narrower cards do not read as
-  columns.
+  Each keeps the master's 31rem height, its drawing in a 160px box.
+- The positioning line keeps its brackets 0.5em from the words, where the
+  master's stand 3% of the line away, so its longer line still holds to one
+  row at 1440px.
+- The Stack's chosen-layer tags carry dark text on the accent, where the
+  master sets white on its blue: white fails contrast on the dark scheme's
+  lighter accent.
 - A value card's description also opens for a keyboard visitor (whenever
   focus is visible anywhere on the page), since a hover alone would leave them
   without it; the master opens it on hover only.
@@ -214,10 +223,9 @@ frame audit of the master's interactions on 2026-09-22, and why it stays:
   begin two seconds after load whatever is on screen.
 - The preloader runs on the first view of a session only; the master covers
   every load, which would tax each move between pages.
-- The toolchain band moves, in brand colour, with every tool the record names
-  that has a published mark (twenty-nine), where the master shows six static
-  grey partner logos on desktop: chosen by the owner on 2026-09-22 from
-  captures of all four combinations.
+- The logo row moves and carries every tool with a published mark
+  (twenty-nine), where the master's stands still with six partner logos on a
+  desktop: the owner's choice on 2026-09-22, from captures.
 - The positioning line quotes the Method's rules rather than a product slogan,
   and draws its arrow and its two shadowed squares, which the master takes
   from whatever system font has them.
