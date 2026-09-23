@@ -29,6 +29,9 @@ pnpm-debug.log*
 *.pem
 *.key
 
+# Local-only working files (plans, notes): never committed, not formatted
+.local/
+
 # Caches
 .cache/
 .eslintcache
