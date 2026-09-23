@@ -57,9 +57,13 @@ Run on 2026-09-22, the day the domain was connected, every check below passed:
 immutable, the three redirected hosts keeping path and query, http to https in
 one hop, the null SPF and DMARC on both zones, and a browser pass over every
 page in both themes with no CSP violation or script error. Cloudflare's Web
-Analytics (RUM) had injected its beacon into the custom domain's HTML, which
-the CSP blocked; it is disabled completely in the `brunogalvan.dev` zone and
-must stay off unless an ADR adds it to the policy.
+Analytics had injected its beacon, which the CSP blocked, from two places:
+the zone's RUM on the custom domain, disabled completely in the
+`brunogalvan.dev` zone on 2026-09-22; and, from the next production deploy
+on 2026-09-23, the Pages project's own Metrics → Web Analytics on
+`brunogalvan.dev` and `brunogalvan.pages.dev`, disabled there and cleared by
+retrying the deployment. Both must stay off unless an ADR adds the beacon to
+the policy.
 
 After any change to the domains, redirects or zone settings:
 
@@ -67,6 +71,7 @@ After any change to the domains, redirects or zone settings:
 curl -sI https://brunogalvan.dev/ | grep -iE '^(HTTP|location)'             # 301 → /en/
 curl -sI https://brunogalvan.dev/fr/ | grep -i '^HTTP'                       # 404
 curl -sI https://brunogalvan.dev/en/ | grep -i 'content-security-policy'
+curl -s https://brunogalvan.dev/en/ | grep -c cloudflareinsights            # 0, after every production deploy
 curl -sI https://www.brunogalvan.dev/en/about/ | grep -iE '^(HTTP|location)' # 301 → https://brunogalvan.dev/en/about/
 curl -sI https://brunogalvan.com/es/ | grep -iE '^(HTTP|location)'          # 301 → https://brunogalvan.dev/es/
 curl -sI http://www.brunogalvan.com/ | grep -iE '^(HTTP|location)'          # 301 → https
