@@ -225,6 +225,17 @@ test('without motion the stack diagrams stand still in their finished state', as
     'animation-name',
     'none',
   );
+  // Finished: the rendered box has taken the accent, the last layer of the
+  // request is the one crossed, and every document has arrived.
+  const accent = await page
+    .locator('.cap-tag')
+    .first()
+    .evaluate((element) => getComputedStyle(element).backgroundColor);
+  await expect(page.locator('.dia-out')).toHaveCSS('border-top-color', accent);
+  await expect(page.locator('.dia-row').last()).toHaveCSS('color', accent);
+  for (const document of await page.locator('.dia-doc').all()) {
+    await expect(document).toHaveCSS('opacity', '1');
+  }
 });
 
 test("the closing word is already cycling when the visitor scrolls to it, as the master's is", async ({

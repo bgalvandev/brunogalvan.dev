@@ -142,7 +142,6 @@
       "screenItems": ["Calendar", "Billing", "Editor", "Forms"],
       "state": "State",
       "output": "Rendered",
-      "outputItems": ["Server", "Client", "Static"],
       "layers": [
         {
           "name": "HTTP",
@@ -162,6 +161,7 @@
         }
       ],
       "translating": "Translating the quote…",
+      "documentsLabel": "Documents",
       "documents": ["Invoice", "Quote", "Receipt"]
     },
     "cards": {
