@@ -4,8 +4,8 @@ import { roles, type Month } from '@/data/experience';
 import { roleMonths } from '@/data/figures';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
-// The master's changelog as the career: a centre line, each period sitting on
-// it, a dashed leader past a marker to the entry. `detail` adds each role's
+// The career as a timeline: a centre line, each period sitting on it, a
+// dashed leader past a marker to the entry. `detail` adds each role's
 // length, what was built in it where the record says, and, where the record
 // names them, its clients.
 interface Props {
@@ -47,9 +47,9 @@ const items = roles.map((role) => {
     highlights: 'highlights' in copy ? copy.highlights : [],
   };
 });
-// The master's changelog frames an icon per entry. The current role shows
-// code in progress and each past one a double check, in the same neutral ink:
-// an accent beside the current one would read as an availability signal.
+// Each entry frames an icon. The current role shows code in progress and
+// each past one a double check, in the same neutral ink: an accent beside the
+// current one would read as an availability signal.
 const icons = {
   current: ['..#...#..', '.#.....#.', '#.......#', '.#.....#.', '..#...#..'],
   past: [
@@ -107,9 +107,9 @@ const icons = {
 </ol>
 
 <style>
-  /* The master's changelog: a centre line, each date sitting on it, a dashed
-     leader running from the date past a marker to the entry, on a row just
-     under the entry's title; the titles stand 13rem from the line. */
+  /* The timeline: a centre line, each date sitting on it, a dashed leader
+     running from the date past a marker to the entry, on a row just under
+     the entry's title; the titles stand 13rem from the line. */
   .experience-timeline {
     --meta: 2.42rem;
     position: relative;
@@ -252,7 +252,7 @@ const icons = {
     font-size: var(--text-label);
   }
   /* Below the desktop breakpoint the line runs 1rem inside the room, each
-     marker centred on it at the room's edge, as the master's do. */
+     marker centred on it at the room's edge. */
   @media (width < 62rem) {
     .experience-timeline {
       margin: 0 0 0 1rem;

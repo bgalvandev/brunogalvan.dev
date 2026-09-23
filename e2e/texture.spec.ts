@@ -257,7 +257,7 @@ test.describe('on a high-density screen', () => {
   });
 });
 
-test("the logo row is a carousel of every tool with a mark, in the master's even cells of a closed box", async ({
+test('the logo row is a carousel of every tool with a mark, in even cells of a closed box', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });

@@ -5,12 +5,12 @@
 
 ## Context
 
-The owner asked for the technologies to appear with their own marks, as the
-design master shows partner logos. From captures on 2026-09-22 he chose a
-moving band of every tool with a mark, and then, the same day, the master's
-treatment of the marks themselves: one grey, in the master's closed box of
-even cells. The same marks fill the Stack room's two rows of chips. The site ships no images of third-party
-artwork and loads nothing from a CDN.
+The owner asked for the technologies to appear with their own marks. From
+captures on 2026-09-22 he chose a moving band of every tool with a mark, and
+then, the same day, the treatment of the marks themselves: one grey, in a
+closed box of even cells. The same marks fill the Stack room's two rows of
+chips. The site ships no images of third-party artwork and loads nothing from
+a CDN.
 
 ## Options
 

@@ -1,6 +1,6 @@
 ---
 import PixelIcon, { type IconName } from '@/components/pixel-icon.astro';
-// Two forms from the design master, whose hovers run 0.3s from a slow start.
+// Two forms, whose hovers run 0.3s from a slow start.
 // `solid`: a sharp ink rectangle with a square bullet; on hover the accent
 // slides in behind, the bullet turns half a turn, the label steps left and
 // the arrow appears. `line`: a bottom rule; on hover a 1px accent frame
@@ -133,7 +133,7 @@ const {
   .button-line-text {
     transition: transform 0.3s var(--ease-power1-in);
   }
-  /* The master's line-button icon sits in a 24px box. */
+  /* The line button's icon sits in a 24px box. */
   .button-line :global(.button-line-icon) {
     flex: none;
     width: 1.5rem;

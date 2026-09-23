@@ -32,10 +32,10 @@ export default defineConfig({
   ],
   // The faces ship from Vercel's `geist` package, so the build needs no
   // network and Dependabot keeps them current. Geist and Geist Mono are its
-  // static, hinted files, one per weight the site sets, the same files the
-  // master serves: Windows renders unhinted outlines, the variable files'
-  // among them, lighter and softer (ADR 0013). Astro emits metric-matched
-  // fallbacks and preloads.
+  // static, hinted files, one per weight the site sets, because hinted files
+  // render as designed on Windows, which draws unhinted outlines, the
+  // variable files' among them, lighter and softer (ADR 0013). Astro emits
+  // metric-matched fallbacks and preloads.
   fonts: [
     {
       provider: fontProviders.local(),

@@ -1,14 +1,13 @@
 ---
-// The design master's pixel grid: square cells, thirty to a row (cells stop
-// shrinking below the tablet breakpoint, where the grid is 80rem wide and
-// overflows on purpose). As in the master, the thirty columns are centred
-// across the room and the rows down it, each line is the right or bottom
-// edge of its cell, so a row stands a line taller than a column is wide, and
-// with an odd count of rows (`rows`, the master's count for the room) a row
-// rather than a line crosses the middle. The lines are CSS; the motion
-// script adds one canvas that lights the cells and lets them fade, where the
-// master animates 1,350 elements. Place it first inside a positioned parent
-// that clips.
+// A pixel grid: square cells, thirty to a row (cells stop shrinking below the
+// tablet breakpoint, where the grid is 80rem wide and overflows on purpose).
+// The thirty columns are centred across the room and the rows down it, each
+// line is the right or bottom edge of its cell, so a row stands a line taller
+// than a column is wide, and with an odd count of rows (`rows`, set per room)
+// a row rather than a line crosses the middle. The lines are CSS; the motion
+// script adds one canvas that lights the cells and lets them fade, rather
+// than an element per cell. Place it first inside a positioned parent that
+// clips.
 interface Props {
   rows?: number;
 }
@@ -42,7 +41,7 @@ const { rows = 18 } = Astro.props;
     height: 100%;
   }
   /* Each tile draws its line on its first pixel, so the tiles start a pixel
-     before the master's cells to put the line on each cell's last. */
+     before the cells to put the line on each cell's last. */
   .pixel-field-lines {
     --cell: calc(100cqw / 30);
     --pitch: calc(var(--cell) + 1px);

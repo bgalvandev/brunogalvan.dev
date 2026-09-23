@@ -82,8 +82,8 @@ const icons = [
           </li>
         ))}
       </ol>
-      {/* The master's dashes, for its phone slider: the motion script shows
-          them and turns the cards into one slide at a time. */}
+      {/* The dashes of the phone slider: the motion script shows them and
+          turns the cards into one slide at a time. */}
       <div class="value-slider-nav" hidden>
         {whatIDo.cards.map((_, index) => (
           <button
@@ -138,8 +138,8 @@ const icons = [
     justify-content: space-between;
   }
   /* Every drawing sits in the same square, so the titles line up. */
-  /* The master draws its line icons in grey, about 140px inside the 160px
-     box, a little in from its top left. */
+  /* The drawing is grey, about 140px inside the 160px box, a little in
+     from its top left. */
   .value-card :global(.value-card-icon) {
     width: 10rem;
     height: 10rem;
@@ -147,7 +147,7 @@ const icons = [
     color: var(--muted);
   }
   /* Without a hover to wait for, the card shows its pixels and its
-     description, as the master does below the desktop breakpoint. */
+     description. */
   .value-card :global(.iso-pixel) {
     color: var(--accent);
   }
@@ -158,7 +158,8 @@ const icons = [
     color: var(--muted);
     font-weight: 500;
   }
-  /* The master's slashes are its number's grey at half strength. */
+  /* The slashes are the number's grey at half strength, so they read as
+     decoration. */
   .value-card-slashes {
     color: var(--muted);
     opacity: 0.5;
@@ -179,9 +180,9 @@ const icons = [
     margin: 0;
     color: var(--muted);
   }
-  /* The master's hover, on a desktop with a pointer that can hover: at rest
-     a line drawing; on hover the drawing turns to pixels in the accent over
-     0.1s, the title takes the accent and the description opens under it over
+  /* The hover, on a desktop with a pointer that can hover: at rest a line
+     drawing; on hover the drawing turns to pixels in the accent over 0.1s,
+     the title takes the accent and the description opens under it over
      0.3s. A keyboard visitor sees every description open, as do touch and
      print, since none of them can hover. */
   @media (width >= 62rem) and (hover: hover) and (pointer: fine) {
@@ -262,7 +263,7 @@ const icons = [
       height: 7.5rem;
     }
   }
-  /* The master's phone slider: one box, the cards in the same place, one
+  /* The phone slider: one box, the cards in the same place, one
      shown at a time; the old one fades out before the next fades in, and
      the dashes at the top left mark and choose it. The cards stay in the
      page, so a screen reader reads all four. */

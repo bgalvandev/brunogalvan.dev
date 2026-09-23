@@ -1,10 +1,10 @@
 ---
-// The master's core capabilities, for the stack: three layers as a radio
-// group down the left, each opening its tags, its square and its description
-// when chosen; the chosen layer's diagram on a dotted pane to the right; and
-// a row of three cards below, the first carrying the toolchain as two rows of
-// logo chips moving in opposite directions. The group works without
-// JavaScript: CSS opens the chosen layer and shows its diagram.
+// The stack, by capability: three layers as a radio group down the left,
+// each opening its tags, its square and its description when chosen; the
+// chosen layer's diagram on a dotted pane to the right; and a row of three
+// cards below, the first carrying the toolchain as two rows of logo chips
+// moving in opposite directions. The group works without JavaScript: CSS
+// opens the chosen layer and shows its diagram.
 import Headline from '@/components/headline.astro';
 import NumberedSection from '@/components/numbered-section.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
@@ -160,9 +160,9 @@ const squares = [
 </NumberedSection>
 
 <style>
-  /* As in the master, the eyebrow runs over the left column only and the
-     pane rises beside it: the room's body is the grid, and the wrappers step
-     aside so their parts sit in it. */
+  /* The eyebrow runs over the left column only and the pane rises beside
+     it: the room's body is the grid, and the wrappers step aside so their
+     parts sit in it. */
   .cap,
   .cap-top {
     display: contents;
@@ -228,9 +228,9 @@ const squares = [
   .cap-tab:has(input:checked) {
     color: var(--ink);
   }
-  /* The chosen layer opens over 0.4s from a slow start, as the master's
-     tab does: its tags drop in above the title, its square slides in and
-     pushes the title right, and its description opens below. */
+  /* The chosen layer opens over 0.4s from a slow start: its tags drop in
+     above the title, its square slides in and pushes the title right, and
+     its description opens below. */
   .cap-tab-top,
   .cap-tab-bottom {
     display: grid;
@@ -300,7 +300,7 @@ const squares = [
     color: var(--faint);
   }
   /* The pane: one diagram per layer in the same place, the chosen one
-     faded in, on dots 16px apart, as the master's videos draw them. */
+     faded in, on dots 16px apart. */
   .cap-pane {
     display: grid;
     place-items: center;
@@ -327,7 +327,7 @@ const squares = [
   }
   /* The cards: the toolchain under the tabs, two short ones under the pane,
      sharing the room's rules. */
-  /* The master's junction: a 2rem strip between the pane and the cards,
+  /* The junction: a 2rem strip between the pane and the cards,
      the pane's edge running on down through it to the cards. */
   .cap-gap {
     height: 2rem;
@@ -373,7 +373,7 @@ const squares = [
     margin: 0;
     color: var(--faint);
   }
-  /* A 64px box, the drawing about 53px inside it, as the master's. */
+  /* A 64px box, the drawing about 53px inside it. */
   .cap-card :global(.cap-card-icon) {
     align-self: flex-end;
     width: 4rem;
@@ -431,7 +431,7 @@ const squares = [
       transform: translateX(-50%);
     }
   }
-  /* Below the desktop breakpoint the master leads with the headline, then
+  /* Below the desktop breakpoint the room leads with the headline, then
      the layers, the pane and the cards, with no junction strip. */
   @media (width < 62rem) {
     .cap-top {
@@ -444,8 +444,8 @@ const squares = [
     .cap-left :global(.headline) {
       order: -1;
     }
-    /* The master's pane is square below the desktop breakpoint, its video
-       filling it (at half size on a phone). */
+    /* The pane is square below the desktop breakpoint, so its height
+       follows the column's width instead of the desktop's 40rem. */
     .cap-pane {
       aspect-ratio: 1;
       min-height: 0;
@@ -467,8 +467,7 @@ const squares = [
   }
   /* A diagram is drawn for the desktop pane; a narrower pane shows it
      smaller rather than rearranged. On a phone the two short cards share a
-     row above the toolchain, each its drawing, title and line, as the
-     master's do. */
+     row above the toolchain, each its drawing, title and line. */
   @media (width < 48rem) {
     .cap-pane {
       padding: 0.75rem;

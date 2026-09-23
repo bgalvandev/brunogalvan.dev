@@ -7,11 +7,11 @@ import ThemeToggle from '@/components/theme-toggle.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 import { pagePath, type RouteKey } from '@/i18n/routes';
-// Fixed boxed tabs hanging from the top edge, as in the design master: pages on
-// the left, language, theme and contact on the right. Below the tablet
-// breakpoint the bar is the master's: the name with its chip, and a menu
-// behind three lines, a native disclosure that works without JavaScript,
-// holding the pages, the contact button, the language and the toggles.
+// Fixed boxed tabs hanging from the top edge: pages on the left, language,
+// theme and contact on the right. Below the tablet breakpoint the bar holds
+// the name with its chip, and a menu behind three lines, a native disclosure
+// that works without JavaScript, holding the pages, the contact button, the
+// language and the toggles.
 interface Props {
   locale: Locale;
   route: RouteKey;
@@ -176,8 +176,8 @@ const contactHref = `${pagePath('home', locale)}#contact`;
   .site-menu summary::-webkit-details-marker {
     display: none;
   }
-  /* The master's three lines in a 40px box, 6px apart; open, the outer two
-     cross and the middle one shrinks away. */
+  /* Three lines in a 40px box, 6px apart; open, the outer two cross and the
+     middle one shrinks away. */
   .site-menu-button {
     display: flex;
     align-items: center;
@@ -208,9 +208,9 @@ const contactHref = `${pagePath('home', locale)}#contact`;
   .site-menu[open] .site-menu-icon > span:last-child {
     transform: translateY(-8px) rotate(-45deg);
   }
-  /* The master's panel: its pages in a column, the contact button under
-     them, over the page dimmed by half. Here the language and the toggles
-     follow, since the bar no longer has room for them. */
+  /* The panel: the pages in a column, the contact button under them, over
+     the page dimmed by half. The language and the toggles follow, since the
+     bar no longer has room for them. */
   .site-menu-panel {
     position: absolute;
     top: 100%;
@@ -279,13 +279,13 @@ const contactHref = `${pagePath('home', locale)}#contact`;
     .site-tools {
       display: none;
     }
-    /* The name and its chip, where the master sets its logo and version. */
+    /* The name and its location chip, aligned at their feet. */
     .site-brand {
       display: flex;
       align-items: flex-end;
       gap: 0.75rem;
     }
-    /* Its capitals stand as tall as the master's logo letters. */
+    /* The name grows to 1.75rem, since the tabs no longer share the bar. */
     .site-brand :global(.site-brand-name) {
       font-size: 1.75rem;
     }

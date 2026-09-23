@@ -201,7 +201,7 @@ export type Cell = FaceKind | null;
  * The scene on a grid `columns` cells wide. A cell takes the nearest face
  * over its centre and that face's kind. Where a solid meets one painted in
  * front of it, the cell behind is left empty, so every piece stands apart by
- * a one-cell gap, as the master's pixel drawings do.
+ * a one-cell gap.
  */
 export function rasterize(scene: readonly Face[], columns: number): Cell[][] {
   const box = bounds(scene);
