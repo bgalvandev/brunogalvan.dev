@@ -18,11 +18,11 @@ const { lines, id, level: Tag = 'h2', size = 'headline' } = Astro.props;
   id={id}
   aria-label={lines.join(' ')}
 >
-  <span aria-hidden="true" data-reveal>
+  <span class="headline-lines" aria-hidden="true" data-reveal>
     {lines.map((line, index) => (
       <>
-        {index > 0 && <br />}
-        {index < lines.length - 1 ? `${line} ` : line}
+        {index > 0 && ' '}
+        <span class="headline-line">{line}</span>
       </>
     ))}
   </span>
@@ -31,20 +31,28 @@ const { lines, id, level: Tag = 'h2', size = 'headline' } = Astro.props;
 <style>
   .headline {
     margin: 0;
+  }
+  /* Each sentence is its own block and balances alone, so neither ends on a
+     word by itself; the slashes open the first and close the last. */
+  .headline-lines,
+  .headline-line {
+    display: block;
+  }
+  .headline-line {
     text-wrap: balance;
   }
-  .headline::before,
-  .headline::after {
+  .headline-line:first-child::before,
+  .headline-line:last-child::after {
     color: var(--decor);
     font-family: var(--font-pixel);
   }
   /* The slash alone, a Geist space's width from the words (0.19em), where
      a no-break space set in the pixel face would open a wider gap. */
-  .headline::before {
+  .headline-line:first-child::before {
     content: '/' / '';
     margin-inline-end: 0.19em;
   }
-  .headline::after {
+  .headline-line:last-child::after {
     content: '/' / '';
     margin-inline-start: 0.19em;
   }

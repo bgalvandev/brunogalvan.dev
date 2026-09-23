@@ -9,9 +9,12 @@ const credentialLike =
 
 // Checks the shape of the built site rather than its rendering: the root
 // redirect and 404 documents exist, and both redirects lead to the default
-// language (Node strips the types of its single source); exactly the three
-// latin font files ship and are preloaded, every script is a build asset, the
-// CSP covers every inline block, and nothing credential-like reached the HTML.
+// language (Node strips the types of its single source); exactly the font
+// files ship and are preloaded, every script is a build asset, the CSP covers
+// every inline block, and nothing credential-like reached the HTML.
+// Geist and Geist Mono at three weights each, and Geist Pixel Square.
+export const fontFiles = 7;
+
 export async function checkDist(root) {
   const problems = [];
   const read = (file) =>
@@ -35,8 +38,10 @@ export async function checkDist(root) {
   const fonts = (
     await readdir(path.join(root, '_astro', 'fonts')).catch(() => [])
   ).filter((file) => file.endsWith('.woff2'));
-  if (fonts.length !== 3) {
-    problems.push(`expected the 3 latin font files, found ${fonts.length}`);
+  if (fonts.length !== fontFiles) {
+    problems.push(
+      `expected the ${fontFiles} font files, found ${fonts.length}`,
+    );
   }
 
   const page = (await read(path.join(defaultLocale, 'index.html'))) ?? '';

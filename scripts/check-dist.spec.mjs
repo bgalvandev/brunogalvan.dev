@@ -5,15 +5,17 @@ import path from 'node:path';
 import { test } from 'node:test';
 
 import { inlineHashes, renderHeaders } from './build/cloudflare-headers.mjs';
-import { checkDist } from './check-dist.mjs';
+import { checkDist, fontFiles } from './check-dist.mjs';
 
 const preload = (file) =>
   `<link rel="preload" href="/_astro/fonts/${file}" as="font" type="font/woff2" crossorigin>`;
+const faces = (count) =>
+  Array.from({ length: count }, (_, index) => `f${index}.woff2`);
 
 async function dist(
   t,
   {
-    fonts = ['a.woff2', 'b.woff2', 'c.woff2'],
+    fonts = faces(fontFiles),
     home,
     headers,
     redirects = '/ /en/ 301',
@@ -32,7 +34,7 @@ async function dist(
   await writeFile(
     path.join(root, 'en', 'index.html'),
     home ??
-      `${preload('a.woff2')}${preload('b.woff2')}${preload('c.woff2')}<style>@font-face{}</style><script>init()</script><script type="module" src="/_astro/x.js"></script>`,
+      `${fonts.map(preload).join('')}<style>@font-face{}</style><script>init()</script><script type="module" src="/_astro/x.js"></script>`,
   );
   await writeFile(
     path.join(root, '_headers'),
@@ -47,7 +49,7 @@ test('accepts a complete build', async (t) => {
 
 test('reports missing documents, extra fonts, missing preloads, foreign scripts, secrets and uncovered inline blocks', async (t) => {
   const root = await dist(t, {
-    fonts: ['a.woff2', 'b.woff2', 'c.woff2', 'd.woff2'],
+    fonts: faces(fontFiles + 1),
     home: '<script src="https://cdn.example/x.js"></script><script>alert(1)</script>ghp_abcdefghijklmnopqrstuv',
     headers: renderHeaders({ scripts: [], styles: [] }),
   });
@@ -55,8 +57,8 @@ test('reports missing documents, extra fonts, missing preloads, foreign scripts,
   const problems = await checkDist(root);
   for (const expected of [
     '404.html is missing',
-    'found 4',
-    'expected 4 font preloads on /en/, found 0',
+    `found ${fontFiles + 1}`,
+    `expected ${fontFiles + 1} font preloads on /en/, found 0`,
     'unexpected script source https://cdn.example/x.js',
     'credential-like',
     '_headers lacks',

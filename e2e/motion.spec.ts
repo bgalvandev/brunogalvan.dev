@@ -231,3 +231,61 @@ test("the closing word is already cycling when the visitor scrolls to it, as the
     timeout: 500,
   });
 });
+
+test('revealed text is as wide whole as split into letters, so the end of the reveal moves nothing', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/en/');
+  const [whole, split] = await page
+    .locator('.hero-line')
+    .first()
+    .evaluate((line) => {
+      const width = (node: Element) => {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        return range.getBoundingClientRect().width;
+      };
+      // The line as the reveal lays it out: a box per letter, spaces between.
+      const letters = line.cloneNode() as HTMLElement;
+      for (const letter of line.textContent ?? '') {
+        if (letter === ' ') {
+          letters.append(' ');
+          continue;
+        }
+        const box = document.createElement('span');
+        box.className = 'reveal-char';
+        box.textContent = letter;
+        letters.append(box);
+      }
+      line.after(letters);
+      const widths = [width(line), width(letters)];
+      letters.remove();
+      return widths;
+    });
+  expect(Math.abs(whole! - split!)).toBeLessThan(0.5);
+});
+
+test('on a phone the cursor and the closing bracket stay on the line of the last letter', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/en/');
+  const { letter, bracket } = await page
+    .locator('.hero-fragment')
+    .evaluate((fragment) => {
+      const top = (node: Node) => {
+        const range = document.createRange();
+        const end = node.textContent!.length;
+        range.setStart(node, end - 1);
+        range.setEnd(node, end);
+        return range.getBoundingClientRect().top;
+      };
+      return {
+        letter: top(fragment.querySelector('[data-typewriter]')!.firstChild!),
+        bracket: top(fragment.lastChild!),
+      };
+    });
+  expect(Math.abs(bracket - letter)).toBeLessThan(1);
+});

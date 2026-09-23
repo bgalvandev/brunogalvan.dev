@@ -6,9 +6,5 @@
     "scripts/e2e/preview.mjs"
   ],
   "project": ["src/**/*.{ts,astro,css}", "e2e/**/*.ts", "scripts/**/*.mjs"],
-  "ignoreDependencies": [
-    "@fontsource-variable/geist",
-    "@fontsource-variable/geist-mono",
-    "geist"
-  ]
+  "ignoreDependencies": ["geist"]
 }

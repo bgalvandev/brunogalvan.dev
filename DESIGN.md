@@ -18,12 +18,15 @@ anywhere. Depth lives on extension pages, never on the home page.
 
 - **Faces.** Geist carries statements, Geist Mono carries every label and
   control, Geist Pixel Square carries only the hero's bracketed fragment and the
-  decorative heading slashes. Three latin files ship through Astro's font
-  pipeline, preloaded: Geist 29.4 kB, Geist Mono 23.1 kB, Geist Pixel Square
-  28.5 kB (81.1 kB in all). Rejected: Archivo and JetBrains Mono, the previous
-  pair, which read as a different site from the master.
+  decorative heading slashes. The master's own files ship through Astro's
+  font pipeline, preloaded: Vercel's static, hinted Geist and Geist Mono at
+  400, 500 and 600, and Geist Pixel Square (320.2 kB in all). The variable
+  subsets they replace (81.1 kB) have no hinting, so Windows drew them lighter
+  and softer than the master (ADR 0013). Rejected: Archivo and JetBrains Mono,
+  the previous pair, which read as a different site from the master.
 - **Type.** Display 72px and section headline 56px at weight 400, never bold;
   negative tracking on everything (−0.06em display, −0.05em body, −0.04em mono);
+  revealed text never kerns, as the master's letters stay split;
   body leading 1.3, so blocks read as specification text. Sizes step down at the
   master's own breakpoints (992, 768, 480px). The scale lives in `@theme` in
   `src/styles/global.css`.
@@ -56,7 +59,10 @@ anywhere. Depth lives on extension pages, never on the home page.
   master's 8px system, 8 to 80px; only control padding goes below it.
 - **Components.** The eyebrow `[N.01/07] —— > LABEL ———` is read off the
   section list, so the count cannot disagree with the page, and speaks as
-  "Section 1 of 7: label". The headline is two short sentences between slashes.
+  "Section 1 of 7: label". The headline is two short sentences between slashes,
+  each balanced on its own lines so neither ends on a word by itself. The block
+  cursor of a typed fragment holds to its last letter, so on a phone the
+  cursor and the closing bracket never take a line of their own.
   Buttons hover as the master's do, over 0.3s from a slow start (GSAP's
   power1.in, `--ease-power1-in`): the solid button is an ink rectangle whose
   accent slides in behind while its square turns half a turn, its label steps

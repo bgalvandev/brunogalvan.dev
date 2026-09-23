@@ -6,6 +6,13 @@ import { pagePath } from './src/i18n/routes';
 import { locales, defaultLocale } from './src/i18n/locales';
 import { cloudflareHeaders } from './scripts/build/cloudflare-headers.mjs';
 
+// geist's exports map hides its font files, so they resolve by root path.
+const face = (file: string, weight: string) => ({
+  src: [`./node_modules/geist/dist/fonts/${file}.woff2`] as [string],
+  weight,
+  style: 'normal' as const,
+});
+
 export default defineConfig({
   site: site.url,
   output: 'static',
@@ -23,45 +30,36 @@ export default defineConfig({
     }),
     cloudflareHeaders(),
   ],
-  // The three latin font files ship from installed packages, so the build needs
-  // no network and Dependabot keeps the faces current. The local provider is
-  // used on purpose: fontsource's CSS labels each face by file name, not by
-  // subset, so the npm provider cannot apply `subsets` and would ship every
-  // script the packages carry. Geist Pixel Square comes from Vercel's `geist`
-  // package because it is the only one that names the shape it carries. Astro
-  // emits metric-matched fallbacks and preloads.
+  // The faces ship from Vercel's `geist` package, so the build needs no
+  // network and Dependabot keeps them current. Geist and Geist Mono are its
+  // static, hinted files, one per weight the site sets, the same files the
+  // master serves: Windows renders unhinted outlines, the variable files'
+  // among them, lighter and softer (ADR 0013). Astro emits metric-matched
+  // fallbacks and preloads.
   fonts: [
     {
       provider: fontProviders.local(),
-      name: 'Geist Variable',
+      name: 'Geist',
       cssVariable: '--font-geist',
       fallbacks: ['sans-serif'],
       options: {
         variants: [
-          {
-            src: [
-              '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2',
-            ],
-            weight: '100 900',
-            style: 'normal',
-          },
+          face('geist-sans/Geist-Regular', '400'),
+          face('geist-sans/Geist-Medium', '500'),
+          face('geist-sans/Geist-SemiBold', '600'),
         ],
       },
     },
     {
       provider: fontProviders.local(),
-      name: 'Geist Mono Variable',
+      name: 'Geist Mono',
       cssVariable: '--font-geist-mono',
       fallbacks: ['monospace'],
       options: {
         variants: [
-          {
-            src: [
-              '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2',
-            ],
-            weight: '100 900',
-            style: 'normal',
-          },
+          face('geist-mono/GeistMono-Regular', '400'),
+          face('geist-mono/GeistMono-Medium', '500'),
+          face('geist-mono/GeistMono-SemiBold', '600'),
         ],
       },
     },
@@ -71,16 +69,7 @@ export default defineConfig({
       cssVariable: '--font-geist-pixel',
       fallbacks: ['monospace'],
       options: {
-        variants: [
-          {
-            // geist's exports map hides its font files, so this is a root path.
-            src: [
-              './node_modules/geist/dist/fonts/geist-pixel/GeistPixel-Square.woff2',
-            ],
-            weight: '400',
-            style: 'normal',
-          },
-        ],
+        variants: [face('geist-pixel/GeistPixel-Square', '400')],
       },
     },
   ],
