@@ -1,13 +1,25 @@
 ---
 // The design master's pixel grid: square cells, thirty to a row (cells stop
 // shrinking below the tablet breakpoint, where the grid is 80rem wide and
-// overflows on purpose). The lines are CSS; the motion script adds one canvas
-// that lights the cells under the pointer and lets them fade, where the master
-// animates 1,350 elements. Place it first inside a positioned parent that
-// clips.
+// overflows on purpose). As in the master, the thirty columns are centred
+// across the room and the rows down it, each line is the right or bottom
+// edge of its cell, so a row stands a line taller than a column is wide, and
+// with an odd count of rows (`rows`, the master's count for the room) a row
+// rather than a line crosses the middle. The lines are CSS; the motion
+// script adds one canvas that lights the cells and lets them fade, where the
+// master animates 1,350 elements. Place it first inside a positioned parent
+// that clips.
+interface Props {
+  rows?: number;
+}
+const { rows = 18 } = Astro.props;
 ---
 
-<div class="pixel-field" aria-hidden="true" data-pixel-field>
+<div
+  class:list={['pixel-field', { 'pixel-field-odd': rows % 2 === 1 }]}
+  aria-hidden="true"
+  data-pixel-field
+>
   <div class="pixel-field-lines"></div>
 </div>
 
@@ -15,7 +27,7 @@
   .pixel-field {
     position: absolute;
     inset: 0;
-    container-type: inline-size;
+    container-type: size;
     overflow: hidden;
     color: var(--accent);
   }
@@ -29,12 +41,21 @@
     width: 100%;
     height: 100%;
   }
+  /* Each tile draws its line on its first pixel, so the tiles start a pixel
+     before the master's cells to put the line on each cell's last. */
   .pixel-field-lines {
     --cell: calc(100cqw / 30);
+    --pitch: calc(var(--cell) + 1px);
+    --row-shift: 0;
     background-image:
       linear-gradient(var(--decor) 1px, transparent 1px),
       linear-gradient(90deg, var(--decor) 1px, transparent 1px);
-    background-size: var(--cell) var(--cell);
+    background-position: calc(50cqw - 15 * var(--cell) - 1px)
+      calc(50cqh - var(--row-shift) * var(--pitch) - 1px);
+    background-size: var(--cell) var(--pitch);
+  }
+  .pixel-field-odd .pixel-field-lines {
+    --row-shift: 0.5;
   }
   @media (width < 62rem) {
     .pixel-field-lines {

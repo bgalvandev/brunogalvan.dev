@@ -59,28 +59,42 @@ const icons = [
       <Headline id="what-i-do-title" lines={whatIDo.headline} />
       <Button href="#contact" label={whatIDo.action} />
     </div>
-    <ol class="value-cards">
-      {whatIDo.cards.map((card, index) => (
-        <li class="value-card">
-          <div class="value-card-content">
-            <div class="value-card-top">
-              <IsoIcon solids={icons[index] ?? []} class="value-card-icon" />
-              <span class="value-card-number" aria-hidden="true">
-                <span class="value-card-slashes">//</span>
-                {String(index + 1).padStart(3, '0')}
-              </span>
-            </div>
-            <div class="value-card-text">
-              <h3 class="value-card-title">{card.title}</h3>
-              <div class="value-card-reveal">
-                <p class="value-card-description">{card.text}</p>
+    <div class="value-slider" data-slider>
+      <ol class="value-cards">
+        {whatIDo.cards.map((card, index) => (
+          <li class="value-card">
+            <div class="value-card-content">
+              <div class="value-card-top">
+                <IsoIcon solids={icons[index] ?? []} class="value-card-icon" />
+                <span class="value-card-number" aria-hidden="true">
+                  <span class="value-card-slashes">//</span>
+                  {String(index + 1).padStart(3, '0')}
+                </span>
+              </div>
+              <div class="value-card-text">
+                <h3 class="value-card-title">{card.title}</h3>
+                <div class="value-card-reveal">
+                  <p class="value-card-description">{card.text}</p>
+                </div>
               </div>
             </div>
-          </div>
-          <p class="tag">{card.tag}</p>
-        </li>
-      ))}
-    </ol>
+            <p class="tag">{card.tag}</p>
+          </li>
+        ))}
+      </ol>
+      {/* The master's dashes, for its phone slider: the motion script shows
+          them and turns the cards into one slide at a time. */}
+      <div class="value-slider-nav" hidden>
+        {whatIDo.cards.map((_, index) => (
+          <button
+            type="button"
+            class="value-slider-dot"
+            aria-label={whatIDo.show.replace('{number}', String(index + 1))}
+            data-slide={index}
+          />
+        ))}
+      </div>
+    </div>
   </div>
 </NumberedSection>
 
@@ -88,7 +102,7 @@ const icons = [
   .value-main {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: var(--space-medium);
   }
   .value-heading {
     display: flex;
@@ -231,6 +245,7 @@ const icons = [
   @media (width < 48rem) {
     .value-heading {
       flex-direction: column;
+      gap: var(--space-small);
     }
     .value-cards {
       grid-template-columns: 1fr;
@@ -239,9 +254,60 @@ const icons = [
       gap: 2rem;
       min-height: auto;
     }
+    .value-card-content {
+      gap: 1.5rem;
+    }
     .value-card :global(.value-card-icon) {
       width: 7.5rem;
       height: 7.5rem;
     }
+  }
+  /* The master's phone slider: one box, the cards in the same place, one
+     shown at a time; the old one fades out before the next fades in, and
+     the dashes at the top left mark and choose it. The cards stay in the
+     page, so a screen reader reads all four. */
+  .value-slider {
+    position: relative;
+  }
+  .value-slider[data-sliding] {
+    border: 1px solid var(--line);
+    touch-action: pan-y;
+  }
+  .value-slider[data-sliding] .value-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .value-slider[data-sliding] .value-card {
+    grid-area: 1 / 1;
+    border: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .value-slider[data-sliding] .value-card.is-current {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0.25s;
+  }
+  .value-slider[data-sliding] :global(.value-card-icon) {
+    margin-top: 2.5rem;
+  }
+  .value-slider-nav {
+    position: absolute;
+    top: 0.75rem;
+    left: 1.25rem;
+    z-index: 1;
+    display: flex;
+  }
+  .value-slider-dot {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: none;
+    background: linear-gradient(var(--faint), var(--faint)) center / 1rem 0.3rem
+      no-repeat;
+    cursor: pointer;
+  }
+  .value-slider-dot[aria-current='true'] {
+    background-image: linear-gradient(var(--ink), var(--ink));
   }
 </style>

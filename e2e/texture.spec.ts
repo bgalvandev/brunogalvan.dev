@@ -148,6 +148,75 @@ test('the pixel field lights the cell under the pointer, keeps it lit while the 
   await expect.poll(alpha, { timeout: 2_000 }).toBe(0);
 });
 
+test('below the desktop breakpoint the pixel field flickers on its own, a fifth of the accent, never over the whole field, under its grid lines', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  const canvas = page.locator('.hero .pixel-field canvas');
+  await expect(canvas).toBeAttached();
+  // The lines are drawn over the glow, so a lit cell keeps its edges.
+  const stack = await page.evaluate(() => {
+    const box = document
+      .querySelector('.hero .pixel-field')!
+      .getBoundingClientRect();
+    return document
+      .elementsFromPoint(box.left + 5, box.top + box.height / 2)
+      .map((element) =>
+        element.tagName === 'CANVAS'
+          ? 'canvas'
+          : element.classList.contains('pixel-field-lines')
+            ? 'lines'
+            : '',
+      )
+      .filter(Boolean);
+  });
+  expect(stack).toEqual(['lines', 'canvas']);
+  // A whole cycle, read at the centre of every cell: each cell swells and
+  // goes dark at once, so part of the field glows and never all of it.
+  const { share, brightest } = await canvas.evaluate(
+    (element: HTMLCanvasElement) =>
+      new Promise<{ share: number[]; brightest: number }>((resolve) => {
+        const context = element.getContext('2d')!;
+        const ratio = element.width / element.clientWidth;
+        const cell = parseFloat(
+          getComputedStyle(
+            element.parentElement!.querySelector('.pixel-field-lines')!,
+          ).getPropertyValue('--cell'),
+        );
+        const share: number[] = [];
+        let brightest = 0;
+        const columns = Math.floor(element.clientWidth / cell);
+        const rows = Math.floor(element.clientHeight / cell);
+        const read = () => {
+          const { data } = context.getImageData(
+            0,
+            0,
+            element.width,
+            element.height,
+          );
+          let lit = 0;
+          for (let row = 0; row < rows; row += 1) {
+            for (let column = 0; column < columns; column += 1) {
+              const x = Math.floor((column + 0.5) * cell * ratio);
+              const y = Math.floor((row + 0.5) * cell * ratio);
+              const alpha = data[(y * element.width + x) * 4 + 3]!;
+              brightest = Math.max(brightest, alpha);
+              if (alpha > 0) lit += 1;
+            }
+          }
+          share.push(lit / (columns * rows));
+          if (share.length < 22) setTimeout(read, 200);
+          else resolve({ share, brightest });
+        };
+        read();
+      }),
+  );
+  expect(Math.max(...share)).toBeGreaterThan(0);
+  expect(Math.max(...share)).toBeLessThan(0.6);
+  expect(brightest).toBeLessThanOrEqual(Math.ceil(255 * 0.2));
+});
+
 test('decoration stays out of the accessibility tree and the positioning line reads whole', async ({
   page,
 }) => {

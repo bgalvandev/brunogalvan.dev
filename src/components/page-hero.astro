@@ -2,17 +2,23 @@
 import Headline from '@/components/headline.astro';
 import PixelField from '@/components/pixel-field.astro';
 // The opening room of an extension page: the dark gridded band, a tag, the
-// page's statement as its h1, and room for an intro or facts below.
+// page's statement as its h1, and room for an intro or facts below. `fit`
+// sets a one-word statement (a project's name) small enough on a phone that
+// the word never runs past the room.
 interface Props {
   label: string;
   lines: readonly string[];
   intro?: string;
+  fit?: boolean;
 }
-const { label, lines, intro } = Astro.props;
+const { label, lines, intro, fit = false } = Astro.props;
 ---
 
-<section class="section band page-hero" aria-labelledby="page-title">
-  <PixelField />
+<section
+  class:list={['section band page-hero', { 'page-hero-fit': fit }]}
+  aria-labelledby="page-title"
+>
+  <PixelField rows={14} />
   <div class="measure page-hero-body">
     <p class="tag">{label}</p>
     <Headline id="page-title" level="h1" size="display" lines={lines} />
@@ -23,8 +29,12 @@ const { label, lines, intro } = Astro.props;
 
 <style>
   .page-hero {
+    container-type: inline-size;
     overflow: hidden;
     background: var(--paper);
+  }
+  .page-hero-fit :global(.headline) {
+    font-size: min(var(--text-display), 11cqw);
   }
   .page-hero-body {
     position: relative;

@@ -24,7 +24,7 @@ test('content and locale navigation work without JavaScript', async ({
       messages('en').hero.spoken,
     );
     await expect(page.getByRole('link', { name: contact })).toBeVisible();
-    await expect(page.locator('[data-theme-toggle]')).toBeHidden();
+    await expect(page.locator('[data-theme-toggle]:visible')).toHaveCount(0);
     await page.getByRole('link', { name: 'Español', exact: true }).click();
     await expect(page).toHaveURL('/es/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(

@@ -43,6 +43,7 @@
     "label": "Qué hago",
     "headline": ["Del modelo de dominio a producción.", "El producto entero."],
     "action": "Hablemos",
+    "show": "Mostrar tarjeta {number}",
     "cards": [
       {
         "title": "Plataformas SaaS",

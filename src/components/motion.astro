@@ -121,9 +121,18 @@
     const cursor = (state: string) => () => {
       live().dataset.cursor = state;
     };
-    for (const word of words) {
+    // A line that holds its words unseen shows the one about to be typed,
+    // so it takes that word's height before the first letter.
+    const begin = (index: number) => () => {
+      cursor('typing')();
+      live()
+        .closest('[data-typewriter-line]')
+        ?.querySelectorAll<HTMLElement>('[data-typewriter-ghost]')
+        .forEach((ghost, at) => (ghost.hidden = at !== index));
+    };
+    for (const [index, word] of words.entries()) {
       const state = { length: 0 };
-      timeline.call(cursor('typing')).to(state, {
+      timeline.call(begin(index)).to(state, {
         length: word.length,
         duration: word.length * TYPE,
         ease: `steps(${word.length})`,
@@ -190,59 +199,116 @@
   // The pixel field lights the cells the pointer crosses, in the accent, as
   // the master's does: a cell rises over a fifth of a second, stays lit half
   // a second after the pointer leaves it, then fades over a fifth; the cell
-  // under a resting pointer stays lit. One canvas, drawn only while a cell
-  // glows.
+  // under a resting pointer stays lit. Below the desktop breakpoint the field
+  // also flickers on its own, as the master's does there: each cell rises to
+  // a fifth of the accent over a second and goes dark at once, the cells
+  // starting in a random order spread over three seconds and the whole field
+  // starting again every four, so about a third of it glows at any moment and
+  // never all of it. One canvas under the grid lines, so a lit cell keeps its
+  // edges, drawn only while a cell glows or the flickering field is on screen.
   function pixelField(field: HTMLElement) {
     const lines = field.querySelector<HTMLElement>('.pixel-field-lines');
     const host = field.parentElement;
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     if (!lines || !host || !context) return () => {};
-    field.append(canvas);
+    lines.before(canvas);
     const RISE = 200;
     const HOLD = 500;
     const FADE = 200;
+    const CYCLE = 4000;
+    const SPREAD = 3000;
+    const SWELL = 1000;
+    const AMBIENT = 0.2;
+    const ambient = window.matchMedia('(width < 62rem)');
+    // A cell's width and a row's height (a line taller), and where the first
+    // cell starts, left of or at the field's edge, as the grid lines lie.
     let cell = 1;
+    let pitch = 2;
+    let left = 0;
+    let top = 0;
     let columns = 0;
-    // When each cell lit and when it was last under the pointer, in ms.
+    // When each cell lit and when it was last under the pointer, in ms, and
+    // when it starts to swell in the flickering field.
     let lit = new Float64Array(0);
     let touched = new Float64Array(0);
+    let delays = new Float64Array(0);
     let current = -1;
     let last: { x: number; y: number } | undefined;
     let frame = 0;
+    let visible = false;
+    let started = performance.now();
+    const flickering = () => visible && ambient.matches;
     function measure() {
       const ratio = window.devicePixelRatio || 1;
-      cell = parseFloat(getComputedStyle(lines!).getPropertyValue('--cell'));
-      canvas.width = Math.round(field.clientWidth * ratio);
-      canvas.height = Math.round(field.clientHeight * ratio);
+      const style = getComputedStyle(lines!);
+      const width = field.clientWidth;
+      const height = field.clientHeight;
+      cell = parseFloat(style.getPropertyValue('--cell'));
+      pitch = cell + 1;
+      const shift = parseFloat(style.getPropertyValue('--row-shift')) || 0;
+      const edge = (start: number, size: number) =>
+        (((start % size) + size) % size) - size;
+      left = edge(width / 2 - 15 * cell, cell);
+      top = edge(height / 2 - shift * pitch, pitch);
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
       context!.setTransform(ratio, 0, 0, ratio, 0, 0);
-      columns = Math.ceil(field.clientWidth / cell);
+      columns = Math.ceil((width - left) / cell);
       touched = new Float64Array(
-        columns * Math.ceil(field.clientHeight / cell),
+        columns * Math.ceil((height - top) / pitch),
       ).fill(-Infinity);
       lit = new Float64Array(touched.length);
+      if (delays.length !== touched.length) {
+        delays = Float64Array.from(touched, () => Math.random() * SPREAD);
+      }
+      wake();
     }
     function draw(now: number) {
       context!.clearRect(0, 0, field.clientWidth, field.clientHeight);
       context!.fillStyle = getComputedStyle(field).color;
       if (current >= 0) touched[current] = now;
-      let glowing = false;
+      // A frame's time can precede the moment the field came into view.
+      const cycle = flickering() ? Math.max(0, now - started) % CYCLE : -1;
+      let glowing = cycle >= 0;
       touched.forEach((at, index) => {
         const since = now - at;
-        if (since >= HOLD + FADE) return;
-        const rise = Math.min(1, (now - lit[index]!) / RISE);
-        const fall = since <= HOLD ? 1 : Math.max(0, 1 - (since - HOLD) / FADE);
-        context!.globalAlpha = Math.min(rise, fall);
+        let alpha = 0;
+        if (since < HOLD + FADE) {
+          const rise = Math.min(1, (now - lit[index]!) / RISE);
+          const fall =
+            since <= HOLD ? 1 : Math.max(0, 1 - (since - HOLD) / FADE);
+          alpha = Math.min(rise, fall);
+          glowing = true;
+        }
+        // A cell that has swelled for its second goes dark at once, as the
+        // master's does: its field's empty track takes the cell back to zero.
+        const swell = (cycle - delays[index]!) / SWELL;
+        if (cycle >= 0 && swell >= 0 && swell < 1) {
+          alpha = Math.max(alpha, AMBIENT * swell);
+        }
+        if (alpha <= 0) return;
+        context!.globalAlpha = alpha;
         context!.fillRect(
-          (index % columns) * cell,
-          Math.floor(index / columns) * cell,
+          left + (index % columns) * cell,
+          top + Math.floor(index / columns) * pitch,
           cell,
-          cell,
+          pitch,
         );
-        glowing = true;
       });
       frame = glowing ? requestAnimationFrame(draw) : 0;
     }
+    function wake() {
+      if (!frame) frame = requestAnimationFrame(draw);
+    }
+    // The flickering starts dark each time the field comes into view.
+    const seen = new IntersectionObserver(([entry]) => {
+      visible = entry?.isIntersecting ?? false;
+      started = performance.now();
+      wake();
+    });
+    seen.observe(field);
+    ambient.addEventListener('change', wake);
     // A cell that had gone dark lights afresh, rising over a fifth of a
     // second; one still glowing just stays lit.
     function touch(index: number, now: number) {
@@ -250,8 +316,8 @@
       touched[index] = now;
     }
     function indexAt(x: number, y: number) {
-      const column = Math.floor(x / cell);
-      const index = Math.floor(y / cell) * columns + column;
+      const column = Math.floor((x - left) / cell);
+      const index = Math.floor((y - top) / pitch) * columns + column;
       return column >= 0 &&
         column < columns &&
         index >= 0 &&
@@ -281,7 +347,7 @@
       }
       current = indexAt(point.x, point.y);
       last = point;
-      if (!frame) frame = requestAnimationFrame(draw);
+      wake();
     }
     const leave = () => {
       last = undefined;
@@ -294,6 +360,8 @@
     host.addEventListener('pointerleave', leave);
     return () => {
       resize.disconnect();
+      seen.disconnect();
+      ambient.removeEventListener('change', wake);
       host.removeEventListener('pointermove', move);
       host.removeEventListener('pointerleave', leave);
       cancelAnimationFrame(frame);
@@ -359,6 +427,118 @@
       return () => {
         delete section.dataset.scrubbing;
         cards.forEach((card) => card.classList.remove('is-active'));
+      };
+    });
+  }
+
+  // The master's phone slider for the value cards: one card at a time, the
+  // next every three and a half seconds (half a second of it to cross), and a
+  // swipe or a dash choosing one, which restarts the wait.
+  function slider(root: HTMLElement) {
+    const cards = [...root.querySelectorAll<HTMLElement>('.value-card')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-slide]')];
+    const nav = root.querySelector<HTMLElement>('.value-slider-nav');
+    if (!nav || cards.length < 2) return;
+    gsap.matchMedia().add('(width < 48rem)', () => {
+      let current = 0;
+      const show = (index: number) => {
+        current = (index + cards.length) % cards.length;
+        cards.forEach((card, at) =>
+          card.classList.toggle('is-current', at === current),
+        );
+        dots.forEach((dot, at) =>
+          dot.setAttribute('aria-current', String(at === current)),
+        );
+      };
+      const timer = gsap.to(
+        {},
+        { duration: 3.5, repeat: -1, onRepeat: () => show(current + 1) },
+      );
+      const choose = (index: number) => {
+        show(index);
+        timer.restart();
+      };
+      let start: number | undefined;
+      const down = (event: PointerEvent) => {
+        start = event.clientX;
+      };
+      const up = (event: PointerEvent) => {
+        const distance = event.clientX - (start ?? event.clientX);
+        start = undefined;
+        if (Math.abs(distance) > 40) choose(current + (distance < 0 ? 1 : -1));
+      };
+      const click = (event: Event) => {
+        const dot = (event.target as HTMLElement).closest<HTMLElement>(
+          '[data-slide]',
+        );
+        if (dot) choose(Number(dot.dataset.slide));
+      };
+      root.dataset.sliding = '';
+      nav.hidden = false;
+      show(0);
+      root.addEventListener('pointerdown', down);
+      root.addEventListener('pointerup', up);
+      nav.addEventListener('click', click);
+      return () => {
+        delete root.dataset.sliding;
+        nav.hidden = true;
+        cards.forEach((card) => card.classList.remove('is-current'));
+        root.removeEventListener('pointerdown', down);
+        root.removeEventListener('pointerup', up);
+        nav.removeEventListener('click', click);
+      };
+    });
+  }
+
+  // The master's phone slider for the method: once the box comes into view,
+  // each card's line fills over five seconds and the next card takes its
+  // place, round and round, while the numbers mark the card shown.
+  function methodSlider(section: HTMLElement) {
+    const cards = [...section.querySelectorAll<HTMLElement>('[data-step]')];
+    const numbers = [...section.querySelectorAll<HTMLElement>('.method-step')];
+    const box = section.querySelector<HTMLElement>('.method-slider');
+    if (!box || cards.length < 2) return;
+    gsap.matchMedia().add('(width < 48rem)', () => {
+      const STEP = 5;
+      let current = -1;
+      const show = (index: number) => {
+        if (index === current) return;
+        current = index;
+        [cards, numbers].forEach((items) =>
+          items.forEach((item, at) =>
+            item.classList.toggle('is-current', at === index),
+          ),
+        );
+      };
+      section.dataset.sliding = '';
+      show(0);
+      const timeline = gsap.timeline({
+        paused: true,
+        repeat: -1,
+        onUpdate: () =>
+          show(Math.min(cards.length - 1, Math.floor(timeline.time() / STEP))),
+      });
+      cards.forEach((card) => {
+        const line = card.querySelector('[data-step-line]');
+        if (line) {
+          timeline.fromTo(
+            line,
+            { width: '0%' },
+            { width: '100%', duration: STEP, ease: 'none' },
+          );
+        }
+      });
+      ScrollTrigger.create({
+        trigger: box,
+        start: 'top bottom',
+        once: true,
+        onEnter: () => timeline.play(),
+      });
+      return () => {
+        delete section.dataset.sliding;
+        [cards, numbers].forEach((items) =>
+          items.forEach((item) => item.classList.remove('is-current')),
+        );
       };
     });
   }
@@ -456,6 +636,10 @@
     // below them.
     document.querySelectorAll<HTMLElement>('[data-steps]').forEach(steps);
     document
+      .querySelectorAll<HTMLElement>('[data-steps]')
+      .forEach(methodSlider);
+    document.querySelectorAll<HTMLElement>('[data-slider]').forEach(slider);
+    document
       .querySelectorAll<HTMLElement>('[data-code-steps]')
       .forEach(codeSteps);
     document.querySelectorAll<HTMLElement>('[data-reveal]').forEach(reveal);
@@ -473,6 +657,13 @@
           delete element.dataset.typewriterKey;
           delete element.dataset.cursor;
         });
+      document
+        .querySelectorAll('[data-typewriter-line]')
+        .forEach((line) =>
+          line
+            .querySelectorAll<HTMLElement>('[data-typewriter-ghost]')
+            .forEach((ghost, at) => (ghost.hidden = at > 0)),
+        );
       root.classList.remove('preloading');
       document.querySelector('[data-preloader]')?.replaceChildren();
       cleanups.forEach((cleanup) => cleanup());

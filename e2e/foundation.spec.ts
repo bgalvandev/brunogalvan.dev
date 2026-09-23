@@ -95,9 +95,15 @@ for (const locale of ['es', 'en'] as const) {
     }) => {
       await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
       await page.goto(`/${locale}/`);
-      await expect(
-        page.getByRole('button', { name: messages(locale).theme.darkMode }),
-      ).toHaveAttribute('aria-pressed', String(colorScheme === 'dark'));
+      // The bar and the phone menu each hold one, and both tell the scheme.
+      const toggles = page.locator('[data-theme-toggle]');
+      await expect(toggles).toHaveCount(2);
+      for (const toggle of await toggles.all()) {
+        await expect(toggle).toHaveAttribute(
+          'aria-pressed',
+          String(colorScheme === 'dark'),
+        );
+      }
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
         .analyze();

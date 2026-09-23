@@ -130,6 +130,76 @@ test('without motion every step of the method shows complete', async ({
   }
 });
 
+test('on a phone the value cards show one at a time, change on their own, and a dash chooses one, with all four still in the page', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  const slider = page.locator('.value-slider');
+  await expect(slider).toHaveAttribute('data-sliding', '');
+  const cards = slider.locator('.value-card');
+  await expect(cards.nth(0)).toHaveClass(/is-current/);
+  await expect(slider.locator('.is-current')).toHaveCount(1);
+  await expect(slider.getByRole('heading', { level: 3 })).toHaveCount(
+    t.whatIDo.cards.length,
+  );
+  await slider
+    .getByRole('button', { name: t.whatIDo.show.replace('{number}', '3') })
+    .click();
+  await expect(cards.nth(2)).toHaveClass(/is-current/);
+  await expect(cards.nth(2)).toHaveCSS('opacity', '1');
+  await expect(cards.nth(3)).toHaveClass(/is-current/, { timeout: 6_000 });
+});
+
+test('on a phone the method shows one card at a time, filling its line before the next takes its place, with all four still in the page', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  const method = page.locator('#method');
+  await expect(method).toHaveAttribute('data-sliding', '');
+  const cards = method.locator('.method-card');
+  const numbers = method.locator('.method-step');
+  await expect(cards.nth(0)).toHaveClass(/is-current/);
+  await expect(numbers.nth(0)).toHaveClass(/is-current/);
+  await expect(method.getByRole('heading', { level: 3 })).toHaveCount(
+    t.method.rules.length,
+  );
+  await method.locator('.method-slider').scrollIntoViewIfNeeded();
+  await expect(cards.nth(1)).toHaveClass(/is-current/, { timeout: 8_000 });
+  await expect(numbers.nth(1)).toHaveClass(/is-current/);
+  await expect(cards.nth(0)).not.toHaveClass(/is-current/);
+});
+
+test('without motion a phone shows every value card and every method card, stacked', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  await expect(page.locator('.value-slider')).not.toHaveAttribute(
+    'data-sliding',
+  );
+  await expect(page.locator('#method')).not.toHaveAttribute('data-sliding');
+  for (const card of [
+    ...(await page.locator('.value-card').all()),
+    ...(await page.locator('.method-card').all()),
+  ]) {
+    await expect(card).toHaveCSS('opacity', '1');
+  }
+  await expect(page.locator('.value-slider-nav')).toBeHidden();
+});
+
+test('on a phone the stack leads with its headline, then its layers', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  const heading = await page.locator('#stack-title').boundingBox();
+  const layers = await page.locator('.cap-tabs').boundingBox();
+  expect(heading!.y).toBeLessThan(layers!.y);
+});
+
 test('the timeline lists every role with its period', async ({ page }) => {
   await page.goto('/es/');
   const items = page.locator('.experience-item');

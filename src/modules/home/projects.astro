@@ -415,6 +415,7 @@ const cards = [...projects]
   @media (width < 48rem) {
     .projects-heading {
       flex-direction: column;
+      gap: var(--space-small);
     }
     .project-card-cover-name {
       font-size: var(--text-medium);
@@ -431,6 +432,28 @@ const cards = [...projects]
     .project-card-featured,
     .project-card:last-child {
       grid-column: auto;
+    }
+  }
+  /* On a phone the master's document cards stand 2rem apart, their titles
+     a step down and their pictures at least 10rem tall. */
+  @media (width < 30rem) {
+    .projects-grid {
+      gap: 2rem;
+    }
+    .project-card-top {
+      min-height: auto;
+    }
+    .project-card-heading {
+      gap: 0.5rem;
+    }
+    .project-card-title {
+      font-size: 1.25rem;
+    }
+    .project-card-featured .project-card-title {
+      font-size: var(--text-medium);
+    }
+    .project-card-cover {
+      min-height: 10rem;
     }
   }
   @media (prefers-reduced-motion: reduce) {

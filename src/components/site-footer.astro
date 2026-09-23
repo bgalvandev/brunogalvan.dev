@@ -278,9 +278,11 @@ const profiles = [
       border-bottom: 1px solid var(--line);
     }
   }
+  /* On a phone the master's cards close up, one hairline between each. */
   @media (width < 48rem) {
     .site-footer-cards {
       grid-template-columns: 1fr;
+      gap: 0;
     }
     .site-footer-card,
     .site-footer-name {
@@ -290,11 +292,18 @@ const profiles = [
     .site-footer-card:nth-child(2) {
       border-inline: none;
     }
-    .site-footer-card:nth-child(2) {
-      border-top: 1px solid var(--line);
-    }
     .site-footer-contact {
       grid-column: auto;
+      border-top: none;
+    }
+    .site-footer-bottom {
+      padding-top: 4rem;
+    }
+  }
+  @media (width < 30rem) {
+    .site-footer-card,
+    .site-footer-name {
+      padding-inline: 1rem;
     }
   }
   @media (prefers-reduced-motion: reduce) {
