@@ -1,10 +1,10 @@
 @import 'tailwindcss';
 @import './tokens.css';
 
-/* Type scale read off the design master: display weight 400, negative tracking
-   on everything, and a 1.3 body leading so blocks read as specification text.
-   Sizes step down at the master's own breakpoints, and a phone keeps the
-   master's 3.25rem display and 2.75rem headline, letting lines wrap. */
+/* Type scale: display weight 400, negative tracking on everything, and a 1.3
+   body leading so blocks read as specification text. Sizes step down at the
+   two breakpoints, and a phone keeps a 3.25rem display and a 2.75rem
+   headline, letting lines wrap. */
 @theme {
   --text-display: 4.5rem;
   --text-display--line-height: 1.1;
@@ -42,9 +42,9 @@
   }
 }
 
-/* The master's space scale, which steps down at its breakpoints: a room's
-   padding is large, the gap under its eyebrow tiny, a deep room closes with
-   hugh, and a heading keeps small and medium around it. */
+/* The space scale, which steps down at the breakpoints: a room's padding is
+   large, the gap under its eyebrow tiny, a deep room closes with hugh, and a
+   heading keeps small and medium around it. */
 :root {
   --space-tiny: 1.5rem;
   --space-small: 3rem;
@@ -122,8 +122,8 @@ html.lenis body {
 }
 
 @layer base {
-  /* The master's two curves, GSAP's power1 in and out, for every transition
-     that copies one of its interactions. */
+  /* Two curves, GSAP's power1 in and out, for the hover and open transitions,
+     so CSS motion eases the same way as the scripted motion. */
   :root {
     --ease-power1-in: cubic-bezier(0.55, 0.085, 0.68, 0.53);
     --ease-power1-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -177,9 +177,9 @@ html.lenis body {
   .band:has(> .pixel-field) {
     --paper: var(--band-deep);
   }
-  /* The content column: the master's 8% gutter (5% on tablets, 1.5rem on
-     phones) capped at 80rem. The width is explicit, so the measure behaves
-     the same inside block, flex and grid parents. */
+  /* The content column: an 8% gutter (5% on tablets, 1.5rem on phones)
+     capped at 80rem. The width is explicit, so the measure behaves the same
+     inside block, flex and grid parents. */
   /* A room inside a band that returns to the page's own scheme and paper. */
   .unband {
     --paper: var(--page-paper);
@@ -227,7 +227,7 @@ html.lenis body {
     gap: var(--space-tiny);
     padding-block: var(--space-large);
   }
-  /* The rooms the master closes with its hugh space below them. */
+  /* A deep room closes with the hugh space below it. */
   .section-deep > .section-body {
     padding-bottom: var(--space-hugh);
   }
@@ -327,7 +327,7 @@ html.lenis body {
   .skip-link:focus {
     transform: translateY(0);
   }
-  /* The master's dotted field: a faint dot every 14px on the field tone. */
+  /* The dotted field: a faint dot every 13px on the field tone. */
   .field-dotted {
     background-color: var(--field);
     background-image: var(--field-dots);
@@ -353,9 +353,8 @@ html.lenis body {
       var(--tick) 100% 100% / 4px 4px no-repeat,
       var(--tick) calc(100% - 8px) 100% / 4px 4px no-repeat;
   }
-  /* Revealed text never kerns, split or whole, as the master's letters stay
-     split and so never kern: reverting the split at the end of the reveal
-     then leaves every letter where it stood. */
+  /* Revealed text never kerns, split or whole, so reverting the split at the
+     end of the reveal leaves every letter where it stood. */
   [data-reveal] {
     font-kerning: none;
   }

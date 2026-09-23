@@ -14,7 +14,7 @@ interface Props {
 }
 const { locale } = Astro.props;
 const { hero, identity, positioning } = messages(locale);
-// The master's scroll cue: a stepped arrow 7 cells by 8, one pixel a cell.
+// The scroll cue: a stepped arrow 7 cells by 8, one pixel a cell.
 const scrollArrow = [
   '...#...',
   '...#...',
@@ -26,7 +26,7 @@ const scrollArrow = [
   '...#...',
 ];
 // The toolchain band carries every tool the record names that has a mark of
-// its own, as a carousel (the owner's choice), in the master's cells.
+// its own, as a carousel (the owner's choice) of logo cells.
 const tools = Object.values(stack)
   .flat()
   .filter((tool) => marks.has(tool));
@@ -186,8 +186,8 @@ const tools = Object.values(stack)
   .hero-name :global(.hero-name-text) {
     font-size: var(--text-large);
   }
-  /* The master's version chip: a lighter block than the band, its text kept
-     light enough to pass contrast. */
+  /* The version chip: a lighter block than the band, its text kept light
+     enough to pass contrast. */
   .hero-name-tag {
     padding: 0.1em 0.25em;
     background: var(--decor);
@@ -209,7 +209,7 @@ const tools = Object.values(stack)
     line-height: 1.3rem;
     letter-spacing: var(--text-small--letter-spacing);
   }
-  /* The master's arrow is drawn 7 by 8 in a 12px box. */
+  /* The arrow is drawn 7 by 8 in a 12px box. */
   .hero-scroll :global(.hero-scroll-icon) {
     width: 0.75rem;
     height: 0.75rem;
@@ -295,8 +295,9 @@ const tools = Object.values(stack)
     text-wrap: balance;
   }
   /* Each part keeps the glyph after it, so a line ends on a glyph and never
-     starts with one. The glyphs are drawn, where the master borrows an arrow
-     and two shadowed squares from whatever system font has them. */
+     starts with one. The glyphs are drawn rather than taken from a system
+     font, so the arrow and the two shadowed squares look the same on every
+     device. */
   .hero-positioning-step {
     white-space: nowrap;
   }
@@ -311,9 +312,8 @@ const tools = Object.values(stack)
     fill: var(--ink);
     vertical-align: -0.02em;
   }
-  /* The squares as Windows draws the master's: each fills the capital
-     height, a hairline square of 0.6em with a shadow 0.1em deep, on a grid
-     of 0.025em. */
+  /* The squares: each fills the capital height, a hairline square of 0.6em
+     with a shadow 0.1em deep, on a grid of 0.025em. */
   .hero-positioning-squares {
     width: 1.575em;
     height: 0.7em;
@@ -323,17 +323,16 @@ const tools = Object.values(stack)
   .hero-positioning-part {
     color: var(--accent);
   }
-  /* The master sets its brackets 3% of the line from its shorter words;
-     these keep 0.5em so the longer line still holds to one row. Both lift
-     them 2px. */
+  /* The brackets keep 0.5em from their words so the longer line still
+     holds to one row, and lift 2px. */
   .hero-positioning-bracket {
     position: relative;
     top: -0.0625em;
     margin-inline: 0.5em;
   }
-  /* Below the desktop breakpoint the band is the master's: half the screen
-     tall, the name gone to the header bar, and the scroll cue at its foot on
-     the left; the logo row and the positioning run edge to edge. */
+  /* Below the desktop breakpoint the band is half the screen tall, the name
+     gone to the header bar, and the scroll cue at its foot on the left; the
+     logo row and the positioning run edge to edge. */
   @media (width < 62rem) {
     .hero-band {
       justify-content: flex-end;

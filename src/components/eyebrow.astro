@@ -59,8 +59,8 @@ const pad = (value: number) => String(value).padStart(2, '0');
   .eyebrow-index {
     display: inline-flex;
   }
-  /* The current number carries ink and the total recedes; the master does it
-     with a paler grey that fails contrast, this does it with value. */
+  /* The current number carries ink and the total recedes by value alone, so
+     neither falls to a grey that fails contrast. */
   .eyebrow-number {
     color: var(--ink);
   }

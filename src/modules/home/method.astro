@@ -1,7 +1,7 @@
 ---
-// As in the master, the four cards sit in a sticky frame inside a tall room and
-// the scroll draws each process line in turn. That only happens while motion
-// runs (data-steps is the hook); otherwise every card shows complete.
+// The four cards sit in a sticky frame inside a tall room and the scroll
+// draws each process line in turn. That only happens while motion runs
+// (data-steps is the hook); otherwise every card shows complete.
 import Button from '@/components/button.astro';
 import Headline from '@/components/headline.astro';
 import NumberedSection from '@/components/numbered-section.astro';
@@ -85,8 +85,8 @@ const icons = [
       <Button href={site.repository} label={method.action} />
     </div>
     <div class="method-slider">
-      {/* The numbers of the master's phone slider, where one card shows at a
-          time and this list marks which. */}
+      {/* The numbers of the phone slider, where one card shows at a time
+          and this list marks which. */}
       <ol class="method-steps" aria-hidden="true">
         {method.rules.map((_, index) => (
           <li class="method-step">// {String(index + 1).padStart(3, '0')}</li>
@@ -146,7 +146,7 @@ const icons = [
     list-style: none;
     border-block: 1px solid var(--line);
   }
-  /* The master's process card: padded 1rem, the number and description at
+  /* The process card: padded 1rem, the number and description at
      the top, the strip out of the flow across the card's middle, and the
      title a fixed distance down (so every title lines up, one line or two)
      with the drawing sunk to the corner, 1.5rem below it. */
@@ -221,7 +221,7 @@ const icons = [
     transition: color 0.2s ease;
   }
   /* A reached card shows its drawing as pixels; one not reached yet shows it
-     as lines, and the swap is instant, as in the master. */
+     as lines, and the swap is instant. */
   .method-card :global(.method-card-icon) {
     align-self: flex-end;
     width: 5rem;
@@ -231,13 +231,12 @@ const icons = [
   .method-card :global(.iso-line) {
     visibility: hidden;
   }
-  /* While the scroll drives it, a card not reached yet is quiet, as in the
-     master: its description waits unseen (a screen reader still reads it),
-     its drawing is a pale line drawing, and its number and title dim to a
-     colour that still passes contrast, where the master drops them to 30%. */
+  /* While the scroll drives it, a card not reached yet is quiet: its
+     description waits unseen (a screen reader still reads it), its drawing
+     is a pale line drawing, and its number and title dim to a colour that
+     still passes contrast. */
   /* The room is padded by 10vh and its body pinned there with no padding of
-     its own, as the master's is, so the eyebrow lands at 10vh and the cards
-     fit the screen. */
+     its own, so the eyebrow lands at 10vh and the cards fit the screen. */
   .method[data-scrubbing] {
     height: 200vh;
     padding-top: 10vh;
@@ -290,7 +289,7 @@ const icons = [
       border-bottom: none;
     }
   }
-  /* The master's phone slider: one box, the cards in the same place, the
+  /* The phone slider: one box, the cards in the same place, the
      numbers at the top left and the drawing at the top right, the process
      strip across at 11rem, and the title and rule under it. Each card's line
      fills over five seconds and the next card takes its place. The cards

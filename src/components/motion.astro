@@ -14,9 +14,9 @@
 
   gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin);
 
-  // The design master's own values: characters open 0.04s apart, each one
-  // widens over a quarter of its duration while it scrambles for the whole of
-  // it, settling on the real glyph.
+  // Characters open 0.04s apart, each one widens over a quarter of its
+  // duration while it scrambles for the whole of it, settling on the real
+  // glyph.
   const SCRAMBLE = '!<>-_\\/[]{}—=+*^?#______';
   const STAGGER = 0.04;
   const DURATION = 0.4;
@@ -87,7 +87,7 @@
   }
 
   // Types a fragment's text, which waits in data-typewriter-text; the cursor
-  // is CSS. A fragment with a list of words runs the master's cycle: each word
+  // is CSS. A fragment with a list of words cycles through them: each word
   // types at 50ms a letter under a cursor that covers the newest one, holds
   // 0.8s, the cursor blinks off and on twice, the word clears at once and the
   // next one follows 0.2s later, round and round. The pause control stops
@@ -157,9 +157,9 @@
         .to({}, { duration: GAP });
     }
   }
-  // A cycling fragment starts with the page, after its own delay, as the
-  // master's do, so it is already moving when the visitor scrolls to it; a
-  // fragment typed once waits for its heading to open.
+  // A cycling fragment starts with the page, after its own delay, so it is
+  // already moving when the visitor scrolls to it; a fragment typed once waits
+  // for its heading to open.
   function holdForTyping(element: HTMLElement, index: number) {
     element.dataset.typewriterKey = String(index);
     element.dataset.typewriterText = element.textContent ?? '';
@@ -196,16 +196,16 @@
     };
   }
 
-  // The pixel field lights the cells the pointer crosses, in the accent, as
-  // the master's does: a cell rises over a fifth of a second, stays lit half
-  // a second after the pointer leaves it, then fades over a fifth; the cell
-  // under a resting pointer stays lit. Below the desktop breakpoint the field
-  // also flickers on its own, as the master's does there: each cell rises to
-  // a fifth of the accent over a second and goes dark at once, the cells
-  // starting in a random order spread over three seconds and the whole field
-  // starting again every four, so about a third of it glows at any moment and
-  // never all of it. One canvas under the grid lines, so a lit cell keeps its
-  // edges, drawn only while a cell glows or the flickering field is on screen.
+  // The pixel field lights the cells the pointer crosses, in the accent: a
+  // cell rises over a fifth of a second, stays lit half a second after the
+  // pointer leaves it, then fades over a fifth; the cell under a resting
+  // pointer stays lit. Below the desktop breakpoint the field also flickers on
+  // its own: each cell rises to a fifth of the accent over a second and goes
+  // dark at once, the cells starting in a random order spread over three
+  // seconds and the whole field starting again every four, so about a third
+  // of it glows at any moment and never all of it. One canvas under the grid
+  // lines, so a lit cell keeps its edges, drawn only while a cell glows or the
+  // flickering field is on screen.
   function pixelField(field: HTMLElement) {
     const lines = field.querySelector<HTMLElement>('.pixel-field-lines');
     const host = field.parentElement;
@@ -281,8 +281,8 @@
           alpha = Math.min(rise, fall);
           glowing = true;
         }
-        // A cell that has swelled for its second goes dark at once, as the
-        // master's does: its field's empty track takes the cell back to zero.
+        // A cell that has swelled for its second goes dark at once rather
+        // than fading.
         const swell = (cycle - delays[index]!) / SWELL;
         if (cycle >= 0 && swell >= 0 && swell < 1) {
           alpha = Math.max(alpha, AMBIENT * swell);
@@ -370,7 +370,7 @@
   }
 
   // The first view of a session: the accent sheet breaks into squares, one
-  // tenth of the width each, that clear in random order, as the master's do.
+  // tenth of the width each, that clear in random order.
   function clearPreloader() {
     const sheet = document.querySelector<HTMLElement>('[data-preloader]');
     if (!sheet || !root.classList.contains('preloading')) return;
@@ -393,10 +393,10 @@
     });
   }
 
-  // A numbered process driven by the scroll, as in the master's how-it-works:
-  // the room grows tall, its content sticks, and each step's line is drawn in
-  // turn while the steps reached so far are marked active. Only where the
-  // steps sit in one row; stacked steps would not fit a sticky frame.
+  // A numbered process driven by the scroll: the room grows tall, its
+  // content sticks, and each step's line is drawn in turn while the steps
+  // reached so far are marked active. Only where the steps sit in one row;
+  // stacked steps would not fit a sticky frame.
   function steps(section: HTMLElement) {
     const cards = [...section.querySelectorAll<HTMLElement>('[data-step]')];
     const lines = cards.flatMap(
@@ -431,9 +431,9 @@
     });
   }
 
-  // The master's phone slider for the value cards: one card at a time, the
-  // next every three and a half seconds (half a second of it to cross), and a
-  // swipe or a dash choosing one, which restarts the wait.
+  // The phone slider for the value cards: one card at a time, the next every
+  // three and a half seconds (half a second of it to cross), and a swipe or a
+  // dash choosing one, which restarts the wait.
   function slider(root: HTMLElement) {
     const cards = [...root.querySelectorAll<HTMLElement>('.value-card')];
     const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-slide]')];
@@ -490,9 +490,9 @@
     });
   }
 
-  // The master's phone slider for the method: once the box comes into view,
-  // each card's line fills over five seconds and the next card takes its
-  // place, round and round, while the numbers mark the card shown.
+  // The phone slider for the method: once the box comes into view, each
+  // card's line fills over five seconds and the next card takes its place,
+  // round and round, while the numbers mark the card shown.
   function methodSlider(section: HTMLElement) {
     const cards = [...section.querySelectorAll<HTMLElement>('[data-step]')];
     const numbers = [...section.querySelectorAll<HTMLElement>('.method-step')];
@@ -543,11 +543,11 @@
     });
   }
 
-  // The master's installation room, where the scroll checks each file in
-  // turn: the first at the top, the second a third of the way through, the
-  // third at two thirds, while the rail's line grows over those two thirds.
-  // A file chosen by hand scrolls the room to its own stretch, so the page and
-  // the choice never disagree.
+  // The code room, where the scroll checks each file in turn: the first at
+  // the top, the second a third of the way through, the third at two thirds,
+  // while the rail's line grows over those two thirds. A file chosen by hand
+  // scrolls the room to its own stretch, so the page and the choice never
+  // disagree.
   function codeSteps(section: HTMLElement) {
     const radios = [
       ...section.querySelectorAll<HTMLInputElement>('input[type="radio"]'),

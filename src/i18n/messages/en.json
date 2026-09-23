@@ -373,7 +373,7 @@
       },
       "headline": ["The site you are reading.", "Every claim with a source."],
       "summary": "A static Astro site in two languages, where every figure is computed from a typed record and every page is tested in a real browser.",
-      "context": "My portfolio, rebuilt in September 2026 in the grammar of one design master. It ships as static HTML with one bundled script for motion; every visible string lives in a Spanish and an English catalog, and every number is derived from the record when the site builds.",
+      "context": "My portfolio, rebuilt in September 2026 on one strict visual system: sharp rectangles, hairlines and numbered sections. It ships as static HTML with one bundled script for motion; every visible string lives in a Spanish and an English catalog, and every number is derived from the record when the site builds.",
       "layers": [
         {
           "name": "Record",

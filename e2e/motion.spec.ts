@@ -147,7 +147,7 @@ test('a revealing heading holds its height, so nothing below it moves', async ({
         document.querySelector('.value-slider')!.getBoundingClientRect().top +
         scrollY,
     }));
-  // The static page is the reference layout.
+  // The static page is the baseline layout.
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/es/');
   const still = await layout();
@@ -183,7 +183,7 @@ test('the closing word cycles between tight brackets while its bands run in oppo
   expect(directions).toEqual(['normal', 'reverse']);
 });
 
-test('hovers follow the master: the bullet turns, the line button closes a frame, the contact tab takes the accent', async ({
+test('hovers: the bullet turns, the line button closes a frame, the contact tab takes the accent', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -238,7 +238,7 @@ test('without motion the stack diagrams stand still in their finished state', as
   }
 });
 
-test("the closing word is already cycling when the visitor scrolls to it, as the master's is", async ({
+test('the closing word is already cycling when the visitor scrolls to it', async ({
   page,
 }) => {
   await page.goto('/es/');

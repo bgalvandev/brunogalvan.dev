@@ -2,17 +2,16 @@
 import PixelIcon from '@/components/pixel-icon.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
-// The three diagrams of the Stack room, drawn in HTML where the master plays
-// three videos, each looping in two seconds:
-// - interfaces: the master's first video, sized as its pane shows it: two
-//   boxes with a bracket behind each, joined to the core, and a channel
-//   running down to what is rendered, which lights as the channel arrives,
-//   then the rows light one by one;
-// - services: the master's third video: from the core the layers of a
-//   request come up one by one, each crossed in turn;
-// - ai: the master's second video: a card at work widens while a card of
-//   documents rises beside it, the documents coming one by one as a bar
-//   runs, the core sliding in and the join appearing on the card's corner.
+// The three diagrams of the Stack room, drawn in HTML so they follow the
+// theme and stay sharp at any size, each looping in two seconds:
+// - interfaces: two boxes with a bracket behind each, joined to the core,
+//   and a channel running down to what is rendered, which lights as the
+//   channel arrives, then the rows light one by one;
+// - services: from the core the layers of a request come up one by one,
+//   each crossed in turn;
+// - ai: a card at work widens while a card of documents rises beside it,
+//   the documents coming one by one as a bar runs, the core sliding in and
+//   the join appearing on the card's corner.
 // At the heart of each, the core: a black square holding a code glyph.
 // Decoration: the tab beside it carries the words. Every loop is CSS, stops
 // with the pause control and is off under reduced motion, where each diagram
@@ -144,8 +143,8 @@ const screenIcons = [
 ];
 const state = ['Next.js', 'TanStack Query', 'React Hook Form', 'Zod'];
 const stateIcons = [glyphs.window, glyphs.query, glyphs.form, glyphs.check];
-// The rendered cells carry finer glyphs, thirteen cells a side, so their
-// strokes are as light as the master's signal icons.
+// The rendered cells carry finer glyphs, thirteen cells a side, so at their
+// larger size the strokes stay as light as the rows'.
 const outputIcons = [
   [
     '#############',
@@ -331,7 +330,7 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     font-size: var(--text-small);
     text-transform: uppercase;
   }
-  /* A box only covers the pane's dots, as the master's do: same ground. */
+  /* A box only covers the pane's dots: it takes the same ground. */
   .dia-box,
   .dia-out,
   .dia-card,
@@ -382,10 +381,9 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     height: auto;
   }
 
-  /* Interfaces, measured from the master's first video as its pane shows
-     it: boxes 151px wide and 249px tall, a bracket 32px deep behind each,
-     30px short of its box at either end, a join of 35px to a core of 94px,
-     and a channel of 10px down to a box of 301 by 124. */
+  /* Interfaces: boxes 151px wide and 249px tall, a bracket 32px deep
+     behind each, 30px short of its box at either end, a join of 35px to a
+     core of 94px, and a channel of 10px down to a box of 301 by 124. */
   .dia-interfaces {
     --box-h: 15.5625rem;
     --core-size: 5.875rem;
@@ -416,10 +414,9 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
   .dia-interfaces .dia-label {
     margin-bottom: 0.4375rem;
   }
-  /* A row stands 40px, as the master's do; its words are a size under
-     the master's so the state box's longest name keeps the master's
-     proportions. A row still dark keeps a grey that passes contrast, where
-     the master's nearly vanish, and lights to ink. */
+  /* A row stands 40px; its words are set at 14px so the state box's
+     longest name fits the box. A row still dark keeps a grey that passes
+     contrast, and lights to ink. */
   .dia-interfaces .dia-item {
     gap: 0.5rem;
     padding-block: 0.75rem;
@@ -564,9 +561,9 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     height: 1.625rem;
   }
 
-  /* Services, measured from the master's third video: a core of 94px, a
-     stem of 55px, and rows of 312 by 68, 18px apart, each with its glyph in
-     a square of 43px and its format on a chip. The row being crossed takes
+  /* Services: a core of 94px, a stem of 55px, and rows of 312 by 68, 18px
+     apart, each with its glyph in a square of 43px and its format on a
+     chip. The row being crossed takes
      the accent, with a square either side; a stem joins each row reached to
      the one above. */
   .dia-services {
@@ -650,10 +647,9 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     color: var(--accent);
   }
 
-  /* AI, measured from the master's second video: a card at work 388 by
-     258, its core of 78px at the top right, and a card of documents 253 by
-     125 over its lower right, with the join, a square of 51px, on that
-     card's corner. */
+  /* AI: a card at work 388 by 258, its core of 78px at the top right, and
+     a card of documents 253 by 125 over its lower right, with the join, a
+     square of 51px, on that card's corner. */
   /* As tall as the finished pair; the documents rise into it from below. */
   .dia-ai {
     position: relative;
@@ -811,11 +807,11 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
   /* The loops. Every rule above is the finished state, which is what shows
      without motion; the keyframes below only play it out. */
   @media (prefers-reduced-motion: no-preference) {
-    /* The master's first video, over two seconds: the joins leave the core,
-       the bracket lines stand up from their middles and their arms reach
-       back to the boxes, while the channel runs down; as it arrives the box
-       below takes the accent and the rows light one by one, then all of it
-       starts again. */
+    /* Interfaces, over two seconds: the joins leave the core, the bracket
+       lines stand up from their middles and their arms reach back to the
+       boxes, while the channel runs down; as it arrives the box below takes
+       the accent and the rows light one by one, then all of it starts
+       again. */
     .dia-interfaces .dia-core::before,
     .dia-interfaces .dia-core::after {
       animation: dia-join var(--dia-loop) linear infinite;
@@ -861,10 +857,9 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     .dia-more span:nth-child(3) {
       animation-name: dia-on-4;
     }
-    /* The master's third video: the stem leaves the core, each row comes up
-       out of a ghost and is crossed in turn, the stem from the row above
-       drawn as it is reached, until the last holds and all of it starts
-       again. */
+    /* Services, over two seconds: the stem leaves the core, each row
+       arrives and is crossed in turn, the stem from the row above drawn as
+       it is reached, until the last holds and all of it starts again. */
     .dia-stem {
       animation: dia-stem var(--dia-loop) linear infinite;
     }
@@ -895,10 +890,10 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     .dia-spinner {
       animation: dia-spin 0.8s steps(8) infinite;
     }
-    /* The master's second video: the card at work widens as its lines
-       fill in, the card of documents rises into place, the documents come
-       one by one while the bar runs, the core slides in from the card's
-       edge and the join appears, then all of it starts again. */
+    /* AI, over two seconds: the card at work widens as its lines fill in,
+       the card of documents rises into place, the documents come one by one
+       while the bar runs, the core slides in from the card's edge and the
+       join appears, then all of it starts again. */
     .dia-card-main {
       animation: dia-widen var(--dia-loop) linear infinite;
     }
@@ -1060,8 +1055,8 @@ const layerIcons = [glyphs.window, glyphs.check, glyphs.layer, glyphs.server];
     }
   }
   /* Each row comes at 0.25, 0.5, 0.875 and 1.125s and settles to its size;
-     where the master fades a ghost in, the words here arrive whole, so no
-     frame shows them below contrast. */
+     its words arrive whole rather than fading in, so no frame shows them
+     below contrast. */
   @keyframes dia-row-in-1 {
     0%,
     12.4% {

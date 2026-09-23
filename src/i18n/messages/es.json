@@ -376,7 +376,7 @@
         "Cada afirmación con su fuente."
       ],
       "summary": "Un sitio estático en Astro, en dos idiomas, donde cada cifra se calcula de un registro tipado y cada página se prueba en un navegador real.",
-      "context": "Mi portafolio, reconstruido en septiembre de 2026 con la gramática de un único diseño de referencia. Se publica como HTML estático con un solo script empaquetado para el movimiento; cada texto visible vive en un catálogo en español y otro en inglés, y cada número se deriva del registro al compilar el sitio.",
+      "context": "Mi portafolio, reconstruido en septiembre de 2026 sobre un sistema visual estricto: rectángulos rectos, líneas finas y secciones numeradas. Se publica como HTML estático con un solo script empaquetado para el movimiento; cada texto visible vive en un catálogo en español y otro en inglés, y cada número se deriva del registro al compilar el sitio.",
       "layers": [
         {
           "name": "Registro",

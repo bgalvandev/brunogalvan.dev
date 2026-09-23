@@ -2,9 +2,9 @@
 
 Bruno Galván's bilingual portfolio, live at <https://brunogalvan.dev>: Astro,
 strict TypeScript and Tailwind CSS v4, static output with no framework runtime
-in the browser. The design follows one
-master, <https://aeye-saas.webflow.io/>; its grammar, tokens and deliberate
-differences are recorded in [DESIGN.md](DESIGN.md).
+in the browser. Its visual system (sharp rectangles, hairlines, numbered
+sections, one accent) and the reasons behind each choice are recorded in
+[DESIGN.md](DESIGN.md).
 
 ## Local development
 
@@ -40,8 +40,8 @@ ADRs 0007 and 0012.
   contract, rendering, routes, future database/server capabilities and tooling.
 - [Current decision](docs/adr/0005-astro-foundation.md): alternatives and tradeoffs.
 - [Contributor rules](AGENTS.md): standing standards; procedures in `.agents/skills`.
-- [Design memory](DESIGN.md): the design master, shared visual decisions and every
-  deliberate difference from the master.
+- [Design memory](DESIGN.md): the brief, shared visual decisions and the reasons
+  behind each.
 
 ```sh
 pnpm run check

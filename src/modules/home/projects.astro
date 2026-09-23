@@ -182,8 +182,8 @@ const cards = [...projects]
     padding: 0;
     list-style: none;
   }
-  /* The master's document card: 1rem between the text and the cover, 1.5rem
-     between the cover and the link row. */
+  /* A project card: 1rem between the text and the cover, 1.5rem between
+     the cover and the link row. */
   .project-card {
     position: relative;
     display: flex;
@@ -278,7 +278,7 @@ const cards = [...projects]
   }
   /* A cover generated from the name, chosen from captures on 2026-09-22
      over cards with no image: no screenshot may be published, and the cover
-     keeps the master's document-card rhythm. */
+     keeps every card's rhythm of text, picture and link row. */
   .project-card-cover {
     background-size: 12.61px;
     position: relative;
@@ -368,7 +368,7 @@ const cards = [...projects]
     transition: opacity 0.3s ease;
   }
   /* A card that leads somewhere stands on an ink rule; on hover the rule
-     fills with a 4px accent bar, as the master's document cards do. */
+     fills with a 4px accent bar. */
   .project-card-linked {
     border-bottom-color: var(--ink);
   }
@@ -434,8 +434,8 @@ const cards = [...projects]
       grid-column: auto;
     }
   }
-  /* On a phone the master's document cards stand 2rem apart, their titles
-     a step down and their pictures at least 10rem tall. */
+  /* On a phone the cards stand 2rem apart, their titles a step down and
+     their pictures at least 10rem tall. */
   @media (width < 30rem) {
     .projects-grid {
       gap: 2rem;

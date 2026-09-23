@@ -4,11 +4,12 @@ import TechLogo from './tech-logo.astro';
 // loop at -50%; the whole band is decoration (the same items are listed where
 // they carry meaning), hidden from assistive technology. It pauses on hover,
 // stops under reduced motion and when the visitor pauses motion.
-// `cells` is a band of bordered cells; `logos` the same band in the master's
-// logo-row cells, each a grey mark and a name, in a closed box with no fade;
+// `cells` is a band of bordered cells; `logos` the same band as a row of logo
+// cells, each a grey mark and a name, in a closed box with no fade;
 // `text` is a line of accent mono words, repeated so a short list still fills
 // the widest screen.
-// `reverse` runs the band the other way, as the master's lower band does.
+// `reverse` runs the band the other way, so a lower band runs against the
+// one above it.
 interface Props {
   items: readonly string[];
   variant?: 'cells' | 'logos' | 'text';
@@ -92,11 +93,10 @@ const run = variant === 'text' ? [items, items, items, items].flat() : items;
     text-transform: uppercase;
     white-space: nowrap;
   }
-  /* The master's logo row: a closed box with no fade at its ends, its left
-     edge on the box and every cell closing its own right, each cell the
-     master's 201.6px by 132px, and below the desktop breakpoint, where the
-     row runs edge to edge, three tenths of it (half on a phone) by 112px.
-     About 60px a second. */
+  /* The logo row: a closed box with no fade at its ends, its left edge on
+     the box and every cell closing its own right, each cell 201.6px by 132px,
+     and below the desktop breakpoint, where the row runs edge to edge, three
+     tenths of it (half on a phone) by 112px. About 60px a second. */
   .marquee-logos {
     container-type: inline-size;
     border-left: 1px solid var(--line);
@@ -127,15 +127,15 @@ const run = variant === 'text' ? [items, items, items, items].flat() : items;
     padding-block: 1.5rem;
     background: var(--paper);
   }
-  /* About 100px a second, the master's pace for its words. */
+  /* Words run at about 100px a second. */
   .marquee-text .marquee-track {
     animation-duration: 21s;
   }
   .marquee-reverse .marquee-track {
     animation-direction: reverse;
   }
-  /* The master's rhythm: 1rem either side of an "&", 5rem before a "//"
-     and 2.5rem after it. */
+  /* The rhythm: 1rem either side of an "&", 5rem before a "//" and 2.5rem
+     after it. */
   .marquee-text .marquee-item {
     width: auto;
     height: auto;

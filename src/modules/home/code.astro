@@ -1,9 +1,9 @@
 ---
 // The language switch is a radio group, so it works without JavaScript: CSS
 // shows the panel whose radio is checked, opens its description and fills
-// the rail to it. On a desktop with motion, the master's installation room:
-// the room grows tall, its content sticks, and the scroll checks each file in
-// turn while the rail's line grows (data-code-steps is the hook).
+// the rail to it. On a desktop with motion, the room grows tall, its content
+// sticks, and the scroll checks each file in turn while the rail's line
+// grows (data-code-steps is the hook).
 import Button from '@/components/button.astro';
 import CodeWindow from '@/components/code-window.astro';
 import Headline from '@/components/headline.astro';
@@ -87,14 +87,14 @@ const samples = snippets.map((snippet) => ({
 </NumberedSection>
 
 <style>
-  /* The master's installation grid: two equal columns and no gap, the text
-     column set in by 3rem. */
+  /* The room's grid: two equal columns and no gap, the text column set in
+     by 3rem. */
   .code-main {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
-  /* The stage is 80vh tall as the master's, the frame a 31 by 32rem box
-     centred on it with no fill, the window filling the frame. */
+  /* The stage is 80vh tall, the frame a 31 by 32rem box centred on it with
+     no fill, the window filling the frame. */
   .code-stage {
     background-size: 14.18px;
     display: flex;
@@ -126,8 +126,8 @@ const samples = snippets.map((snippet) => ({
     flex-direction: column;
     min-height: 0;
   }
-  /* A long file scrolls inside its window, so the room keeps the master's
-     proportions; printed, it runs whole. */
+  /* A long file scrolls inside its window, so the frame keeps its size;
+     printed, it runs whole. */
   .code-windows :global(.code-window-body) {
     flex: 1;
     min-height: 0;
@@ -165,9 +165,9 @@ const samples = snippets.map((snippet) => ({
     align-items: flex-start;
     gap: 2.5rem;
   }
-  /* The master's installation process: a rail of a dashed track with a
-     square at each end, an accent line that grows down it, and the files
-     beside it; the checked one open, the others closed to their titles. */
+  /* The process: a rail of a dashed track with a square at each end, an
+     accent line that grows down it, and the files beside it; the checked
+     one open, the others closed to their titles. */
   .code-process {
     display: flex;
     gap: 1.5rem;

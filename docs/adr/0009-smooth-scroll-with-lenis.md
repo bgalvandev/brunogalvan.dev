@@ -5,12 +5,12 @@
 
 ## Context
 
-The design master's motion is driven by the scroll: headlines open at `top
-80%`, and the Method room is drawn with `scrub: 0.8`. With a stepped mouse
-wheel, native scrolling jumps in 100px notches and a scrubbed timeline jumps
-with it. Inertial scrolling smooths those steps into one continuous motion,
-which is most of what makes a scroll-driven page feel finished. It must never
-take scrolling away from anyone: keyboard, touch, anchors, the skip link and
+The site's motion is driven by the scroll: headlines open at `top 80%`, and
+the Method room is drawn with `scrub: 0.8`. With a stepped mouse wheel, native
+scrolling jumps in 100px notches and a scrubbed timeline jumps with it.
+Inertial scrolling smooths those steps into one continuous motion, which is
+most of what makes a scroll-driven page feel finished. It must never take
+scrolling away from anyone: keyboard, touch, anchors, the skip link and
 reduced motion have to behave exactly as native.
 
 ## Options

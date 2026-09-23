@@ -7,10 +7,10 @@ import {
   runs,
   type Solid,
 } from './isometric';
-// One isometric scene drawn twice, as the master draws its card icons: a line
-// drawing (each visible face filled with the paper and outlined) and pixel
-// art (the left-facing faces solid, the others a grid of cells). Both stack in
-// one box; the feature decides which one shows, so a card can swap them.
+// One isometric scene drawn twice: a line drawing (each visible face filled
+// with the paper and outlined) and pixel art (the left-facing faces solid, the
+// others a grid of cells). Both stack in one box; the feature decides which
+// one shows, so a card can swap them.
 interface Props {
   solids: readonly Solid[];
   /** How many cells the pixel drawing is wide. */

@@ -151,7 +151,7 @@ test('on a phone the pages fold into a menu that works without JavaScript', asyn
   }
 });
 
-test("on a phone the bar is the name and the master's three lines, and the menu holds the language, the theme and the pause", async ({
+test('on a phone the bar is the name and three lines, and the menu holds the language, the theme and the pause', async ({
   page,
 }) => {
   const t = messages('es');

@@ -6,9 +6,9 @@ import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 import { pagePath } from '@/i18n/routes';
-// The master's footer grid, without its newsletter: a static site has no form
-// to post to. The logo stands where the master's stands, as wide as its
-// column allows.
+// The footer grid: the name in the first column, as wide as the column
+// allows, and the cards beside it. It holds no form, since a static site has
+// nothing to post one to.
 interface Props {
   locale: Locale;
 }
@@ -20,8 +20,8 @@ const pages = [
   { href: pagePath('experience', locale), label: navigation.experience },
   { href: pagePath('about', locale), label: navigation.about },
 ];
-// Each profile leads with its mark, as the master's do: GitHub's from Simple
-// Icons, LinkedIn's "in" drawn here, since Simple Icons does not carry it.
+// Each profile leads with its mark: GitHub's from Simple Icons, LinkedIn's
+// "in" drawn here, since Simple Icons does not carry it.
 const profiles = [
   { label: 'GitHub', href: site.github, mark: siGithub.path },
   {
@@ -143,8 +143,8 @@ const profiles = [
     margin: 0;
     color: var(--muted);
   }
-  /* The master's right column: its cards stand 8px apart, each drawing the
-     rule on its own side, so every junction reads as a double hairline. */
+  /* The right column: its cards stand 8px apart, each drawing the rule on
+     its own side, so every junction reads as a double hairline. */
   .site-footer-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -214,8 +214,8 @@ const profiles = [
     height: 1.125rem;
     fill: currentColor;
   }
-  /* The master's twin arrow: on hover one steps out to the top right while
-     its copy steps in from the bottom left. */
+  /* The twin arrow: on hover one steps out to the top right while its copy
+     steps in from the bottom left. */
   .site-footer-arrow {
     position: relative;
     flex: none;
@@ -278,7 +278,7 @@ const profiles = [
       border-bottom: 1px solid var(--line);
     }
   }
-  /* On a phone the master's cards close up, one hairline between each. */
+  /* On a phone the cards close up, one hairline between each. */
   @media (width < 48rem) {
     .site-footer-cards {
       grid-template-columns: 1fr;
