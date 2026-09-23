@@ -2,7 +2,8 @@
 import Button from '@/components/button.astro';
 import Headline from '@/components/headline.astro';
 import NumberedSection from '@/components/numbered-section.astro';
-import PixelIcon from '@/components/pixel-icon.astro';
+import IsoIcon from '@/components/iso-icon.astro';
+import { box, cylinder, extrude } from '@/components/isometric';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 import { sectionNumber, sections } from './sections';
@@ -11,70 +12,37 @@ interface Props {
 }
 const { locale } = Astro.props;
 const { whatIDo } = messages(locale);
-// One bitmap per card, in catalog order: a window, braces, a node tree and a
-// fast-forward.
+// One isometric scene per card, in catalog order: stacked layers (a
+// platform), two blocks joined (an API between services), a screen on its
+// stand (an interface) and a cluster of cylinders (models and their data).
 const icons = [
   [
-    '##############',
-    '#............#',
-    '#.#.#.#......#',
-    '#............#',
-    '##############',
-    '#...#........#',
-    '#...#.######.#',
-    '#...#........#',
-    '#...#.####...#',
-    '#...#........#',
-    '#...#.#####..#',
-    '#...#........#',
-    '##############',
+    box(0, 0, 0, 8, 8, 1.6),
+    box(0, 0, 2.8, 8, 8, 1.6),
+    box(0, 0, 5.6, 8, 8, 1.6),
+  ],
+  [box(7, 0, 0, 4, 4, 4), box(4, 1.5, 1.5, 3, 1, 1), box(0, 0, 0, 4, 4, 4)],
+  [
+    box(4, 1, 0, 3, 3, 0.8),
+    box(5, 2, 0.8, 1, 1, 2),
+    extrude(
+      [
+        [0, 2.8],
+        [11, 2.8],
+        [11, 10],
+        [0, 10],
+      ],
+      1.5,
+      1,
+    ),
   ],
   [
-    '...##....##...',
-    '..#........#..',
-    '..#........#..',
-    '..#........#..',
-    '..#...##...#..',
-    '##....##....##',
-    '..#........#..',
-    '..#...##...#..',
-    '..#...##...#..',
-    '..#........#..',
-    '..#........#..',
-    '...##....##...',
-    '..............',
+    cylinder(2, 2, 0, 1.8, 4),
+    cylinder(6.5, 2, 0, 1.8, 2.5),
+    cylinder(2, 6.5, 0, 1.8, 2.5),
+    cylinder(6.5, 6.5, 0, 1.8, 5.5),
   ],
-  [
-    '.....####.....',
-    '.....#..#.....',
-    '.....####.....',
-    '.......#......',
-    '.......#......',
-    '..##########..',
-    '..#........#..',
-    '..#........#..',
-    '####......####',
-    '#..#......#..#',
-    '####......####',
-    '..............',
-    '..............',
-  ],
-  [
-    '#......#......',
-    '##.....##.....',
-    '#.#....#.#....',
-    '#..#...#..#...',
-    '#...#..#...#..',
-    '#....#.#....#.',
-    '#.....##.....#',
-    '#....#.#....#.',
-    '#...#..#...#..',
-    '#..#...#..#...',
-    '#.#....#.#....',
-    '##.....##.....',
-    '#......#......',
-  ],
-] as const;
+];
 ---
 
 <NumberedSection
@@ -95,7 +63,7 @@ const icons = [
         <li class="value-card">
           <div class="value-card-content">
             <div class="value-card-top">
-              <PixelIcon rows={icons[index] ?? []} class="value-card-icon" />
+              <IsoIcon solids={icons[index] ?? []} class="value-card-icon" />
               <span class="value-card-number" aria-hidden="true">
                 <span class="value-card-slashes">//</span>
                 {String(index + 1).padStart(3, '0')}
@@ -103,7 +71,9 @@ const icons = [
             </div>
             <div class="value-card-text">
               <h3 class="value-card-title">{card.title}</h3>
-              <p class="value-card-description">{card.text}</p>
+              <div class="value-card-reveal">
+                <p class="value-card-description">{card.text}</p>
+              </div>
             </div>
           </div>
           <p class="tag">{card.tag}</p>
@@ -152,12 +122,19 @@ const icons = [
     align-items: flex-start;
     justify-content: space-between;
   }
-  /* At this size a cell is about nine pixels, so the one-cell strokes weigh
-     what the master's line drawings weigh. */
+  /* Every drawing sits in the same square, so the titles line up. */
   .value-card :global(.value-card-icon) {
-    width: 7.5rem;
-    height: auto;
+    width: 10rem;
+    height: 10rem;
     color: var(--ink);
+  }
+  /* Without a hover to wait for, the card shows its pixels and its
+     description, as the master does below the desktop breakpoint. */
+  .value-card :global(.iso-pixel) {
+    color: var(--accent);
+  }
+  .value-card :global(.iso-line) {
+    opacity: 0;
   }
   .value-card-number {
     color: var(--muted);
@@ -182,6 +159,64 @@ const icons = [
     margin: 0;
     color: var(--muted);
   }
+  /* The master's hover, on a desktop with a pointer that can hover: at rest
+     a line drawing; on hover the drawing turns to pixels in the accent over
+     0.1s, the title takes the accent and the description opens under it over
+     0.3s. A keyboard visitor sees every description open, as do touch and
+     print, since none of them can hover. */
+  @media (width >= 62rem) and (hover: hover) and (pointer: fine) {
+    .value-card :global(.iso-line) {
+      opacity: 1;
+    }
+    .value-card :global(.iso-pixel) {
+      opacity: 0;
+    }
+    .value-card-title {
+      transition: color 0.3s var(--ease-power1-out);
+    }
+    .value-card-reveal {
+      display: grid;
+      grid-template-rows: minmax(0, 0fr);
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        grid-template-rows 0.3s var(--ease-power1-out),
+        opacity 0.3s var(--ease-power1-out);
+    }
+    .value-card-description {
+      min-height: 0;
+    }
+    .value-card :global(.iso-icon svg) {
+      transition: opacity 0.1s var(--ease-power1-out);
+    }
+    .value-card:hover .value-card-title {
+      color: var(--accent);
+    }
+    .value-card:hover .value-card-reveal,
+    :global(:root:has(:focus-visible)) .value-card-reveal {
+      grid-template-rows: minmax(0, 1fr);
+      opacity: 1;
+    }
+    .value-card:hover :global(.iso-line) {
+      opacity: 0;
+    }
+    .value-card:hover :global(.iso-pixel) {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .value-card-title,
+    .value-card-reveal,
+    .value-card :global(.iso-icon svg) {
+      transition: none;
+    }
+  }
+  @media print {
+    .value-card-reveal {
+      grid-template-rows: minmax(0, 1fr);
+      opacity: 1;
+    }
+  }
   .value-card .tag {
     margin: 0;
   }
@@ -202,7 +237,8 @@ const icons = [
       min-height: auto;
     }
     .value-card :global(.value-card-icon) {
-      width: 6rem;
+      width: 7.5rem;
+      height: 7.5rem;
     }
   }
 </style>

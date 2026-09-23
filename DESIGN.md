@@ -46,7 +46,9 @@ anywhere. Depth lives on extension pages, never on the home page.
   colour written twice. Its paper is a registered `--band-paper`, resolved once
   on the root: `#212121` on a light page, a deeper `#141414` on a dark one.
   Chosen from captures on 2026-09-22 over inverting the band to the light scheme
-  in dark mode, which glared.
+  in dark mode, which glared. A gridded band (the hero's, the closing room's, a
+  page's opening) sits deeper, on `--band-deep`: the master's `#1a1a1a` on a
+  light page, the band's `#141414` on a dark one, with its grid in `#474747`.
 - **Layout.** Sections own the full width and hold content in `.measure`: the
   master's 8% gutter (5% tablet, 1.5rem phone) capped at 80rem, set as an
   explicit width so it behaves the same in block, flex and grid parents. Nothing
@@ -55,42 +57,72 @@ anywhere. Depth lives on extension pages, never on the home page.
 - **Components.** The eyebrow `[N.01/07] —— > LABEL ———` is read off the
   section list, so the count cannot disagree with the page, and speaks as
   "Section 1 of 7: label". The headline is two short sentences between slashes.
-  The solid button is an ink rectangle with a square bullet; on hover the
-  accent slides in behind, the label steps left and an arrow appears. The line
-  button grows a 4px accent underline. Navigation is boxed tabs hanging from the
-  top edge, the current page filled with the accent inside `<` `>`.
-- **Icons.** Drawn as bitmaps on a pixel grid (`pixel-icon.astro`), the same
-  language as the pixel face, with no artwork carried over. Card icons render at
-  7.5rem so a one-cell stroke weighs what the master's line drawings weigh.
-- **Motion.** The master's, value for value: every headline opens character
-  by character, 0.04s apart, each character widening over 0.1s while it
-  scrambles for 0.4s, triggered once at `top 80%`; links and buttons scramble
-  their label for 0.8s on pointer hover; the hero types its fragment once.
-  Every hover transition is 0.2s. Beyond the master: a revealed heading keeps
-  its phrase on `aria-label` and hides the characters, a scrambling link pins
-  its name first, the cursor stops blinking within five seconds, and all of it
-  is off under reduced motion. The library decision is ADR 0008.
+  Buttons hover as the master's do, over 0.3s from a slow start (GSAP's
+  power1.in, `--ease-power1-in`): the solid button is an ink rectangle whose
+  accent slides in behind while its square turns half a turn, its label steps
+  left and an arrow appears; the line button closes a 1px accent frame, grows a
+  4px accent underline and draws its icon and label in from the edges.
+  Navigation is boxed tabs hanging from the top edge, the current page filled
+  with the accent inside `<` `>`; the contact tab takes the accent on hover.
+  The logo is the favicon's pixel B and its accent block before the name, in
+  the hero band beside a version-style chip and, stacked, filling the footer's
+  first column.
+- **Icons.** Card icons are isometric scenes of simple solids (boxes,
+  cylinders, upright profiles) built in `isometric.ts` and drawn twice by
+  `iso-icon.astro`: a line drawing and two-tone pixel art (faces turned left
+  solid, the others a grid of cells), the master's two languages for one
+  object. The scenes are ours; no artwork is carried over. Small glyphs (arrows,
+  row icons, the changelog's `<>` and double check) are bitmaps on a pixel grid
+  (`pixel-icon.astro`). Technology logos are their own published marks, from
+  Simple Icons (CC0), in brand colour (chosen by the owner on 2026-09-22 from
+  captures over grey), with LinkedIn's "in" drawn here.
+- **Motion.** The master's, value for value, read from its interaction data:
+  every headline opens character by character, 0.04s apart, each character
+  widening over 0.1s while it scrambles for 0.4s, triggered once at `top 80%`;
+  links, buttons and footer links scramble their label for 0.8s on pointer
+  hover. The hero's and the closing room's bracketed words cycle as the
+  master's do: each word types at 50ms a letter under a block that covers the
+  newest one, holds 0.8s, the block blinks off and on twice at 0.4s, the word
+  clears at once and the next follows 0.2s later. A value card, on a desktop
+  pointer, swaps its line drawing for pixels over 0.1s while its title takes
+  the accent and its description opens over 0.3s. Method and Code are driven
+  by the scroll from 992px up (Method over 200vh, Code over 250vh, both sticky
+  at 10vh, scrub 0.8): Method activates a card at each quarter and swaps its
+  drawing to pixels; Code checks each file at each third while its rail's line
+  grows. The Stack's chosen layer opens over 0.4s, and its diagram loops in
+  about 2.4s. Beyond the master: a revealed heading keeps its phrase on
+  `aria-label` and hides the characters, a scrambling link pins its name
+  first, and all of it is off under reduced motion. The library decision is
+  ADR 0008.
 - **Texture.** The pixel field is the master's grid, thirty square cells to a
   row (fixed at 80rem/30 below the tablet breakpoint, where it overflows on
-  purpose); the pointer lights the cells it crosses in the accent and each
-  fades over a second. Lines are CSS; the glow is one canvas, drawn only while
-  a cell glows, where the master animates 1,350 elements. The preloader covers
-  the first view of a session in accent and clears in tenth-of-the-width
-  squares, in random order, over about 1.2s; a CSS failsafe lifts it at 2.5s if
-  the script never arrives. The dotted field is a dot every 14px on the field
-  tone; corner ticks are a pair of 4px squares at each corner. Marquees are
-  bands of bordered cells that fade out at the edges, about 60px per second.
+  purpose); a cell the pointer crosses rises to the accent over 0.2s, stays lit
+  0.5s after the pointer leaves it and fades over 0.2s, and the cell under a
+  resting pointer stays lit. Lines are CSS; the glow is one canvas, drawn only
+  while a cell glows, where the master animates 1,350 elements. The preloader
+  covers the first view of a session in accent and clears in tenth-of-the-width
+  squares that hold and then snap off (0.3s, expo.in, 0.01s apart in random
+  order); a CSS failsafe lifts it at 2.5s if the script never arrives. The
+  dotted field is the master's faint diamond, 3.7px across every 13px, one
+  translucent grey for both schemes; a component scales the tile as the
+  master's do (7.9px on the Method strips, 12.6px on project covers, 14.2px on
+  the code stage). Corner ticks are a pair of 4px squares at each corner.
+  Marquees are bands of bordered cells or words: the toolchain's logos about
+  60px a second, the closing room's words 100px a second, above and below in
+  opposite directions, the Stack's logo chips in two rows moving opposite ways.
 - **Pause.** A header toggle pauses everything that moves on its own
-  (marquees, preloader, reveals, scrambles, the pixel trail) and persists like
-  the theme, so no motion runs past five seconds without a way to stop it. It
-  is hidden without JavaScript and under reduced motion, where nothing moves.
+  (marquees, word cycles, diagrams, preloader, reveals, scrambles, the pixel
+  trail) and persists like the theme, so no motion runs past five seconds
+  without a way to stop it (WCAG 2.2.2). It is hidden without JavaScript and
+  under reduced motion, where nothing moves.
 - **Sections.** Seven numbered rooms after the hero, each built from a master
   archetype: What I do (value cards), By the numbers (stat grid and a career
-  chart), Stack (capability cells in a band), Method (numbered cards drawn by
-  the scroll), Code (a code window on a dotted stage), Projects (document
-  cards) and Experience (a changelog timeline), then the closing room and the
-  footer. Every figure, count and period is computed from `src/data` at build
-  time.
+  chart), Stack (the core-capabilities room: three layers as tabs, a diagram
+  per layer on a dotted pane, and three cards below), Method (numbered cards
+  drawn by the scroll), Code (the installation room: code on a dotted stage and
+  a rail of files), Projects (document cards) and Experience (a changelog
+  timeline), then the closing room and the footer. Every figure, count and
+  period is computed from `src/data` at build time.
 - **Extension pages.** Each opens in a dark gridded band with a tag and its
   statement as the h1, then numbered rooms in the home page's grammar.
   Experience shows every role with its length computed from its period and,
@@ -109,7 +141,7 @@ anywhere. Depth lives on extension pages, never on the home page.
   feature level with no code, internals or team-built parts. English is the
   default language (ADR 0010).
 - **Words.** Measured on 2026-09-22 with `innerText` of the home page's main,
-  decoration and code excluded: 535 visible words in English, 543 in Spanish.
+  decoration and code excluded: 570 visible words in English, 582 in Spanish.
   Section 4 of the plan set a target near 300; on 2026-09-22 the owner asked
   for more information, experience and technology instead, so the record, not
   the budget, sets the length.
@@ -164,65 +196,69 @@ What this site does that the master does not, and why each earns its cost:
 
 ## Deliberate differences from the master
 
-Each difference found in side-by-side captures at 1440px, and why it stays:
+Each difference found in side-by-side captures at 1440px, and in the frame by
+frame audit of the master's interactions on 2026-09-22, and why it stays:
 
 - `What I do` has four cards, not three: the content has four capabilities.
   Cards stand 28rem rather than 31rem so four narrower cards do not read as
   columns.
-- Card descriptions are always visible; the master hides them until hover,
-  which leaves touch and keyboard users without them.
-- Card icons are pixel bitmaps rather than isometric line drawings that swap to
-  pixel versions on hover; no artwork may be invented or carried over.
+- A value card's description also opens for a keyboard visitor (whenever
+  focus is visible anywhere on the page), since a hover alone would leave them
+  without it; the master opens it on hover only.
 - The eyebrow's current number is ink and its total faint, where the master
   greys the total below readable contrast.
 - The hero has no rating row, avatars or partner logos: none is true here.
-- The hero fragment is typed once and the cursor holds after four blinks; the
-  master retypes three words forever, which WCAG 2.2.2 forbids without a pause
-  control.
+- The hero band's chip carries the location, where the master's carries a
+  version, and its text is lighter than the master's so it passes contrast.
+- The word cycles begin once their heading has opened, where the master's
+  begin two seconds after load whatever is on screen.
 - The preloader runs on the first view of a session only; the master covers
   every load, which would tax each move between pages.
-- The toolchain band is a marquee at every width, with names in mono where the
-  master shows six static partner logos on desktop: there are thirty-seven
-  tools and no logos to show.
-- The positioning line quotes the Method's rules rather than a product slogan.
+- The toolchain band moves, in brand colour, with every tool the record names
+  that has a published mark (twenty-nine), where the master shows six static
+  grey partner logos on desktop: chosen by the owner on 2026-09-22 from
+  captures of all four combinations.
+- The positioning line quotes the Method's rules rather than a product slogan,
+  and draws its arrow and its two shadowed squares, which the master takes
+  from whatever system font has them.
 - A pause control exists; the master has none.
 - By the numbers charts the career itself, one bar per month as tall as the
   months into the role, with company names over each run; the master's chart
   is a picture of invented data behind a with/without toggle, and there is no
   second series here to toggle.
-- Stack is the master's capability cards as a three-by-two grid with the tools
-  as tags; its tabbed feature panel shows product screenshots, and there are
-  none to show. The headline leads, as in every other room.
+- The Stack's layers are a radio group that works without JavaScript; a layer
+  not chosen dims to a colour that still passes contrast, where the master's
+  tabs drop to half opacity. Its diagrams are drawn in HTML from the record
+  (screens and state, the layers of a request, a document translated), where
+  the master plays videos of its product.
 - Method is drawn by the scroll only from 992px up, where the four cards sit
-  in one row. A card not reached yet dims to a colour that still passes
-  contrast; the master drops it to 30% opacity and hides its text.
+  in one row. A card not reached yet hides its description, as the master's
+  does, but dims its number and title to a colour that still passes contrast
+  where the master drops the card to 30% opacity.
 - Code shows three files from this site's own repository, verbatim, pinned to
-  the commit they were read at: the master has three tabs, and this is the
-  code the visitor can follow. The language switch is a radio group clicked by the visitor and working
-  without JavaScript; the master switches its tabs with the scroll. Syntax
-  colours come from classes, since Shiki's inline styles break the CSP.
+  the commit they were read at, with a title bar that names and links the
+  file. Its files are a radio group that works without JavaScript; on a
+  desktop with motion the scroll checks them as the master's does, and a file
+  chosen by hand scrolls the room to its own stretch. Syntax colours come from
+  classes, since Shiki's inline styles break the CSP.
 - Projects pulls one project out across the first row, its text beside its
   cover, as portfolios do, and gives each card a cover generated from its
-  name, chosen from captures over cards with no image. A card follows its code
-  link; a project with no public code shows plain text.
-- Experience marks every role with the same neutral square: an accent beside
-  the current one would read as an availability signal.
+  name, chosen from captures over cards with no image. Only a card that leads
+  somewhere hovers (outline, 4px bar, rising cover): a project with no public
+  code shows plain text and must not look actionable. There is no junction
+  strip above the cards.
+- Experience frames `<>` beside the current role and a double check beside
+  each past one, the master's two glyphs, in neutral ink: an accent beside the
+  current one would read as an availability signal.
 - The closing room keeps the master's card and marquees; the email and the
   profiles appear once, in the footer. The footer has no newsletter form.
 - Every section button leads somewhere true (this repository, every
   repository, the whole career, the email) where the master's all say contact
   us or get started.
-- Code offers two languages, not three: there are two public files worth
-  reading. The window's title bar names the repository and file and links to
-  it at the pinned commit, where the master's names the product.
 - Experience has no paragraph under its button: the headline already states
-  the span, and the page is over its word budget. The timeline has four
-  entries because there are four roles.
-- The footer sets the name as its wordmark where the master sets a logo, lists
-  profiles without brand icons (no artwork is carried over), and ends with the
-  source link instead of legal pages the site does not need.
-- Hovering a `What I do` card changes nothing: the cards are not links, and
-  a hover response would make them look actionable.
+  the span. The timeline has four entries because there are four roles.
+- The footer ends with the source link instead of legal pages the site does
+  not need.
 
 ## Working on visible changes
 

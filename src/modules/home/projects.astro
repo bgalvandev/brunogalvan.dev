@@ -153,6 +153,7 @@ const cards = [...projects]
             </span>
           </div>
           <span class="project-card-border" aria-hidden="true" />
+          <span class="project-card-bar" aria-hidden="true" />
         </li>
       ))}
     </ul>
@@ -187,7 +188,7 @@ const cards = [...projects]
     flex-direction: column;
     border: 1px solid var(--line);
     color: var(--ink);
-    transition: color 0.2s ease;
+    transition: color 0.3s ease;
   }
   .project-card-featured {
     grid-column: 1 / -1;
@@ -271,6 +272,7 @@ const cards = [...projects]
      over cards with no image: no screenshot may be published, and the cover
      keeps the master's document-card rhythm. */
   .project-card-cover {
+    background-size: 12.61px;
     position: relative;
     display: flex;
     flex: 1;
@@ -288,7 +290,7 @@ const cards = [...projects]
     line-height: 1.1;
     text-align: center;
     text-wrap: balance;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
   }
   .project-card-featured .project-card-cover-name {
     font-size: var(--text-display);
@@ -328,7 +330,7 @@ const cards = [...projects]
   .project-card-arrow :global(svg) {
     position: absolute;
     inset: 0.125rem;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
   }
   .project-card-arrow :global(svg:last-child) {
     transform: translate(-150%, 150%);
@@ -355,7 +357,27 @@ const cards = [...projects]
     border: 1px solid var(--accent);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.3s ease;
+  }
+  /* A card that leads somewhere stands on an ink rule; on hover the rule
+     fills with a 4px accent bar, as the master's document cards do. */
+  .project-card-linked {
+    border-bottom-color: var(--ink);
+  }
+  .project-card-bar {
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    z-index: 2;
+    width: 0;
+    height: 4px;
+    background: var(--accent);
+    pointer-events: none;
+    transition: width 0.3s ease;
+  }
+  .project-card-linked:hover .project-card-bar,
+  .project-card-linked:focus-within .project-card-bar {
+    width: calc(100% + 2px);
   }
   .project-card-linked:hover,
   .project-card-linked:focus-within {
@@ -366,7 +388,7 @@ const cards = [...projects]
     opacity: 1;
   }
   .project-card-linked:hover .project-card-cover-name {
-    transform: translateY(-0.5rem);
+    transform: translateY(-2rem);
   }
   .project-card-linked:hover .project-card-arrow :global(svg:first-child) {
     transform: translate(150%, -150%);
@@ -406,6 +428,7 @@ const cards = [...projects]
   @media (prefers-reduced-motion: reduce) {
     .project-card,
     .project-card-border,
+    .project-card-bar,
     .project-card-cover-name,
     .project-card-arrow :global(svg) {
       transition: none;

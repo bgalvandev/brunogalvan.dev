@@ -1,6 +1,9 @@
 ---
 // The language switch is a radio group, so it works without JavaScript: CSS
-// shows the panel whose radio is checked.
+// shows the panel whose radio is checked, opens its description and fills
+// the rail to it. On a desktop with motion, the master's installation room:
+// the room grows tall, its content sticks, and the scroll checks each file in
+// turn while the rail's line grows (data-code-steps is the hook).
 import Button from '@/components/button.astro';
 import CodeWindow from '@/components/code-window.astro';
 import Headline from '@/components/headline.astro';
@@ -29,6 +32,8 @@ const samples = snippets.map((snippet) => ({
   label={code.label}
   locale={locale}
   headingId="code-title"
+  class="code"
+  data-code-steps
 >
   <div class="code-main">
     <div class="code-stage field-dotted">
@@ -53,21 +58,30 @@ const samples = snippets.map((snippet) => ({
         <Headline id="code-title" lines={code.headline} />
         <Button href={site.github} label={code.action} icon="arrow-up-right" />
       </div>
-      <fieldset class="code-tabs">
-        <legend class="sr-only">{code.tabs}</legend>
-        {samples.map((sample, index) => (
-          <label class="code-tab">
-            <input
-              type="radio"
-              name="code-sample"
-              value={sample.id}
-              checked={index === 0}
-            />
-            <span class="code-tab-title">{sample.title}</span>
-            <span class="code-tab-text">{sample.text}</span>
-          </label>
-        ))}
-      </fieldset>
+      <div class="code-process">
+        <span class="code-rail" aria-hidden="true">
+          <span class="code-rail-dot"></span>
+          <span class="code-rail-line" data-code-line></span>
+          <span class="code-rail-dot code-rail-end"></span>
+        </span>
+        <fieldset class="code-tabs">
+          <legend class="sr-only">{code.tabs}</legend>
+          {samples.map((sample, index) => (
+            <label class="code-tab">
+              <input
+                type="radio"
+                name="code-sample"
+                value={sample.id}
+                checked={index === 0}
+              />
+              <span class="code-tab-title">{sample.title}</span>
+              <span class="code-tab-reveal">
+                <span class="code-tab-text">{sample.text}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+      </div>
     </div>
   </div>
 </NumberedSection>
@@ -79,6 +93,7 @@ const samples = snippets.map((snippet) => ({
     gap: 3rem;
   }
   .code-stage {
+    background-size: 14.18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -128,39 +143,77 @@ const samples = snippets.map((snippet) => ({
     align-items: flex-start;
     gap: 2.5rem;
   }
-  /* The master's vertical process: a dashed track, the checked item marked
-     by an accent bar and a square. */
+  /* The master's installation process: a rail of a dashed track with a
+     square at each end, an accent line that grows down it, and the files
+     beside it; the checked one open, the others closed to their titles. */
+  .code-process {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .code-rail {
+    position: relative;
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 0.5rem;
+    overflow: hidden;
+  }
+  .code-rail::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 50%;
+    border-left: 1px dashed var(--decor);
+  }
+  .code-rail-line {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 0.5px);
+    width: 1px;
+    height: 0;
+    background: var(--accent);
+    transition: height 0.5s var(--ease-power1-out);
+  }
+  .code-rail-dot {
+    position: relative;
+    z-index: 1;
+    width: 0.5rem;
+    aspect-ratio: 1;
+    background: var(--accent);
+  }
+  .code-rail-end {
+    background: var(--decor);
+    transition: background-color 0.3s ease;
+  }
+  /* Without the scroll, the line reaches the checked file. */
+  .code-main:has(input[value='astro']:checked) .code-rail-line {
+    height: 50%;
+  }
+  .code-main:has(input[value='playwright']:checked) .code-rail-line {
+    height: 100%;
+  }
+  .code-main:has(input[value='playwright']:checked) .code-rail-end {
+    background: var(--accent);
+  }
   .code-tabs {
     display: flex;
+    flex: 1;
     flex-direction: column;
+    gap: 1.5rem;
     margin: 0;
     padding: 0;
     border: none;
-    border-left: 1px dashed var(--decor);
   }
   .code-tab {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.75rem 0 0.75rem 1.75rem;
     cursor: pointer;
   }
   .code-tab input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
-  }
-  .code-tab::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -1px;
-    width: 2px;
-  }
-  .code-tab:has(input:checked)::before {
-    background: var(--accent);
   }
   .code-tab:has(input:focus-visible) {
     outline: 2px solid var(--accent);
@@ -171,15 +224,47 @@ const samples = snippets.map((snippet) => ({
     font-size: var(--text-medium);
     line-height: 1.3;
     letter-spacing: var(--text-medium--letter-spacing);
-    transition: color 0.2s ease;
+    transition: color 0.5s ease;
   }
   .code-tab:hover .code-tab-title,
   .code-tab:has(input:checked) .code-tab-title {
     color: var(--ink);
   }
+  /* A closed file keeps its description in its name, so a screen reader
+     still hears it; only its box is folded away. */
+  .code-tab-reveal {
+    display: grid;
+    grid-template-rows: minmax(0, 0fr);
+    overflow: hidden;
+    transition: grid-template-rows 0.5s ease;
+  }
+  .code-tab:has(input:checked) .code-tab-reveal {
+    grid-template-rows: minmax(0, 1fr);
+  }
   .code-tab-text {
-    max-width: 24rem;
-    color: var(--faint);
+    min-height: 0;
+    max-width: 26.25rem;
+    padding-top: 0.25rem;
+    color: var(--muted);
+  }
+  /* The scroll drives the room: it grows tall and its content sticks. */
+  .code[data-scrubbing] {
+    height: 250vh;
+  }
+  .code[data-scrubbing] :global(.section-body) {
+    position: sticky;
+    top: 10vh;
+  }
+  .code[data-scrubbing] .code-rail-line {
+    transition: none;
+  }
+  /* The sticky frame fits the viewport, as the master's 80vh stage does. */
+  .code[data-scrubbing] .code-stage {
+    min-height: 70vh;
+    padding-block: 2rem;
+  }
+  .code[data-scrubbing] .code-windows :global(.code-window-body) {
+    max-height: calc(70vh - 10rem);
   }
   @media (width < 62rem) {
     .code-main {
@@ -202,8 +287,16 @@ const samples = snippets.map((snippet) => ({
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .code-tab-title {
+    .code-tab-title,
+    .code-tab-reveal,
+    .code-rail-line,
+    .code-rail-end {
       transition: none;
+    }
+  }
+  @media print {
+    .code-tab-reveal {
+      grid-template-rows: minmax(0, 1fr);
     }
   }
 </style>

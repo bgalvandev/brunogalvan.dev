@@ -1,0 +1,31 @@
+---
+// The mark alone: the favicon's pixel B and its accent block, sized by the
+// parent. The letter takes the text colour.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg
+  class:list={['logo-mark', className]}
+  viewBox="0 0 14 14"
+  shape-rendering="crispEdges"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path
+    class="logo-letter"
+    d="M0 0h8v2H0zM0 2h2v4H0zM8 2h2v4H8zM0 6h8v2H0zM0 8h2v4H0zM8 8h2v4H8zM0 12h8v2H0z"
+  ></path>
+  <path class="logo-block" d="M12 8h2v6h-2z"></path>
+</svg>
+
+<style>
+  .logo-letter {
+    fill: currentColor;
+  }
+  .logo-block {
+    fill: var(--accent);
+  }
+</style>

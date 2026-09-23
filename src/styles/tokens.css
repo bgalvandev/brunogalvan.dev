@@ -9,6 +9,14 @@
   inherits: true;
   initial-value: #141414;
 }
+/* The gridded rooms (the hero band, the closing band, a page's opening) sit
+   deeper still on a light page, #1a1a1a as in the master; on a dark page they
+   share the band's #141414. */
+@property --band-deep {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #141414;
+}
 :root {
   color-scheme: light dark;
   /* The page's own scheme and paper, kept apart so a room inside a band can
@@ -27,11 +35,20 @@
   --line-strong: light-dark(#474747, #cccccc);
   /* Decoration only: heading slashes, field dots, empty cells. Never text. */
   --decor: light-dark(#cccccc, #474747);
+  /* The master's dotted field: a faint diamond, 3.7px across, every 13px, as
+     light as its #ccc at half strength. One translucent grey lands on
+     #e2e2e2 over the light field and #262626 over the dark one. A component
+     scales the tile to change the pitch, as the master does. */
+  --field-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13'%3E%3Cpath d='M1.85 0l1.85 1.85-1.85 1.85L0 1.85z' fill='rgb(125 125 125 / 0.17)'/%3E%3C/svg%3E");
   /* Vermilion, chosen from captures on 2026-09-22 against indigo and green:
      far enough from the master's #0055ff that the page never reads as a copy. */
   --accent: light-dark(#c8341a, #ff7a5c);
   --accent-contrast: light-dark(#ffffff, #141414);
   --band-paper: light-dark(#212121, #141414);
+  --band-deep: light-dark(#1a1a1a, #141414);
+  /* The black square that holds the mark at the heart of a diagram, darker
+     than any band around it. */
+  --core: light-dark(#1a1a1a, #050505);
   /* A raised panel's top edge catching the light, the one thing that makes a
      dark surface read as lit rather than flat. */
   --highlight: light-dark(rgb(255 255 255 / 70%), rgb(255 255 255 / 6%));

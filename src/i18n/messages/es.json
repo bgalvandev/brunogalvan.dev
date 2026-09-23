@@ -26,7 +26,12 @@
   },
   "hero": {
     "greeting": "Soy Bruno. Construyo",
-    "fragment": "plataformas SaaS",
+    "fragments": [
+      "plataformas SaaS",
+      "APIs en TypeScript",
+      "interfaces en React",
+      "funciones con IA"
+    ],
     "closing": "de punta a punta.",
     "spoken": "Soy Bruno. Construyo plataformas SaaS de punta a punta.",
     "line": "Desarrollador full stack senior en Lima, Perú. React, Node.js y PostgreSQL, del modelo de dominio a producción.",
@@ -64,7 +69,7 @@
   "contact": {
     "label": "Contacto",
     "headline": ["Un correo basta.", "Lo leo yo."],
-    "fragment": "Escríbeme",
+    "fragments": ["Escríbeme", "Hablemos", "Salúdame"],
     "action": "Enviar un correo",
     "marquee": ["[#Frontend]", "&", "[#Backend]", "//", "[#Producción]", "//"]
   },
@@ -84,12 +89,8 @@
     "pause": "Pausar animación"
   },
   "positioning": {
-    "spoken": "Límites explícitos, cambios pequeños, verificado en producción.",
-    "parts": [
-      "Límites explícitos",
-      "cambios pequeños",
-      "verificado en producción"
-    ]
+    "spoken": "Límites claros, cambios pequeños, probado en producción.",
+    "parts": ["Límites claros", "cambios pequeños", "probado en producción"]
   },
   "numbers": {
     "label": "En cifras",
@@ -108,7 +109,7 @@
   },
   "stack": {
     "label": "Stack",
-    "headline": ["Herramientas por capa.", "Del navegador a la base de datos."],
+    "headline": ["Tres capas.", "De la pantalla a los datos."],
     "groups": {
       "frontend": "Frontend",
       "backend": "Backend",
@@ -116,6 +117,65 @@
       "ai": "IA",
       "architecture": "Arquitectura",
       "platform": "Nube y calidad"
+    },
+    "tabs": [
+      {
+        "tags": ["React 19", "Next.js"],
+        "title": "Interfaces",
+        "text": "Pantallas que responden al instante: render en servidor, actualizaciones optimistas y formularios validados antes de enviarse."
+      },
+      {
+        "tags": ["Fastify", "PostgreSQL"],
+        "title": "Servicios",
+        "text": "APIs contract-first en capas hexagonales, con eventos de dominio vía outbox y consultas afinadas en PostgreSQL."
+      },
+      {
+        "tags": ["OpenAI", "WhatsApp"],
+        "title": "IA en el producto",
+        "text": "Funciones con LLM donde ocurre el trabajo: documentos traducidos a pedido y un asistente de reservas en WhatsApp."
+      }
+    ],
+    "tabsLabel": "Capa",
+    "diagram": {
+      "screens": "Pantallas",
+      "screenItems": ["Agenda", "Facturación", "Editor", "Formularios"],
+      "state": "Estado",
+      "output": "Render",
+      "outputItems": ["Servidor", "Cliente", "Estático"],
+      "layers": [
+        {
+          "name": "HTTP",
+          "format": "REST"
+        },
+        {
+          "name": "Contrato",
+          "format": "OpenAPI"
+        },
+        {
+          "name": "Dominio",
+          "format": "DDD"
+        },
+        {
+          "name": "Datos",
+          "format": "SQL"
+        }
+      ],
+      "translating": "Traduciendo el presupuesto…",
+      "documents": ["Factura", "Presupuesto", "Recibo"]
+    },
+    "cards": {
+      "toolchain": {
+        "title": "Las herramientas",
+        "text": "Cada herramienta aparece en mis propios commits de los últimos dos años."
+      },
+      "typed": {
+        "title": "Tipado de punta a punta",
+        "text": "TypeScript estricto del esquema a la pantalla."
+      },
+      "tested": {
+        "title": "Probado tal como se publica",
+        "text": "Vitest y Playwright sobre el build de producción."
+      }
     }
   },
   "method": {

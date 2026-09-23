@@ -1,6 +1,7 @@
 ---
-// The master's closing room: a line of words above and below, a dark gridded
-// band, and a light card with a square at each corner. The email and profiles
+// The master's closing room: a line of words above and below, running in
+// opposite directions, a dark gridded band, and a light card with a square at
+// each corner, whose bracketed word cycles like the hero's. The email and profiles
 // live in the footer, once.
 import Button from '@/components/button.astro';
 import Marquee from '@/components/marquee.astro';
@@ -27,14 +28,21 @@ const [first, second] = contact.headline;
           <h2
             id="contact-title"
             class="contact-heading text-display"
-            aria-label={`${first} ${contact.fragment}. ${second}`}
+            aria-label={`${first} ${contact.fragments[0]}. ${second}`}
           >
             <span aria-hidden="true" data-reveal data-reveal-duration="0.6">
               <span class="contact-line">{first}</span>
               <span class="contact-line pixel-highlight" data-reveal-skip>
-                {'[ '}
-                <span data-typewriter>{contact.fragment}</span>
-                {' ]'}
+                {[
+                  '[',
+                  <span
+                    data-typewriter
+                    data-typewriter-words={contact.fragments.join('|')}
+                  >
+                    {contact.fragments[0]}
+                  </span>,
+                  ']',
+                ]}
               </span>
               <span class="contact-line">{second}</span>
             </span>
@@ -44,7 +52,7 @@ const [first, second] = contact.headline;
       </div>
     </div>
   </div>
-  <Marquee items={contact.marquee} variant="text" />
+  <Marquee items={contact.marquee} variant="text" reverse />
 </section>
 
 <style>

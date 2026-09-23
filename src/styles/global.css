@@ -94,6 +94,12 @@ html.lenis body {
 }
 
 @layer base {
+  /* The master's two curves, GSAP's power1 in and out, for every transition
+     that copies one of its interactions. */
+  :root {
+    --ease-power1-in: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    --ease-power1-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
   html {
     scroll-padding-top: 4rem;
   }
@@ -139,6 +145,9 @@ html.lenis body {
   .band {
     --paper: var(--band-paper);
     color-scheme: dark;
+  }
+  .band:has(> .pixel-field) {
+    --paper: var(--band-deep);
   }
   /* The content column: the master's 8% gutter (5% on tablets, 1.5rem on
      phones) capped at 80rem. The width is explicit, so the measure behaves
@@ -288,12 +297,8 @@ html.lenis body {
   /* The master's dotted field: a faint dot every 14px on the field tone. */
   .field-dotted {
     background-color: var(--field);
-    background-image: radial-gradient(
-      circle at 1px 1px,
-      var(--decor) 1px,
-      transparent 0
-    );
-    background-size: 14px 14px;
+    background-image: var(--field-dots);
+    background-size: 13px 13px;
   }
   /* Corner ticks: a pair of small squares at each corner of a panel. */
   .ticked {
@@ -337,7 +342,7 @@ html.lenis body {
     display: inline-block;
     width: 0.55em;
     height: 0.9em;
-    margin-left: 0.05em;
+    margin-left: 2px;
     background: currentColor;
     vertical-align: -0.05em;
   }
@@ -345,6 +350,17 @@ html.lenis body {
     [data-typewriter]::after {
       animation: cursor-blink 0.8s steps(1) 4;
     }
+  }
+  /* A cycling fragment blinks from its script instead, and while it types
+     the block sits over the newest letter. */
+  [data-typewriter][data-cursor]::after {
+    animation: none;
+  }
+  [data-typewriter][data-cursor='off']::after {
+    opacity: 0;
+  }
+  [data-typewriter][data-cursor='typing']::after {
+    margin-left: calc(2px - 0.55em);
   }
   @keyframes cursor-blink {
     50% {

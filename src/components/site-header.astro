@@ -113,6 +113,11 @@ const contactHref = `${pagePath('home', locale)}#contact`;
     font-family: var(--font-mono);
     font-weight: 600;
     text-transform: uppercase;
+    transition: color 0.3s var(--ease-power1-out);
+  }
+  .site-contact:hover,
+  .site-contact:focus-visible {
+    color: var(--accent);
   }
   /* The arrow steps out to the top right while its twin steps in from the
      bottom left. */
@@ -126,7 +131,7 @@ const contactHref = `${pagePath('home', locale)}#contact`;
   .site-contact-arrow :global(svg) {
     position: absolute;
     inset: 0.2rem;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s var(--ease-power1-out);
   }
   .site-contact-arrow :global(svg:last-child) {
     transform: translate(-150%, 150%);
@@ -222,6 +227,7 @@ const contactHref = `${pagePath('home', locale)}#contact`;
     }
   }
   @media (prefers-reduced-motion: reduce) {
+    .site-contact,
     .site-contact-arrow :global(svg) {
       transition: none;
     }
