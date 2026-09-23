@@ -45,7 +45,9 @@
         box.style.minHeight = '';
         split.revert();
         element
-          .querySelectorAll<HTMLElement>('[data-typewriter]')
+          .querySelectorAll<HTMLElement>(
+            '[data-typewriter]:not([data-typewriter-words])',
+          )
           .forEach((fragment) => type(fragment));
       },
     });
@@ -95,14 +97,29 @@
   const HOLD = 0.8;
   const BLINK = 0.4;
   const GAP = 0.2;
-  function type(element: HTMLElement) {
-    const words = element.dataset.typewriterWords?.split('|') ?? [
-      element.dataset.typewriterText ?? '',
+  function type(fragment: HTMLElement) {
+    const words = fragment.dataset.typewriterWords?.split('|') ?? [
+      fragment.dataset.typewriterText ?? '',
     ];
+    // A heading that finishes opening restores its markup, which replaces
+    // the fragment's node; the cycle follows it to the node on the page.
+    let element = fragment;
+    const live = () => {
+      if (!element.isConnected) {
+        element =
+          document.querySelector<HTMLElement>(
+            `[data-typewriter-key="${fragment.dataset.typewriterKey}"]`,
+          ) ?? element;
+      }
+      return element;
+    };
     const cycling = words.length > 1;
-    const timeline = gsap.timeline({ repeat: cycling ? -1 : 0 });
+    const timeline = gsap.timeline({
+      repeat: cycling ? -1 : 0,
+      delay: Number(fragment.dataset.typewriterDelay ?? 0),
+    });
     const cursor = (state: string) => () => {
-      element.dataset.cursor = state;
+      live().dataset.cursor = state;
     };
     for (const word of words) {
       const state = { length: 0 };
@@ -111,7 +128,7 @@
         duration: word.length * TYPE,
         ease: `steps(${word.length})`,
         onUpdate: () => {
-          element.textContent = word.slice(0, Math.round(state.length));
+          live().textContent = word.slice(0, Math.round(state.length));
         },
       });
       timeline.call(cursor('on'));
@@ -123,7 +140,7 @@
         .call(cursor('on'), [], `+=${BLINK}`)
         .call(
           () => {
-            element.textContent = '';
+            live().textContent = '';
           },
           [],
           `+=${BLINK}`,
@@ -131,10 +148,16 @@
         .to({}, { duration: GAP });
     }
   }
-  function holdForTyping(element: HTMLElement) {
+  // A cycling fragment starts with the page, after its own delay, as the
+  // master's do, so it is already moving when the visitor scrolls to it; a
+  // fragment typed once waits for its heading to open.
+  function holdForTyping(element: HTMLElement, index: number) {
+    element.dataset.typewriterKey = String(index);
     element.dataset.typewriterText = element.textContent ?? '';
     element.textContent = '';
-    if (!element.closest('[data-reveal]')) type(element);
+    if (element.dataset.typewriterWords || !element.closest('[data-reveal]')) {
+      type(element);
+    }
   }
 
   // Links and buttons cycle through noise on pointer hover and settle back.
@@ -447,6 +470,7 @@
         .forEach((element) => {
           element.textContent = element.dataset.typewriterText ?? '';
           delete element.dataset.typewriterText;
+          delete element.dataset.typewriterKey;
           delete element.dataset.cursor;
         });
       root.classList.remove('preloading');

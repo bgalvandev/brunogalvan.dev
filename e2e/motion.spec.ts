@@ -219,3 +219,15 @@ test('without motion the stack diagrams stand still in their finished state', as
     'none',
   );
 });
+
+test("the closing word is already cycling when the visitor scrolls to it, as the master's is", async ({
+  page,
+}) => {
+  await page.goto('/es/');
+  // The visitor reads the top of the page for a while first.
+  await page.waitForTimeout(4000);
+  await page.locator('#contact').scrollIntoViewIfNeeded();
+  await expect(page.locator('#contact [data-typewriter]')).toHaveText(/\S/, {
+    timeout: 500,
+  });
+});
