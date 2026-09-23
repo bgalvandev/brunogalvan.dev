@@ -23,8 +23,8 @@
 
   // Headings keep their name on the element (aria-label) and hide the visual
   // copy, so splitting it into characters never reaches assistive technology.
-  // When the reveal ends the split is reverted, restoring kerning, and any
-  // fragment inside is typed.
+  // When the reveal ends the split is reverted, which moves nothing since
+  // revealed text sets no kerning, and any fragment inside is typed.
   function reveal(element: HTMLElement) {
     const duration = Number(element.dataset.revealDuration ?? DURATION);
     // Closed characters have no width, so the block would lose its lines;

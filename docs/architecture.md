@@ -67,8 +67,9 @@ responsibilities or the first request-time capability.
   pause, and marks the first view of a session for the preloader. An inline
   Speculation Rules block prerenders internal pages, and cross-document view
   transitions are CSS only. Fonts go through Astro's font
-  pipeline from installed packages (Geist and Geist Mono from fontsource, Geist
-  Pixel Square from Vercel's `geist`): only the three latin files ship,
+  pipeline from Vercel's installed `geist` package: static, hinted Geist and
+  Geist Mono at 400, 500 and 600, and Geist Pixel Square
+  ([ADR 0013](adr/0013-hinted-static-geist.md)). All seven files ship
   preloaded, with metric-matched fallbacks declared inline and hashed into the
   CSP. `geist` declares Next.js as a peer for wrappers this site never imports;
   `pnpm-workspace.yaml` marks that peer optional so it is never installed.

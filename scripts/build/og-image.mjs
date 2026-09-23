@@ -1,5 +1,4 @@
 import { mkdir, readFile } from 'node:fs/promises';
-import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -10,34 +9,18 @@ import { chromium } from '@playwright/test';
 // (`pnpm run og:generate`) when the name, copy, colours or favicon change; the
 // PNGs are committed so the build stays free of a browser dependency, and a
 // browser test fails if a page names a card that does not exist.
-const require = createRequire(import.meta.url);
 const root = path.resolve(import.meta.dirname, '../..');
 // Fonts travel as data: URIs; a page opened with setContent has no file://
 // access, so a file URL would silently fall back to a system face.
 const dataUri = async (file) =>
   `data:font/woff2;base64,${(await readFile(file)).toString('base64')}`;
-const fontsource = (pkg, file) =>
-  path.join(
-    path.dirname(require.resolve(`${pkg}/package.json`)),
-    'files',
-    file,
-  );
-const sans = await dataUri(
-  fontsource('@fontsource-variable/geist', 'geist-latin-wght-normal.woff2'),
-);
-const mono = await dataUri(
-  fontsource(
-    '@fontsource-variable/geist-mono',
-    'geist-mono-latin-wght-normal.woff2',
-  ),
-);
-// geist's exports map hides its font files, so this one resolves by path.
-const pixel = await dataUri(
-  path.join(
-    root,
-    'node_modules/geist/dist/fonts/geist-pixel/GeistPixel-Square.woff2',
-  ),
-);
+// The cards are drawn in Chromium on Linux, where hinting changes nothing, so
+// one variable file per family covers every weight. geist's exports map hides
+// its font files, so they resolve by path.
+const geist = (file) => path.join(root, 'node_modules/geist/dist/fonts', file);
+const sans = await dataUri(geist('geist-sans/Geist-Variable.woff2'));
+const mono = await dataUri(geist('geist-mono/GeistMono-Variable.woff2'));
+const pixel = await dataUri(geist('geist-pixel/GeistPixel-Square.woff2'));
 
 // Node 24 strips the types, so the identity, the projects and the case
 // studies come from their single sources.

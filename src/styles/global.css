@@ -325,6 +325,12 @@ html.lenis body {
       var(--tick) 100% 100% / 4px 4px no-repeat,
       var(--tick) calc(100% - 8px) 100% / 4px 4px no-repeat;
   }
+  /* Revealed text never kerns, split or whole, as the master's letters stay
+     split and so never kern: reverting the split at the end of the reveal
+     then leaves every letter where it stood. */
+  [data-reveal] {
+    font-kerning: none;
+  }
   /* The reveal's pieces, created by the motion script: each character is its
      own box so its width can open, and a word never breaks between them. */
   .reveal-word {
@@ -342,14 +348,18 @@ html.lenis body {
     letter-spacing: var(--text-display--letter-spacing);
     white-space: nowrap;
   }
+  /* The block is painted on an inline box around a word joiner: a line may
+     break on either side of an inline-block, even beside a no-break space,
+     and would leave the cursor and the closing bracket on a line of their
+     own. It spans 0.85em above the baseline to 0.05em below, 0.16em into the
+     pixel face's content area. */
   [data-typewriter]::after {
-    content: '';
-    display: inline-block;
-    width: 0.55em;
-    height: 0.9em;
+    content: '\2060';
     margin-left: 2px;
-    background: currentColor;
-    vertical-align: -0.05em;
+    padding-left: 0.55em;
+    letter-spacing: 0;
+    background: linear-gradient(currentColor, currentColor) 0 0.155em / 100%
+      0.9em no-repeat;
   }
   @media (prefers-reduced-motion: no-preference) {
     [data-typewriter]::after {
