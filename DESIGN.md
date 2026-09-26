@@ -86,10 +86,13 @@ anywhere. Depth lives on extension pages, never on the home page.
   cylinders, upright profiles) built in `isometric.ts` and drawn twice by
   `iso-icon.astro`: a line drawing and two-tone pixel art (faces turned left
   solid, the others a grid of cells), two readings of one object. Small glyphs
-  (arrows, row icons, the changelog's `<>` and double check) are bitmaps on a
-  pixel grid (`pixel-icon.astro`). Technology logos are their own published
-  marks, from Simple Icons (CC0), in one grey (the owner's choice on
-  2026-09-22), with LinkedIn's "in" drawn here.
+  (arrows, the about page's stack cells, the changelog's `<>` and double
+  check) are bitmaps on a pixel grid (`pixel-icon.astro`). The Stack diagrams
+  read the same way as the cards: what a layer takes in carries a line icon
+  with a 1.5px stroke at 16px (ADR 0014), what it delivers is drawn in pixels and
+  takes the accent, and each core holds an asterisk of four bars. Technology
+  logos are their own published marks, from Simple Icons (CC0), in one grey
+  (the owner's choice on 2026-09-22), with LinkedIn's "in" drawn here.
 - **Motion.** Every headline opens character by character, 0.04s apart, each
   character widening over 0.1s while it scrambles for 0.4s, triggered once at
   `top 80%`; links, buttons and footer links scramble their label for 0.8s on
@@ -102,11 +105,16 @@ anywhere. Depth lives on extension pages, never on the home page.
   992px up (Method over 200vh, Code over 250vh, both sticky at 10vh, scrub 0.8):
   Method activates a card at each quarter and swaps its drawing to pixels; Code
   checks each file at each third while its rail's line grows. The Stack's chosen
-  layer opens over 0.4s, and its diagram plays a two-second loop: the hub's
-  joins, brackets and channel draw out and the rows light one by one; the layers
-  of a request come up one at a time, each crossed in turn; the card at work
-  widens while the documents rise, arrive and fill their bar. Below 768px the
-  value cards and the method become sliders (chosen on 2026-09-23 over keeping
+  layer opens over 0.4s, and its diagram plays a two-second loop while its
+  core's asterisk turns once against the clock: the hub's joins run out to the
+  boxes, the brackets stand and reach back, and the channel's two rules run down
+  a stretch at a time; the box below lights, its drawings double and take the
+  accent, and the rows light over 0.3s each, a tenth of a second apart. The
+  layers of a request come up one at a time at three quarters of their size and
+  grow to it, each crossing fading in and out over 0.3s. The card at work widens
+  while the documents rise, its status grows in beside a turning spinner, the
+  documents arrive and fill their bar, and the core comes out from behind its
+  own edge. Below 768px the value cards and the method become sliders (chosen on 2026-09-23 over keeping
   them stacked, which made the phone page long): the value cards one at a time,
   the next every 3.5s with a half-second cross-fade, a swipe or a dash choosing
   one; the method one card at a time, its line filling over 5s before the next
@@ -252,13 +260,14 @@ What each earns for its cost:
   not chosen dims to a colour that still passes contrast. Its diagrams are drawn
   in HTML from the record (screens and state, the layers of a request, documents
   translated), sized for a 603px pane and looping in two seconds: a hub of two
-  boxes of 151 by 249 with a bracket behind each, a core of 94px and a channel
-  of 10px down to a box of square cells; rows of 312 by 68, 18px apart; a card
-  at work of 388 by 258 with a card of documents of 253 by 125 over its corner.
-  Every text in them keeps a grey that passes contrast in every frame: a row
-  waits in `--faint` and lights to ink, and a layer arrives whole rather than
-  fading in. The state box's longest name sets its rows at 14px so the box keeps
-  its proportions.
+  boxes of 151 by 249 with a bracket 30px behind each, a core of 96px and a
+  channel of two 3px rules 4px apart down to a box of square cells; rows of 312
+  by 68, 18px apart; a card at work of 388 by 258 with a card of documents of
+  253 by 125 over its corner. Every text in them keeps a grey that passes
+  contrast in every frame: a row waits in `--faint` and lights to ink, and a
+  layer or a status arrives whole, small, and grows rather than fading in. The
+  state box's longest name sets its rows at 14px, and still widens both boxes
+  to 158px.
 - Method is drawn by the scroll only from 992px up, where the four cards sit
   in one row; from 768 to 992px they stand two by two, and below 768px they
   are a one-card slider. A card not reached yet hides its description and dims
