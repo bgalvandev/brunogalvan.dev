@@ -225,14 +225,21 @@ test('without motion the stack diagrams stand still in their finished state', as
     'animation-name',
     'none',
   );
-  // Finished: the rendered box has taken the accent, the last layer of the
-  // request is the one crossed, and every document has arrived.
+  // Finished: the rendered box has taken the accent and its drawings their
+  // full size, the last layer of the request is the one crossed while every
+  // layer's format stays readable, and every document has arrived.
   const accent = await page
     .locator('.cap-tag')
     .first()
     .evaluate((element) => getComputedStyle(element).backgroundColor);
   await expect(page.locator('.dia-out')).toHaveCSS('border-top-color', accent);
+  for (const drawing of await page.locator('.dia-cell svg').all()) {
+    await expect(drawing).toHaveCSS('transform', 'none');
+  }
   await expect(page.locator('.dia-row').last()).toHaveCSS('color', accent);
+  for (const format of await page.locator('.dia-row-format').all()) {
+    await expect(format).not.toHaveCSS('color', 'rgba(0, 0, 0, 0)');
+  }
   for (const document of await page.locator('.dia-doc').all()) {
     await expect(document).toHaveCSS('opacity', '1');
   }
