@@ -90,9 +90,11 @@ anywhere. Depth lives on extension pages, never on the home page.
   check) are bitmaps on a pixel grid (`pixel-icon.astro`). The Stack diagrams
   read the same way as the cards: what a layer takes in carries a line icon
   with a 1.5px stroke at 16px (ADR 0014), what it delivers is drawn in pixels and
-  takes the accent, and each core holds an asterisk of four bars. Technology
-  logos are their own published marks, from Simple Icons (CC0), in one grey
-  (the owner's choice on 2026-09-22), with LinkedIn's "in" drawn here.
+  takes the accent, and each core holds an asterisk of four bars that turns
+  once a loop (chosen on 2026-09-25 over the still code glyph `< >`, since a
+  turning core shows the diagram at work and `< >` cannot turn and still read).
+  Technology logos are their own published marks, from Simple Icons (CC0), in
+  one grey (the owner's choice on 2026-09-22), with LinkedIn's "in" drawn here.
 - **Motion.** Every headline opens character by character, 0.04s apart, each
   character widening over 0.1s while it scrambles for 0.4s, triggered once at
   `top 80%`; links, buttons and footer links scramble their label for 0.8s on
