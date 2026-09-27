@@ -66,11 +66,14 @@ and practice is the only thing forbidden without exception.
 13. Commits follow Conventional Commits 1.0.0 with types `feat`, `fix`,
     `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`, `revert`; no
     authorship or AI-attribution trailers. Feature work never starts on `main`.
+    A squash subject ends with `(#<number>)` and the squash body is passed empty,
+    so GitHub adds no `Co-authored-by:` trailers.
 14. Published history is undone with `git revert`; a forced update, only when
-    unavoidable, uses `--force-with-lease`. Before reporting a pull request ready,
-    run the `pr-ready` skill. The repository deletes a merged pull request's head
-    branch; the local one is deleted after the merge with `git branch -D`, once the
-    pull request is merged and its head equals the local tip.
+    unavoidable, uses `--force-with-lease`. Run the `ship` skill before every
+    commit, before reporting a pull request ready, and when merging one. The
+    repository deletes a merged pull request's head branch; the local one is
+    deleted after the merge with `git branch -D`, once the pull request is merged
+    and its head equals the local tip.
 15. Workflows declare read-only permissions, job timeouts and actions pinned to a
     full commit SHA; credentials live only in GitHub Secrets. Dependabot keeps
     dependencies and actions current. Dependency security checks fail on high or
