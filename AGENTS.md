@@ -35,7 +35,8 @@ and practice is the only thing forbidden without exception.
    hold files.
 7. Changes MUST use the smallest code path that satisfies the requirement. No
    abstractions, adapters or utilities for hypothetical reuse; kebab-case file
-   names; no `utils.ts` or `service.ts`.
+   names; no `utils.ts` or `service.ts`. Superseded components, styles, assets,
+   routes and tests are removed in the change that replaces them.
 8. Localized URLs live as pairs in `src/i18n/routes.ts`; all visible text lives
    in both catalogs under `src/i18n/messages`; metadata describes the rendered
    locale; every URL works without cookies or JavaScript.
@@ -53,7 +54,9 @@ and practice is the only thing forbidden without exception.
 11. Vitest tests pure TypeScript, Playwright tests the production build in a real
     browser with axe in both themes, and Node's test runner covers repository
     scripts. Tests protect observable behavior and distinct failure modes; there
-    are no coverage thresholds.
+    are no coverage thresholds. A reported failure is reproduced and classified as
+    a defect, bad data or expected behavior before any fix, and a fix carries a
+    test that fails before it and passes after.
 12. A change a visitor could notice MUST be confirmed in the production build in
     a real browser before the pull request is reported ready: layout and
     interaction changes from rendered captures at narrow, tablet and desktop
@@ -68,8 +71,11 @@ and practice is the only thing forbidden without exception.
     authorship or AI-attribution trailers. Feature work never starts on `main`.
     A squash subject ends with `(#<number>)` and the squash body is passed empty,
     so GitHub adds no `Co-authored-by:` trailers.
-14. Published history is undone with `git revert`; a forced update, only when
-    unavoidable, uses `--force-with-lease`. Run the `ship` skill before every
+14. Published history is undone with `git revert`. `git reset --hard`,
+    destructive `git clean`, force pushes, interactive rebases of pushed branches
+    and deleting remote branches or tags need explicit maintainer approval, a
+    backup branch and a recorded reason; an approved forced update uses
+    `--force-with-lease`. Run the `ship` skill before every
     commit, before reporting a pull request ready, and when merging one. The
     repository deletes a merged pull request's head branch; the local one is
     deleted after the merge with `git branch -D`, once the pull request is merged
@@ -83,7 +89,14 @@ and practice is the only thing forbidden without exception.
 
 16. A decision not obvious from the code (hosting, framework, testing strategy) is
     recorded in `docs/adr/NNNN-title.md` with context, options and consequences.
+    A new or changed ADR compares at least two options, states the central
+    tradeoff and dates every external source it cites as `YYYY-MM-DD`. An
+    exception to a MUST rule is a short ADR with a review date.
 17. Skills are canonical under `.agents/skills/**`, discovered by Claude Code
     through the `.claude/skills` symlink, and declare `name` and a `description`
     stating when they apply. A skill MUST NOT contradict this file; `CLAUDE.md`
     stays minimal and defers here.
+18. AI agents use least-privilege credentials and obtain explicit human approval
+    before a destructive operation. Skills and `.claude/settings.json`
+    pre-approve only commands scoped to a program and its subcommand, never a
+    destructive one, and contain no secrets.
