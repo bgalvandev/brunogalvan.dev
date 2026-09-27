@@ -3,16 +3,16 @@
   "permissions": {
     "allow": [
       "Bash(pnpm install)",
-      "Bash(pnpm run:*)",
-      "Bash(pnpm exec playwright:*)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(git fetch:*)",
-      "Bash(git branch:*)",
-      "Bash(git add:*)",
-      "Bash(gh pr view:*)",
-      "Bash(gh pr checks:*)"
+      "Bash(pnpm run *)",
+      "Bash(pnpm exec playwright *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git fetch *)",
+      "Bash(git branch *)",
+      "Bash(git add *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr checks *)"
     ]
   }
 }

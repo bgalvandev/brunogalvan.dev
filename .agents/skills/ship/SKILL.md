@@ -1,7 +1,7 @@
 ---
 name: ship
 description: Take a change from the working tree to main — pre-commit checks (branch, author identity, staged diff, formatting, Conventional Commits subject, no attribution trailers), pull-request readiness (PR head equals the local tip, ancestry against the PR's own base, merge state, required checks from branch protection and rulesets), the squash merge, and local branch cleanup. Use before every commit, before reporting a PR ready, and when merging one.
-allowed-tools: Bash(git branch *), Bash(git status *), Bash(git diff *), Bash(git log *), Bash(git config user.name), Bash(git config user.email), Bash(git fetch *), Bash(git merge-base *), Bash(git rev-parse *), Bash(git switch main), Bash(git pull --ff-only *), Bash(pnpm run format), Bash(pnpm run format:check), Bash(gh api *), Bash(gh pr view *), Bash(gh pr checks *)
+allowed-tools: Bash(git branch *), Bash(git status *), Bash(git diff *), Bash(git log *), Bash(git config user.name), Bash(git config user.email), Bash(git fetch *), Bash(git merge-base *), Bash(git rev-parse *), Bash(git switch main), Bash(git pull --ff-only *), Bash(pnpm run format), Bash(pnpm run format:check), Bash(gh api repos/{owner}/{repo}/branches/*/protection/required_status_checks --jq .contexts), Bash(gh api repos/{owner}/{repo}/rules/branches/* --jq *), Bash(gh pr view *), Bash(gh pr checks *)
 ---
 
 # Ship: from commit to merged
