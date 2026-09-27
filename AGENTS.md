@@ -35,8 +35,7 @@ and practice is the only thing forbidden without exception.
    hold files.
 7. Changes MUST use the smallest code path that satisfies the requirement. No
    abstractions, adapters or utilities for hypothetical reuse; kebab-case file
-   names; no `utils.ts` or `service.ts`. Superseded components, styles, assets,
-   routes and tests are removed in the change that replaces them.
+   names; no `utils.ts` or `service.ts`.
 8. Localized URLs live as pairs in `src/i18n/routes.ts`; all visible text lives
    in both catalogs under `src/i18n/messages`; metadata describes the rendered
    locale; every URL works without cookies or JavaScript.
@@ -54,9 +53,7 @@ and practice is the only thing forbidden without exception.
 11. Vitest tests pure TypeScript, Playwright tests the production build in a real
     browser with axe in both themes, and Node's test runner covers repository
     scripts. Tests protect observable behavior and distinct failure modes; there
-    are no coverage thresholds. A reported failure is reproduced and classified as
-    a defect, bad data or expected behavior before any fix, and a fix carries a
-    test that fails before it and passes after.
+    are no coverage thresholds.
 12. A change a visitor could notice MUST be confirmed in the production build in
     a real browser before the pull request is reported ready: layout and
     interaction changes from rendered captures at narrow, tablet and desktop
@@ -89,9 +86,6 @@ and practice is the only thing forbidden without exception.
 
 16. A decision not obvious from the code (hosting, framework, testing strategy) is
     recorded in `docs/adr/NNNN-title.md` with context, options and consequences.
-    A new or changed ADR compares at least two options, states the central
-    tradeoff and dates every external source it cites as `YYYY-MM-DD`. An
-    exception to a MUST rule is a short ADR with a review date.
 17. Skills are canonical under `.agents/skills/**`, discovered by Claude Code
     through the `.claude/skills` symlink, and declare `name` and a `description`
     stating when they apply. A skill MUST NOT contradict this file; `CLAUDE.md`

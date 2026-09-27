@@ -1,7 +1,6 @@
 ---
 name: website
 description: Build or change this Astro website: pages, localized routes and catalogs, theme tokens, browser scripts and the Playwright suite. Use before any change under src or e2e; not for repository governance or Git tasks.
-allowed-tools: Bash(pnpm run dev), Bash(pnpm run check), Bash(pnpm run test:e2e), Bash(pnpm run security:audit)
 ---
 
 # Website
