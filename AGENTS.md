@@ -68,7 +68,9 @@ and practice is the only thing forbidden without exception.
     authorship or AI-attribution trailers. Feature work never starts on `main`.
 14. Published history is undone with `git revert`; a forced update, only when
     unavoidable, uses `--force-with-lease`. Before reporting a pull request ready,
-    run the `pr-ready` skill.
+    run the `pr-ready` skill. The repository deletes a merged pull request's head
+    branch; the local one is deleted after the merge with `git branch -D`, once the
+    pull request is merged and its head equals the local tip.
 15. Workflows declare read-only permissions, job timeouts and actions pinned to a
     full commit SHA; credentials live only in GitHub Secrets. Dependabot keeps
     dependencies and actions current. Dependency security checks fail on high or
