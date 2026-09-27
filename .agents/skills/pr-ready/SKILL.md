@@ -9,8 +9,8 @@ allowed-tools: Bash(git fetch *), Bash(git merge-base *), Bash(git rev-parse *),
 Run these checks explicitly. Commands shown in a skill are instructions, not proof
 that any shell command has already executed.
 
-1. Resolve the PR number and base/head branches with `gh pr view --json
-number,url,baseRefName,headRefName,headRefOid,mergeStateStatus,statusCheckRollup`.
+1. Resolve the PR number and base/head branches with
+   `gh pr view --json number,url,baseRefName,headRefName,headRefOid,mergeStateStatus,statusCheckRollup`.
 2. Fetch origin. Verify the reviewed local HEAD matches the PR head, and the latest
    remote base is an ancestor of that head using `git merge-base --is-ancestor`.
    Update a stale branch without discarding work, then repeat the checks.

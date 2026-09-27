@@ -25,8 +25,8 @@ allowed-tools: Bash(pnpm run check), Bash(pnpm run lint), Bash(pnpm run typechec
 5. **Done means green and seen.** `pnpm run check` and, for visible or
    configuration changes, `pnpm run test:e2e`. A failing gate is fixed at its
    cause; the gate is never weakened, the test never deleted, no ignore added to
-   turn red green. Then confirm the change in the production build: `pnpm run
-build && node scripts/e2e/preview.mjs`, open the pages in a real browser,
+   turn red green. Then confirm the change in the production build:
+   `pnpm run build && node scripts/e2e/preview.mjs`, open the pages in a real browser,
    take one capture per changed state into the session scratch directory (the
    e2e suite already writes captures at three widths and two themes), and look
    at them yourself. The pull request names the capture paths and what was not

@@ -12,8 +12,7 @@
       "Bash(git branch:*)",
       "Bash(git add:*)",
       "Bash(gh pr view:*)",
-      "Bash(gh pr checks:*)",
-      "Bash(gh api:*)"
+      "Bash(gh pr checks:*)"
     ]
   }
 }
