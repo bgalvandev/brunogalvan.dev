@@ -14,7 +14,8 @@ and practice is the only thing forbidden without exception.
    email and profile links; tests and scripts import it rather than repeating it.
 2. Contributors MUST NOT invent clients, metrics, testimonials, affiliations or
    project claims; unavailable links stay non-interactive.
-3. Technical artifacts are written in English; site copy is Spanish and English.
+3. Technical artifacts are written in English, except the git-ignored `.local/`
+   folder; site copy is Spanish and English.
 4. An artifact MUST explain decisions in brunogalvan.dev terms and MUST NOT
    attribute work or design to an external person, course, product,
    repository, or reference source; it MAY name an adopted dependency,
