@@ -17,7 +17,7 @@ test('every figure on the page is the figure the record gives', async ({
   await expect(page.locator('.numbers-stat dd')).toHaveText([
     String(counts.yearsSinceFirstRole),
     String(counts.companies),
-    String(counts.publicProjects),
+    String(counts.projects),
     String(counts.technologies),
   ]);
   await expect(page.locator('#projects-title')).toHaveAccessibleName(

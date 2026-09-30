@@ -1,5 +1,5 @@
 // The current stack, grouped by capability: what Bruno's own commits show in
-// his 2025–2026 work (ClinicSay, VitalPro and this site), checked against the
+// his 2025–2026 work (ClinicSay, Asistira and this site), checked against the
 // repositories on 2026-09-22. Team-built parts of a product he did not touch
 // are left out, and so is anything only older work used; that history stays in
 // each role. Group names are visible text, so they live in the catalogs under
@@ -39,7 +39,6 @@ export const stack = {
   platform: [
     'Docker',
     'GitHub Actions',
-    'Fly.io',
     'Cloudflare',
     'Vitest',
     'Playwright',

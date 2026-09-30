@@ -24,8 +24,8 @@ export const projects = [
     ],
   },
   {
-    id: 'vitalpro',
-    name: 'VitalPro',
+    id: 'asistira',
+    name: 'Asistira',
     kind: 'product',
     repository: null,
     demo: null,
@@ -36,7 +36,6 @@ export const projects = [
       'Prisma',
       'PostgreSQL',
       'Nx',
-      'Fly.io',
     ],
   },
   {
@@ -47,14 +46,6 @@ export const projects = [
     repository: 'https://github.com/bgalvandev/brunogalvan.dev',
     demo: null,
     technologies: ['Astro', 'TypeScript', 'Tailwind CSS', 'GSAP', 'Playwright'],
-  },
-  {
-    id: 'placer-sano',
-    name: 'Placer Sano',
-    kind: 'project',
-    repository: 'https://github.com/bgalvandev/placersano-restaurant',
-    demo: 'https://placer-sano.netlify.app',
-    technologies: ['Astro', 'CSS', 'Netlify'],
   },
 ] as const satisfies readonly {
   id: string;

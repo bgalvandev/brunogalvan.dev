@@ -11,9 +11,9 @@ describe('figures read off the record', () => {
       yearsSinceFirstRole: 7,
       firstYear: 2019,
       companies: 4,
-      projects: 4,
-      publicProjects: 2,
-      technologies: 40,
+      projects: 3,
+      publicProjects: 1,
+      technologies: 39,
     });
   });
   it('rounds years down until a full year has passed', () => {

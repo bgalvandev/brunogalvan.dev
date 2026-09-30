@@ -173,7 +173,8 @@ const cards = [...projects]
     gap: 3rem;
   }
   /* Three columns: the featured project takes the first row, its text beside
-     its cover, and the other three fill the row below. */
+     its cover, and the others fill the row below. With only two others the
+     row splits in halves, so no column stands empty. */
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -181,6 +182,11 @@ const cards = [...projects]
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+  @media (width >= 62rem) {
+    .projects-grid:has(> .project-card:nth-child(3):last-child) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   /* A project card: 1rem between the text and the cover, 1.5rem between
      the cover and the link row. */
@@ -408,7 +414,8 @@ const cards = [...projects]
     .projects-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .project-card:last-child {
+    /* An odd card out (the featured one counts as the first) takes the row. */
+    .project-card:last-child:nth-child(even) {
       grid-column: span 2;
     }
   }
@@ -430,7 +437,7 @@ const cards = [...projects]
       grid-template-columns: minmax(0, 1fr);
     }
     .project-card-featured,
-    .project-card:last-child {
+    .project-card:last-child:nth-child(even) {
       grid-column: auto;
     }
   }
