@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "Bruno Galván — Desarrollador Full Stack Senior",
-    "description": "Bruno Galván, desarrollador full stack senior en Lima, Perú: plataformas SaaS en React, Node.js y PostgreSQL, del modelo de dominio a producción."
+    "title": "Bruno Galván — Senior Full-Stack Engineer",
+    "description": "Bruno Galván, ingeniero full-stack senior en Lima, Perú: plataformas SaaS multi-tenant en TypeScript, Node.js, React y PostgreSQL, de la arquitectura a producción."
   },
   "identity": {
-    "role": "Desarrollador Full Stack Senior",
+    "role": "Senior Full-Stack Engineer",
     "location": "Lima, Perú"
   },
   "navigation": {
@@ -34,14 +34,14 @@
     ],
     "closing": "de punta a punta.",
     "spoken": "Soy Bruno. Construyo plataformas SaaS de punta a punta.",
-    "line": "Desarrollador full stack senior en Lima, Perú. React, Node.js y PostgreSQL, del modelo de dominio a producción.",
+    "line": "Ingeniero full-stack senior en Lima, Perú. TypeScript, Node.js, React y PostgreSQL, de la arquitectura a producción.",
     "primary": "Ver proyectos",
     "secondary": "Escríbeme",
     "scroll": "Baja para ver más"
   },
   "whatIDo": {
     "label": "Qué hago",
-    "headline": ["Del modelo de dominio a producción.", "El producto entero."],
+    "headline": ["De la arquitectura a producción.", "El producto entero."],
     "action": "Hablemos",
     "show": "Mostrar tarjeta {number}",
     "cards": [
@@ -100,7 +100,7 @@
     "stats": {
       "years": "años desde el primer rol",
       "companies": "empresas",
-      "publicProjects": "proyectos con código público",
+      "projects": "proyectos",
       "technologies": "tecnologías en el stack"
     },
     "chart": {
@@ -235,10 +235,9 @@
     "demo": "Demo",
     "private": "Código privado",
     "items": {
-      "clinicsay": "SaaS de salud. Construyo facturación, agenda y documentos en la app React y la API en Fastify.",
-      "vitalpro": "Mi SaaS multi-tenant para negocios de servicios: monorepo Nx con Next.js y Fastify.",
-      "brunogalvan-dev": "Este sitio: Astro estático en dos idiomas, una CSP hecha de hashes y axe en ambos temas.",
-      "placer-sano": "Sitio de restaurante en Astro: carta, reservas y equipo."
+      "clinicsay": "SaaS de gestión clínica. Soy responsable de facturación, agenda y migración de datos en la app React y la API en Fastify.",
+      "asistira": "Mi SaaS multi-tenant para negocios de servicios: monorepo Nx con Next.js y Fastify.",
+      "brunogalvan-dev": "Este sitio: Astro estático en dos idiomas, una CSP hecha de hashes y axe en ambos temas."
     },
     "codeOf": "Código de {name}",
     "demoOf": "Demo de {name}"
@@ -250,13 +249,14 @@
     "present": "Hoy",
     "roles": {
       "clinicsay": {
-        "role": "Desarrollador Full Stack Senior",
-        "line": "SaaS de salud: facturación, agenda y documentos en React 19 y una API hexagonal en Fastify.",
+        "role": "Senior Full-Stack Engineer",
+        "line": "SaaS de gestión clínica: facturación, agenda, documentos y migración de datos en React 19 y una API hexagonal en Fastify.",
         "highlights": [
           "Facturación: facturas, recibos, notas de crédito, pagos parciales, devoluciones, cajas con arqueo y numeración configurable.",
           "Agenda: plantillas de disponibilidad con excepciones, una sola API de citas con series recurrentes y un calendario de arrastrar y tocar con actualizaciones optimistas.",
           "Documentos: PDF rehechos con react-pdf, facturas y presupuestos bilingües con un endpoint de traducción en OpenAI, y exportaciones contables a Excel.",
           "Eventos de dominio: handlers sobre un outbox transaccional, como recalcular lo que debe un paciente tras cualquier cambio relacionado.",
+          "Migración de datos: clínicas que llegan desde otros sistemas y copias de seguridad (MySQL, Firebird, SQL Server y aplicaciones cerradas), validadas con comprobaciones automáticas.",
           "Rendimiento de PostgreSQL en búsquedas, listados y calendario, y escaneo antivirus de los archivos subidos."
         ]
       },
@@ -265,11 +265,11 @@
         "line": "Microservicios, una integración REST con Salesforce y automatización de WhatsApp para clientes de educación."
       },
       "surtidores": {
-        "role": "Programador PHP",
+        "role": "Desarrollador de Software (PHP / Laravel)",
         "line": "Lideré el nuevo ERP web en Laravel y mantuve en marcha el anterior, en PHP 5."
       },
       "platanitos": {
-        "role": "Programador Web · Analista SAP",
+        "role": "Desarrollador Web · Analista SAP",
         "line": "Aplicaciones web para retail, facturación electrónica y reportes que cruzan SAP con SQL."
       }
     },
@@ -278,7 +278,7 @@
   "experiencePage": {
     "meta": {
       "title": "Experiencia — Bruno Galván",
-      "description": "La trayectoria completa de Bruno Galván, desarrollador full stack senior: cuatro empresas desde 2019, con periodos, lo hecho en cada rol y la formación."
+      "description": "La trayectoria completa de Bruno Galván, ingeniero full-stack senior: cuatro empresas desde 2019, con periodos, lo hecho en cada rol y la formación."
     },
     "label": "Trayectoria",
     "headline": ["Cada rol, con su periodo.", "Y lo que hice en él."],
@@ -301,11 +301,11 @@
   "aboutPage": {
     "meta": {
       "title": "Sobre mí — Bruno Galván",
-      "description": "Bruno Galván, desarrollador full stack senior en Lima, Perú: sus reglas de trabajo, su stack, su formación e idiomas."
+      "description": "Bruno Galván, ingeniero full-stack senior en Lima, Perú: sus reglas de trabajo, su stack, su formación e idiomas."
     },
     "label": "Sobre mí",
     "headline": ["Soy Bruno Galván.", "Desarrollo de principio a fin."],
-    "intro": "Desarrollador full stack senior en Lima, Perú. Construyo plataformas SaaS en React, Node.js y PostgreSQL, del modelo de dominio a producción.",
+    "intro": "Ingeniero full-stack senior en Lima, Perú. Construyo plataformas SaaS multi-tenant en TypeScript, Node.js, React y PostgreSQL, de la arquitectura a producción.",
     "method": {
       "label": "Método",
       "headline": ["Mis reglas de trabajo.", "Tal como las escribí."],
