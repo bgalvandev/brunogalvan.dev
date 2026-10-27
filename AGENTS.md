@@ -79,8 +79,12 @@ and practice is the only thing forbidden without exception.
     and its head equals the local tip.
 15. Workflows declare read-only permissions, job timeouts and actions pinned to a
     full commit SHA; credentials live only in GitHub Secrets. Dependabot keeps
-    dependencies and actions current. Dependency security checks fail on high or
-    critical advisories, and an audit service failure is never reported as clean.
+    dependencies and actions current: a patch or minor update merges itself once
+    the required checks pass (`.github/workflows/dependabot-auto-merge.yml`),
+    through the `AUTO_MERGE_TOKEN` Dependabot secret so the merge runs the
+    push-to-main CI, and a major update waits for a reviewed merge. Dependency
+    security checks fail on high or critical advisories, and an audit service
+    failure is never reported as clean.
 
 ## Decisions and skills
 
