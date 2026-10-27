@@ -1,0 +1,50 @@
+name: Dependabot auto-merge
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  auto-merge:
+    # Only Dependabot's own pull requests, and never on a fork.
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'bgalvandev/brunogalvan.dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Read update metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Patch and minor updates merge on their own once the required checks
+      # pass; branch protection still gates the merge. A major update stays
+      # open for a reviewed merge.
+      #
+      # The merge is attributed to a user, not to GITHUB_TOKEN, because GitHub
+      # starts no workflow for an event the workflow token causes, and a merge
+      # by github-actions would skip the push-to-main CI. AUTO_MERGE_TOKEN is a
+      # fine-grained token with contents, pull-requests and workflows write on
+      # this repository, stored as a Dependabot secret because runs Dependabot
+      # triggers cannot read Actions secrets. Without it the pull request waits
+      # for a manual merge. The subject and the empty body are explicit so the
+      # squash commit carries no trailers (AGENTS.md rule 13).
+      - name: Enable auto-merge for patch and minor updates
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${GH_TOKEN:-}" ]]; then
+            echo "::warning::AUTO_MERGE_TOKEN is not configured; leaving this pull request for a manual merge so the push-to-main CI runs."
+            exit 0
+          fi
+          gh pr merge --auto --squash --subject "${PR_TITLE} (#${PR_NUMBER})" --body "" "$PR_URL"
