@@ -94,3 +94,13 @@ and practice is the only thing forbidden without exception.
     before a destructive operation. Skills and `.claude/settings.json`
     pre-approve only commands scoped to a program and its subcommand, never a
     destructive one, and contain no secrets.
+19. `.claude/settings.json` sets `autoMemoryEnabled: false`, because what an
+    agent learns belongs in this file or a skill, where it is reviewed and
+    versioned. It also runs `scripts/git-guard.mjs` as a `PreToolUse` hook on
+    Bash, because agent sessions run without permission prompts and rules 14
+    and 18 alone stop nothing. The guard denies the operations rule 14 reserves
+    for approval, deletions through `gh`, commands that discard uncommitted work
+    and `git stash`, whose list every worktree of the repository shares. An
+    agent prefixes a command with `APPROVED=1`, which lets it past the guard,
+    only when the maintainer approved that operation in the current
+    conversation; `pnpm run test:tools` covers the guard.
