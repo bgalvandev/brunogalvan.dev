@@ -111,4 +111,8 @@ git branch -D <headRefName>
 If the tip differs, the branch holds commits the PR never had: keep it and
 report them instead of deleting.
 
+A pull request closed without merging deletes its head branch too
+(`gh pr close <n> --delete-branch`), because the repository deletes head
+branches only on merge.
+
 Related: [engineering-discipline](../engineering-discipline/SKILL.md).
