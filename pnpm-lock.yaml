@@ -20,8 +20,8 @@ importers:
         specifier: ~7.4.2
         version: 7.4.2(@types/node@24.13.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
       geist:
-        specifier: 1.7.2
-        version: 1.7.2
+        specifier: 1.8.2
+        version: 1.8.2
       gsap:
         specifier: 3.15.0
         version: 3.15.0
@@ -1867,8 +1867,8 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  geist@1.7.2:
-    resolution: {integrity: sha512-Gu5lDFa3pLRyoBlBPf0QIFHVdWAnpco7fS1bJm41jyLPFoguBgiubseUN2oLXMgqZ7uxAxDoXcHMhCY/fOTTgg==}
+  geist@1.8.2:
+    resolution: {integrity: sha512-fRF4sbJ9qcCxPb35cVtKBAwYlTt1IbU9nkbPi0a+xyZqPIjCJ2BY8ekGhx6/SGSZKrR7/UuL57r/eeDQ1Xy11g==}
     peerDependencies:
       next: '>=13.2.0'
     peerDependenciesMeta:
@@ -4650,7 +4650,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  geist@1.7.2: {}
+  geist@1.8.2: {}
 
   get-caller-file@2.0.5: {}
 
