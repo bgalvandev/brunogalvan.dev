@@ -17,7 +17,7 @@ pnpm install --frozen-lockfile
 pnpm run dev
 ```
 
-Open `http://127.0.0.1:3000/en/` or `http://127.0.0.1:3000/es/`.
+Open `http://127.0.0.1:4300/en/` or `http://127.0.0.1:4300/es/`.
 The root URL redirects to `/en/`; the visible language selector links to `/es/`. Stop the owned terminal process with Ctrl+C.
 No environment file, database or container service is required.
 
@@ -26,7 +26,7 @@ pnpm run build
 pnpm run preview
 ```
 
-Build output is static `dist/`; preview uses `http://127.0.0.1:3100` for local
+Build output is static `dist/`; preview uses `http://127.0.0.1:4301` for local
 verification. Cloudflare Pages builds `main` and every pull request from the
 connected repository (build command `pnpm run build`, output `dist`,
 `NODE_VERSION=24`, `PNPM_VERSION=11.15.1`); redirects live in
@@ -50,7 +50,7 @@ pnpm run test:e2e
 pnpm run security:audit
 ```
 
-The browser suite builds and manages an isolated preview on port 3100, which must
+The browser suite builds and manages an isolated preview on port 4301, which must
 be free. CI runs the local gates, browser journeys and registry security auditing.
 
 Public identity and links live in `src/config/site.ts`; `pnpm run og:generate`
