@@ -215,10 +215,13 @@ const squares = [
     cursor: pointer;
     transition: color 0.35s ease;
   }
+  /* The radio only holds the tab's state and the label draws the tab, so it
+     drops the native appearance and, with it, the browser's round shape. */
   .cap-tab input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
+    appearance: none;
   }
   .cap-tab:has(input:focus-visible) {
     outline: 2px solid var(--accent);
