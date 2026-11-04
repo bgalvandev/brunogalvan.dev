@@ -232,10 +232,13 @@ const samples = snippets.map((snippet) => ({
     flex-direction: column;
     cursor: pointer;
   }
+  /* The radio only holds the tab's state and the label draws the tab, so it
+     drops the native appearance and, with it, the browser's round shape. */
   .code-tab input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
+    appearance: none;
   }
   .code-tab:has(input:focus-visible) {
     outline: 2px solid var(--accent);
