@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 3100;
+// The dev server takes 4300 and the preview 4301, clear of 3000–3499, where
+// other projects on the shared development machine run their servers.
+const PORT = 4301;
 const baseURL = `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({

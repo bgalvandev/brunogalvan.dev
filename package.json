@@ -8,9 +8,9 @@
   },
   "packageManager": "pnpm@11.15.1",
   "scripts": {
-    "dev": "astro dev --host 127.0.0.1 --port 3000",
+    "dev": "astro dev --host 127.0.0.1 --port 4300",
     "build": "astro build",
-    "preview": "astro preview --host 127.0.0.1 --port 3100",
+    "preview": "astro preview --host 127.0.0.1 --port 4301",
     "lint": "eslint .",
     "typecheck": "astro check",
     "test": "vitest run",

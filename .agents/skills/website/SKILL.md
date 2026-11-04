@@ -35,7 +35,7 @@ official guide before using it; this skill is project-authored, not official.
 
 ## Browser suite
 
-- `pnpm run test:e2e` builds the site and serves it on port 3100 through
+- `pnpm run test:e2e` builds the site and serves it on port 4301 through
   `scripts/e2e/preview.mjs`, which keeps the server under Playwright's control.
   The port must be free; stop only servers this task started.
 - Prefer role and name locators and web-first assertions; no sleeps. Cover
@@ -46,7 +46,7 @@ official guide before using it; this skill is project-authored, not official.
 
 ## Commands
 
-`pnpm run dev` (port 3000), `pnpm run check`, `pnpm run test:e2e`,
+`pnpm run dev` (port 4300), `pnpm run check`, `pnpm run test:e2e`,
 `pnpm run security:audit`. Framework or configuration changes run all of them and
 inspect the emitted HTML and asset requests, not only the dev server.
 
