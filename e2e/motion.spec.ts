@@ -5,15 +5,8 @@ import { messages } from '@/i18n/messages';
 
 const { whatIDo, hero } = messages('es');
 const phrase = whatIDo.headline.join(' ');
-// What the eye reads: the words a typed line holds unseen, only to keep its
-// height, are left out.
-const visualText = (element: Element) => {
-  const copy = element.cloneNode(true) as Element;
-  copy
-    .querySelectorAll('[data-typewriter-ghost]')
-    .forEach((ghost) => ghost.remove());
-  return copy.textContent?.replace(/\s+/g, ' ').trim();
-};
+const visualText = (element: Element) =>
+  element.textContent?.replace(/\s+/g, ' ').trim();
 
 test('a heading reveals character by character and reads whole throughout', async ({
   page,
@@ -139,14 +132,18 @@ test('a revealing heading holds its height, so nothing below it moves', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 360, height: 800 });
+  // Measured from the heading's own top, since the hero's typed word above
+  // it may take one line or two as it cycles.
   const layout = () =>
-    page.evaluate(() => ({
-      heading:
-        document.querySelector<HTMLElement>('#what-i-do-title')!.offsetHeight,
-      cards:
-        document.querySelector('.value-slider')!.getBoundingClientRect().top +
-        scrollY,
-    }));
+    page.evaluate(() => {
+      const heading = document.querySelector<HTMLElement>('#what-i-do-title')!;
+      return {
+        heading: heading.offsetHeight,
+        cards:
+          document.querySelector('.value-slider')!.getBoundingClientRect().top -
+          heading.getBoundingClientRect().top,
+      };
+    });
   // The static page is the baseline layout.
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/es/');
@@ -176,11 +173,14 @@ test('the closing word cycles between tight brackets while its bands run in oppo
   const line = page.locator('#contact .pixel-highlight');
   expect(await line.evaluate(visualText)).toBe(`[${contact.fragments[1]}]`);
   const directions = await page
-    .locator('#contact .marquee-track')
-    .evaluateAll((tracks) =>
-      tracks.map((track) => getComputedStyle(track).animationDirection),
+    .locator('#contact .marquee')
+    .evaluateAll((bands) =>
+      bands.map(
+        (band) =>
+          getComputedStyle(band.querySelector('.marquee-run')!).animationName,
+      ),
     );
-  expect(directions).toEqual(['normal', 'reverse']);
+  expect(directions).toEqual(['marquee', 'marquee-reverse']);
 });
 
 test('hovers: the bullet turns, the line button closes a frame, the contact tab takes the accent', async ({
@@ -289,45 +289,6 @@ test('revealed text is as wide whole as split into letters, so the end of the re
       return widths;
     });
   expect(Math.abs(whole! - split!)).toBeLessThan(0.5);
-});
-
-test('on a phone the line a word types into takes its height first, so nothing below moves while it types', async ({
-  page,
-}) => {
-  const { hero } = messages('en');
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/en/');
-  await expect(page.locator('.hero [data-typewriter]')).toHaveText(
-    hero.fragments[0]!,
-    { timeout: 10_000 },
-  );
-  // The whole of the next word, from its first letter to its last.
-  const tops = await page.evaluate(
-    () =>
-      new Promise<number[]>((resolve) => {
-        const heading = document.querySelector('#hero-title')!;
-        const summary = document.querySelector('.hero-summary')!;
-        let tops: number[] | undefined;
-        new MutationObserver(() => {
-          const word = heading.querySelector<HTMLElement>('[data-typewriter]');
-          if (!word) return;
-          if (!tops && word.dataset.cursor === 'typing') {
-            if (word.textContent!.length === 1) tops = [];
-            else return;
-          }
-          if (!tops) return;
-          tops.push(summary.getBoundingClientRect().top);
-          if (word.dataset.cursor === 'on') resolve(tops);
-        }).observe(heading, {
-          subtree: true,
-          childList: true,
-          characterData: true,
-          attributes: true,
-        });
-      }),
-  );
-  expect(tops.length).toBeGreaterThan(3);
-  expect(new Set(tops).size).toBe(1);
 });
 
 test('on a phone the cursor and the closing bracket stay on the line of the last letter', async ({

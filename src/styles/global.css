@@ -127,6 +127,9 @@ html.lenis body {
   :root {
     --ease-power1-in: cubic-bezier(0.55, 0.085, 0.68, 0.53);
     --ease-power1-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Lets a box ease to its natural height (a disclosure opening), where
+       the browser supports it; elsewhere it opens at once. */
+    interpolate-size: allow-keywords;
   }
   html {
     scroll-padding-top: 4rem;
@@ -202,23 +205,51 @@ html.lenis body {
       --gutter: 1.5rem;
     }
   }
-  /* A statement on the left, the record on the right; stacked on tablets. */
-  .split {
+  /* A statement on the left, a timeline on the right: three columns, the
+     statement in the first and the timeline across a 7rem strip and the
+     last, closed by a rule 2.5rem under it. On a phone the statement takes
+     the full row above. */
+  .changelog {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 7rem minmax(0, 1fr);
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
   }
-  .split-side {
+  .changelog > :last-child {
+    grid-column: span 2;
+  }
+  .changelog-side {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: flex-start;
-    gap: 3rem;
-    padding-right: 1rem;
+    justify-content: space-between;
   }
-  @media (width < 62rem) {
-    .split {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 4rem;
+  .changelog-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    max-width: 26rem;
+  }
+  .changelog-text {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+  @media (width < 48rem) {
+    .changelog {
+      grid-template-columns: minmax(0, 1fr) 7rem;
+      gap: var(--space-medium);
+      border-bottom: none;
+    }
+    .changelog-side {
+      grid-column: span 2;
+      justify-content: flex-start;
+      gap: var(--space-small);
+    }
+    .changelog-text {
+      font-size: var(--text-body);
     }
   }
   .section-body {
@@ -373,7 +404,6 @@ html.lenis body {
     color: var(--accent);
     font-family: var(--font-pixel);
     letter-spacing: var(--text-display--letter-spacing);
-    white-space: nowrap;
   }
   /* The block is painted on an inline box around a word joiner: a line may
      break on either side of an inline-block, even beside a no-break space,
@@ -418,6 +448,8 @@ html.lenis body {
     .skip-link,
     .preloader,
     .marquee,
+    .hero-logos,
+    .code-list,
     .pixel-field,
     .hero-scroll,
     .site-menu,

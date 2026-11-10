@@ -13,16 +13,15 @@ interface Props {
 const { locale } = Astro.props;
 const { whatIDo } = messages(locale);
 // One isometric scene per card, in catalog order, each about as wide as it
-// is tall so the four weigh the same in their boxes: stacked layers (a
-// platform), two blocks joined (an API between services), a laptop (an
-// interface) and a cluster of cylinders (models and their data).
+// is tall so the three weigh the same in their boxes: stacked layers (a
+// platform and its APIs), a laptop (an interface) and a cluster of cylinders
+// (models and their data).
 const icons = [
   [
     box(0, 0, 0, 8, 8, 1.6),
     box(0, 0, 2.8, 8, 8, 1.6),
     box(0, 0, 5.6, 8, 8, 1.6),
   ],
-  [box(7, 0, 0, 4, 4, 4), box(4, 1.5, 1.5, 3, 1, 1), box(0, 0, 0, 4, 4, 4)],
   [
     box(0, 0, 0, 8, 6.5, 0.7),
     box(1, 3, 0.7, 6, 2.5, 0.2),
@@ -112,7 +111,7 @@ const icons = [
   }
   .value-cards {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.5rem;
     margin: 0;
     padding: 0;
@@ -174,7 +173,6 @@ const icons = [
     font-size: var(--text-medium);
     font-weight: 500;
     line-height: 1.3;
-    letter-spacing: var(--text-medium--letter-spacing);
   }
   .value-card-description {
     margin: 0;
@@ -238,9 +236,13 @@ const icons = [
   .value-card .tag {
     margin: 0;
   }
+  /* On a tablet the three cards keep their row, each drawing half the
+     card's width. */
   @media (width < 62rem) {
-    .value-cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .value-card :global(.value-card-icon) {
+      width: 50%;
+      height: auto;
+      aspect-ratio: 1;
     }
   }
   @media (width < 48rem) {
@@ -259,8 +261,8 @@ const icons = [
       gap: 1.5rem;
     }
     .value-card :global(.value-card-icon) {
-      width: 7.5rem;
-      height: 7.5rem;
+      width: 100%;
+      max-width: 7.5rem;
     }
   }
   /* The phone slider: one box, the cards in the same place, one

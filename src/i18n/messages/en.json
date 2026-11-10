@@ -15,8 +15,7 @@
     "contact": "Contact",
     "about": "About",
     "experience": "Experience",
-    "menu": "Menu",
-    "sections": "Sections"
+    "menu": "Menu"
   },
   "theme": {
     "darkMode": "Dark mode"
@@ -47,13 +46,8 @@
     "cards": [
       {
         "title": "SaaS platforms",
-        "tag": "Multi-tenant",
-        "text": "Products with organizations, scheduling and billing, from the schema to the screen."
-      },
-      {
-        "title": "Typed APIs",
         "tag": "Fastify · OpenAPI",
-        "text": "Contract-first REST in hexagonal layers, with domain events through an outbox."
+        "text": "Multi-tenant products with scheduling and billing, on contract-first APIs in hexagonal layers."
       },
       {
         "title": "Product interfaces",
@@ -72,7 +66,7 @@
     "headline": ["An email is enough.", "I read it myself."],
     "fragments": ["Write to me", "Let's talk", "Say hello"],
     "action": "Send an email",
-    "marquee": ["[#Frontend]", "&", "[#Backend]", "//", "[#Production]", "//"]
+    "marquee": [["[#Frontend]", "[#Backend]"], ["[#Production]"]]
   },
   "footer": {
     "colophon": "Built with Astro, with no framework in the browser.",
@@ -226,26 +220,26 @@
     "label": "Projects",
     "headline": ["{total} projects.", "{public} with the code in the open."],
     "action": "All repositories",
+    "intro": "A product I build at work, one of my own, and this site, with its code and a case study in the open.",
     "kinds": {
       "work": "Work",
       "product": "Own product",
       "project": "Project"
     },
     "code": "Code",
-    "demo": "Demo",
     "private": "Private code",
     "items": {
       "clinicsay": "Clinic-management SaaS. I own billing, scheduling and data migration across the React app and the Fastify API.",
       "asistira": "My own multi-tenant SaaS for service businesses: an Nx monorepo with Next.js and Fastify.",
       "brunogalvan-dev": "This site: static Astro in two languages, a CSP built from hashes, and axe in both themes."
     },
-    "codeOf": "Code for {name}",
-    "demoOf": "Demo of {name}"
+    "codeOf": "Code for {name}"
   },
   "experience": {
     "label": "Experience",
     "headline": ["{companies} companies.", "Since {year}."],
     "action": "Full record",
+    "intro": "From retail systems and an ERP to integrations for education and a clinic-management SaaS.",
     "present": "Present",
     "roles": {
       "clinicsay": {

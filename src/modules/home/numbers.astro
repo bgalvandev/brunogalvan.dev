@@ -66,21 +66,25 @@ const summary = numbers.chart.summary
   class="section-deep"
 >
   <div class="numbers-main">
-    <div class="numbers-top">
-      <div class="numbers-heading">
-        <Headline id="numbers-title" lines={numbers.headline} />
-        <Button href="#experience" label={numbers.action} />
-      </div>
-      <dl class="numbers-stats">
-        {stats.map((stat) => (
-          <div class="numbers-stat">
-            <dt>{stat.label}</dt>
-            <dd>{stat.value}</dd>
-          </div>
-        ))}
-      </dl>
+    <div class="numbers-heading">
+      <Headline id="numbers-title" lines={numbers.headline} />
+      <Button href="#experience" label={numbers.action} />
     </div>
+    <dl class="numbers-stats">
+      {stats.map((stat) => (
+        <div class="numbers-stat">
+          <dt>{stat.label}</dt>
+          <dd>{stat.value}</dd>
+        </div>
+      ))}
+    </dl>
     <figure class="numbers-chart">
+      {/* The caption stands over the chart, in a row 24px tall with 32px
+          under it. */}
+      <figcaption class="numbers-legend">
+        <span class="sr-only">{summary}</span>
+        <span class="numbers-caption">{numbers.chart.caption}</span>
+      </figcaption>
       <svg class="numbers-plot" aria-hidden="true" focusable="false">
         {years.map((tick) => (
           <line class="numbers-tick" x1={tick.x} x2={tick.x} y1="0" y2="100%" />
@@ -103,25 +107,16 @@ const summary = numbers.chart.summary
           </text>
         ))}
       </svg>
-      <figcaption>
-        <span class="sr-only">{summary}</span>
-        <span class="numbers-caption">{numbers.chart.caption}</span>
-      </figcaption>
     </figure>
   </div>
 </NumberedSection>
 
 <style>
   .numbers-main {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 5.75rem;
-  }
-  .numbers-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 3rem;
+    gap: var(--space-medium);
   }
   .numbers-heading {
     display: flex;
@@ -131,16 +126,16 @@ const summary = numbers.chart.summary
     width: 60%;
   }
   /* The stat grid: cells share their rules, the grid closes the top and
-     right. */
-  /* The grid rises to the eyebrow's rule and covers its end. */
+     right. It rises to the eyebrow's rule and covers its end. */
   .numbers-stats {
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    inset: -2.175rem 0 auto auto;
+    z-index: 2;
     display: grid;
-    flex: none;
     grid-template-columns: 1fr 1fr;
-    width: min(28rem, 35%);
-    margin: -2.125rem 0 0;
+    width: 35%;
+    max-width: 28rem;
+    margin: 0;
     background: var(--paper);
     border-top: 1px solid var(--line);
     border-right: 1px solid var(--line);
@@ -151,6 +146,7 @@ const summary = numbers.chart.summary
     justify-content: flex-end;
     gap: 1rem;
     padding: 1.5rem;
+    overflow: hidden;
     border-bottom: 1px solid var(--line);
     border-left: 1px solid var(--line);
   }
@@ -158,13 +154,18 @@ const summary = numbers.chart.summary
     margin: 0;
     font-size: var(--text-large);
     line-height: 1.25;
-    letter-spacing: var(--text-large--letter-spacing);
   }
   .numbers-stat dt {
     color: var(--muted);
   }
   .numbers-chart {
     margin: 0;
+  }
+  .numbers-legend {
+    display: flex;
+    align-items: center;
+    min-height: 1.5rem;
+    margin-bottom: 2rem;
   }
   .numbers-plot {
     display: block;
@@ -197,31 +198,24 @@ const summary = numbers.chart.summary
     text-anchor: middle;
   }
   .numbers-caption {
-    display: block;
-    margin-top: 1rem;
     color: var(--faint);
     font-family: var(--font-mono);
     font-size: var(--text-small);
     letter-spacing: var(--text-small--letter-spacing);
     text-transform: uppercase;
   }
+  /* On a tablet the stats come into the flow under the heading, one row of
+     four, each figure a step smaller over its label; two by two on a
+     phone. */
   @media (width < 62rem) {
-    .numbers-top {
-      flex-direction: column;
-    }
     .numbers-heading {
       width: auto;
     }
-    /* The stats run in one row of four across the room, then two by two on
-       a phone, each figure a step smaller over its label. */
-    .numbers-main,
-    .numbers-top {
-      gap: var(--space-medium);
-    }
     .numbers-stats {
+      position: static;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      width: 100%;
-      margin-top: 0;
+      width: auto;
+      max-width: none;
     }
     .numbers-stat {
       gap: 0.25rem;
@@ -229,8 +223,9 @@ const summary = numbers.chart.summary
     .numbers-stat dd {
       font-size: var(--text-medium);
     }
-    .numbers-plot {
-      height: 16rem;
+    /* The names would collide over the shorter roles. */
+    .numbers-company {
+      display: none;
     }
   }
   @media (width < 48rem) {
@@ -239,9 +234,6 @@ const summary = numbers.chart.summary
     }
     .numbers-stats {
       grid-template-columns: 1fr 1fr;
-    }
-    .numbers-company {
-      display: none;
     }
     .numbers-axis text {
       font-size: var(--text-small);

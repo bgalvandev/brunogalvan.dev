@@ -4,8 +4,7 @@ import PixelIcon, { type IconName } from '@/components/pixel-icon.astro';
 // `solid`: a sharp ink rectangle with a square bullet; on hover the accent
 // slides in behind, the bullet turns half a turn, the label steps left and
 // the arrow appears. `line`: a bottom rule; on hover a 1px accent frame
-// closes around it, its accent underline grows and the icon and label step
-// in from the edges.
+// closes around it, its accent underline grows and the label steps left.
 interface Props {
   href: string;
   label: string;
@@ -127,9 +126,8 @@ const {
     color: var(--ink);
     font-weight: 500;
     overflow: visible;
-    transition: color 0.3s var(--ease-power1-in);
+    transition: color 0.3s var(--ease-power1-out);
   }
-  .button-line :global(.button-line-icon),
   .button-line-text {
     transition: transform 0.3s var(--ease-power1-in);
   }
@@ -151,10 +149,6 @@ const {
   .button-line:hover .button-line-frame,
   .button-line:focus-visible .button-line-frame {
     opacity: 1;
-  }
-  .button-line:hover :global(.button-line-icon),
-  .button-line:focus-visible :global(.button-line-icon) {
-    transform: translateX(0.5rem);
   }
   .button-line:hover .button-line-text,
   .button-line:focus-visible .button-line-text {
@@ -183,7 +177,6 @@ const {
     .button :global(.button-icon),
     .button-bg,
     .button-line,
-    .button-line :global(.button-line-icon),
     .button-line-text,
     .button-line-frame,
     .button-line-bar {

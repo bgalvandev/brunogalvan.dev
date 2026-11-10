@@ -6,9 +6,11 @@ import { site } from '@/config/site';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 import { pagePath } from '@/i18n/routes';
-// The footer grid: the name in the first column, as wide as the column
-// allows, and the cards beside it. It holds no form, since a static site has
-// nothing to post one to.
+// The footer grid: the first column opens with the role and the place and
+// closes with the name, as wide as the column allows; the cards stand beside
+// it, two over one. It holds no form, since a static site has nothing to post
+// one to. Under it, a row of four: the copyright across two, the source link
+// and the colophon.
 interface Props {
   locale: Locale;
 }
@@ -36,11 +38,12 @@ const profiles = [
   <div class="measure">
     <div class="site-footer-grid">
       <div class="site-footer-name">
+        <div class="site-footer-intro">
+          <p class="site-footer-role">{identity.role}</p>
+          <p class="site-footer-place">{identity.location}</p>
+        </div>
         <p class="site-footer-wordmark">
           <Logo stacked />
-        </p>
-        <p class="site-footer-role">
-          {identity.role} · {identity.location}
         </p>
       </div>
       <div class="site-footer-cards">
@@ -102,46 +105,66 @@ const profiles = [
       </div>
     </div>
     <div class="site-footer-bottom">
-      <p>
+      <p class="site-footer-copyright">
         © {year} {site.name}
       </p>
-      <p>{footer.colophon}</p>
-      <a class="site-footer-source" href={site.repository}>
-        {footer.source}
-      </a>
+      <p class="site-footer-links">
+        <a class="site-footer-source" href={site.repository}>
+          {footer.source}
+        </a>
+      </p>
+      <p class="site-footer-colophon">{footer.colophon}</p>
     </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
+    position: relative;
+    z-index: 2;
     border-top: 1px solid var(--line);
     background: var(--paper);
+    color: var(--ink);
   }
   .site-footer-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    border-inline: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
   }
   .site-footer-name {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 2.5rem;
     padding: 2.5rem;
-    border-right: 1px solid var(--line);
-  }
-  .site-footer-name {
+    border: 1px solid var(--line);
+    border-top: none;
     container-type: inline-size;
   }
-  .site-footer-wordmark {
+  .site-footer-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .site-footer-role,
+  .site-footer-place {
     margin: 0;
-    font-size: 24cqi;
   }
   .site-footer-role {
-    margin: 0;
+    font-size: var(--text-medium);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .site-footer-place {
     color: var(--muted);
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+  /* The name fills the column up to 32.5rem. */
+  .site-footer-wordmark {
+    width: 100%;
+    max-width: 32.5rem;
+    margin: 0;
+    font-size: min(24cqi, 7.8rem);
   }
   /* The right column: its cards stand 8px apart, each drawing the rule on
      its own side, so every junction reads as a double hairline. */
@@ -149,6 +172,8 @@ const profiles = [
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
   }
   .site-footer-card {
     display: flex;
@@ -156,13 +181,12 @@ const profiles = [
     gap: 1rem;
     padding: 2.5rem;
   }
-  .site-footer-card:not(.site-footer-contact) {
-    border-bottom: 1px solid var(--line);
-  }
   .site-footer-card:first-child {
     border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
   }
   .site-footer-card:nth-child(2) {
+    border-bottom: 1px solid var(--line);
     border-left: 1px solid var(--line);
   }
   .site-footer-contact {
@@ -178,8 +202,8 @@ const profiles = [
     margin: 0;
     font-size: var(--text-label);
     font-weight: 600;
+    line-height: 1.25;
     text-transform: uppercase;
-    letter-spacing: var(--text-label--letter-spacing);
   }
   .site-footer-list {
     display: flex;
@@ -210,8 +234,9 @@ const profiles = [
   }
   .site-footer-mark {
     flex: none;
-    width: 1.125rem;
-    height: 1.125rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0.0625rem;
     fill: currentColor;
   }
   /* The twin arrow: on hover one steps out to the top right while its copy
@@ -221,6 +246,7 @@ const profiles = [
     flex: none;
     width: 1.25rem;
     height: 1.25rem;
+    margin-left: -0.5rem;
     overflow: hidden;
   }
   .site-footer-arrow :global(svg) {
@@ -247,24 +273,30 @@ const profiles = [
     margin: 0;
     color: var(--muted);
   }
+  /* The bottom row: four columns, the copyright across the first two, the
+     source link in the third and the colophon at the end of the fourth. */
   .site-footer-bottom {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     padding-block: 6.5rem 3rem;
     color: var(--faint);
     font-size: var(--text-label);
+    line-height: 1.3;
   }
-  .site-footer-bottom p,
-  .site-footer-source {
+  .site-footer-bottom p {
     margin: 0;
-    line-height: 1.5rem;
+  }
+  .site-footer-copyright {
+    grid-column: span 2;
+  }
+  .site-footer-colophon {
+    justify-self: end;
+    text-align: right;
   }
   .site-footer-source {
     color: var(--faint);
+    white-space: nowrap;
     text-decoration: underline;
-    text-underline-offset: 0.2em;
   }
   .site-footer-source:hover {
     color: var(--accent);
@@ -273,37 +305,72 @@ const profiles = [
     .site-footer-grid {
       grid-template-columns: minmax(0, 1fr);
     }
-    .site-footer-name {
-      border-right: none;
-      border-bottom: 1px solid var(--line);
+    .site-footer-cards {
+      border-left: 1px solid var(--line);
+    }
+    .site-footer-bottom {
+      grid-template-columns: 1fr 1fr;
+      row-gap: 2rem;
+      padding-top: 4rem;
+    }
+    .site-footer-colophon {
+      justify-self: auto;
+      text-align: left;
     }
   }
-  /* On a phone the cards close up, one hairline between each. */
+  /* On a phone the cards close up, one hairline between each, and the
+     bottom row stacks with the source link first. */
   @media (width < 48rem) {
     .site-footer-cards {
       grid-template-columns: 1fr;
       gap: 0;
     }
-    .site-footer-card,
-    .site-footer-name {
+    .site-footer-card {
       padding: 1.5rem;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
     }
-    .site-footer-card:first-child,
+    .site-footer-card:first-child {
+      border-right: none;
+    }
     .site-footer-card:nth-child(2) {
-      border-inline: none;
+      border-bottom: none;
+      border-left: none;
     }
     .site-footer-contact {
       grid-column: auto;
-      border-top: none;
+      border-top: 1px solid var(--line);
+      border-bottom: none;
+    }
+    .site-footer-name {
+      padding: 1.5rem;
+    }
+    .site-footer-role {
+      font-size: 1.25rem;
+    }
+    .site-footer-place {
+      font-size: var(--text-body);
+    }
+    .site-footer-wordmark {
+      width: 80%;
+      font-size: min(19cqi, 7.8rem);
     }
     .site-footer-bottom {
-      padding-top: 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .site-footer-links {
+      order: -1;
     }
   }
   @media (width < 30rem) {
     .site-footer-card,
     .site-footer-name {
       padding-inline: 1rem;
+    }
+    .site-footer-bottom {
+      gap: 1rem;
     }
   }
   @media (prefers-reduced-motion: reduce) {

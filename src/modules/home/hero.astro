@@ -1,12 +1,10 @@
 ---
 import Button from '@/components/button.astro';
 import Logo from '@/components/logo.astro';
-import Marquee from '@/components/marquee.astro';
-import { marks } from '@/components/tech-marks';
 import PixelField from '@/components/pixel-field.astro';
 import PixelIcon from '@/components/pixel-icon.astro';
 import { site } from '@/config/site';
-import { stack } from '@/data/stack';
+import TechLogo from '@/components/tech-logo.astro';
 import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 interface Props {
@@ -25,11 +23,18 @@ const scrollArrow = [
   '..###..',
   '...#...',
 ];
-// The toolchain band carries every tool the record names that has a mark of
-// its own, as a carousel (the owner's choice) of logo cells.
-const tools = Object.values(stack)
-  .flat()
-  .filter((tool) => marks.has(tool));
+// The logo row: six tools of the current stack, each with a published mark,
+// standing still in six cells on a desktop and running as a band below it
+// (the owner's choice on 2026-11-10). The row is drawn twice so the band can
+// loop; the copy shows only while it runs.
+const tools = [
+  'React',
+  'TypeScript',
+  'Node.js',
+  'Fastify',
+  'PostgreSQL',
+  'Astro',
+] as const;
 ---
 
 <section class="section hero" aria-labelledby="hero-title">
@@ -60,42 +65,23 @@ const tools = Object.values(stack)
           data-reveal-duration="0.6"
         >
           <span class="hero-line">{hero.greeting}</span>
+          {/* The typed fragment flows with its brackets, so on a phone the
+              line wraps where the words fall, the closing bracket included. */}
           <span
             class="hero-line hero-fragment pixel-highlight"
             data-reveal-skip
-            data-typewriter-line
           >
-            {/* Arrays, so no whitespace creeps between the brackets and the
-                word the script types. Behind the typed word the whole word
-                stands unseen in the same cell, so the line takes its full
-                height before the first letter and nothing below moves while
-                it types; the script swaps the unseen word with each one. */}
-            <span>
-              {[
-                '[\u00a0',
-                <span
-                  data-typewriter
-                  data-typewriter-words={hero.fragments.join('|')}
-                  data-typewriter-delay="2"
-                >
-                  {hero.fragments[0]}
-                </span>,
-                '\u00a0]',
-              ]}
-            </span>
-            {hero.fragments.map((word, index) => (
+            {[
+              '[ ',
               <span
-                class="hero-fragment-ghost"
-                data-typewriter-ghost
-                hidden={index > 0}
+                data-typewriter
+                data-typewriter-words={hero.fragments.join('|')}
+                data-typewriter-delay="2"
               >
-                {[
-                  '[\u00a0',
-                  <span class="hero-fragment-word">{word}</span>,
-                  '\u00a0]',
-                ]}
-              </span>
-            ))}
+                {hero.fragments[0]}
+              </span>,
+              ' ]',
+            ]}
           </span>
           <span class="hero-line">{hero.closing}</span>
         </span>
@@ -113,12 +99,24 @@ const tools = Object.values(stack)
       </div>
     </div>
     <div class="measure hero-main">
-      <Marquee items={tools} variant="logos" />
+      <div class="hero-logos" aria-hidden="true">
+        {[0, 1].map((copy) => (
+          <ul class:list={['hero-logos-row', { 'hero-logos-copy': copy }]}>
+            {tools.map((tool) => (
+              <li class="hero-logo">
+                <TechLogo name={tool} />
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
       <div class="hero-positioning field-dotted">
-        <p class="hero-positioning-text">
+        <p class="hero-positioning-main">
           <span class="sr-only">{positioning.spoken}</span>
-          <span aria-hidden="true" data-reveal>
-            <span class="hero-positioning-bracket">&gt;</span>
+          <span class="hero-positioning-bracket" aria-hidden="true">
+            &gt;
+          </span>
+          <span class="hero-positioning-text" aria-hidden="true" data-reveal>
             {positioning.parts.map((part, index) => (
               <>
                 <span class="hero-positioning-step">
@@ -143,7 +141,9 @@ const tools = Object.values(stack)
                 {index < positioning.parts.length - 1 && ' '}
               </>
             ))}
-            <span class="hero-positioning-bracket">&lt;</span>
+          </span>
+          <span class="hero-positioning-bracket" aria-hidden="true">
+            &lt;
           </span>
         </p>
       </div>
@@ -157,11 +157,13 @@ const tools = Object.values(stack)
     flex-direction: column;
     min-height: 100vh;
   }
-  /* The dark room sticks while the statement scrolls over it. */
+  /* The dark room fills what the statement leaves of the first screen and
+     sticks while the statement scrolls over it. */
   .hero-band {
     position: sticky;
     top: 0;
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
     min-height: 40vh;
@@ -174,8 +176,7 @@ const tools = Object.values(stack)
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
-    padding-block: 3rem;
+    pointer-events: none;
   }
   .hero-name {
     display: flex;
@@ -192,10 +193,9 @@ const tools = Object.values(stack)
     padding: 0.1em 0.25em;
     background: var(--decor);
     color: var(--muted);
-    line-height: 1.3rem;
     font-family: var(--font-mono);
     font-size: var(--text-small);
-    letter-spacing: var(--text-small--letter-spacing);
+    line-height: 1.3rem;
     text-transform: uppercase;
   }
   .hero-scroll {
@@ -207,7 +207,7 @@ const tools = Object.values(stack)
     font-size: var(--text-small);
     font-weight: 400;
     line-height: 1.3rem;
-    letter-spacing: var(--text-small--letter-spacing);
+    letter-spacing: -0.05rem;
   }
   /* The arrow is drawn 7 by 8 in a 12px box. */
   .hero-scroll :global(.hero-scroll-icon) {
@@ -217,8 +217,8 @@ const tools = Object.values(stack)
   }
   .hero-body {
     position: relative;
-    z-index: 1;
-    padding-bottom: calc(2 * var(--space-large));
+    z-index: 2;
+    padding-bottom: var(--space-large);
     background: var(--paper);
   }
   .hero-top {
@@ -228,33 +228,21 @@ const tools = Object.values(stack)
     gap: 2rem;
     padding-block: var(--space-small) var(--space-medium);
   }
+  /* The heading holds its lines whole, at least 43rem wide, until a phone
+     lets it wrap. */
   .hero-heading {
+    min-width: 43rem;
     margin: 0;
-    min-width: min(43rem, 100%);
+    white-space: nowrap;
   }
   .hero-visual,
   .hero-line {
     display: block;
   }
-  /* On a narrow phone the greeting breaks between its sentences, as the
-     headlines do, rather than leaving a word alone at a line's end. */
-  .hero-line {
+  /* The greeting and the closing break between their words evenly when a
+     phone wraps them, so no line ends on a word by itself. */
+  .hero-line:not(.hero-fragment) {
     text-wrap: balance;
-  }
-  .hero-fragment {
-    display: grid;
-  }
-  .hero-fragment > * {
-    grid-area: 1 / 1;
-  }
-  .hero-fragment-ghost {
-    visibility: hidden;
-  }
-  /* The typed word's cursor, so a ghost wraps where the word will. */
-  .hero-fragment-word::after {
-    content: '\2060';
-    margin-left: 2px;
-    padding-left: 0.55em;
   }
   .hero-content {
     display: flex;
@@ -277,22 +265,57 @@ const tools = Object.values(stack)
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
   }
+  .hero-main {
+    position: relative;
+    z-index: 2;
+    padding-bottom: var(--space-large);
+  }
+  /* The logo row: six cells in a closed box, 132px tall, on a desktop. */
+  .hero-logos-row {
+    display: flex;
+    height: 8.25rem;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-right-style: none;
+    list-style: none;
+  }
+  .hero-logos-copy {
+    display: none;
+  }
+  .hero-logo {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border-right: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 1.125rem;
+  }
   .hero-positioning {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
     min-height: 17.5rem;
     padding: 2rem;
   }
-  .hero-positioning-text {
+  /* The brackets stand apart from the words, 3% of the row away. */
+  .hero-positioning-main {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
     margin: 0;
     font-family: var(--font-mono);
     font-size: var(--text-large);
-    line-height: var(--text-large--line-height);
-    letter-spacing: var(--text-large--letter-spacing);
+    line-height: 1.3;
     text-align: center;
     text-transform: uppercase;
-    text-wrap: balance;
+  }
+  .hero-positioning-bracket {
+    padding-bottom: 0.125em;
   }
   /* Each part keeps the glyph after it, so a line ends on a glyph and never
      starts with one. The glyphs are drawn rather than taken from a system
@@ -323,52 +346,112 @@ const tools = Object.values(stack)
   .hero-positioning-part {
     color: var(--accent);
   }
-  /* The brackets keep 0.5em from their words so the longer line still
-     holds to one row, and lift 2px. */
-  .hero-positioning-bracket {
-    position: relative;
-    top: -0.0625em;
-    margin-inline: 0.5em;
-  }
   /* Below the desktop breakpoint the band is half the screen tall, the name
-     gone to the header bar, and the scroll cue at its foot on the left; the
-     logo row and the positioning run edge to edge. */
+     gone to the header bar and the scroll cue at its foot; the logo row runs
+     as a band of cells three tenths of the screen wide (half on a phone),
+     and the row and the positioning run edge to edge. */
   @media (width < 62rem) {
     .hero-band {
+      flex: 0 auto;
       justify-content: flex-end;
       min-height: 50vh;
     }
     .hero-band-content {
-      padding-block: 0 1rem;
+      margin-bottom: 1rem;
     }
     .hero-name {
       display: none;
     }
-    .hero-content {
-      margin-left: 0;
-    }
     .hero-main {
       width: 100%;
     }
-  }
-  @media (width < 48rem) {
-    .hero-positioning-text {
-      font-size: var(--text-medium);
+    .hero-logos {
+      display: flex;
+      overflow: hidden;
     }
-    /* The fragment may take two lines; its brackets hold to its words. */
-    .hero-fragment {
+    .hero-logos-row {
+      flex: none;
+      height: 7rem;
+      border-bottom-style: none;
+    }
+    .hero-logos-copy {
+      display: flex;
+    }
+    .hero-logo {
+      flex: none;
+      width: 30vw;
+      border-bottom: 1px solid var(--line);
+    }
+    /* Both rows move their own width every 10 seconds, so the band never
+       shows an end; the pause control and reduced motion stop it. */
+    .hero-logos-row {
+      animation: hero-logos 10s linear infinite;
+    }
+    :global(html[data-motion='paused']) .hero-logos-row {
+      animation-play-state: paused;
+    }
+  }
+  @media (width < 62rem) and (prefers-reduced-motion: reduce) {
+    .hero-logos-row {
+      animation: none;
+    }
+  }
+  @keyframes hero-logos {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  /* Below the tablet breakpoint a line too long for the screen wraps
+     rather than pushing the page sideways; one that fits holds whole. */
+  @media (width < 48rem) {
+    .hero-band {
+      height: 17.5rem;
+    }
+    .hero-heading {
+      min-width: auto;
       white-space: normal;
+    }
+    .hero-content {
+      max-width: none;
+    }
+    .hero-logo {
+      width: 50vw;
+    }
+    .hero-positioning-main {
+      font-size: var(--text-medium);
     }
   }
   @media (width < 30rem) {
+    .hero-band-content {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .hero-top {
+      flex-flow: column;
+      justify-content: flex-start;
+    }
+    .hero-heading {
+      width: 100%;
+      min-width: 20rem;
+    }
+    .hero-content {
+      flex: 0 auto;
+      margin-left: 0;
+    }
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-main {
+      overflow: hidden;
+    }
     .hero-positioning {
       padding: 1rem;
     }
     .hero-positioning-bracket {
       display: none;
-    }
-    .hero-actions {
-      grid-template-columns: 1fr;
     }
   }
 </style>

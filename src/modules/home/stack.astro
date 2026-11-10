@@ -190,10 +190,26 @@ const squares = [
       grid-area: 4 / 1 / 5 / 3;
     }
   }
+  /* A diagram is drawn 542px wide for the widest pane; a narrower desktop
+     pane shows it smaller, in steps that keep it inside the pane. */
+  @media (width >= 62rem) and (width < 70rem) {
+    .cap-pane :global(.dia) {
+      zoom: 0.66;
+    }
+  }
+  @media (width >= 70rem) and (width < 80rem) {
+    .cap-pane :global(.dia) {
+      zoom: 0.76;
+    }
+  }
+  @media (width >= 80rem) and (width < 90rem) {
+    .cap-pane :global(.dia) {
+      zoom: 0.88;
+    }
+  }
   .cap-left {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     gap: 5rem;
     padding: 5rem 3rem 5rem 0;
     border-bottom: 1px solid var(--line);
@@ -239,11 +255,12 @@ const squares = [
     display: grid;
     grid-template-rows: minmax(0, 0fr);
     overflow: hidden;
-    transition: grid-template-rows 0.4s var(--ease-power1-in);
   }
+  /* The layer left behind closes at once; only the chosen one eases open. */
   .cap-tab:has(input:checked) .cap-tab-top,
   .cap-tab:has(input:checked) .cap-tab-bottom {
     grid-template-rows: minmax(0, 1fr);
+    transition: grid-template-rows 0.4s var(--ease-power1-in);
   }
   .cap-tab-tags {
     display: flex;
@@ -276,10 +293,10 @@ const squares = [
     height: 0.5rem;
     overflow: hidden;
     background: var(--accent);
-    transition: width 0.4s var(--ease-power1-in);
   }
   .cap-tab:has(input:checked) .cap-tab-dot {
     width: 0.5rem;
+    transition: width 0.4s var(--ease-power1-in);
   }
   .cap-tab-dot {
     margin-right: -0.5rem;
@@ -341,6 +358,7 @@ const squares = [
   .cap-cards {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 18rem;
     border-right: 1px solid var(--line);
   }
   .cap-card {
@@ -348,7 +366,6 @@ const squares = [
     flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
-    min-height: 18rem;
     padding: 1.5rem;
     border-bottom: 1px solid var(--line);
     border-left: 1px solid var(--line);
@@ -383,7 +400,7 @@ const squares = [
     padding: 0.333rem;
     color: var(--faint);
   }
-  /* Two rows of logo chips, one moving left and one right, about 72px a
+  /* Two rows of logo chips, one moving left and one right, about 70px a
      second; they stop with the pause control and without motion. */
   .cap-chips {
     display: flex;
@@ -393,9 +410,10 @@ const squares = [
   .cap-chip-row {
     display: flex;
     width: max-content;
-    animation: cap-chips 40s linear infinite;
+    animation: cap-chips 25s linear infinite;
   }
   .cap-chip-reverse {
+    animation-duration: 19s;
     animation-direction: reverse;
   }
   :global(html[data-motion='paused']) .cap-chip-row {
@@ -437,12 +455,17 @@ const squares = [
   /* Below the desktop breakpoint the room leads with the headline, then
      the layers, the pane and the cards, with no junction strip. */
   @media (width < 62rem) {
-    .cap-top {
-      grid-template-columns: minmax(0, 1fr);
+    .stack > :global(.section-body) {
+      gap: 0;
     }
     .cap-left {
-      padding: var(--space-small) 0 2rem;
+      gap: 5rem;
+      padding: var(--space-large) 0 0;
       border-bottom: none;
+    }
+    .cap-tabs {
+      min-height: 0;
+      margin-bottom: 2rem;
     }
     .cap-left :global(.headline) {
       order: -1;
@@ -463,9 +486,7 @@ const squares = [
     }
     .cap-card-toolchain {
       grid-column: 1 / -1;
-    }
-    .cap-card:nth-child(2) {
-      border-left: none;
+      order: 1;
     }
   }
   /* A diagram is drawn for the desktop pane; a narrower pane shows it
@@ -478,15 +499,9 @@ const squares = [
     .cap-pane :global(.dia) {
       zoom: 0.7;
     }
-    .cap-card-toolchain {
-      order: 1;
-    }
-    .cap-card,
-    .cap-card:nth-child(2) {
+    .cap-card {
       justify-content: flex-start;
       gap: 0.5rem;
-      min-height: auto;
-      border-left: 1px solid var(--line);
     }
     .cap-card :global(.cap-card-icon) {
       order: -1;
@@ -501,12 +516,16 @@ const squares = [
     }
     .cap-card-description {
       font-size: var(--text-label);
+      line-height: 1.3rem;
     }
     .cap-card-text {
       gap: 0.5rem;
     }
   }
   @media (width < 30rem) {
+    .cap-tab-title {
+      font-size: 1.25rem;
+    }
     .cap-pane :global(.dia) {
       zoom: 0.55;
     }

@@ -29,18 +29,14 @@ const headline = t.headline.map((line) =>
   locale={locale}
   headingId="experience-title"
 >
-  <div class="split experience-main">
-    <div class="split-side">
+  <div class="changelog">
+    <div class="changelog-side">
       <Headline id="experience-title" lines={headline} />
-      <Button href={pagePath('experience', locale)} label={t.action} />
+      <div class="changelog-intro">
+        <Button href={pagePath('experience', locale)} label={t.action} />
+        <p class="changelog-text">{t.intro}</p>
+      </div>
     </div>
     <CareerTimeline locale={locale} />
   </div>
 </NumberedSection>
-
-<style>
-  .experience-main {
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid var(--line);
-  }
-</style>
