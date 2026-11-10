@@ -1,7 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
 
-import { marks } from '@/components/tech-marks';
-import { stack } from '@/data/stack';
 import { messages } from '@/i18n/messages';
 
 const { motion, positioning } = messages('es');
@@ -73,7 +71,7 @@ test('pausing motion stops the marquee and every reveal, and persists', async ({
   const toggle = page.getByRole('button', { name: motion.pause });
   await expect(toggle).toHaveAttribute('aria-pressed', 'false');
   // The closing room's words move at every width.
-  const track = page.locator('.marquee-text .marquee-track').first();
+  const track = page.locator('#contact .marquee-run').first();
   await expect(track).toHaveCSS('animation-play-state', 'running');
   await expect(page.locator('.reveal-char').first()).toBeAttached();
 
@@ -99,7 +97,7 @@ test('under reduced motion the pause control is gone and nothing moves', async (
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/es/');
   await expect(page.getByRole('button', { name: motion.pause })).toBeHidden();
-  await expect(page.locator('.marquee-text .marquee-track').first()).toHaveCSS(
+  await expect(page.locator('#contact .marquee-run').first()).toHaveCSS(
     'animation-name',
     'none',
   );
@@ -229,7 +227,7 @@ test('decoration stays out of the accessibility tree and the positioning line re
     'aria-hidden',
     'true',
   );
-  await expect(page.locator('.hero-positioning-text')).toContainText(
+  await expect(page.locator('.hero-positioning-main')).toContainText(
     positioning.spoken,
   );
   const snapshot = await page.locator('.hero-positioning').ariaSnapshot();
@@ -257,27 +255,27 @@ test.describe('on a high-density screen', () => {
   });
 });
 
-test('the logo row is a carousel of every tool with a mark, in even cells of a closed box', async ({
+test('the logo row stands still in six even cells of a closed box on a desktop and runs as a band below it', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/es/');
-  const row = page.locator('.marquee-logos');
-  const tools = Object.values(stack)
-    .flat()
-    .filter((tool) => marks.has(tool));
-  const cells = row.locator('.marquee-group').first().locator('.marquee-item');
-  await expect(cells).toHaveCount(tools.length);
-  await expect(row.locator('.marquee-track')).toHaveCSS(
-    'animation-name',
-    'marquee',
-  );
-  await expect(row).toHaveCSS('border-left-style', 'solid');
-  await expect(row).toHaveCSS('mask-image', 'none');
+  const rows = page.locator('.hero-logos-row');
+  const cells = rows.first().locator('.hero-logo');
+  await expect(cells).toHaveCount(6);
+  await expect(rows.nth(1)).toBeHidden();
+  await expect(rows.first()).toHaveCSS('animation-name', 'none');
+  await expect(rows.first()).toHaveCSS('border-left-style', 'solid');
+  await expect(rows.first()).toHaveCSS('height', '132px');
   const widths = await cells.evaluateAll((items) =>
-    items.map(
-      (item) => Math.round(item.getBoundingClientRect().width * 10) / 10,
-    ),
+    items.map((item) => Math.round(item.getBoundingClientRect().width)),
   );
-  expect(new Set(widths)).toEqual(new Set([201.6]));
+  expect(new Set(widths).size).toBe(1);
+  await page.setViewportSize({ width: 768, height: 900 });
+  await expect(rows.nth(1)).toBeVisible();
+  await expect(rows.first()).toHaveCSS('animation-name', 'hero-logos');
+  await expect(rows.first()).toHaveCSS('height', '112px');
+  expect(
+    await cells.first().evaluate((cell) => cell.getBoundingClientRect().width),
+  ).toBeCloseTo(768 * 0.3, 0);
 });

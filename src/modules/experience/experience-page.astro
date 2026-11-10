@@ -34,8 +34,8 @@ const headline = experience.headline.map((line) =>
     locale={locale}
     headingId="roles-title"
   >
-    <div class="split record">
-      <div class="split-side">
+    <div class="changelog">
+      <div class="changelog-side">
         <Headline id="roles-title" lines={headline} />
         <Button
           href={site.linkedin}
@@ -63,10 +63,6 @@ const headline = experience.headline.map((line) =>
 <SiteFooter locale={locale} />
 
 <style>
-  .record {
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid var(--line);
-  }
   .education {
     display: flex;
     flex-direction: column;

@@ -121,18 +121,9 @@
     const cursor = (state: string) => () => {
       live().dataset.cursor = state;
     };
-    // A line that holds its words unseen shows the one about to be typed,
-    // so it takes that word's height before the first letter.
-    const begin = (index: number) => () => {
-      cursor('typing')();
-      live()
-        .closest('[data-typewriter-line]')
-        ?.querySelectorAll<HTMLElement>('[data-typewriter-ghost]')
-        .forEach((ghost, at) => (ghost.hidden = at !== index));
-    };
-    for (const [index, word] of words.entries()) {
+    for (const word of words) {
       const state = { length: 0 };
-      timeline.call(begin(index)).to(state, {
+      timeline.call(cursor('typing')).to(state, {
         length: word.length,
         duration: word.length * TYPE,
         ease: `steps(${word.length})`,
@@ -375,10 +366,11 @@
     const sheet = document.querySelector<HTMLElement>('[data-preloader]');
     if (!sheet || !root.classList.contains('preloading')) return;
     sheet.style.animation = 'none';
-    const size = window.innerWidth / 10;
-    const squares = Array.from(
-      { length: 10 * Math.ceil(window.innerHeight / size) },
-      () => document.createElement('span'),
+    // Always 110 squares, a tenth of the width each (a fifth below the
+    // desktop breakpoint), whether or not they all fit the screen, so the
+    // sheet takes the same 1.39s to clear on any screen.
+    const squares = Array.from({ length: 110 }, () =>
+      document.createElement('span'),
     );
     sheet.append(...squares);
     sheet.style.background = 'transparent';
@@ -402,7 +394,7 @@
     const lines = cards.flatMap(
       (card) => card.querySelector<HTMLElement>('[data-step-line]') ?? [],
     );
-    gsap.matchMedia().add('(min-width: 62rem)', () => {
+    gsap.matchMedia().add('(min-width: 48rem)', () => {
       section.dataset.scrubbing = '';
       const mark = (progress: number) =>
         cards.forEach((card, index) =>
@@ -657,13 +649,6 @@
           delete element.dataset.typewriterKey;
           delete element.dataset.cursor;
         });
-      document
-        .querySelectorAll('[data-typewriter-line]')
-        .forEach((line) =>
-          line
-            .querySelectorAll<HTMLElement>('[data-typewriter-ghost]')
-            .forEach((ghost, at) => (ghost.hidden = at > 0)),
-        );
       root.classList.remove('preloading');
       document.querySelector('[data-preloader]')?.replaceChildren();
       cleanups.forEach((cleanup) => cleanup());

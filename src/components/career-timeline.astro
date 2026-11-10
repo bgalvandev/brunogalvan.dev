@@ -62,80 +62,121 @@ const icons = {
 };
 ---
 
-<ol class="experience-timeline">
-  {items.map((item) => (
-    <li class="experience-item">
-      <div class="experience-head">
-        <p class="experience-date">
-          <time datetime={item.start}>{item.from}</time> —{' '}
-          {item.end ? <time datetime={item.end}>{item.to}</time> : item.to}
-        </p>
-        <span class="experience-dash" aria-hidden="true" />
-        <span class="experience-marker" aria-hidden="true">
-          <PixelIcon rows={item.end ? icons.past : icons.current} />
-        </span>
-        <h3 class="experience-company">{item.company}</h3>
-      </div>
-      <p class="experience-role">{item.role}</p>
-      <p class="experience-line">{item.line}</p>
-      {detail && item.highlights.length > 0 && (
-        <div class="experience-highlights">
-          <p class="experience-highlights-label">{experiencePage.highlights}</p>
-          <ul class="experience-highlights-list">
-            {item.highlights.map((highlight) => (
-              <li>{highlight}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {detail && (
-        <dl class="experience-facts">
-          <div>
-            <dt class="sr-only">{experiencePage.durationLabel}</dt>
-            <dd class="tag">{item.length}</dd>
+<ol
+  class:list={['experience-timeline', { 'experience-timeline-detail': detail }]}
+>
+  {items.map((item) => {
+    const period = (
+      <>
+        <time datetime={item.start}>{item.from}</time> —{' '}
+        {item.end ? <time datetime={item.end}>{item.to}</time> : item.to}
+      </>
+    );
+    return (
+      <li class="experience-item">
+        <div class="experience-row">
+          <div class="experience-content experience-top">
+            <p class="experience-date experience-date-inline">{period}</p>
+            <h3 class="experience-company">{item.company}</h3>
           </div>
-          {item.clients.length > 0 && (
-            <div>
-              <dt>{experiencePage.clients}</dt>
-              <dd>{item.clients.join(' · ')}</dd>
-            </div>
-          )}
-        </dl>
-      )}
-    </li>
-  ))}
+        </div>
+        <div class="experience-row experience-mark">
+          <p class="experience-date experience-date-line">{period}</p>
+          <span class="experience-marker" aria-hidden="true">
+            <PixelIcon rows={item.end ? icons.past : icons.current} />
+          </span>
+          <span class="experience-dash" aria-hidden="true" />
+        </div>
+        <div class="experience-row">
+          <div class="experience-content">
+            <p class="experience-role">{item.role}</p>
+            <p class="experience-line">{item.line}</p>
+            {detail && item.highlights.length > 0 && (
+              <div class="experience-highlights">
+                <p class="experience-highlights-label">
+                  {experiencePage.highlights}
+                </p>
+                <ul class="experience-highlights-list">
+                  {item.highlights.map((highlight) => (
+                    <li>{highlight}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {detail && (
+              <dl class="experience-facts">
+                <div>
+                  <dt class="sr-only">{experiencePage.durationLabel}</dt>
+                  <dd class="tag">{item.length}</dd>
+                </div>
+                {item.clients.length > 0 && (
+                  <div>
+                    <dt>{experiencePage.clients}</dt>
+                    <dd>{item.clients.join(' · ')}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+          </div>
+        </div>
+      </li>
+    );
+  })}
 </ol>
 
 <style>
-  /* The timeline: a centre line, each date sitting on it, a dashed leader
-     running from the date past a marker to the entry, on a row just under
-     the entry's title; the titles stand 13rem from the line. */
+  /* The timeline spans a 7rem centre strip and the column after it (see
+     .changelog in global.css). Its centre line runs down the strip's middle,
+     from above the room's first entry to the rule under the room. Each entry
+     is three rows: its name, a 1rem row where its period sits on the line and
+     a dashed leader runs past a marker, and its role and line. The text keeps
+     to the last 60% of the width, 20rem at most. */
   .experience-timeline {
-    --meta: 2.42rem;
+    --center: 7rem;
+    --content: 60%;
+    --marker: 3.5rem;
     position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: 3.5rem;
-    margin: -2.125rem 0 -2.5rem;
-    padding: 2.875rem 0 2.5rem 13rem;
+    margin: 0;
+    padding: 0.75rem 0 0;
     list-style: none;
-    border-left: 1px solid var(--line);
+  }
+  .experience-timeline::before {
+    content: '';
+    position: absolute;
+    top: -2.125rem;
+    bottom: -2.5rem;
+    left: calc(var(--center) / 2);
+    z-index: -1;
+    width: 1px;
+    background: var(--line);
   }
   .experience-item {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
   }
-  .experience-head {
+  .experience-row {
     position: relative;
+    display: grid;
+    grid-template-columns: var(--center) minmax(0, 1fr) var(--content);
+  }
+  .experience-content {
+    grid-column: 3;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    max-width: 20rem;
+  }
+  /* With the full record, the text takes the whole of its column. */
+  .experience-timeline-detail .experience-content {
+    max-width: none;
+  }
+  .experience-mark {
+    height: 1rem;
   }
   .experience-date {
-    position: absolute;
-    top: calc(var(--meta) - 0.6rem);
-    left: -13rem;
-    z-index: 1;
     margin: 0;
     padding: 0.2em 0;
     background: var(--surface);
@@ -146,19 +187,29 @@ const icons = {
     line-height: 1.3;
     text-transform: uppercase;
     white-space: nowrap;
-    transform: translateX(-50%);
+  }
+  .experience-date-inline {
+    display: none;
+  }
+  .experience-date-line {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--center) / 2);
+    z-index: 2;
+    transform: translate(-50%, -50%);
   }
   .experience-dash {
     position: absolute;
-    left: -13rem;
+    top: 50%;
     right: 0;
-    top: var(--meta);
+    left: calc(var(--center) / 2);
+    z-index: -1;
     border-top: 1px dashed var(--line);
   }
   .experience-marker {
     position: absolute;
-    top: calc(var(--meta) - 1rem);
-    left: -3.5rem;
+    top: 50%;
+    left: calc(100% - var(--content) - var(--marker));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -166,15 +217,13 @@ const icons = {
     height: 2rem;
     border: 1px solid var(--line);
     background: var(--paper);
-  }
-  .experience-marker {
     color: var(--muted);
+    transform: translateY(-50%);
   }
   .experience-marker :global(svg) {
     width: 1rem;
   }
   .experience-company {
-    position: relative;
     margin: 0;
     font-size: var(--text-medium);
     font-weight: 400;
@@ -182,18 +231,23 @@ const icons = {
     letter-spacing: var(--text-medium--letter-spacing);
   }
   .experience-role {
-    margin: 1.5rem 0 0;
+    margin: 0 0 0.5rem;
     font-family: var(--font-mono);
     font-size: var(--text-label);
     font-weight: 500;
     letter-spacing: var(--text-label--letter-spacing);
     text-transform: uppercase;
   }
+  .experience-line {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--text-label);
+  }
   .experience-facts {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    margin: 0.5rem 0 0;
+    margin: 0.75rem 0 0;
     font-size: var(--text-label);
   }
   .experience-facts div {
@@ -212,7 +266,6 @@ const icons = {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    max-width: 40rem;
     margin-top: 0.75rem;
   }
   .experience-highlights-label {
@@ -235,6 +288,7 @@ const icons = {
     position: relative;
     padding-left: 1.25rem;
     color: var(--muted);
+    font-size: var(--text-label);
   }
   .experience-highlights-list li::before {
     content: '';
@@ -245,37 +299,48 @@ const icons = {
     height: 0.375rem;
     background: var(--faint);
   }
-  .experience-line {
-    max-width: 20rem;
-    margin: 0;
-    color: var(--muted);
-    font-size: var(--text-label);
-  }
-  /* Below the desktop breakpoint the line runs 1rem inside the room, each
-     marker centred on it at the room's edge. */
   @media (width < 62rem) {
-    .experience-timeline {
-      margin: 0 0 0 1rem;
-      padding: 0 0 0 2rem;
+    .experience-company {
+      font-size: 1.25rem;
     }
-    .experience-head {
-      flex-direction: column;
+  }
+  @media (width < 48rem) {
+    .experience-timeline::before {
+      top: 0;
+    }
+  }
+  /* On a narrow phone the strip narrows to 2rem, the text takes the rest
+     of the row and the period moves above the name. */
+  @media (width < 30rem) {
+    .experience-timeline {
+      --center: 2rem;
+      --content: calc(100% - 3rem);
+      --marker: 3rem;
+      gap: 3rem;
+    }
+    .experience-row {
+      column-gap: 1rem;
+      grid-template-columns: var(--center) minmax(0, 1fr);
+    }
+    .experience-content {
+      grid-column: 2;
+      max-width: none;
+    }
+    .experience-top {
       align-items: flex-start;
       gap: 0.5rem;
     }
-    .experience-date {
-      position: static;
-      transform: none;
+    .experience-mark {
+      height: 0.5rem;
     }
-    .experience-dash {
+    .experience-date-inline {
+      display: block;
+    }
+    .experience-date-line {
       display: none;
     }
-    .experience-marker {
-      top: 0;
-      left: -3rem;
-    }
-    .experience-role {
-      margin-top: 0;
+    .experience-company {
+      font-size: 1.125rem;
     }
   }
 </style>

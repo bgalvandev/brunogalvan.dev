@@ -30,7 +30,7 @@ test('every figure on the page is the figure the record gives', async ({
   );
 });
 
-test('a project with nothing public to follow is plain text, never a link', async ({
+test('a project card leads to its case study, else its code, and one with nothing public to follow is plain text, never a link', async ({
   page,
 }) => {
   await page.goto('/es/');
@@ -38,13 +38,12 @@ test('a project with nothing public to follow is plain text, never a link', asyn
     const card = page
       .locator('.project-card')
       .filter({ has: page.getByRole('heading', { name: project.name }) });
-    const expected = [
-      'caseStudy' in project ? pagePath('caseStudy', 'es', project.id) : null,
-      project.repository,
-      project.demo,
-    ].filter(Boolean);
-    await expect(card.getByRole('link')).toHaveCount(expected.length);
-    for (const href of expected) {
+    const href =
+      'caseStudy' in project
+        ? pagePath('caseStudy', 'es', project.id)
+        : project.repository;
+    await expect(card.getByRole('link')).toHaveCount(href ? 1 : 0);
+    if (href) {
       await expect(card.locator(`a[href="${href}"]`)).toHaveCount(1);
     }
     if (!project.repository) {
@@ -130,7 +129,7 @@ test('without motion every step of the method shows complete', async ({
   }
 });
 
-test('on a phone the value cards show one at a time, change on their own, and a dash chooses one, with all four still in the page', async ({
+test('on a phone the value cards show one at a time, change on their own, and a dash chooses one, with every card still in the page', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -148,7 +147,8 @@ test('on a phone the value cards show one at a time, change on their own, and a 
     .click();
   await expect(cards.nth(2)).toHaveClass(/is-current/);
   await expect(cards.nth(2)).toHaveCSS('opacity', '1');
-  await expect(cards.nth(3)).toHaveClass(/is-current/, { timeout: 6_000 });
+  // After the last card the slider comes round to the first.
+  await expect(cards.nth(0)).toHaveClass(/is-current/, { timeout: 6_000 });
 });
 
 test('on a phone the method shows one card at a time, filling its line before the next takes its place, with all four still in the page', async ({
@@ -215,34 +215,6 @@ test('the timeline lists every role with its period', async ({ page }) => {
     );
     await expect(item).toContainText(t.experience.roles[role.id].role);
   }
-});
-
-test('on a wide screen a numbered rail marks the room being read and fills as the page is read', async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/es/');
-  const rail = page.getByRole('navigation', { name: t.navigation.sections });
-  await expect(rail).toBeVisible();
-  const links = rail.getByRole('link');
-  await expect(links).toHaveCount(7);
-  await expect(links.first()).toHaveAccessibleName(`01 ${t.whatIDo.label}`);
-  await expect(links.first()).toHaveAttribute('href', '#what-i-do');
-  await page.locator('#projects').scrollIntoViewIfNeeded();
-  await page.evaluate(() => window.scrollBy(0, 200));
-  await expect(
-    rail.getByRole('link', { name: `06 ${t.projects.label}` }),
-  ).toHaveAttribute('aria-current', 'location');
-  await page.evaluate(() =>
-    window.scrollTo(0, document.documentElement.scrollHeight),
-  );
-  await expect(page.locator('.rail-fill')).toHaveCSS(
-    'transform',
-    'matrix(1, 0, 0, 1, 0, 0)',
-  );
-  await page.setViewportSize({ width: 360, height: 800 });
-  await expect(rail).toBeHidden();
 });
 
 test('a value card opens its description and turns to pixels on hover without growing, and a keyboard visitor sees every description', async ({

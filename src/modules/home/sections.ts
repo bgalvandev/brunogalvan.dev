@@ -9,7 +9,7 @@ export const sections = [
   'projects',
   'experience',
 ] as const;
-export type SectionId = (typeof sections)[number];
+type SectionId = (typeof sections)[number];
 
 export function sectionNumber(id: SectionId): number {
   return sections.indexOf(id) + 1;

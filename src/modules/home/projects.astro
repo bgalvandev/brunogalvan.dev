@@ -10,6 +10,11 @@ import { messages } from '@/i18n/messages';
 import type { Locale } from '@/i18n/locales';
 import { pagePath } from '@/i18n/routes';
 import { sectionNumber, sections } from './sections';
+// The statement on the left, its button and a paragraph at its foot; the
+// project cards on the right, two to a row, the third across the row below.
+// Rules run down from the eyebrow to the cards' edges and on below them. A
+// card that leads somewhere (its case study, else its code) is one link and
+// hovers; a project with no public code is plain text.
 interface Props {
   locale: Locale;
 }
@@ -22,39 +27,29 @@ const headline = t.headline.map((line) =>
     .replace('{total}', String(counts.projects))
     .replace('{public}', String(counts.publicProjects)),
 );
-// The featured project leads; the numbers follow the order shown.
-const cards = [...projects]
-  .sort(
-    (a, b) =>
-      Number('featured' in b && b.featured) -
-      Number('featured' in a && a.featured),
-  )
-  .map((project, index) => {
-    const caseStudy = 'caseStudy' in project && project.caseStudy;
-    // A card follows its case study when there is one, else its code.
-    const primary = caseStudy
+const cards = projects.map((project, index) => {
+  const caseStudy = 'caseStudy' in project && project.caseStudy;
+  const link = caseStudy
+    ? {
+        href: pagePath('caseStudy', locale, project.id),
+        label: caseLabels.read,
+        name: caseLabels.readOf.replace('{name}', project.name),
+      }
+    : project.repository
       ? {
-          href: pagePath('caseStudy', locale, project.id),
-          label: caseLabels.read,
-          name: caseLabels.readOf.replace('{name}', project.name),
+          href: project.repository,
+          label: t.code,
+          name: t.codeOf.replace('{name}', project.name),
         }
-      : project.repository
-        ? {
-            href: project.repository,
-            label: t.code,
-            name: t.codeOf.replace('{name}', project.name),
-          }
-        : null;
-    return {
-      ...project,
-      caseStudy,
-      primary,
-      featured: 'featured' in project && project.featured,
-      number: String(index + 1).padStart(3, '0'),
-      kindLabel: t.kinds[project.kind],
-      line: t.items[project.id],
-    };
-  });
+      : null;
+  return {
+    ...project,
+    link,
+    number: String(index + 1).padStart(3, '0'),
+    kindLabel: t.kinds[project.kind],
+    line: t.items[project.id],
+  };
+});
 ---
 
 <NumberedSection
@@ -64,161 +59,192 @@ const cards = [...projects]
   label={t.label}
   locale={locale}
   headingId="projects-title"
+  class="projects"
 >
+  <div class="projects-rules" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span class="projects-corner"></span>
+  </div>
   <div class="projects-main">
-    <div class="projects-heading">
+    <div class="projects-left">
       <Headline id="projects-title" lines={headline} />
-      <Button
-        href={`${site.github}?tab=repositories`}
-        label={t.action}
-        icon="arrow-up-right"
-      />
+      <div class="projects-intro">
+        <Button
+          href={`${site.github}?tab=repositories`}
+          label={t.action}
+          icon="arrow-up-right"
+        />
+        <p class="projects-text">{t.intro}</p>
+      </div>
     </div>
-    <ul class="projects-grid">
-      {cards.map((card) => (
-        <li
-          class:list={[
-            'project-card',
-            {
-              'project-card-featured': card.featured,
-              'project-card-linked': card.repository,
-            },
-          ]}
-        >
-          <div class="project-card-top">
-            <div class="project-card-heading">
-              <h3 class="project-card-title">{card.name}</h3>
-              <ul class="project-card-tags">
-                {card.technologies.map((technology) => (
-                  <li class="project-card-tag">{technology}</li>
-                ))}
-              </ul>
-            </div>
-            <p class="project-card-line">{card.line}</p>
-            <div class="project-card-meta">
-              <span class="project-card-number" aria-hidden="true">
-                <span class="project-card-slashes">//</span> {card.number}
-              </span>
-              <span class="tag">{card.kindLabel}</span>
-            </div>
-          </div>
-          <div class="project-card-cover field-dotted" aria-hidden="true">
-            <span class="project-card-cover-name">{card.name}</span>
-          </div>
-          <div class="project-card-links">
-            {card.primary ? (
-              <a
-                class="project-card-link project-card-primary"
-                href={card.primary.href}
-                aria-label={card.primary.name}
+    <div class="projects-right">
+      <ul class="projects-grid">
+        {cards.map((card) => {
+          const Body = card.link ? 'a' : 'div';
+          return (
+            <li
+              class:list={['project-card', { 'project-card-link': card.link }]}
+            >
+              <Body
+                class="project-card-body"
+                href={card.link?.href}
+                aria-label={card.link?.name}
               >
-                <span class="project-card-arrow" aria-hidden="true">
-                  <PixelIcon name="arrow-up-right" />
-                  <PixelIcon name="arrow-up-right" />
-                </span>
-                {card.primary.label}
-              </a>
-            ) : (
-              <span class="project-card-link project-card-private">
-                {t.private}
-              </span>
-            )}
-            <span class="project-card-secondary">
-              {card.caseStudy && card.repository && (
-                <a
-                  class="project-card-link"
-                  href={card.repository}
-                  aria-label={t.codeOf.replace('{name}', card.name)}
-                >
-                  {t.code}
-                  <PixelIcon
-                    name="arrow-up-right"
-                    class="project-card-demo-icon"
-                  />
-                </a>
-              )}
-              {card.demo && (
-                <a
-                  class="project-card-link"
-                  href={card.demo}
-                  aria-label={t.demoOf.replace('{name}', card.name)}
-                >
-                  {t.demo}
-                  <PixelIcon
-                    name="arrow-up-right"
-                    class="project-card-demo-icon"
-                  />
-                </a>
-              )}
-            </span>
-          </div>
-          <span class="project-card-border" aria-hidden="true" />
-          <span class="project-card-bar" aria-hidden="true" />
-        </li>
-      ))}
-    </ul>
+                <div class="project-card-top">
+                  <div class="project-card-heading">
+                    <h3 class="project-card-title">{card.name}</h3>
+                    <ul class="project-card-tags">
+                      {card.technologies.map((technology) => (
+                        <li class="project-card-tag">{technology}</li>
+                      ))}
+                    </ul>
+                    <p class="project-card-line">{card.line}</p>
+                  </div>
+                  <div class="project-card-meta">
+                    <span class="project-card-number" aria-hidden="true">
+                      <span class="project-card-slashes">//</span> {card.number}
+                    </span>
+                    <span class="tag">{card.kindLabel}</span>
+                  </div>
+                </div>
+                <div class="project-card-bottom">
+                  <div
+                    class="project-card-cover field-dotted"
+                    aria-hidden="true"
+                  >
+                    <div class="project-card-sheet">
+                      <span class="project-card-sheet-name">{card.name}</span>
+                      <span class="project-card-sheet-kind">
+                        {card.kindLabel}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="project-card-action">
+                    {card.link ? (
+                      <>
+                        <span class="project-card-arrow" aria-hidden="true">
+                          <PixelIcon name="arrow-up-right" />
+                          <PixelIcon name="arrow-up-right" />
+                        </span>
+                        <span>{card.link.label}</span>
+                      </>
+                    ) : (
+                      <span class="project-card-private">{t.private}</span>
+                    )}
+                  </div>
+                </div>
+                <span class="project-card-border" aria-hidden="true" />
+                <span class="project-card-bar" aria-hidden="true" />
+              </Body>
+            </li>
+          );
+        })}
+      </ul>
+      <div class="projects-rules projects-rules-bottom" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </div>
+    </div>
   </div>
 </NumberedSection>
 
 <style>
+  .projects > :global(.section-body) {
+    gap: 0;
+  }
+  /* The rules under the eyebrow: a 2rem strip that rises 10px into the
+     eyebrow's row, its quarters ruled where the cards' edges fall, closed on
+     the right with a small square at its top corner. */
+  .projects-rules {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    height: 2rem;
+    margin-top: -0.625rem;
+    border-right: 1px solid var(--line);
+  }
+  .projects-rules > span:nth-child(1) {
+    grid-column: 3;
+  }
+  .projects-rules > span:not(.projects-corner) {
+    border-left: 1px solid var(--line);
+  }
+  .projects-corner {
+    position: absolute;
+    inset: -0.2rem -0.2rem auto auto;
+    width: 0.4rem;
+    aspect-ratio: 1;
+    background: var(--line);
+  }
+  .projects-rules-bottom {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0;
+  }
+  .projects-rules-bottom > span:nth-child(1) {
+    grid-column: auto;
+  }
   .projects-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 37.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .projects-left {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
-  }
-  .projects-heading {
-    display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 3rem;
+    padding: 0 1rem 2rem 0;
   }
-  /* Three columns: the featured project takes the first row, its text beside
-     its cover, and the others fill the row below. With only two others the
-     row splits in halves, so no column stands empty. */
+  .projects-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    max-width: 26rem;
+  }
+  .projects-text {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+  .projects-right {
+    display: flex;
+    flex-direction: column;
+  }
+  /* Two cards to a row sharing their middle rule; the third runs across the
+     row below. */
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.5rem;
+    flex: 1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  @media (width >= 62rem) {
-    .projects-grid:has(> .project-card:nth-child(3):last-child) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  /* A project card: 1rem between the text and the cover, 1.5rem between
-     the cover and the link row. */
   .project-card {
-    position: relative;
     display: flex;
+  }
+  .project-card:nth-child(odd):not(:last-child) .project-card-body {
+    border-right-style: none;
+  }
+  .project-card:nth-child(n + 3) .project-card-body {
+    border-top-style: none;
+  }
+  .project-card:nth-child(odd):last-child {
+    grid-column: 1 / -1;
+  }
+  .project-card-body {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 1rem;
     border: 1px solid var(--line);
     color: var(--ink);
-    transition: color 0.3s ease;
-  }
-  .project-card-featured {
-    grid-column: 1 / -1;
-  }
-  @media (width >= 62rem) {
-    .project-card-featured {
-      gap: 0;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
-      grid-template-rows: minmax(0, 1fr) auto;
-    }
-    .project-card-featured .project-card-cover {
-      grid-row: 1 / span 2;
-      grid-column: 2;
-      min-height: 22rem;
-      margin: 0;
-      border-left: 1px solid var(--line);
-    }
-    .project-card-featured .project-card-links {
-      grid-column: 1;
-    }
   }
   .project-card-top {
     display: flex;
@@ -240,9 +266,6 @@ const cards = [...projects]
     line-height: 1.3;
     letter-spacing: var(--text-medium--letter-spacing);
   }
-  .project-card-featured .project-card-title {
-    font-size: var(--text-large);
-  }
   .project-card-tags {
     display: flex;
     flex-wrap: wrap;
@@ -252,14 +275,14 @@ const cards = [...projects]
     list-style: none;
   }
   .project-card-tag {
-    padding: 0.2em 0;
+    padding-block: 0.2em;
     background: var(--surface);
     color: var(--muted);
     font-family: var(--font-mono);
     font-size: var(--text-small);
     font-weight: 500;
     line-height: 1.4;
-    letter-spacing: -0.04em;
+    letter-spacing: var(--text-label--letter-spacing);
     text-transform: uppercase;
   }
   .project-card-line {
@@ -273,7 +296,7 @@ const cards = [...projects]
     gap: 1rem;
   }
   .project-card-meta .tag {
-    align-self: auto;
+    margin: 0;
   }
   .project-card-number {
     color: var(--muted);
@@ -282,57 +305,77 @@ const cards = [...projects]
   .project-card-slashes {
     opacity: 0.5;
   }
-  /* A cover generated from the name, chosen from captures on 2026-09-22
-     over cards with no image: no screenshot may be published, and the cover
-     keeps every card's rhythm of text, picture and link row. */
-  .project-card-cover {
-    background-size: 12.61px;
-    position: relative;
+  .project-card-bottom {
     display: flex;
     flex: 1;
-    align-items: center;
-    justify-content: center;
-    min-height: 9rem;
-    margin: 0 1px 0.5rem;
+    flex-direction: column;
+    gap: 1.5rem;
     overflow: hidden;
   }
-  .project-card-cover-name {
-    padding-inline: 1rem;
+  /* The cover: a sheet nine tenths of the card wide, square, sunk to the
+     cover's foot so its top shows. */
+  .project-card-cover {
+    position: relative;
+    flex: 1;
+    min-height: 12rem;
+    margin-inline: 1px;
+    overflow: hidden;
+    background-size: 12.6px;
+  }
+  .project-card-sheet {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 90%;
+    aspect-ratio: 1;
+    margin-inline: auto;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    transform: translateY(30%);
+  }
+  .project-card-link .project-card-sheet {
+    transition: transform 0.2s var(--ease-power1-out);
+  }
+  /* The card across the row keeps the sheet of a card in a column. */
+  @media (width >= 30rem) {
+    .project-card:nth-child(odd):last-child .project-card-sheet {
+      width: 45%;
+    }
+  }
+  .project-card-sheet-name {
     color: var(--ink);
     font-family: var(--font-pixel);
-    font-size: var(--text-large);
+    font-size: 2rem;
     line-height: 1.1;
-    text-align: center;
-    text-wrap: balance;
-    transition: transform 0.3s ease;
+    letter-spacing: -0.06em;
+    overflow-wrap: anywhere;
   }
-  .project-card-featured .project-card-cover-name {
-    font-size: var(--text-display);
+  .project-card-sheet-kind {
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    text-transform: uppercase;
   }
-  .project-card-links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    justify-content: space-between;
-    margin-top: auto;
-    border-top: 1px solid var(--line);
-  }
-  .project-card-link {
+  /* The line button at the card's foot: an arrow on the left, the label on
+     the right, over a rule. */
+  .project-card-action {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
     min-height: 3rem;
     padding: 0.5rem 1.5rem;
+    border-bottom: 1px solid var(--ink);
     font-family: var(--font-mono);
     font-weight: 500;
     text-transform: uppercase;
   }
   .project-card-private {
+    margin-left: auto;
     color: var(--faint);
-  }
-  .project-card :global(.project-card-demo-icon) {
-    width: 0.625rem;
-    height: 0.625rem;
   }
   .project-card-arrow {
     position: relative;
@@ -343,26 +386,11 @@ const cards = [...projects]
   }
   .project-card-arrow :global(svg) {
     position: absolute;
-    inset: 0.125rem;
-    transition: transform 0.3s ease;
+    inset: 0.2rem;
+    transition: transform 0.2s var(--ease-power1-out);
   }
   .project-card-arrow :global(svg:last-child) {
     transform: translate(-150%, 150%);
-  }
-  /* The whole card follows its code link: the link's box stretches over the
-     card, the demo link sits above it. */
-  .project-card-primary::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-  }
-  .project-card-secondary {
-    display: flex;
-  }
-  .project-card-links a:not(.project-card-primary) {
-    position: relative;
-    z-index: 2;
   }
   .project-card-border {
     position: absolute;
@@ -371,81 +399,115 @@ const cards = [...projects]
     border: 1px solid var(--accent);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  /* A card that leads somewhere stands on an ink rule; on hover the rule
-     fills with a 4px accent bar. */
-  .project-card-linked {
-    border-bottom-color: var(--ink);
   }
   .project-card-bar {
     position: absolute;
-    bottom: -1px;
-    left: -1px;
+    inset: auto 0 -1px;
     z-index: 2;
     width: 0;
     height: 4px;
     background: var(--accent);
-    pointer-events: none;
-    transition: width 0.3s ease;
   }
-  .project-card-linked:hover .project-card-bar,
-  .project-card-linked:focus-within .project-card-bar {
-    width: calc(100% + 2px);
+  /* The hover, on a desktop: over 0.2s the card takes the accent, its frame
+     closes, its bar grows, its arrow steps out and its sheet rises. */
+  @media (width >= 62rem) {
+    .project-card-link .project-card-body {
+      transition: color 0.2s var(--ease-power1-out);
+    }
+    .project-card-link .project-card-border {
+      transition: opacity 0.2s var(--ease-power1-out);
+    }
+    .project-card-link .project-card-bar {
+      transition: width 0.2s var(--ease-power1-out);
+    }
+    .project-card-link .project-card-body:hover,
+    .project-card-link .project-card-body:focus-visible {
+      color: var(--accent);
+    }
+    .project-card-body:hover .project-card-border,
+    .project-card-body:focus-visible .project-card-border {
+      opacity: 1;
+    }
+    .project-card-body:hover .project-card-bar,
+    .project-card-body:focus-visible .project-card-bar {
+      width: 100%;
+    }
+    .project-card-body:hover .project-card-sheet,
+    .project-card-body:focus-visible .project-card-sheet {
+      transform: translateY(3rem);
+    }
+    .project-card-body:hover .project-card-arrow :global(svg:first-child),
+    .project-card-body:focus-visible
+      .project-card-arrow
+      :global(svg:first-child) {
+      transform: translate(150%, -150%);
+    }
+    .project-card-body:hover .project-card-arrow :global(svg:last-child),
+    .project-card-body:focus-visible
+      .project-card-arrow
+      :global(svg:last-child) {
+      transform: none;
+    }
   }
-  .project-card-linked:hover,
-  .project-card-linked:focus-within {
-    color: var(--accent);
-  }
-  .project-card-linked:hover .project-card-border,
-  .project-card-linked:focus-within .project-card-border {
-    opacity: 1;
-  }
-  .project-card-linked:hover .project-card-cover-name {
-    transform: translateY(-2rem);
-  }
-  .project-card-linked:hover .project-card-arrow :global(svg:first-child) {
-    transform: translate(150%, -150%);
-  }
-  .project-card-linked:hover .project-card-arrow :global(svg:last-child) {
-    transform: none;
+  /* A card that leads nowhere never hovers. */
+  .project-card:not(.project-card-link) .project-card-border,
+  .project-card:not(.project-card-link) .project-card-bar {
+    display: none;
   }
   @media (width < 62rem) {
-    .projects-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .projects > :global(.section-body) {
+      gap: var(--space-tiny);
     }
-    /* An odd card out (the featured one counts as the first) takes the row. */
-    .project-card:last-child:nth-child(even) {
-      grid-column: span 2;
+    .projects-rules:not(.projects-rules-bottom) {
+      display: none;
+    }
+    .projects-main {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: auto;
+    }
+    .projects-left {
+      justify-content: flex-start;
+      gap: 2.5rem;
+      padding-right: 0;
+    }
+    .projects-intro {
+      gap: 2rem;
+    }
+    .project-card-cover {
+      flex: 0 auto;
+      min-height: 20rem;
     }
   }
   @media (width < 48rem) {
-    .projects-heading {
-      flex-direction: column;
+    .projects-left {
       gap: var(--space-small);
     }
-    .project-card-cover-name {
-      font-size: var(--text-medium);
+    .projects-intro {
+      gap: 1rem;
     }
-    .project-card-link {
-      padding-inline: 1rem;
+    .projects-text {
+      font-size: var(--text-body);
     }
-    .project-card-featured .project-card-cover-name {
-      font-size: var(--text-large);
-    }
-    .projects-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .project-card-featured,
-    .project-card:last-child:nth-child(even) {
-      grid-column: auto;
+    .project-card-sheet {
+      inset: 0;
+      margin: auto;
+      transform: none;
     }
   }
-  /* On a phone the cards stand 2rem apart, their titles a step down and
-     their pictures at least 10rem tall. */
   @media (width < 30rem) {
+    .projects-rules-bottom {
+      display: none;
+    }
     .projects-grid {
+      display: flex;
+      flex-direction: column;
       gap: 2rem;
+    }
+    .project-card:nth-child(odd):not(:last-child) .project-card-body {
+      border-right-style: solid;
+    }
+    .project-card:nth-child(n + 3) .project-card-body {
+      border-top-style: solid;
     }
     .project-card-top {
       min-height: auto;
@@ -456,20 +518,23 @@ const cards = [...projects]
     .project-card-title {
       font-size: 1.25rem;
     }
-    .project-card-featured .project-card-title {
-      font-size: var(--text-medium);
-    }
     .project-card-cover {
       min-height: 10rem;
     }
+    .project-card-bottom {
+      gap: 0;
+    }
+    .project-card-sheet {
+      inset: 1.5rem 0 auto;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .project-card,
+    .project-card-sheet,
+    .project-card-body,
     .project-card-border,
     .project-card-bar,
-    .project-card-cover-name,
     .project-card-arrow :global(svg) {
-      transition: none;
+      transition: none !important;
     }
   }
 </style>

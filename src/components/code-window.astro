@@ -111,11 +111,6 @@ const toClasses: Transformer = {
 
 <figure class:list={['code-window', 'band', className]}>
   <figcaption class="code-window-header">
-    <span class="code-window-lights" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-    </span>
     <a class="code-window-file" href={href}>
       {project} / {file}
       {lines && ` · L${lines[0]}–${lines[1]}`}
@@ -139,30 +134,21 @@ const toClasses: Transformer = {
     background: var(--surface);
     color: var(--ink);
   }
-  /* The window: a header of 16px mono capitals on the deepest dark, a
-     #474747 rule, and the code on the surface below it. */
+  /* The window: a header of mono capitals on the deepest dark, a #474747
+     rule, and the code on the surface below it. */
   .code-window-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 1em;
+    padding: 1em;
     background: var(--band-deep);
     border-bottom: 1px solid var(--decor);
     box-shadow: inset 0 1px 0 var(--highlight);
     font-family: var(--font-mono);
-    font-size: var(--text-body);
+    font-size: 1em;
     line-height: 1.3;
     letter-spacing: -0.05rem;
     text-transform: uppercase;
-  }
-  .code-window-lights {
-    display: flex;
-    gap: 0.375rem;
-  }
-  .code-window-lights span {
-    width: 0.5rem;
-    height: 0.5rem;
-    background: var(--decor);
   }
   .code-window-file {
     display: flex;
@@ -181,10 +167,10 @@ const toClasses: Transformer = {
   }
   .code-window :global(.code-window-body) {
     margin: 0;
-    padding: 0.4375rem;
+    padding: 0.5em;
     overflow-x: auto;
     font-family: var(--font-mono);
-    font-size: 0.875rem;
+    font-size: 0.875em;
     line-height: 1.3;
     letter-spacing: -0.05rem;
     tab-size: 4;

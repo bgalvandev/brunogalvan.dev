@@ -177,7 +177,7 @@ const contactHref = `${pagePath('home', locale)}#contact`;
     display: none;
   }
   /* Three lines in a 40px box, 6px apart; open, the outer two cross and the
-     middle one shrinks away. */
+     middle one shrinks away over 0.5s. */
   .site-menu-button {
     display: flex;
     align-items: center;
@@ -197,7 +197,7 @@ const contactHref = `${pagePath('home', locale)}#contact`;
   .site-menu-icon > span {
     height: 2px;
     background: currentColor;
-    transition: transform 0.4s ease;
+    transition: transform 0.5s var(--ease-power1-out);
   }
   .site-menu[open] .site-menu-icon > span:first-child {
     transform: translateY(8px) rotate(45deg);

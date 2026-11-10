@@ -19,9 +19,16 @@
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     align-content: start;
+    overflow: hidden;
     background: var(--accent);
     pointer-events: none;
     animation: preloader-failsafe 0s 2.5s forwards;
+  }
+  /* Below the desktop breakpoint the squares are a fifth of the width. */
+  @media (width < 62rem) {
+    :global(html.preloading) .preloader {
+      grid-template-columns: repeat(5, 1fr);
+    }
   }
   .preloader :global(span) {
     aspect-ratio: 1;

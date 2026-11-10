@@ -61,15 +61,16 @@ anywhere. Depth lives on extension pages, never on the home page.
   section list, so the count cannot disagree with the page, and speaks as
   "Section 1 of 7: label". The headline is two short sentences between slashes,
   each balanced on its own lines so neither ends on a word by itself. The block
-  cursor of a typed fragment holds to its last letter, so on a phone the cursor
-  and the closing bracket never take a line of their own. Behind the hero's
-  typed word the whole word stands unseen in the same cell, so the line takes
-  that word's height before its first letter and nothing below moves while it
-  types. Buttons hover over 0.3s from a slow start (GSAP's power1.in,
+  cursor of a typed fragment holds to its last letter. The hero's typed word
+  flows with its brackets: the heading holds its lines whole down to the tablet
+  breakpoint, and below it a line wraps where its words fall, so on a phone the
+  typed line takes one line or two as its words cycle (decided on 2026-11-10
+  over holding the tallest word's height, which left an empty line under a
+  short word). Buttons hover over 0.3s from a slow start (GSAP's power1.in,
   `--ease-power1-in`): the solid button is an ink rectangle whose accent slides
   in behind while its square turns half a turn, its label steps left and an
   arrow appears; the line button closes a 1px accent frame, grows a 4px accent
-  underline and draws its icon and label in from the edges. Navigation is boxed
+  underline and steps its label left, its colour easing out. Navigation is boxed
   tabs hanging from the top edge, the current page filled with the accent inside
   `<` `>`; the contact tab takes the accent on hover. Below the desktop
   breakpoint the bar holds the name with its chip on the left and three lines on
@@ -103,11 +104,16 @@ anywhere. Depth lives on extension pages, never on the home page.
   one, holds 0.8s, the block blinks off and on twice at 0.4s, the word clears at
   once and the next follows 0.2s later. A value card, on a desktop pointer, swaps
   its line drawing for pixels over 0.1s while its title takes the accent and its
-  description opens over 0.3s. Method and Code are driven by the scroll from
-  992px up (Method over 200vh, Code over 250vh, both sticky at 10vh, scrub 0.8):
-  Method activates a card at each quarter and swaps its drawing to pixels; Code
-  checks each file at each third while its rail's line grows. The Stack's chosen
-  layer opens over 0.4s, and its diagram plays a two-second loop while its
+  description opens over 0.3s. Method is driven by the scroll from 768px up and
+  Code from 992px up, both with a scrub of 0.8: on a desktop Method's room runs
+  200vh and Code's 250vh, both sticky at 10vh, and on a tablet Method's room
+  keeps its height and lights its cards in the stretch it scrolls past. Method
+  activates a card at each quarter and swaps its drawing to pixels; Code
+  checks each file at each third while its rail's line grows. Below 992px
+  Code's files are a list, each opening its window under its name over 0.4s
+  while its plus turns to a cross on the accent. The Stack's chosen layer
+  opens over 0.4s while the one left behind closes at once, and its diagram
+  plays a two-second loop while its
   core's asterisk turns once against the clock: the hub's joins run out to the
   boxes, the brackets stand and reach back, and the channel's two rules run down
   a stretch at a time; the box below lights, its drawings double and take the
@@ -139,21 +145,24 @@ anywhere. Depth lives on extension pages, never on the home page.
   every four, so about a third of it glows at any moment and never all of it.
   Lines are CSS; the glow is one canvas under them, so a lit cell keeps its
   edges, drawn only while a cell glows or the flickering field is in view. The
-  preloader covers the first view of a session in accent and clears in
-  tenth-of-the-width squares that hold and then snap off (0.3s, expo.in, 0.01s
-  apart in random order); a CSS failsafe lifts it at 2.5s if the script never
+  preloader covers the first view of a session in accent and clears in 110
+  squares a tenth of the width (a fifth below 992px), whether or not they all
+  fit the screen, that hold and then snap off (0.3s, expo.in, 0.01s apart in
+  random order, 1.39s in all); a CSS failsafe lifts it at 2.5s if the script never
   arrives, and it runs once a session so moving between pages costs nothing. The
   dotted field is a faint diamond, 3.7px across every 13px, one translucent grey
   for both schemes; a component scales the tile to change the pitch (7.9px on
   the Method strips, 12.6px on project covers, 14.2px on the code stage, 16px
   on the Stack pane). Corner ticks are a pair of 4px squares at each corner. The
-  logo row is a carousel of every tool with a published mark (the owner's choice
-  on 2026-09-22, from captures), in cells of 201.6px by 132px, a grey mark and
-  name, a closed box with no fade, about 60px a second; below 992px the row and
-  the positioning run edge to edge, each cell three tenths of the row (half on a
-  phone) by 112px. The closing room's words move at 100px a second, above and
-  below in opposite directions, and the Stack's logo chips in two rows moving
-  opposite ways.
+  logo row holds six tools of the current stack, a grey mark and name each, in
+  six even cells of a closed box 132px tall that stand still on a desktop (the
+  owner's choice on 2026-11-10, over a carousel of every tool); below 992px the
+  row and the positioning run edge to edge and the row runs as a band, each
+  cell three tenths of the screen (half on a phone) by 112px, a row's width
+  every 10 seconds. The closing room's words, each a `//` and its words joined
+  by `&`, run a run's width every 15 seconds, above and below in opposite
+  directions, and the Stack's logo chips run in two rows moving opposite ways
+  at about 70px a second.
 - **Pause.** A header toggle pauses everything that moves on its own
   (marquees, word cycles, diagrams, preloader, reveals, scrambles, the pixel
   trail and flicker, the phone sliders) and persists like the theme, so no
@@ -162,9 +171,10 @@ anywhere. Depth lives on extension pages, never on the home page.
 - **Sections.** Seven numbered rooms after the hero: What I do (value cards),
   By the numbers (stat grid and a career chart), Stack (three layers as tabs, a
   diagram per layer on a dotted pane, and three cards below), Method (numbered
-  cards drawn by the scroll), Code (code on a dotted stage and a rail of files),
-  Projects (document cards) and Experience (a timeline), then the closing room
-  and the footer. Every figure, count and period is computed from `src/data` at
+  cards drawn by the scroll), Code (code on a dotted stage and a rail of files,
+  a list of files below 992px), Projects (the statement on the left, document
+  cards on the right) and Experience (a timeline on a centre line), then the
+  closing room and the footer. Every figure, count and period is computed from `src/data` at
   build time.
 - **Extension pages.** Each opens in a dark gridded band with a tag and its
   statement as the h1, then numbered rooms in the home page's grammar.
@@ -226,21 +236,16 @@ What each earns for its cost:
   and education.
 - **Lit dark panels.** The code window's header carries an inset top highlight
   from a themed token, so a dark surface reads as lit rather than flat.
-- **A numbered rail.** From 992px a fixed rail in the right gutter lists the
-  seven rooms by number, slides out each label on hover or focus, marks the
-  room crossing the middle of the viewport with the accent and
-  `aria-current="location"`, and fills a hairline as the page is read. The
-  links are plain anchors; the fill is a CSS scroll-driven animation, absent
-  where unsupported; one observer marks the room. Below 992px the gutter is too
-  narrow, and the eyebrow already numbers each room.
 - **No framework runtime.** Static Astro output with one bundled motion script.
 
 ## Decisions and their reasons
 
-- `What I do` has four cards because the content has four capabilities, each
-  31rem tall with its drawing in a 160px box.
-- The positioning line keeps its brackets 0.5em from the words, so its line
-  holds to one row at 1440px. It quotes the Method's rules and draws its arrow
+- `What I do` has three cards in one row at every width down to the phone
+  slider, each 31rem tall with its drawing in a 160px box (half the card on a
+  tablet); platforms and their APIs share a card (the owner's choice on
+  2026-11-10, over four narrower cards).
+- The positioning line keeps its brackets apart from the words, 3% of the
+  row, and drops them on a narrow phone. It quotes the Method's rules and draws its arrow
   and its two shadowed squares rather than taking them from a system font, so
   every platform shows the same glyphs; each square fills the capital height, a
   hairline square of 0.6em with a shadow 0.1em deep.
@@ -257,7 +262,9 @@ What each earns for its cost:
 - A case study's title, one word (a project's name), shrinks on a phone to 11%
   of the room's width so the word never runs past it.
 - By the numbers charts the career itself, one bar per month as tall as the
-  months into the role, with company names over each run.
+  months into the role, with company names over each run on a desktop (on a
+  narrower chart they would collide). Its stat grid rises beside the headline
+  to the eyebrow's rule and its caption stands in a 24px row over the chart.
 - The Stack's layers are a radio group that works without JavaScript; a layer
   not chosen dims to a colour that still passes contrast. Its diagrams are drawn
   in HTML from the record (screens and state, the layers of a request, documents
@@ -269,30 +276,40 @@ What each earns for its cost:
   contrast in every frame: a row waits in `--faint` and lights to ink, and a
   layer or a status arrives whole, small, and grows rather than fading in. The
   state box's longest name sets its rows at 14px, and still widens both boxes
-  to 158px.
-- Method is drawn by the scroll only from 992px up, where the four cards sit
-  in one row; from 768 to 992px they stand two by two, and below 768px they
-  are a one-card slider. A card not reached yet hides its description and dims
-  its number and title to a colour that still passes contrast.
+  to 158px. A desktop pane narrower than the diagram shows it smaller, in
+  steps (0.66 up to 1120px, 0.76 up to 1280px, 0.88 up to 1440px), so it
+  never runs out of its pane.
+- Method's four cards sit in one row from 992px, stand two by two apart from
+  each other from 768 to 992px, and below 768px are a one-card slider. A card
+  not reached yet hides its description and dims its number and title to a
+  colour that still passes contrast.
 - Code shows three files from this site's own repository, verbatim, pinned to
   the commit they were read at, with a title bar that names and links the file.
-  Its files are a radio group that works without JavaScript; on a desktop with
+  On a desktop its files are a radio group that works without JavaScript; with
   motion the scroll checks them, and a file chosen by hand scrolls the room to
-  its own stretch. Syntax colours come from classes, since Shiki's inline styles
-  break the CSP.
-- Projects pulls one project out across the first row, its text beside its
-  cover, and gives each card a cover generated from its name, chosen from
-  captures over cards with no image. Only a card that leads somewhere hovers
-  (outline, 4px bar, rising cover): a project with no public code shows plain
-  text and must not look actionable.
+  its own stretch. Below 992px each file is a native disclosure that opens its
+  own window, at 0.8 of the desktop size, so it works without JavaScript too.
+  Syntax colours come from classes, since Shiki's inline styles break the CSP.
+- Projects sets the statement on the left, its button and a paragraph at its
+  foot, and the cards on the right, two to a row and the third across the row
+  below (the owner's choice on 2026-11-10); rules run down from the eyebrow to
+  the cards' edges and on below them. Each card's cover is a sheet with the
+  project's name, nine tenths of a column wide and sunk so its top shows. A
+  card that leads somewhere (its case study, else its code) is one link and
+  hovers over 0.2s (accent, outline, 4px bar, arrow, the sheet rising); a
+  project with no public code shows plain text and must not look actionable.
 - Experience frames `<>` beside the current role and a double check beside
   each past one, in neutral ink: an accent beside the current one would read as
-  an availability signal. It has no paragraph under its button, since the
-  headline already states the span, and four entries because there are four
-  roles.
+  an availability signal. Its statement takes the first of three columns, its
+  button and a line naming the kinds of work at its foot; the timeline takes a
+  7rem strip, whose middle carries the centre line and each period, and the
+  last column, whose last 60% (20rem at most on the home page) holds each
+  entry. Four entries because there are four roles.
 - The closing room holds one card between two word bands; the email and the
-  profiles appear once, in the footer. The footer has no newsletter form and
-  ends with the source link instead of legal pages the site does not need.
+  profiles appear once, in the footer. The footer has no newsletter form: its
+  first column opens with the role and the place and closes with the name, and
+  its bottom row ends with the source link and the colophon instead of legal
+  pages the site does not need.
 - Every section button leads somewhere true: this repository, every
   repository, the whole career, the email.
 

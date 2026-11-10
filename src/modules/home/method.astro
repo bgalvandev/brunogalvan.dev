@@ -134,7 +134,7 @@ const icons = [
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 3rem;
+    gap: 2.5rem;
   }
   .method-cards {
     display: grid;
@@ -148,12 +148,14 @@ const icons = [
   }
   /* The process card: padded 1rem, the number and description at
      the top, the strip out of the flow across the card's middle, and the
-     title a fixed distance down (so every title lines up, one line or two)
-     with the drawing sunk to the corner, 1.5rem below it. */
+     title at the foot with the drawing sunk to the corner, 1.5rem below
+     it. */
   .method-card {
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    gap: 3rem;
     padding: 1rem;
     border-inline: 1px solid var(--line);
   }
@@ -166,11 +168,8 @@ const icons = [
   }
   .method-card-bottom {
     display: flex;
-    flex: 1;
     flex-direction: column;
-    justify-content: space-between;
     gap: 1.5rem;
-    margin-top: 4.925rem;
   }
   .method-card-number {
     color: var(--accent);
@@ -235,16 +234,20 @@ const icons = [
      description waits unseen (a screen reader still reads it), its drawing
      is a pale line drawing, and its number and title dim to a colour that
      still passes contrast. */
-  /* The room is padded by 10vh and its body pinned there with no padding of
-     its own, so the eyebrow lands at 10vh and the cards fit the screen. */
-  .method[data-scrubbing] {
-    height: 200vh;
-    padding-top: 10vh;
-  }
-  .method[data-scrubbing] :global(.section-body) {
-    position: sticky;
-    top: 10vh;
-    padding-top: 0;
+  /* On a desktop the room is padded by 10vh and its body pinned there with
+     no padding of its own, so the eyebrow lands at 10vh and the cards fit
+     the screen. On a tablet the room keeps its height and the cards light
+     up in the short stretch it scrolls past. */
+  @media (width >= 62rem) {
+    .method[data-scrubbing] {
+      height: 200vh;
+      padding-top: 10vh;
+    }
+    .method[data-scrubbing] :global(.section-body) {
+      position: sticky;
+      top: 10vh;
+      padding-top: 0;
+    }
   }
   .method[data-scrubbing] .method-card:not(.is-active) .method-card-number,
   .method[data-scrubbing] .method-card:not(.is-active) .method-card-title {
@@ -273,10 +276,10 @@ const icons = [
   @media (width < 62rem) {
     .method-cards {
       grid-template-columns: repeat(2, 1fr);
-      row-gap: 0;
+      border-block: none;
     }
     .method-card {
-      border-bottom: 1px solid var(--line);
+      border-block: 1px solid var(--line);
     }
   }
   @media (width < 48rem) {
@@ -291,12 +294,12 @@ const icons = [
   }
   /* The phone slider: one box, the cards in the same place, the
      numbers at the top left and the drawing at the top right, the process
-     strip across at 11rem, and the title and rule under it. Each card's line
+     strip centred on 11rem, and the title and rule under it. Each card's line
      fills over five seconds and the next card takes its place. The cards
      stay in the page, so a screen reader reads all four. */
   .method[data-sliding] .method-slider {
     position: relative;
-    height: 21rem;
+    height: 20rem;
     overflow: hidden;
     border: 1px solid var(--line);
   }
@@ -354,7 +357,6 @@ const icons = [
   }
   .method[data-sliding] .method-card-process {
     top: 11rem;
-    transform: none;
   }
   .method[data-sliding] .method-card-title {
     grid-row: 2;
@@ -363,6 +365,11 @@ const icons = [
   .method[data-sliding] .method-card-text {
     grid-row: 3;
     color: var(--muted);
+  }
+  @media (width < 30rem) {
+    .method[data-sliding] .method-slider {
+      height: 21rem;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     .method-card-number,
