@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.5",
-    "@lucide/astro": "1.48.0",
+    "@lucide/astro": "1.74.0",
     "astro": "~7.4.12",
     "geist": "1.9.2",
     "gsap": "3.15.0",
