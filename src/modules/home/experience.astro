@@ -1,0 +1,42 @@
+---
+import Button from '@/components/button.astro';
+import CareerTimeline from '@/components/career-timeline.astro';
+import Headline from '@/components/headline.astro';
+import NumberedSection from '@/components/numbered-section.astro';
+import { figures } from '@/data/figures';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import { pagePath } from '@/i18n/routes';
+import { sectionNumber, sections } from './sections';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = messages(locale).experience;
+const counts = figures(new Date());
+const headline = t.headline.map((line) =>
+  line
+    .replace('{companies}', String(counts.companies))
+    .replace('{year}', String(counts.firstYear)),
+);
+---
+
+<NumberedSection
+  id="experience"
+  number={sectionNumber('experience')}
+  total={sections.length}
+  label={t.label}
+  locale={locale}
+  headingId="experience-title"
+>
+  <div class="changelog">
+    <div class="changelog-side">
+      <Headline id="experience-title" lines={headline} />
+      <div class="changelog-intro">
+        <Button href={pagePath('experience', locale)} label={t.action} />
+        <p class="changelog-text">{t.intro}</p>
+      </div>
+    </div>
+    <CareerTimeline locale={locale} />
+  </div>
+</NumberedSection>

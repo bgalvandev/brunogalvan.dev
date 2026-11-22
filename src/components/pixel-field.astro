@@ -1,0 +1,64 @@
+---
+// A pixel grid: square cells, thirty to a row (cells stop shrinking below the
+// tablet breakpoint, where the grid is 80rem wide and overflows on purpose).
+// The thirty columns are centred across the room and the rows down it, each
+// line is the right or bottom edge of its cell, so a row stands a line taller
+// than a column is wide, and with an odd count of rows (`rows`, set per room)
+// a row rather than a line crosses the middle. The lines are CSS; the motion
+// script adds one canvas that lights the cells and lets them fade, rather
+// than an element per cell. Place it first inside a positioned parent that
+// clips.
+interface Props {
+  rows?: number;
+}
+const { rows = 18 } = Astro.props;
+---
+
+<div
+  class:list={['pixel-field', { 'pixel-field-odd': rows % 2 === 1 }]}
+  aria-hidden="true"
+  data-pixel-field
+>
+  <div class="pixel-field-lines"></div>
+</div>
+
+<style>
+  .pixel-field {
+    position: absolute;
+    inset: 0;
+    container-type: size;
+    overflow: hidden;
+    color: var(--accent);
+  }
+  .pixel-field-lines,
+  .pixel-field :global(canvas) {
+    position: absolute;
+    inset: 0;
+  }
+  /* The bitmap carries the device pixel ratio; the box stays the field's. */
+  .pixel-field :global(canvas) {
+    width: 100%;
+    height: 100%;
+  }
+  /* Each tile draws its line on its first pixel, so the tiles start a pixel
+     before the cells to put the line on each cell's last. */
+  .pixel-field-lines {
+    --cell: calc(100cqw / 30);
+    --pitch: calc(var(--cell) + 1px);
+    --row-shift: 0;
+    background-image:
+      linear-gradient(var(--decor) 1px, transparent 1px),
+      linear-gradient(90deg, var(--decor) 1px, transparent 1px);
+    background-position: calc(50cqw - 15 * var(--cell) - 1px)
+      calc(50cqh - var(--row-shift) * var(--pitch) - 1px);
+    background-size: var(--cell) var(--pitch);
+  }
+  .pixel-field-odd .pixel-field-lines {
+    --row-shift: 0.5;
+  }
+  @media (width < 62rem) {
+    .pixel-field-lines {
+      --cell: calc(80rem / 30);
+    }
+  }
+</style>

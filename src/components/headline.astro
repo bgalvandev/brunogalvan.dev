@@ -1,0 +1,59 @@
+---
+// The section statement: two short sentences between decorative slashes. The
+// slashes are generated content with an empty text alternative, so they are
+// neither read aloud nor measured as text. The name lives on the heading and
+// the visual copy is hidden, so the per-character reveal never reaches
+// assistive technology and the phrase reads whole.
+interface Props {
+  lines: readonly string[];
+  id?: string;
+  level?: 'h1' | 'h2' | 'h3';
+  size?: 'headline' | 'display';
+}
+const { lines, id, level: Tag = 'h2', size = 'headline' } = Astro.props;
+---
+
+<Tag
+  class:list={['headline', `text-${size}`]}
+  id={id}
+  aria-label={lines.join(' ')}
+>
+  <span class="headline-lines" aria-hidden="true" data-reveal>
+    {lines.map((line, index) => (
+      <>
+        {index > 0 && ' '}
+        <span class="headline-line">{line}</span>
+      </>
+    ))}
+  </span>
+</Tag>
+
+<style>
+  .headline {
+    margin: 0;
+  }
+  /* Each sentence is its own block and balances alone, so neither ends on a
+     word by itself; the slashes open the first and close the last. */
+  .headline-lines,
+  .headline-line {
+    display: block;
+  }
+  .headline-line {
+    text-wrap: balance;
+  }
+  .headline-line:first-child::before,
+  .headline-line:last-child::after {
+    color: var(--decor);
+    font-family: var(--font-pixel);
+  }
+  /* The slash alone, a Geist space's width from the words (0.19em), where
+     a no-break space set in the pixel face would open a wider gap. */
+  .headline-line:first-child::before {
+    content: '/' / '';
+    margin-inline-end: 0.19em;
+  }
+  .headline-line:last-child::after {
+    content: '/' / '';
+    margin-inline-start: 0.19em;
+  }
+</style>

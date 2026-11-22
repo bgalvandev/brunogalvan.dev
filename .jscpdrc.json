@@ -1,0 +1,9 @@
+{
+  "minTokens": 80,
+  "minLines": 10,
+  "gitignore": true,
+  "absolute": false,
+  "reporters": ["console"],
+  "format": ["typescript", "tsx", "javascript", "jsx", "css"],
+  "formatsExts": { "tsx": ["astro"] }
+}

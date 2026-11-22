@@ -1,0 +1,44 @@
+---
+import { markId, marks } from './tech-marks';
+// A technology as its own mark and name, in one grey, the text colour of
+// wherever it sits (chosen on 2026-09-22 over brand colour). A
+// technology with no published mark shows its name alone. The mark points at
+// the page's sprite (tech-sprite.astro), which the page renders once.
+interface Props {
+  name: string;
+  class?: string;
+}
+const { name, class: className } = Astro.props;
+const mark = marks.get(name);
+---
+
+<span class:list={['tech-logo', className]}>
+  {mark && (
+    <svg
+      class="tech-logo-mark"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <use href={`#${markId(name)}`} />
+    </svg>
+  )}
+  <span class="tech-logo-name">{name}</span>
+</span>
+
+<style>
+  .tech-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+  .tech-logo-mark {
+    flex: none;
+    width: 1.4em;
+    height: 1.4em;
+  }
+</style>

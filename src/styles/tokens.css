@@ -1,0 +1,88 @@
+/* Paired values preserve system theming even without JavaScript. Every pair
+   resolves against the element's own color-scheme, so a band that switches to
+   the dark scheme (see .band in global.css) re-themes everything inside it. */
+/* Registered, so it resolves once on the root against the page's scheme and
+   reaches the band as a finished colour: #212121 when the page is light, a
+   deeper #141414 when it is dark, so a band is always a different room. */
+@property --band-paper {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #141414;
+}
+/* The gridded rooms (the hero band, the closing band, a page's opening) sit
+   deeper still on a light page, #1a1a1a; on a dark page they share the
+   band's #141414. */
+@property --band-deep {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #141414;
+}
+:root {
+  color-scheme: light dark;
+  /* The page's own scheme and paper, kept apart so a room inside a band can
+     return to them (see .unband). */
+  --page-scheme: light dark;
+  --page-paper: light-dark(#ffffff, #212121);
+  --paper: var(--page-paper);
+  --field: light-dark(#f7f7f7, #141414);
+  --surface: light-dark(#f5f5f5, #2b2b2b);
+  --ink: light-dark(#1a1a1a, #ffffff);
+  --muted: light-dark(#474747, #cccccc);
+  /* Tertiary text, dark enough to pass 4.5:1 on paper, field and surface in
+     both schemes. */
+  --faint: light-dark(#6b6b6b, #a3a3a3);
+  --line: light-dark(#e0e0e0, #3d3d3d);
+  --line-strong: light-dark(#474747, #cccccc);
+  /* Decoration only: heading slashes, field dots, empty cells. Never text. */
+  --decor: light-dark(#cccccc, #474747);
+  /* The dotted field: a faint diamond, 3.7px across, every 13px, as light as
+     #ccc at half strength. One translucent grey lands on #e2e2e2 over the
+     light field and #262626 over the dark one. A component scales the tile to
+     change the pitch. */
+  --field-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13'%3E%3Cpath d='M1.85 0l1.85 1.85-1.85 1.85L0 1.85z' fill='rgb(125 125 125 / 0.17)'/%3E%3C/svg%3E");
+  /* Vermilion, chosen from captures on 2026-09-22 against indigo and green. */
+  --accent: light-dark(#c8341a, #ff7a5c);
+  --accent-contrast: light-dark(#ffffff, #141414);
+  --band-paper: light-dark(#212121, #141414);
+  --band-deep: light-dark(#1a1a1a, #141414);
+  /* The black square that holds the mark at the heart of a diagram, darker
+     than any band around it. */
+  --core: light-dark(#1a1a1a, #050505);
+  /* The page dimmed behind an open menu: #1a1a1a at half. */
+  --scrim: light-dark(rgb(26 26 26 / 50%), rgb(0 0 0 / 50%));
+  /* A raised panel's top edge catching the light, the one thing that makes a
+     dark surface read as lit rather than flat. */
+  --highlight: light-dark(rgb(255 255 255 / 70%), rgb(255 255 255 / 6%));
+  /* Syntax, read inside the code window, which is always a dark room; the
+     light values keep every pair valid. Keywords take the accent. */
+  --syntax-keyword: var(--accent);
+  --syntax-string: light-dark(#3d7a00, #b5e48c);
+  --syntax-constant: light-dark(#8f5400, #ffcb6b);
+  --syntax-function: light-dark(#2255aa, #9ac2ff);
+  --syntax-type: light-dark(#7a3d99, #d7b4ff);
+}
+:root[data-theme='light'] {
+  --page-scheme: light;
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  --page-scheme: dark;
+  color-scheme: dark;
+}
+@theme inline {
+  --color-paper: var(--paper);
+  --color-field: var(--field);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-decor: var(--decor);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+  /* The families themselves are declared by Astro's font pipeline (astro.config.ts). */
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+  --font-pixel: var(--font-geist-pixel);
+}

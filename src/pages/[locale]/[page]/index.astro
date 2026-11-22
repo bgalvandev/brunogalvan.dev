@@ -1,0 +1,43 @@
+---
+import { locales, type Locale } from '@/i18n/locales';
+import { messages } from '@/i18n/messages';
+import { pagePath, segment } from '@/i18n/routes';
+import SiteLayout from '@/layouts/site-layout.astro';
+import AboutPage from '@/modules/about/about-page.astro';
+import ExperiencePage from '@/modules/experience/experience-page.astro';
+// The localized single pages. Each segment comes from its route pair, so
+// /es/experiencia/ and /en/experience/ are built from one definition.
+// getStaticPaths runs apart from the rest of the frontmatter, so the list
+// lives inside it.
+type Page = 'experience' | 'about';
+export function getStaticPaths() {
+  const pages: readonly Page[] = ['experience', 'about'];
+  return pages.flatMap((route) =>
+    locales.map((locale) => ({
+      params: { locale, page: segment(route, locale) },
+      props: { locale, route },
+    })),
+  );
+}
+interface Props {
+  locale: Locale;
+  route: Page;
+}
+const { locale, route } = Astro.props;
+const t = messages(locale);
+const meta = route === 'experience' ? t.experiencePage.meta : t.aboutPage.meta;
+---
+
+<SiteLayout
+  locale={locale}
+  title={meta.title}
+  description={meta.description}
+  canonicalPath={pagePath(route, locale)}
+  route={route}
+>
+  {route === 'experience' ? (
+    <ExperiencePage locale={locale} />
+  ) : (
+    <AboutPage locale={locale} />
+  )}
+</SiteLayout>

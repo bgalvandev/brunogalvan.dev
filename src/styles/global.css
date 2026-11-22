@@ -1,0 +1,495 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Type scale: display weight 400, negative tracking on everything, and a 1.3
+   body leading so blocks read as specification text. Sizes step down at the
+   two breakpoints, and a phone keeps a 3.25rem display and a 2.75rem
+   headline, letting lines wrap. */
+@theme {
+  --text-display: 4.5rem;
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.06em;
+  --text-headline: 3.5rem;
+  --text-headline--line-height: 1.1;
+  --text-headline--letter-spacing: -0.06em;
+  --text-large: 2rem;
+  --text-large--line-height: 1.3;
+  --text-large--letter-spacing: -0.025em;
+  --text-medium: 1.5rem;
+  --text-medium--line-height: 1.3;
+  --text-medium--letter-spacing: -0.033em;
+  --text-body: 1rem;
+  --text-body--line-height: 1.3;
+  --text-body--letter-spacing: -0.05em;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: -0.04em;
+  --text-small: 0.75rem;
+  --text-small--line-height: 1.4;
+  --text-small--letter-spacing: -0.05rem;
+  --radius-*: initial;
+}
+@media (width < 62rem) {
+  :root {
+    --text-display: 4rem;
+    --text-headline: 3rem;
+  }
+}
+@media (width < 48rem) {
+  :root {
+    --text-display: 3.25rem;
+    --text-headline: 2.75rem;
+  }
+}
+
+/* The space scale, which steps down at the breakpoints: a room's padding is
+   large, the gap under its eyebrow tiny, a deep room closes with hugh, and a
+   heading keeps small and medium around it. */
+:root {
+  --space-tiny: 1.5rem;
+  --space-small: 3rem;
+  --space-medium: 4rem;
+  --space-large: 5rem;
+  --space-hugh: 10rem;
+}
+@media (width < 62rem) {
+  :root {
+    --space-small: 2rem;
+    --space-medium: 3rem;
+    --space-large: 4rem;
+    --space-hugh: 8rem;
+  }
+}
+@media (width < 48rem) {
+  :root {
+    --space-tiny: 1rem;
+    --space-small: 1.5rem;
+    --space-medium: 2.5rem;
+    --space-large: 3.5rem;
+    --space-hugh: 7rem;
+  }
+}
+@media (width < 30rem) {
+  :root {
+    --space-hugh: 4rem;
+  }
+}
+
+/* Registered so a script can read the pixel field's cell size in pixels. */
+@property --cell {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 48px;
+}
+
+/* Moving between pages cross-fades while the header holds still, with no
+   JavaScript: browsers without cross-document view transitions simply load
+   the next page. Off under reduced motion and when motion is paused. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+:root[data-motion='paused']::view-transition-group(*),
+:root[data-motion='paused']::view-transition-old(*),
+:root[data-motion='paused']::view-transition-new(*) {
+  animation: none;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.25s;
+}
+
+/* The two rules Lenis needs (its stylesheet is not exported by the package):
+   the page keeps its natural height, and a stopped scroll clips. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Printed, the page is light whatever the theme. Outside any layer, so it
+   outranks the scheme tokens.css sets on the root. */
+@media print {
+  :root,
+  :root[data-theme],
+  .band {
+    --paper: var(--page-paper);
+    color-scheme: light;
+  }
+}
+
+@layer base {
+  /* Two curves, GSAP's power1 in and out, for the hover and open transitions,
+     so CSS motion eases the same way as the scripted motion. */
+  :root {
+    --ease-power1-in: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    --ease-power1-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Lets a box ease to its natural height (a disclosure opening), where
+       the browser supports it; elsewhere it opens at once. */
+    interpolate-size: allow-keywords;
+  }
+  html {
+    scroll-padding-top: 4rem;
+  }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-weight: 400;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-contrast);
+  }
+}
+
+@layer components {
+  /* A section owns the full width; its content sits in the measure. Nothing
+     reaches for the viewport width, so a scrollbar never causes overflow. */
+  .section {
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  /* A band is a dark room: every light-dark() token inside re-resolves to its
+     dark value, so no colour is written twice, and its paper steps one shade
+     away from the page's in either theme. */
+  .band {
+    --paper: var(--band-paper);
+    color-scheme: dark;
+  }
+  .band:has(> .pixel-field) {
+    --paper: var(--band-deep);
+  }
+  /* The content column: an 8% gutter (5% on tablets, 1.5rem on phones)
+     capped at 80rem. The width is explicit, so the measure behaves the same
+     inside block, flex and grid parents. */
+  /* A room inside a band that returns to the page's own scheme and paper. */
+  .unband {
+    --paper: var(--page-paper);
+    color-scheme: var(--page-scheme);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .measure {
+    --gutter: 8%;
+    width: min(100% - 2 * var(--gutter), 80rem);
+    margin-inline: auto;
+  }
+  @media (width < 62rem) {
+    .measure {
+      --gutter: 5%;
+    }
+  }
+  @media (width < 48rem) {
+    .measure {
+      --gutter: 1.5rem;
+    }
+  }
+  /* A statement on the left, a timeline on the right: three columns, the
+     statement in the first and the timeline across a 7rem strip and the
+     last, closed by a rule 2.5rem under it. On a phone the statement takes
+     the full row above. */
+  .changelog {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7rem minmax(0, 1fr);
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .changelog > :last-child {
+    grid-column: span 2;
+  }
+  .changelog-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .changelog-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    max-width: 26rem;
+  }
+  .changelog-text {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+  @media (width < 48rem) {
+    .changelog {
+      grid-template-columns: minmax(0, 1fr) 7rem;
+      gap: var(--space-medium);
+      border-bottom: none;
+    }
+    .changelog-side {
+      grid-column: span 2;
+      justify-content: flex-start;
+      gap: var(--space-small);
+    }
+    .changelog-text {
+      font-size: var(--text-body);
+    }
+  }
+  .section-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-tiny);
+    padding-block: var(--space-large);
+  }
+  /* A deep room closes with the hugh space below it. */
+  .section-deep > .section-body {
+    padding-bottom: var(--space-hugh);
+  }
+  .label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+  }
+  .tag {
+    align-self: flex-start;
+    padding: 0.2em 0;
+    background: var(--surface);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+  }
+  /* Boxed tabs share their edges: every tab draws its left, top and bottom
+     rule and the last one in a group closes the right. */
+  .tabs {
+    display: flex;
+    align-items: flex-start;
+  }
+  .tab {
+    display: flex;
+    align-items: center;
+    min-height: 1.75rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--line-strong);
+    border-right-style: none;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+  .tab:last-child {
+    border-right-style: solid;
+  }
+  .tab:hover {
+    background: var(--line);
+  }
+  /* The accent marks the current page and nothing else. A quiet tab (the
+     language pair) and a pressed toggle invert to ink instead. */
+  .tab[aria-current='page'] {
+    padding-block: 0.5rem;
+    border-right-style: solid;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 600;
+  }
+  .tab[aria-current='page']::before {
+    content: '<' / '';
+  }
+  .tab[aria-current='page']::after {
+    content: '>' / '';
+  }
+  .tab-quiet[aria-current='page'],
+  .tab[aria-pressed='true'] {
+    padding-block: 0.25rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+  }
+  .tab-quiet[aria-current='page']::before,
+  .tab-quiet[aria-current='page']::after {
+    content: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tab {
+      transition: none;
+    }
+  }
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 1000;
+    transform: translateY(-200%);
+    padding: 0.75rem 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+  /* The dotted field: a faint dot every 13px on the field tone. */
+  .field-dotted {
+    background-color: var(--field);
+    background-image: var(--field-dots);
+    background-size: 13px 13px;
+  }
+  /* Corner ticks: a pair of small squares at each corner of a panel. */
+  .ticked {
+    position: relative;
+  }
+  .ticked::after {
+    --tick: linear-gradient(var(--ink), var(--ink));
+    content: '';
+    position: absolute;
+    inset: 0.375rem;
+    pointer-events: none;
+    background:
+      var(--tick) 0 0 / 4px 4px no-repeat,
+      var(--tick) 8px 0 / 4px 4px no-repeat,
+      var(--tick) 100% 0 / 4px 4px no-repeat,
+      var(--tick) calc(100% - 8px) 0 / 4px 4px no-repeat,
+      var(--tick) 0 100% / 4px 4px no-repeat,
+      var(--tick) 8px 100% / 4px 4px no-repeat,
+      var(--tick) 100% 100% / 4px 4px no-repeat,
+      var(--tick) calc(100% - 8px) 100% / 4px 4px no-repeat;
+  }
+  /* Revealed text never kerns, split or whole, so reverting the split at the
+     end of the reveal leaves every letter where it stood. */
+  [data-reveal] {
+    font-kerning: none;
+  }
+  /* The reveal's pieces, created by the motion script: each character is its
+     own box so its width can open, and a word never breaks between them. */
+  .reveal-word {
+    white-space: nowrap;
+  }
+  .reveal-char {
+    display: inline-block;
+  }
+  /* The pixel fragment of a display heading, inside literal brackets, with
+     a block cursor after the typed text. The cursor blinks four times and
+     holds, so nothing blinks for longer than five seconds. */
+  .pixel-highlight {
+    color: var(--accent);
+    font-family: var(--font-pixel);
+    letter-spacing: var(--text-display--letter-spacing);
+  }
+  /* The block is painted on an inline box around a word joiner: a line may
+     break on either side of an inline-block, even beside a no-break space,
+     and would leave the cursor and the closing bracket on a line of their
+     own. It spans 0.85em above the baseline to 0.05em below, 0.16em into the
+     pixel face's content area. */
+  [data-typewriter]::after {
+    content: '\2060';
+    margin-left: 2px;
+    padding-left: 0.55em;
+    letter-spacing: 0;
+    background: linear-gradient(currentColor, currentColor) 0 0.155em / 100%
+      0.9em no-repeat;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-typewriter]::after {
+      animation: cursor-blink 0.8s steps(1) 4;
+    }
+  }
+  /* A cycling fragment blinks from its script instead, and while it types
+     the block sits over the newest letter. */
+  [data-typewriter][data-cursor]::after {
+    animation: none;
+  }
+  [data-typewriter][data-cursor='off']::after {
+    opacity: 0;
+  }
+  [data-typewriter][data-cursor='typing']::after {
+    margin-left: calc(2px - 0.55em);
+  }
+  @keyframes cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  /* Printed, the site is a CV: light paper whatever the theme, no chrome or
+     decoration, every room at its natural height, both code samples, and the
+     address of each profile written after it. A heading that was never
+     scrolled into view still prints whole. */
+  @media print {
+    .site-header,
+    .skip-link,
+    .preloader,
+    .marquee,
+    .hero-logos,
+    .code-list,
+    .pixel-field,
+    .hero-scroll,
+    .site-menu,
+    .case-nav {
+      display: none !important;
+    }
+    .hero-band,
+    .method[data-scrubbing] .section-body {
+      position: static !important;
+    }
+    .hero,
+    .hero-band,
+    .method[data-scrubbing] {
+      min-height: 0 !important;
+      height: auto !important;
+    }
+    .code-window {
+      display: block !important;
+    }
+    .site-footer a[href^='http']::after {
+      content: ' (' attr(href) ')';
+      color: var(--muted);
+      font-size: 0.75em;
+      overflow-wrap: anywhere;
+    }
+    li,
+    figure {
+      break-inside: avoid;
+    }
+    .reveal-char {
+      width: auto !important;
+      opacity: 1 !important;
+    }
+  }
+  /* The theme button exists only where its script can run: the pre-paint
+     initializer marks the document with .js. */
+  [data-theme-toggle] {
+    display: none;
+  }
+  html.js [data-theme-toggle] {
+    display: flex;
+  }
+}

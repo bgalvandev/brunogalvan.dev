@@ -1,0 +1,94 @@
+---
+// A band of words that runs on its own: each item is a "//" and its words
+// joined by "&", in accent mono capitals; a run holds the items 5rem apart,
+// and three runs move together, one run's width every 15 seconds, so the
+// band never shows an end. The whole band is decoration (the words repeat
+// what the page says), hidden from assistive technology. `reverse` runs it
+// the other way, for the band under a room. It stops under reduced motion
+// and when the visitor pauses motion.
+interface Props {
+  items: readonly (readonly string[])[];
+  reverse?: boolean;
+}
+const { items, reverse = false } = Astro.props;
+---
+
+<div
+  class:list={['marquee', { 'marquee-reverse': reverse }]}
+  aria-hidden="true"
+>
+  {[0, 1, 2].map(() => (
+    <ul class="marquee-run">
+      {[...items, ...items].map((words) => (
+        <li class="marquee-item">
+          <span>//</span>
+          <span class="marquee-words">
+            {words.map((word, index) => (
+              <>
+                {index > 0 && <span>&amp;</span>}
+                <span>{word}</span>
+              </>
+            ))}
+          </span>
+        </li>
+      ))}
+    </ul>
+  ))}
+</div>
+
+<style>
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    padding-block: 1.5rem;
+    background: var(--paper);
+  }
+  .marquee-reverse {
+    justify-content: flex-end;
+  }
+  .marquee-run {
+    display: flex;
+    flex: none;
+    gap: 5rem;
+    margin: 0;
+    padding: 0 5rem 0 0;
+    list-style: none;
+    animation: marquee 15s linear infinite;
+  }
+  .marquee-reverse .marquee-run {
+    animation-name: marquee-reverse;
+  }
+  :global(html[data-motion='paused']) .marquee-run {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-run {
+      animation: none;
+    }
+  }
+  .marquee-item {
+    display: flex;
+    gap: 2.5rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 500;
+    line-height: 1.3;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .marquee-words {
+    display: flex;
+    gap: 1rem;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes marquee-reverse {
+    to {
+      transform: translateX(100%);
+    }
+  }
+</style>

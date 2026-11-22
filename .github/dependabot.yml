@@ -1,0 +1,49 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Majors are welcome: a full gate runs in about a minute, so a failing major
+    # is free information. The cooldown is the protection against a bad release.
+    open-pull-requests-limit: 5
+    cooldown:
+      semver-major-days: 14
+      semver-minor-days: 5
+      semver-patch-days: 2
+    ignore:
+      # Node types follow the runtime major pinned in .nvmrc and engines.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+    groups:
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - '*'
+      astro-stack:
+        applies-to: version-updates
+        patterns:
+          - 'astro'
+          - '@astrojs/*'
+        update-types:
+          - minor
+          - patch
+      lint-stack:
+        applies-to: version-updates
+        patterns:
+          - 'eslint'
+          - '@typescript-eslint/*'
+          - 'eslint-plugin-*'
+          - 'typescript-eslint'
+          - '@eslint/js'
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']

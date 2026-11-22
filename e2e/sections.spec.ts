@@ -1,0 +1,379 @@
+import { test, expect } from '@playwright/test';
+
+import { roles } from '@/data/experience';
+import { career, figures } from '@/data/figures';
+import { projects } from '@/data/projects';
+import { messages } from '@/i18n/messages';
+import { pagePath } from '@/i18n/routes';
+import { snippets } from '@/modules/home/snippets';
+
+const t = messages('es');
+
+test('every figure on the page is the figure the record gives', async ({
+  page,
+}) => {
+  await page.goto('/es/');
+  const counts = figures(new Date());
+  await expect(page.locator('.numbers-stat dd')).toHaveText([
+    String(counts.yearsSinceFirstRole),
+    String(counts.companies),
+    String(counts.projects),
+    String(counts.technologies),
+  ]);
+  await expect(page.locator('#projects-title')).toHaveAccessibleName(
+    new RegExp(`^${counts.projects} .* ${counts.publicProjects} `),
+  );
+  const months = career(new Date()).filter((month) => month.role);
+  await expect(page.locator('.numbers-bars rect')).toHaveCount(months.length);
+  await expect(page.locator('.numbers-chart figcaption')).toContainText(
+    String(months.length),
+  );
+});
+
+test('a project card leads to its case study, else its code, and one with nothing public to follow is plain text, never a link', async ({
+  page,
+}) => {
+  await page.goto('/es/');
+  for (const project of projects) {
+    const card = page
+      .locator('.project-card')
+      .filter({ has: page.getByRole('heading', { name: project.name }) });
+    const href =
+      'caseStudy' in project
+        ? pagePath('caseStudy', 'es', project.id)
+        : project.repository;
+    await expect(card.getByRole('link')).toHaveCount(href ? 1 : 0);
+    if (href) {
+      await expect(card.locator(`a[href="${href}"]`)).toHaveCount(1);
+    }
+    if (!project.repository) {
+      await expect(card).toContainText(t.projects.private);
+    }
+  }
+});
+
+test('the code shown is the file it cites, verbatim, and the switch works without JavaScript', async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    ...(baseURL === undefined ? {} : { baseURL }),
+  });
+  try {
+    const page = await context.newPage();
+    await page.goto('/es/');
+    for (const snippet of snippets) {
+      const window = page.locator(`.code-window-${snippet.id}`);
+      expect(
+        await window.locator('pre').evaluate((pre) => pre.textContent),
+      ).toBe(snippet.code);
+      await expect(window.locator('a')).toHaveAttribute(
+        'href',
+        `https://github.com/${snippet.repository}/blob/${snippet.commit}/${snippet.path}${
+          'lines' in snippet ? `#L${snippet.lines[0]}-L${snippet.lines[1]}` : ''
+        }`,
+      );
+    }
+    await expect(page.locator('.code-window-ts')).toBeVisible();
+    await expect(page.locator('.code-window-astro')).toBeHidden();
+    // A pointer clicks the label; a keyboard moves through the radio group.
+    await page.locator('.code-tab', { hasText: 'Astro' }).click();
+    await expect(page.getByRole('radio', { name: /Astro/ })).toBeChecked();
+    await expect(page.locator('.code-window-astro')).toBeVisible();
+    await expect(page.locator('.code-window-ts')).toBeHidden();
+    await page.getByRole('radio', { name: /Astro/ }).focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('radio', { name: /Playwright/ })).toBeChecked();
+    await expect(page.locator('.code-window-playwright')).toBeVisible();
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('ArrowUp');
+    await expect(page.getByRole('radio', { name: /TypeScript/ })).toBeChecked();
+    await expect(page.locator('.code-window-ts')).toBeVisible();
+  } finally {
+    await context.close();
+  }
+});
+
+test('on a wide screen the scroll draws the method step by step', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/es/');
+  const method = page.locator('#method');
+  await expect(method).toHaveAttribute('data-scrubbing', '');
+  const cards = method.locator('.method-card');
+  await expect(cards.nth(0)).toHaveClass(/is-active/);
+  await expect(cards.nth(3)).not.toHaveClass(/is-active/);
+  const bottom = await method.evaluate(
+    (element) => element.getBoundingClientRect().bottom + scrollY,
+  );
+  await page.evaluate((y) => window.scrollTo(0, y - innerHeight), bottom);
+  await expect(cards.nth(3)).toHaveClass(/is-active/);
+});
+
+test('without motion every step of the method shows complete', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/es/');
+  const method = page.locator('#method');
+  await expect(method).not.toHaveAttribute('data-scrubbing');
+  for (const line of await method.locator('.method-card-line').all()) {
+    const [width, track] = await line.evaluate((element) => [
+      element.getBoundingClientRect().width,
+      element.parentElement!.getBoundingClientRect().width,
+    ]);
+    expect(width).toBeGreaterThan(track! * 0.8);
+  }
+});
+
+test('on a phone the value cards show one at a time, change on their own, and a dash chooses one, with every card still in the page', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  const slider = page.locator('.value-slider');
+  await expect(slider).toHaveAttribute('data-sliding', '');
+  const cards = slider.locator('.value-card');
+  await expect(cards.nth(0)).toHaveClass(/is-current/);
+  await expect(slider.locator('.is-current')).toHaveCount(1);
+  await expect(slider.getByRole('heading', { level: 3 })).toHaveCount(
+    t.whatIDo.cards.length,
+  );
+  await slider
+    .getByRole('button', { name: t.whatIDo.show.replace('{number}', '3') })
+    .click();
+  await expect(cards.nth(2)).toHaveClass(/is-current/);
+  await expect(cards.nth(2)).toHaveCSS('opacity', '1');
+  // After the last card the slider comes round to the first.
+  await expect(cards.nth(0)).toHaveClass(/is-current/, { timeout: 6_000 });
+});
+
+test('on a phone the method shows one card at a time, filling its line before the next takes its place, with all four still in the page', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  const method = page.locator('#method');
+  await expect(method).toHaveAttribute('data-sliding', '');
+  const cards = method.locator('.method-card');
+  const numbers = method.locator('.method-step');
+  await expect(cards.nth(0)).toHaveClass(/is-current/);
+  await expect(numbers.nth(0)).toHaveClass(/is-current/);
+  await expect(method.getByRole('heading', { level: 3 })).toHaveCount(
+    t.method.rules.length,
+  );
+  await method.locator('.method-slider').scrollIntoViewIfNeeded();
+  await expect(cards.nth(1)).toHaveClass(/is-current/, { timeout: 8_000 });
+  await expect(numbers.nth(1)).toHaveClass(/is-current/);
+  await expect(cards.nth(0)).not.toHaveClass(/is-current/);
+});
+
+test('without motion a phone shows every value card and every method card, stacked', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  await expect(page.locator('.value-slider')).not.toHaveAttribute(
+    'data-sliding',
+  );
+  await expect(page.locator('#method')).not.toHaveAttribute('data-sliding');
+  for (const card of [
+    ...(await page.locator('.value-card').all()),
+    ...(await page.locator('.method-card').all()),
+  ]) {
+    await expect(card).toHaveCSS('opacity', '1');
+  }
+  await expect(page.locator('.value-slider-nav')).toBeHidden();
+});
+
+test('on a phone the stack leads with its headline, then its layers', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/es/');
+  const heading = await page.locator('#stack-title').boundingBox();
+  const layers = await page.locator('.cap-tabs').boundingBox();
+  expect(heading!.y).toBeLessThan(layers!.y);
+});
+
+test('the timeline lists every role with its period', async ({ page }) => {
+  await page.goto('/es/');
+  const items = page.locator('.experience-item');
+  await expect(items).toHaveCount(roles.length);
+  for (const [index, role] of roles.entries()) {
+    const item = items.nth(index);
+    await expect(item.getByRole('heading', { level: 3 })).toHaveText(
+      role.company,
+    );
+    await expect(item.locator('time').first()).toHaveAttribute(
+      'datetime',
+      role.start,
+    );
+    await expect(item).toContainText(t.experience.roles[role.id].role);
+  }
+});
+
+test('a value card opens its description and turns to pixels on hover without growing, and a keyboard visitor sees every description', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/es/');
+  const cards = page.locator('.value-card');
+  const card = cards.first();
+  const opacity = (locator: typeof card) =>
+    locator.evaluate((element) => Number(getComputedStyle(element).opacity));
+  const open = (index: number) =>
+    opacity(cards.nth(index).locator('.value-card-reveal'));
+  const heights = () =>
+    cards.evaluateAll((items) =>
+      items.map((item) => item.getBoundingClientRect().height),
+    );
+  await card.scrollIntoViewIfNeeded();
+  const before = await heights();
+  expect(await open(0)).toBe(0);
+  expect(await opacity(card.locator('.iso-line'))).toBe(1);
+  expect(await opacity(card.locator('.iso-pixel'))).toBe(0);
+  await card.hover();
+  await expect.poll(() => open(0)).toBe(1);
+  await expect.poll(() => opacity(card.locator('.iso-pixel'))).toBe(1);
+  expect(await opacity(card.locator('.iso-line'))).toBe(0);
+  // Opening the description moves nothing: every card keeps its height.
+  expect(await heights()).toEqual(before);
+  await expect(card).toContainText(t.whatIDo.cards[0]!.text);
+  await page.mouse.move(0, 0);
+  await expect.poll(() => open(1)).toBe(0);
+  await page.keyboard.press('Tab');
+  for (const index of t.whatIDo.cards.keys()) {
+    await expect.poll(() => open(index)).toBe(1);
+  }
+  // Below the desktop breakpoint there is nothing to hover for.
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.mouse.click(1, 1);
+  await expect.poll(() => open(0)).toBe(1);
+  await expect.poll(() => opacity(card.locator('.iso-pixel'))).toBe(1);
+});
+
+test('choosing a layer of the stack opens it and shows its diagram, without JavaScript', async ({
+  browser,
+  baseURL,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 1440, height: 900 },
+    ...(baseURL === undefined ? {} : { baseURL }),
+  });
+  try {
+    const page = await context.newPage();
+    await page.goto('/es/');
+    const tabs = page.locator('.cap-tab');
+    const opened = (index: number) =>
+      tabs
+        .nth(index)
+        .locator('.cap-tab-bottom')
+        .evaluate((element) => element.getBoundingClientRect().height);
+    await expect(page.locator('.cap-diagram-interfaces')).toBeVisible();
+    await expect(page.locator('.cap-diagram-services')).toBeHidden();
+    await tabs.nth(1).click();
+    await expect(tabs.nth(1).getByRole('radio')).toBeChecked();
+    await expect(page.locator('.cap-diagram-services')).toBeVisible();
+    await expect(page.locator('.cap-diagram-interfaces')).toBeHidden();
+    await expect.poll(() => opened(1)).toBeGreaterThan(0);
+    await expect.poll(() => opened(0)).toBe(0);
+  } finally {
+    await context.close();
+  }
+});
+
+test('on a wide screen the scroll checks each file of the code in turn, and a file chosen by hand scrolls to its stretch', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/es/');
+  const room = page.locator('#code');
+  await expect(room).toHaveAttribute('data-scrubbing', '');
+  const checked = () =>
+    room
+      .locator('input:checked')
+      .evaluate((input: HTMLInputElement) => input.value);
+  const scrollRoom = (share: number) =>
+    room.evaluate((element: HTMLElement, fraction) => {
+      const top = element.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo(
+        0,
+        top + (element.offsetHeight - window.innerHeight) * fraction,
+      );
+    }, share);
+  await scrollRoom(0.1);
+  await expect.poll(checked).toBe('ts');
+  await scrollRoom(0.5);
+  await expect.poll(checked).toBe('astro');
+  await scrollRoom(0.95);
+  await expect.poll(checked).toBe('playwright');
+  await expect(room.locator('.code-window-playwright')).toBeVisible();
+  const [line, rail] = await room
+    .locator('.code-rail-line')
+    .evaluate((element) => [
+      element.getBoundingClientRect().height,
+      element.parentElement!.getBoundingClientRect().height,
+    ]);
+  expect(line).toBeGreaterThan(rail! * 0.95);
+  await room.locator('.code-tab', { hasText: 'TypeScript' }).click();
+  await expect.poll(checked).toBe('ts');
+  await expect(room.locator('.code-window-ts')).toBeInViewport();
+});
+
+test('every technology logo points at a mark the page carries', async ({
+  page,
+}) => {
+  await page.goto('/es/');
+  const missing = await page.evaluate(() =>
+    [...document.querySelectorAll('use')]
+      .map((use) => use.getAttribute('href') ?? '')
+      .filter((href) => !document.querySelector(href)),
+  );
+  expect(missing).toEqual([]);
+  expect(await page.locator('.tech-logo-mark use').count()).toBeGreaterThan(20);
+});
+
+test('while the scroll drives Method and Code, each frame pins at 10vh and fits the screen', async ({
+  page,
+}) => {
+  for (const [width, height] of [
+    [1440, 900],
+    [1280, 720],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    await page.goto('/es/');
+    for (const [id, last] of [
+      ['method', '.method-cards'],
+      ['code', '.code-stage'],
+    ] as const) {
+      const room = page.locator(`#${id}`);
+      await expect(room).toHaveAttribute('data-scrubbing', '');
+      await room.evaluate((element: HTMLElement) => {
+        const top = element.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(
+          0,
+          top + (element.offsetHeight - window.innerHeight) * 0.4,
+        );
+      });
+      await expect
+        .poll(() =>
+          room
+            .locator('.eyebrow')
+            .evaluate((element) =>
+              Math.round(element.getBoundingClientRect().top),
+            ),
+        )
+        .toBe(Math.round(height * 0.1));
+      const bottom = await room
+        .locator(last)
+        .evaluate((element) => element.getBoundingClientRect().bottom);
+      expect(bottom).toBeLessThanOrEqual(height);
+    }
+  }
+});

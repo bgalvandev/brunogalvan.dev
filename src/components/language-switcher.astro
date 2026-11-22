@@ -1,0 +1,26 @@
+---
+import { alternatePages, type RouteKey } from '@/i18n/routes';
+import { messages } from '@/i18n/messages';
+import { localeNames, type Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+  route: RouteKey;
+  slug?: string | undefined;
+}
+const { locale, route, slug } = Astro.props;
+---
+
+<nav aria-label={messages(locale).navigation.language} class="tabs">
+  {alternatePages(route, slug).map((alternative) => (
+    <a
+      class="tab tab-quiet"
+      href={alternative.path}
+      lang={alternative.locale}
+      hreflang={alternative.locale}
+      aria-current={locale === alternative.locale ? 'page' : undefined}
+      aria-label={localeNames[alternative.locale]}
+    >
+      {alternative.locale.toUpperCase()}
+    </a>
+  ))}
+</nav>

@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+
+# Build / output
+dist/
+*.tsbuildinfo
+.astro/
+
+# Testing / coverage
+coverage/
+
+# E2E (Playwright)
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Env / secrets
+# Real env files are ignored; only committed templates (*.example) are tracked.
+.env
+.env.*
+!.env.*.example
+*.pem
+*.key
+
+# Local-only working files (plans, notes): never committed, not formatted
+.local/
+
+# Caches
+.cache/
+.eslintcache
+
+# Editors / IDEs
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+
+# AI / agent local config
+# Portable skills live in .agents/skills (read by tool-agnostic agents);
+# .claude/skills is a symlink so Claude Code discovers the same files.
+# Share team-owned config; keep personal/machine-specific overrides local.
+.agents/*
+!.agents/skills/
+.claude/*
+!.claude/skills
+!.claude/settings.json
+.claude/settings.local.json
+.cursor/
+.aider*

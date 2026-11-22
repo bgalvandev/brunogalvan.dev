@@ -1,0 +1,59 @@
+# brunogalvan.dev
+
+Bruno Galván's bilingual portfolio, live at <https://brunogalvan.dev>: Astro,
+strict TypeScript and Tailwind CSS v4, static output with no framework runtime
+in the browser. Its visual system (sharp rectangles, hairlines, numbered
+sections, one accent) and the reasons behind each choice are recorded in
+[DESIGN.md](DESIGN.md).
+
+## Local development
+
+Use the Node version in `.nvmrc` and the pnpm version in `package.json` via Corepack.
+
+```sh
+nvm use
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run dev
+```
+
+Open `http://127.0.0.1:4300/en/` or `http://127.0.0.1:4300/es/`.
+The root URL redirects to `/en/`; the visible language selector links to `/es/`.
+No environment file, database or container service is required.
+
+```sh
+pnpm run build
+pnpm run preview
+```
+
+Build output is static `dist/`; preview uses `http://127.0.0.1:4301` for local
+verification. Cloudflare Pages builds `main` and every pull request from the
+connected repository (build command `pnpm run build`, output `dist`,
+`NODE_VERSION=24`, `PNPM_VERSION=11.15.1`); redirects live in
+`public/_redirects` and the build writes `dist/_headers`. `brunogalvan.dev` is
+the only origin; `www` and `brunogalvan.com` redirect to it at the edge. See
+ADRs 0007 and 0012.
+
+## Engineering
+
+- [Architecture and extension paths](docs/architecture.md): ownership, dependency
+  contract, rendering, routes, future database/server capabilities and tooling.
+- [Current decision](docs/adr/0005-astro-foundation.md): alternatives and tradeoffs.
+- [Contributor rules](AGENTS.md): standing standards; procedures in `.agents/skills`.
+- [Design memory](DESIGN.md): the brief, shared visual decisions and the reasons
+  behind each.
+
+```sh
+pnpm run check
+pnpm exec playwright install chromium
+pnpm run test:e2e
+pnpm run security:audit
+```
+
+The browser suite builds and manages an isolated preview on port 4301, which must
+be free. CI runs the local gates, browser journeys and registry security auditing.
+
+Public identity and links live in `src/config/site.ts`; `pnpm run og:generate`
+re-renders the social cards and touch icon from it after a change. Approved contact:
+`brunogalvangarcia@outlook.com`. Catalogs live in `src/i18n/messages`; route pairs in
+`src/i18n/routes.ts`.

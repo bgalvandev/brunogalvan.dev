@@ -1,0 +1,83 @@
+import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { test } from 'node:test';
+
+import { inlineHashes, renderHeaders } from './build/cloudflare-headers.mjs';
+import { checkDist, fontFiles } from './check-dist.mjs';
+
+const preload = (file) =>
+  `<link rel="preload" href="/_astro/fonts/${file}" as="font" type="font/woff2" crossorigin>`;
+const faces = (count) =>
+  Array.from({ length: count }, (_, index) => `f${index}.woff2`);
+
+async function dist(
+  t,
+  {
+    fonts = faces(fontFiles),
+    home,
+    headers,
+    redirects = '/ /en/ 301',
+    refresh = '<meta http-equiv="refresh" content="0;url=/en/">',
+  } = {},
+) {
+  const root = await mkdtemp(path.join(tmpdir(), 'dist-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await mkdir(path.join(root, 'en'));
+  await mkdir(path.join(root, '_astro', 'fonts'), { recursive: true });
+  for (const font of fonts)
+    await writeFile(path.join(root, '_astro', 'fonts', font), '');
+  await writeFile(path.join(root, '404.html'), '<h1>404</h1>');
+  await writeFile(path.join(root, '_redirects'), redirects);
+  await writeFile(path.join(root, 'index.html'), refresh);
+  await writeFile(
+    path.join(root, 'en', 'index.html'),
+    home ??
+      `${fonts.map(preload).join('')}<style>@font-face{}</style><script>init()</script><script type="module" src="/_astro/x.js"></script>`,
+  );
+  await writeFile(
+    path.join(root, '_headers'),
+    headers ?? renderHeaders(await inlineHashes(root)),
+  );
+  return root;
+}
+
+test('accepts a complete build', async (t) => {
+  assert.deepEqual(await checkDist(await dist(t)), []);
+});
+
+test('reports missing documents, extra fonts, missing preloads, foreign scripts, secrets and uncovered inline blocks', async (t) => {
+  const root = await dist(t, {
+    fonts: faces(fontFiles + 1),
+    home: '<script src="https://cdn.example/x.js"></script><script>alert(1)</script>ghp_abcdefghijklmnopqrstuv',
+    headers: renderHeaders({ scripts: [], styles: [] }),
+  });
+  await rm(path.join(root, '404.html'));
+  const problems = await checkDist(root);
+  for (const expected of [
+    '404.html is missing',
+    `found ${fontFiles + 1}`,
+    `expected ${fontFiles + 1} font preloads on /en/, found 0`,
+    'unexpected script source https://cdn.example/x.js',
+    'credential-like',
+    '_headers lacks',
+  ]) {
+    assert.ok(
+      problems.some((problem) => problem.includes(expected)),
+      `missing "${expected}" in:\n${problems.join('\n')}`,
+    );
+  }
+});
+
+test('reports a root that leads anywhere but the default language', async (t) => {
+  const root = await dist(t, {
+    redirects: '/ /es/ 301',
+    refresh: '<meta http-equiv="refresh" content="0;url=/es/">',
+  });
+  const problems = await checkDist(root);
+  assert.deepEqual(problems, [
+    'index.html does not refresh to /en/',
+    '_redirects does not send / to /en/',
+  ]);
+});

@@ -1,0 +1,409 @@
+{
+  "meta": {
+    "title": "Bruno Galván — Senior Full-Stack Engineer",
+    "description": "Bruno Galván, senior full-stack engineer in Lima, Peru: multi-tenant SaaS platforms in TypeScript, Node.js, React and PostgreSQL, from architecture to production."
+  },
+  "identity": {
+    "role": "Senior Full-Stack Engineer",
+    "location": "Lima, Peru"
+  },
+  "navigation": {
+    "language": "Language",
+    "skip": "Skip to content",
+    "main": "Main",
+    "home": "Home",
+    "contact": "Contact",
+    "about": "About",
+    "experience": "Experience",
+    "menu": "Menu"
+  },
+  "theme": {
+    "darkMode": "Dark mode"
+  },
+  "section": {
+    "spoken": "Section {number} of {total}"
+  },
+  "hero": {
+    "greeting": "I'm Bruno. I build",
+    "fragments": [
+      "SaaS platforms",
+      "TypeScript APIs",
+      "React interfaces",
+      "AI features"
+    ],
+    "closing": "end to end.",
+    "spoken": "I'm Bruno. I build SaaS platforms end to end.",
+    "line": "Senior full-stack engineer in Lima, Peru. TypeScript, Node.js, React and PostgreSQL, from architecture to production.",
+    "primary": "See projects",
+    "secondary": "Write to me",
+    "scroll": "Scroll for more"
+  },
+  "whatIDo": {
+    "label": "What I do",
+    "headline": ["From architecture to production.", "The whole product."],
+    "action": "Let's talk",
+    "show": "Show card {number}",
+    "cards": [
+      {
+        "title": "SaaS platforms",
+        "tag": "Fastify · OpenAPI",
+        "text": "Multi-tenant products with scheduling and billing, on contract-first APIs in hexagonal layers."
+      },
+      {
+        "title": "Product interfaces",
+        "tag": "React 19 · TanStack Query",
+        "text": "Calendars, billing screens and editors with optimistic updates."
+      },
+      {
+        "title": "AI in the product",
+        "tag": "OpenAI · WhatsApp",
+        "text": "LLM features where the work happens: bilingual documents and a booking assistant."
+      }
+    ]
+  },
+  "contact": {
+    "label": "Contact",
+    "headline": ["An email is enough.", "I read it myself."],
+    "fragments": ["Write to me", "Let's talk", "Say hello"],
+    "action": "Send an email",
+    "marquee": [["[#Frontend]", "[#Backend]"], ["[#Production]"]]
+  },
+  "footer": {
+    "colophon": "Built with Astro, with no framework in the browser.",
+    "source": "Source code",
+    "pages": "Pages",
+    "profiles": "Profiles",
+    "contact": "Contact"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for is unavailable.",
+    "navigation": "Home in English or in Spanish"
+  },
+  "motion": {
+    "pause": "Pause motion"
+  },
+  "positioning": {
+    "spoken": "Clear boundaries, small changes, proven in production.",
+    "parts": ["Clear boundaries", "small changes", "proven in production"]
+  },
+  "numbers": {
+    "label": "By the numbers",
+    "headline": ["Figures read off the record.", "None typed by hand."],
+    "action": "See experience",
+    "stats": {
+      "years": "years since the first role",
+      "companies": "companies",
+      "projects": "projects",
+      "technologies": "technologies in the stack"
+    },
+    "chart": {
+      "caption": "Each bar is a month; its height, months into the role.",
+      "summary": "{months} months since {year}, across {companies} companies."
+    }
+  },
+  "stack": {
+    "label": "Stack",
+    "headline": ["Three layers.", "One product."],
+    "groups": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "data": "Data",
+      "ai": "AI",
+      "architecture": "Architecture",
+      "platform": "Cloud and quality"
+    },
+    "tabs": [
+      {
+        "tags": ["React 19", "Next.js"],
+        "title": "Interfaces",
+        "text": "Screens that answer at once: server rendering, optimistic updates and forms validated before they are sent."
+      },
+      {
+        "tags": ["Fastify", "PostgreSQL"],
+        "title": "Services",
+        "text": "Contract-first APIs in hexagonal layers, with domain events through an outbox and queries tuned in PostgreSQL."
+      },
+      {
+        "tags": ["OpenAI", "WhatsApp"],
+        "title": "AI in the product",
+        "text": "LLM features where the work happens: documents translated on request and a booking assistant on WhatsApp."
+      }
+    ],
+    "tabsLabel": "Layer",
+    "diagram": {
+      "screens": "Screens",
+      "screenItems": ["Calendar", "Billing", "Editor", "Forms"],
+      "state": "State",
+      "output": "Rendered",
+      "layers": [
+        {
+          "name": "HTTP",
+          "format": "REST"
+        },
+        {
+          "name": "Contract",
+          "format": "OpenAPI"
+        },
+        {
+          "name": "Domain",
+          "format": "DDD"
+        },
+        {
+          "name": "Store",
+          "format": "SQL"
+        }
+      ],
+      "translating": "Translating the quote…",
+      "documentsLabel": "Documents",
+      "documents": ["Invoice", "Quote", "Receipt"]
+    },
+    "cards": {
+      "toolchain": {
+        "title": "The toolchain",
+        "text": "Every tool here appears in my own commits from the last two years."
+      },
+      "typed": {
+        "title": "Typed end to end",
+        "text": "Strict TypeScript from the schema to the screen."
+      },
+      "tested": {
+        "title": "Tested as shipped",
+        "text": "Vitest and Playwright against the production build."
+      }
+    }
+  },
+  "method": {
+    "label": "Method",
+    "headline": ["Four rules.", "Written down, not assumed."],
+    "action": "See this repository",
+    "rules": [
+      {
+        "title": "Explicit boundaries",
+        "text": "Dependency runs one way; the domain knows nothing of the framework."
+      },
+      {
+        "title": "The smallest change",
+        "text": "No abstraction for a future that has not arrived."
+      },
+      {
+        "title": "Verify before claiming",
+        "text": "Done means the gates are green and it was seen in production."
+      },
+      {
+        "title": "Decisions in writing",
+        "text": "What the code cannot say goes into a dated record."
+      }
+    ]
+  },
+  "code": {
+    "label": "Code",
+    "headline": ["Real code.", "Open on GitHub."],
+    "action": "More on GitHub",
+    "tabs": "Language",
+    "samples": {
+      "ts": {
+        "title": "TypeScript",
+        "text": "Every figure on this page, computed from the record when the site builds."
+      },
+      "astro": {
+        "title": "Astro",
+        "text": "A heading that opens character by character and still reads whole."
+      },
+      "playwright": {
+        "title": "Playwright",
+        "text": "Every page checked with axe in both themes, in a real browser."
+      }
+    }
+  },
+  "projects": {
+    "label": "Projects",
+    "headline": ["{total} projects.", "{public} with the code in the open."],
+    "action": "All repositories",
+    "intro": "A product I build at work, one of my own, and this site, with its code and a case study in the open.",
+    "kinds": {
+      "work": "Work",
+      "product": "Own product",
+      "project": "Project"
+    },
+    "code": "Code",
+    "private": "Private code",
+    "items": {
+      "clinicsay": "Clinic-management SaaS. I own billing, scheduling and data migration across the React app and the Fastify API.",
+      "asistira": "My own multi-tenant SaaS for service businesses: an Nx monorepo with Next.js and Fastify.",
+      "brunogalvan-dev": "This site: static Astro in two languages, a CSP built from hashes, and axe in both themes."
+    },
+    "codeOf": "Code for {name}"
+  },
+  "experience": {
+    "label": "Experience",
+    "headline": ["{companies} companies.", "Since {year}."],
+    "action": "Full record",
+    "intro": "From retail systems and an ERP to integrations for education and a clinic-management SaaS.",
+    "present": "Present",
+    "roles": {
+      "clinicsay": {
+        "role": "Senior Full-Stack Engineer",
+        "line": "Clinic-management SaaS: billing, scheduling, documents and data migration across React 19 and a hexagonal Fastify API.",
+        "highlights": [
+          "Billing: invoices, receipts, credit notes, partial payments, refunds, cash sessions with reconciliation, and configurable numbering.",
+          "Scheduling: availability templates with exceptions, one appointments API with recurring series, and a drag-and-touch calendar with optimistic updates.",
+          "Documents: PDFs rebuilt on react-pdf, bilingual invoices and quotes through an OpenAI translation endpoint, and accounting exports to Excel.",
+          "Domain events: handlers on a transactional outbox, such as recalculating what a patient owes after any related change.",
+          "Data migration: clinics brought in from other systems and backups (MySQL, Firebird, SQL Server and closed apps), validated with automated checks.",
+          "PostgreSQL performance on search, list and calendar queries, and virus scanning of uploaded files."
+        ]
+      },
+      "metrica-andina": {
+        "role": "Senior Programmer Analyst",
+        "line": "Microservices, a Salesforce REST integration and WhatsApp automation for education clients."
+      },
+      "surtidores": {
+        "role": "Software Developer (PHP / Laravel)",
+        "line": "Led the new web ERP in Laravel; kept the previous one, on PHP 5, running."
+      },
+      "platanitos": {
+        "role": "Web Developer · SAP Analyst",
+        "line": "Web applications for retail, electronic invoicing, and reports joining SAP with SQL."
+      }
+    },
+    "linkedin": "See LinkedIn"
+  },
+  "experiencePage": {
+    "meta": {
+      "title": "Experience — Bruno Galván",
+      "description": "The full professional record of Bruno Galván, senior full-stack engineer: four companies since 2019, with periods, what each role involved, and education."
+    },
+    "label": "Record",
+    "headline": ["Every role, with its period.", "And what I did in it."],
+    "duration": {
+      "year": "year",
+      "years": "years",
+      "month": "month",
+      "months": "months"
+    },
+    "clients": "Clients",
+    "education": {
+      "label": "Education",
+      "title": "Computación Informática (computing)",
+      "school": "Universidad San Ignacio de Loyola",
+      "period": "2015 — 2017"
+    },
+    "durationLabel": "Length",
+    "highlights": "What I built"
+  },
+  "aboutPage": {
+    "meta": {
+      "title": "About — Bruno Galván",
+      "description": "Bruno Galván, senior full-stack engineer in Lima, Peru: his working rules, his stack, his education and languages."
+    },
+    "label": "About",
+    "headline": ["I'm Bruno Galván.", "I build end to end."],
+    "intro": "Senior full-stack engineer in Lima, Peru. I build multi-tenant SaaS platforms in TypeScript, Node.js, React and PostgreSQL, from architecture to production.",
+    "method": {
+      "label": "Method",
+      "headline": ["My working rules.", "As I wrote them."],
+      "rules": [
+        {
+          "title": "Boundaries are explicit.",
+          "text": "Dependency runs one way — interface to application, application to domain. The domain knows nothing of the framework, the database or the transport. A boundary is crossed by a written decision."
+        },
+        {
+          "title": "The smallest change that works.",
+          "text": "No abstraction for a future that has not arrived; whatever stops being used goes in the same change."
+        },
+        {
+          "title": "Verify before claiming.",
+          "text": "Nothing is done because it compiles. It is done when the gates pass and it has been seen in the production build."
+        },
+        {
+          "title": "Decisions are written down.",
+          "text": "What cannot be read off the code goes into a dated record with at least two options compared."
+        }
+      ]
+    },
+    "stack": {
+      "label": "Stack",
+      "headline": ["The tools.", "Grouped by layer."]
+    },
+    "languages": {
+      "label": "Languages",
+      "items": [
+        {
+          "name": "Spanish",
+          "level": "Native"
+        },
+        {
+          "name": "English",
+          "level": "Elementary"
+        }
+      ]
+    }
+  },
+  "caseStudy": {
+    "label": "Case study",
+    "back": "All projects",
+    "context": "Context",
+    "architecture": "Architecture",
+    "decisions": "Decisions",
+    "code": "In the code",
+    "excerpt": "Excerpt of {file}, lines {from} to {to}",
+    "whole": "{file}, whole",
+    "facts": {
+      "kind": "Kind",
+      "stack": "Stack",
+      "repository": "Repository",
+      "demo": "Demo",
+      "noDemo": "No public demo"
+    },
+    "read": "Read the case",
+    "readOf": "Case study of {name}"
+  },
+  "caseStudies": {
+    "brunogalvan-dev": {
+      "meta": {
+        "title": "brunogalvan.dev — Case study — Bruno Galván",
+        "description": "The site itself: a static Astro build in two languages, a Content Security Policy built from hashes, and Playwright with axe on every page in both themes."
+      },
+      "headline": ["The site you are reading.", "Every claim with a source."],
+      "summary": "A static Astro site in two languages, where every figure is computed from a typed record and every page is tested in a real browser.",
+      "context": "My portfolio, rebuilt in September 2026 on one strict visual system: sharp rectangles, hairlines and numbered sections. It ships as static HTML with one bundled script for motion; every visible string lives in a Spanish and an English catalog, and every number is derived from the record when the site builds.",
+      "layers": [
+        {
+          "name": "Record",
+          "text": "src/data holds the roles, projects and stack; years, counts and the career chart are computed from it at build time."
+        },
+        {
+          "name": "Routes",
+          "text": "Localized URLs live as pairs in one file, so every page exists in both languages with reciprocal hreflang."
+        },
+        {
+          "name": "Tokens",
+          "text": "Colours and faces come from semantic tokens with a light and a dark value; a dark band re-resolves them by switching the colour scheme."
+        },
+        {
+          "name": "Motion",
+          "text": "GSAP and Lenis run in one context that reverts completely under reduced motion or the pause control."
+        }
+      ],
+      "decisions": [
+        {
+          "title": "No framework in the browser",
+          "text": "Static output; the only script is the motion bundle, and every page works without JavaScript."
+        },
+        {
+          "title": "A policy built from hashes",
+          "text": "The build hashes every inline script and style into the Content Security Policy, so an edited block can never ship with a stale hash."
+        },
+        {
+          "title": "Tested as shipped",
+          "text": "Playwright runs the production build with axe in both themes and replays the policy on every page."
+        },
+        {
+          "title": "Decisions on record",
+          "text": "Hosting, the motion library and smooth scrolling each have an ADR with the options compared and the cost in kilobytes."
+        }
+      ]
+    }
+  }
+}

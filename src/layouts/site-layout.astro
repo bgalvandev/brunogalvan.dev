@@ -1,0 +1,55 @@
+---
+import { Font } from 'astro:assets';
+import '@/styles/global.css';
+import Motion from '@/components/motion.astro';
+import Preloader from '@/components/preloader.astro';
+import SeoHead from '@/components/seo-head.astro';
+import DocumentInit from '@/components/document-init.astro';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import type { RouteKey } from '@/i18n/routes';
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  canonicalPath: string;
+  route?: RouteKey;
+  slug?: string;
+  noindex?: boolean;
+  structured?: readonly Record<string, unknown>[];
+}
+const { locale, ...metadata } = Astro.props;
+// Browsers that support Speculation Rules prerender an internal page as the
+// pointer settles on its link, so the next page is already there on click.
+// Others ignore the block. It is inline, so its hash joins the CSP.
+const speculation = {
+  prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }],
+};
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <Font cssVariable="--font-geist" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+    <Font cssVariable="--font-geist-pixel" preload />
+    <SeoHead locale={locale} {...metadata} />
+    <DocumentInit />
+    <script
+      is:inline
+      type="speculationrules"
+      set:html={JSON.stringify(speculation)}
+    ></script>
+  </head>
+  <body>
+    <Preloader />
+    <a class="skip-link" href="#main">
+      {messages(locale).navigation.skip}
+    </a>
+    <slot />
+    <Motion />
+  </body>
+</html>

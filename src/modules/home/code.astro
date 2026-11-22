@@ -1,0 +1,460 @@
+---
+// On a desktop the language switch is a radio group, so it works without
+// JavaScript: CSS shows the panel whose radio is checked, opens its
+// description and fills the rail to it. With motion, the room grows tall, its
+// content sticks, and the scroll checks each file in turn while the rail's
+// line grows (data-code-steps is the hook). Below the desktop breakpoint each
+// file is a disclosure of its own that opens its window under its name.
+import Button from '@/components/button.astro';
+import CodeWindow from '@/components/code-window.astro';
+import Headline from '@/components/headline.astro';
+import NumberedSection from '@/components/numbered-section.astro';
+import { site } from '@/config/site';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import { sectionNumber, sections } from './sections';
+import { snippets } from './snippets';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { code } = messages(locale);
+
+const samples = snippets.map((snippet) => ({
+  ...snippet,
+  ...code.samples[snippet.id],
+}));
+---
+
+<NumberedSection
+  id="code"
+  number={sectionNumber('code')}
+  total={sections.length}
+  label={code.label}
+  locale={locale}
+  headingId="code-title"
+  class="code"
+  data-code-steps
+>
+  <div class="code-main">
+    <div class="code-stage field-dotted">
+      <div class="code-frame ticked">
+        <div class="code-windows">
+          {samples.map((sample) => (
+            <CodeWindow
+              code={sample.code}
+              lang={sample.lang}
+              repository={sample.repository}
+              commit={sample.commit}
+              path={sample.path}
+              {...('lines' in sample ? { lines: sample.lines } : {})}
+              class={`code-window-${sample.id}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+    <div class="code-side">
+      <div class="code-heading">
+        <Headline id="code-title" lines={code.headline} />
+        <Button href={site.github} label={code.action} icon="arrow-up-right" />
+      </div>
+      <div class="code-process">
+        <span class="code-rail" aria-hidden="true">
+          <span class="code-rail-dot"></span>
+          <span class="code-rail-line" data-code-line></span>
+          <span class="code-rail-dot code-rail-end"></span>
+        </span>
+        <fieldset class="code-tabs">
+          <legend class="sr-only">{code.tabs}</legend>
+          {samples.map((sample, index) => (
+            <label class="code-tab">
+              <input
+                type="radio"
+                name="code-sample"
+                value={sample.id}
+                checked={index === 0}
+              />
+              <span class="code-tab-title">{sample.title}</span>
+              <span class="code-tab-reveal">
+                <span class="code-tab-text">{sample.text}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+      </div>
+      <div class="code-list">
+        {samples.map((sample) => (
+          <details class="code-item">
+            <summary class="code-item-summary">
+              <span class="code-item-title">{sample.title}</span>
+              <span class="code-item-text">{sample.text}</span>
+              <span class="code-item-button" aria-hidden="true">
+                <svg viewBox="0 0 16 16" class="code-item-icon">
+                  <path d="M7.5 2h1v5.5H14v1H8.5V14h-1V8.5H2v-1h5.5z" />
+                </svg>
+              </span>
+            </summary>
+            <div class="code-item-stage field-dotted">
+              <div class="code-frame ticked">
+                <CodeWindow
+                  code={sample.code}
+                  lang={sample.lang}
+                  repository={sample.repository}
+                  commit={sample.commit}
+                  path={sample.path}
+                  {...('lines' in sample ? { lines: sample.lines } : {})}
+                />
+              </div>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+</NumberedSection>
+
+<style>
+  /* The room's grid: two equal columns and no gap, the text column set in
+     by 3rem. */
+  .code-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  /* The stage is 80vh tall, the frame a 31 by 32rem box centred on it with
+     no fill, the window filling the frame. */
+  .code-stage {
+    background-size: 14.18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    min-height: 36rem;
+    padding: 1.5rem;
+  }
+  /* Sized in em, so the list below the desktop breakpoint draws the same
+     frame at 0.8 of the size. */
+  .code-frame {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 31em;
+    min-width: 0;
+    height: 32em;
+    max-height: 100%;
+    padding: 1.25em 0.75em;
+    border: 1px solid var(--line);
+  }
+  .code-windows {
+    display: grid;
+    flex: 1;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .code-windows :global(.code-window) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  /* A long file scrolls inside its window, so the frame keeps its size;
+     printed, it runs whole. */
+  .code-windows :global(.code-window-body) {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  @media print {
+    .code-stage,
+    .code-frame {
+      height: auto;
+      max-height: none;
+    }
+    .code-windows :global(.code-window-body) {
+      max-height: none;
+    }
+  }
+  /* The checked radio decides which window shows. */
+  .code-main:has(input[value='ts']:checked)
+    :global(.code-window:not(.code-window-ts)),
+  .code-main:has(input[value='astro']:checked)
+    :global(.code-window:not(.code-window-astro)),
+  .code-main:has(input[value='playwright']:checked)
+    :global(.code-window:not(.code-window-playwright)) {
+    display: none;
+  }
+  .code-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-left: 3rem;
+  }
+  .code-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.5rem;
+  }
+  /* The process: a rail of a dashed track with a square at each end, an
+     accent line that grows down it, and the files beside it; the checked
+     one open, the others closed to their titles. */
+  .code-process {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .code-rail {
+    position: relative;
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 0.5rem;
+    overflow: hidden;
+  }
+  .code-rail::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 50%;
+    border-left: 1px dashed var(--decor);
+  }
+  .code-rail-line {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 0.5px);
+    width: 1px;
+    height: 0;
+    background: var(--accent);
+    transition: height 0.5s var(--ease-power1-out);
+  }
+  .code-rail-dot {
+    position: relative;
+    z-index: 1;
+    width: 0.5rem;
+    aspect-ratio: 1;
+    background: var(--accent);
+  }
+  .code-rail-end {
+    background: var(--decor);
+    transition: background-color 0.3s ease;
+  }
+  /* Without the scroll, the line reaches the checked file. */
+  .code-main:has(input[value='astro']:checked) .code-rail-line {
+    height: 50%;
+  }
+  .code-main:has(input[value='playwright']:checked) .code-rail-line {
+    height: 100%;
+  }
+  .code-main:has(input[value='playwright']:checked) .code-rail-end {
+    background: var(--accent);
+  }
+  .code-tabs {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .code-tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+  /* The radio only holds the tab's state and the label draws the tab, so it
+     drops the native appearance and, with it, the browser's round shape. */
+  .code-tab input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    appearance: none;
+  }
+  .code-tab:has(input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .code-tab-title {
+    color: var(--faint);
+    font-size: var(--text-medium);
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+    transition: color 0.5s ease;
+  }
+  .code-tab:hover .code-tab-title,
+  .code-tab:has(input:checked) .code-tab-title {
+    color: var(--ink);
+  }
+  /* A closed file keeps its description in its name, so a screen reader
+     still hears it; only its box is folded away. */
+  .code-tab-reveal {
+    display: grid;
+    grid-template-rows: minmax(0, 0fr);
+    overflow: hidden;
+    transition: grid-template-rows 0.5s ease;
+  }
+  .code-tab:has(input:checked) .code-tab-reveal {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .code-tab-text {
+    min-height: 0;
+    max-width: 26.25rem;
+    padding-top: 0.25rem;
+    color: var(--muted);
+  }
+  /* The scroll drives the room: it grows tall and its content sticks. */
+  /* Padded and pinned as Method is, so the eyebrow lands at 10vh. */
+  .code[data-scrubbing] {
+    height: 250vh;
+    padding-top: 10vh;
+  }
+  .code[data-scrubbing] :global(.section-body) {
+    position: sticky;
+    top: 10vh;
+    padding-top: 0;
+  }
+  .code[data-scrubbing] .code-rail-line {
+    transition: none;
+  }
+  /* The list that stands for the switch below the desktop breakpoint:
+     each file a row under a rule, its name and line, and a 32px ink square
+     with a plus at its top right that turns to the accent and a cross when
+     the file opens; the window opens under it over 0.4s, at 0.8 of its
+     desktop size, on the dotted field. */
+  .code-list {
+    display: none;
+  }
+  .code-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .code-item-summary {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 3rem 1rem 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .code-item-summary::-webkit-details-marker {
+    display: none;
+  }
+  .code-item-title {
+    font-size: var(--text-medium);
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+  }
+  .code-item-text {
+    max-width: 26.25rem;
+    padding-top: 0.25rem;
+    color: var(--muted);
+  }
+  .code-item-button {
+    position: absolute;
+    top: 1rem;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    aspect-ratio: 1;
+    background: var(--ink);
+    color: var(--paper);
+    transition: background-color 0.4s var(--ease-power1-out);
+  }
+  .code-item-icon {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+    transition: transform 0.4s var(--ease-power1-out);
+  }
+  .code-item[open] .code-item-button {
+    background: var(--accent);
+    color: var(--accent-contrast);
+  }
+  .code-item[open] .code-item-icon {
+    transform: rotate(45deg);
+  }
+  .code-item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.4s var(--ease-power1-out),
+      content-visibility 0.4s allow-discrete;
+  }
+  .code-item[open]::details-content {
+    block-size: auto;
+  }
+  .code-item-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: 14.18px;
+  }
+  .code-item-stage .code-frame {
+    margin-block: 1.5em;
+    font-size: 0.8rem;
+  }
+  .code-item-stage :global(.code-window) {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .code-item-stage :global(.code-window-body) {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  @media (width < 62rem) {
+    .code-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .code-stage,
+    .code-process {
+      display: none;
+    }
+    .code-side {
+      justify-content: flex-start;
+      gap: 4rem;
+      padding-left: 0;
+    }
+    .code-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .code-item-stage {
+      margin-bottom: 1rem;
+    }
+  }
+  @media (width < 48rem) {
+    .code-side {
+      gap: var(--space-medium);
+    }
+    .code-heading {
+      gap: var(--space-small);
+    }
+  }
+  @media (width < 30rem) {
+    .code-item-stage {
+      padding: 1rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .code-tab-title,
+    .code-tab-reveal,
+    .code-rail-line,
+    .code-rail-end,
+    .code-item-button,
+    .code-item-icon,
+    .code-item::details-content {
+      transition: none;
+    }
+  }
+  @media print {
+    .code-tab-reveal {
+      grid-template-rows: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "e2e/**/*.spec.ts",
+    "scripts/**/*.spec.mjs",
+    "scripts/e2e/preview.mjs"
+  ],
+  "project": ["src/**/*.{ts,astro,css}", "e2e/**/*.ts", "scripts/**/*.mjs"],
+  "ignoreDependencies": ["geist"]
+}

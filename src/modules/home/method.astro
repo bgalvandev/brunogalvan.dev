@@ -1,0 +1,382 @@
+---
+// The four cards sit in a sticky frame inside a tall room and the scroll
+// draws each process line in turn. That only happens while motion runs
+// (data-steps is the hook); otherwise every card shows complete.
+import Button from '@/components/button.astro';
+import Headline from '@/components/headline.astro';
+import NumberedSection from '@/components/numbered-section.astro';
+import IsoIcon from '@/components/iso-icon.astro';
+import { box, extrude } from '@/components/isometric';
+import { site } from '@/config/site';
+import { messages } from '@/i18n/messages';
+import type { Locale } from '@/i18n/locales';
+import { sectionNumber, sections } from './sections';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { method } = messages(locale);
+// One isometric scene per rule, each about as wide as it is tall so the four
+// weigh the same: layers narrowing upward (dependency one way), four blocks
+// and one more on top (the smallest change), a gate with a block passing
+// (verification) and two sheets with their lines (a written decision).
+const icons = [
+  [
+    box(0, 0, 0, 6, 6, 1.4),
+    box(1, 1, 2.2, 4, 4, 1.4),
+    box(2, 2, 4.4, 2, 2, 1.4),
+  ],
+  [
+    box(0, 0, 0, 2.4, 2.4, 2.4),
+    box(2.8, 0, 0, 2.4, 2.4, 2.4),
+    box(0, 2.8, 0, 2.4, 2.4, 2.4),
+    box(2.8, 2.8, 0, 2.4, 2.4, 2.4),
+    box(2.8, 2.8, 2.8, 2.4, 2.4, 2.4),
+  ],
+  [
+    box(0, 0, 0, 1.8, 3, 4.2),
+    box(5, 0, 0, 1.8, 3, 4.2),
+    box(0, 0, 4.2, 6.8, 3, 1.6),
+    box(2.6, 0.7, 0, 1.6, 1.6, 1.6),
+  ],
+  [
+    extrude(
+      [
+        [0, 0],
+        [6, 0],
+        [6, 5.5],
+        [4.5, 7],
+        [0, 7],
+      ],
+      0,
+      0.8,
+    ),
+    extrude(
+      [
+        [1.5, -1],
+        [7.5, -1],
+        [7.5, 4.5],
+        [6, 6],
+        [1.5, 6],
+      ],
+      2,
+      0.8,
+    ),
+    box(2.5, 2.8, 3.8, 3.5, 0.5, 0.7),
+    box(2.5, 2.8, 2.2, 4, 0.5, 0.7),
+    box(2.5, 2.8, 0.6, 4, 0.5, 0.7),
+  ],
+];
+---
+
+<NumberedSection
+  id="method"
+  number={sectionNumber('method')}
+  total={sections.length}
+  label={method.label}
+  locale={locale}
+  headingId="method-title"
+  class="method"
+  data-steps
+>
+  <div class="method-main">
+    <div class="method-heading">
+      <Headline id="method-title" lines={method.headline} />
+      <Button href={site.repository} label={method.action} />
+    </div>
+    <div class="method-slider">
+      {/* The numbers of the phone slider, where one card shows at a time
+          and this list marks which. */}
+      <ol class="method-steps" aria-hidden="true">
+        {method.rules.map((_, index) => (
+          <li class="method-step">// {String(index + 1).padStart(3, '0')}</li>
+        ))}
+      </ol>
+      <ol class="method-cards">
+        {method.rules.map((rule, index) => (
+          <li class="method-card" data-step>
+            <div class="method-card-top">
+              <span class="method-card-number" aria-hidden="true">
+                // {String(index + 1).padStart(3, '0')}
+              </span>
+              <p class="method-card-text">{rule.text}</p>
+            </div>
+            <div class="method-card-process field-dotted" aria-hidden="true">
+              <span class="method-card-line" data-step-line />
+              <span class="method-card-dot" />
+            </div>
+            <div class="method-card-bottom">
+              <h3 class="method-card-title">{rule.title}</h3>
+              <IsoIcon
+                solids={icons[index] ?? []}
+                columns={20}
+                align="xMaxYMax"
+                class="method-card-icon"
+              />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</NumberedSection>
+
+<style>
+  .method-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-medium);
+  }
+  .method-steps {
+    display: none;
+  }
+  .method-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2.5rem;
+  }
+  .method-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    min-height: 24rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block: 1px solid var(--line);
+  }
+  /* The process card: padded 1rem, the number and description at
+     the top, the strip out of the flow across the card's middle, and the
+     title at the foot with the drawing sunk to the corner, 1.5rem below
+     it. */
+  .method-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3rem;
+    padding: 1rem;
+    border-inline: 1px solid var(--line);
+  }
+  .method-card-top {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 8.5rem;
+  }
+  .method-card-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .method-card-number {
+    color: var(--accent);
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  .method-card-text {
+    margin: 0;
+    color: var(--ink);
+    transition: opacity 0.2s ease;
+  }
+  /* The process strip: a dotted track edge to edge, an accent line and a
+     square that leads it; a finished line fills the strip and pushes the
+     square out of sight. */
+  .method-card-process {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 1.5rem;
+    padding-block: 0.5rem;
+    overflow: hidden;
+    background-size: 7.88px;
+    transform: translateY(-50%);
+  }
+  .method-card-line {
+    flex: none;
+    align-self: stretch;
+    width: 100%;
+    background: var(--accent);
+  }
+  .method-card-dot {
+    flex: none;
+    height: 100%;
+    aspect-ratio: 1;
+    background: var(--accent);
+  }
+  .method-card-title {
+    margin: 0;
+    color: var(--accent);
+    font-size: var(--text-medium);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: var(--text-medium--letter-spacing);
+    transition: color 0.2s ease;
+  }
+  /* A reached card shows its drawing as pixels; one not reached yet shows it
+     as lines, and the swap is instant. */
+  .method-card :global(.method-card-icon) {
+    align-self: flex-end;
+    width: 5rem;
+    height: 5rem;
+    color: var(--accent);
+  }
+  .method-card :global(.iso-line) {
+    visibility: hidden;
+  }
+  /* While the scroll drives it, a card not reached yet is quiet: its
+     description waits unseen (a screen reader still reads it), its drawing
+     is a pale line drawing, and its number and title dim to a colour that
+     still passes contrast. */
+  /* On a desktop the room is padded by 10vh and its body pinned there with
+     no padding of its own, so the eyebrow lands at 10vh and the cards fit
+     the screen. On a tablet the room keeps its height and the cards light
+     up in the short stretch it scrolls past. */
+  @media (width >= 62rem) {
+    .method[data-scrubbing] {
+      height: 200vh;
+      padding-top: 10vh;
+    }
+    .method[data-scrubbing] :global(.section-body) {
+      position: sticky;
+      top: 10vh;
+      padding-top: 0;
+    }
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-number,
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-title {
+    color: var(--faint);
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-text {
+    opacity: 0;
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-title {
+    font-weight: 400;
+  }
+  .method[data-scrubbing]
+    .method-card:not(.is-active)
+    :global(.method-card-icon) {
+    color: var(--decor);
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) :global(.iso-line) {
+    visibility: visible;
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) :global(.iso-pixel) {
+    visibility: hidden;
+  }
+  .method[data-scrubbing] .method-card:not(.is-active) .method-card-dot {
+    opacity: 0;
+  }
+  @media (width < 62rem) {
+    .method-cards {
+      grid-template-columns: repeat(2, 1fr);
+      border-block: none;
+    }
+    .method-card {
+      border-block: 1px solid var(--line);
+    }
+  }
+  @media (width < 48rem) {
+    .method-heading {
+      flex-direction: column;
+      gap: var(--space-small);
+    }
+    .method-cards {
+      grid-template-columns: 1fr;
+      border-bottom: none;
+    }
+  }
+  /* The phone slider: one box, the cards in the same place, the
+     numbers at the top left and the drawing at the top right, the process
+     strip centred on 11rem, and the title and rule under it. Each card's line
+     fills over five seconds and the next card takes its place. The cards
+     stay in the page, so a screen reader reads all four. */
+  .method[data-sliding] .method-slider {
+    position: relative;
+    height: 20rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .method[data-sliding] .method-steps {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-weight: 500;
+  }
+  .method[data-sliding] .method-step {
+    opacity: 0.5;
+  }
+  .method[data-sliding] .method-step.is-current {
+    color: var(--accent);
+    opacity: 1;
+  }
+  .method[data-sliding] .method-cards {
+    height: 100%;
+    min-height: 0;
+    border: none;
+  }
+  .method[data-sliding] .method-card {
+    display: grid;
+    grid-area: 1 / 1;
+    grid-template-rows: 12rem auto auto;
+    align-content: start;
+    row-gap: 0.75rem;
+    border: none;
+    background: var(--paper);
+    opacity: 0;
+  }
+  .method[data-sliding] .method-card.is-current {
+    opacity: 1;
+  }
+  .method[data-sliding] .method-card-top,
+  .method[data-sliding] .method-card-bottom {
+    display: contents;
+  }
+  .method[data-sliding] .method-card-number {
+    display: none;
+  }
+  .method[data-sliding] :global(.method-card-icon) {
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    width: 7rem;
+    height: 7rem;
+  }
+  .method[data-sliding] .method-card-process {
+    top: 11rem;
+  }
+  .method[data-sliding] .method-card-title {
+    grid-row: 2;
+    margin-top: 0.25rem;
+  }
+  .method[data-sliding] .method-card-text {
+    grid-row: 3;
+    color: var(--muted);
+  }
+  @media (width < 30rem) {
+    .method[data-sliding] .method-slider {
+      height: 21rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .method-card-number,
+    .method-card-text,
+    .method-card-title,
+    .method-card :global(.method-card-icon) {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,49 @@
+---
+import { messages } from '@/i18n/messages';
+import { pagePath } from '@/i18n/routes';
+import SiteLayout from '@/layouts/site-layout.astro';
+const es = messages('es');
+const en = messages('en');
+---
+
+<SiteLayout
+  locale="en"
+  title={`404 — ${en.notFound.title}`}
+  description={en.notFound.description}
+  canonicalPath="/404/"
+  noindex
+>
+  <main id="main" tabindex="-1" class="measure not-found">
+    <p class="tag">404</p>
+    <h1 class="text-headline">{en.notFound.title}</h1>
+    <p class="not-found-text">{en.notFound.description}</p>
+    <p class="not-found-text" lang="es">
+      {es.notFound.description}
+    </p>
+    <nav class="tabs" aria-label={en.notFound.navigation}>
+      <a class="tab" href={pagePath('home', 'en')} lang="en">
+        {en.navigation.home}
+      </a>
+      <a class="tab" href={pagePath('home', 'es')} lang="es">
+        {es.navigation.home}
+      </a>
+    </nav>
+  </main>
+</SiteLayout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding-block: 8rem;
+  }
+  .not-found h1 {
+    margin: 0;
+  }
+  .not-found-text {
+    margin: 0;
+    color: var(--muted);
+  }
+</style>

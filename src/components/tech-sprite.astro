@@ -1,0 +1,23 @@
+---
+import { markId, marks } from './tech-marks';
+// Every technology mark, once per page, as symbols the logos point at. A
+// band that repeats its logos to loop then costs a few bytes a copy instead
+// of a whole path. A page that shows a TechLogo renders this once.
+---
+
+<svg class="tech-sprite" aria-hidden="true" focusable="false">
+  {[...marks].map(([name, mark]) => (
+    <symbol id={markId(name)} viewBox="0 0 24 24">
+      <path d={mark.path} />
+    </symbol>
+  ))}
+</svg>
+
+<style>
+  .tech-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+</style>

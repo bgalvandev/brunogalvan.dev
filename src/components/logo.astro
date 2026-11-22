@@ -1,0 +1,34 @@
+---
+import { site } from '@/config/site';
+// The name as the wordmark: a personal site is signed by its name, and the
+// pixel B stays the favicon.
+// `stacked` sets it on two lines, to fill the footer's first column.
+interface Props {
+  class?: string;
+  stacked?: boolean;
+}
+const { class: className, stacked = false } = Astro.props;
+const words = site.name.split(' ');
+---
+
+<span class:list={['logo', { 'logo-stacked': stacked }, className]}>
+  {stacked
+    ? words.map((word) => <span class="logo-word">{word}</span>)
+    : site.name}
+</span>
+
+<style>
+  .logo {
+    display: inline-block;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+  }
+  .logo-stacked {
+    line-height: 0.9;
+  }
+  .logo-word {
+    display: block;
+  }
+</style>
